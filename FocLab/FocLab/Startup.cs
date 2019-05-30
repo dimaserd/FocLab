@@ -11,6 +11,7 @@ namespace FocLab
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -20,6 +21,14 @@ namespace FocLab
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    "areas",
+                    "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+            });
 
             app.Run(async (context) =>
             {
