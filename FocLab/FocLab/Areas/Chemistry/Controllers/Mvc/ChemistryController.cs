@@ -308,7 +308,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> LoadOrReloadFileForExperiment(Chemistry_ChangeFileForExperiment model)
+        public async Task<JsonResult> LoadOrReloadFileForExperiment(ChemistryChangeFileForExperiment model)
         {
             try
             {

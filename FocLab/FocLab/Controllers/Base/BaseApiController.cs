@@ -71,8 +71,6 @@ namespace FocLab.Controllers.Base
         protected IApplicationAuthenticationManager AuthenticationManager => new ApplicationAuthenticationManager(SignInManager);
 
         
-        //UserSettingManager.GetUserSetting<CatalogueUserConfiguration, MyDbContext>(ContextWrapper);
-
         /// <summary>
         /// Контекст для работы с бд
         /// </summary>

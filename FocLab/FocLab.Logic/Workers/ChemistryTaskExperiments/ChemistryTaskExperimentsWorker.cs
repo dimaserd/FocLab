@@ -188,7 +188,7 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> LoadOrReloadFileForExperimentAsync(Chemistry_ChangeFileForExperiment model)
+        public async Task<BaseApiResponse> LoadOrReloadFileForExperimentAsync(ChemistryChangeFileForExperiment model)
         {
             if (model == null)
             {
