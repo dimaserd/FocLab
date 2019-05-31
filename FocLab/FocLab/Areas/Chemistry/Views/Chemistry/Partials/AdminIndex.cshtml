@@ -1,0 +1,709 @@
+﻿@using FocLab.Logic.EntityDtos.Users.Default
+@using Microsoft.AspNetCore.Html
+@using Newtonsoft.Json
+@model List<FocLab.Logic.Models.Chemistry_Task>
+@{
+    Layout = null;
+
+    var dateNow = DateTime.Now;
+
+    var user = ViewData["User"] as ApplicationUserDto;
+
+    var isEmailSet = user != null;
+
+    var tasks = isEmailSet ? Model.Where(x => x.PerformerId == user.Id).ToList() : Model;
+
+    var sortSelect = new List<SelectListItem>
+    {
+        new SelectListItem
+        {
+        Text = "Не сортировать",
+        Value = "0"
+        },
+
+        new SelectListItem
+        {
+        Text = "По дате выполнения",
+        Value = "1",
+        },
+
+        new SelectListItem
+        {
+        Text = "По имени исполнителя",
+        Value = "2",
+        },
+
+    };
+
+    var usersSelectList = ViewData["usersSelectList"] as List<SelectListItem>;
+
+    var tasksSelectList = ViewData["tasksSelectList"] as List<SelectListItem>;
+}
+
+<style>
+    .btn-margin {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-md-12"> 
+        <a href="/Chemistry/Chemistry/CreateTask" class="btn btn-primary btn-margin">
+            <i class="fa fa-plus-circle"></i>
+            Создать задание
+        </a>
+
+        
+    </div>
+</div>
+
+<div style="height:30px">
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+
+
+        @*<tr>
+            <th>
+                Исполнитель
+            </th>
+
+            <th>
+                @Html.DropDownList(name: "User", selectList: usersSelectList, htmlAttributes: new { id = "User", @class = "form-control" })
+            </th>
+        </tr>*@
+
+        <tr>
+            <th>
+                Искать по названию
+            </th>
+
+            <th>
+                @Html.DropDownList("q", tasksSelectList, new { id = "q", @class = "form-control" })
+            </th>
+        </tr>
+
+        <tr style="display:none">
+            <th>
+                Создание за последних n дней
+            </th>
+
+            <th>
+                @Html.TextBox("days", "", new { @class = "form-control", type = "number" })
+            </th>
+        </tr>
+
+        <tr>
+            <th>
+                Сортировать по
+            </th>
+
+            <th>
+                @Html.DropDownList("sort", sortSelect, new { @class = "form-control selectpicker" })
+            </th>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <button onclick="tasksFilter.ApplyFilter()" class="btn btn-success btn-block">
+                    <i class="fa fa-search"></i>
+                    <strong>
+                        Поиск
+                    </strong>
+                </button>
+            </th>
+        </tr>
+    </table>
+</div>
+
+
+
+
+@{
+    var text = !isEmailSet ? "Список заданий которые выполнили исполнители" : $"Список заданий которые выполнил исполнитель {user.Email}";
+}
+<div class="row">
+
+    <div class="col-md-12">
+        <h2 class="text-center">
+            @text <span class="m-menu__link-badge">
+                      <span class="m-badge m-badge--success">@tasks.Count(x => x.IsPerformed)</span>
+                  </span> 
+        </h2>
+
+        <h2>
+            <span class="pull-right btn" onclick="$('#performedBody').fadeToggle()">[Показать/Скрыть]</span>
+        </h2>
+    </div>
+
+</div>
+
+
+
+<div class="table-responsive" id="performedBody">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Название
+                </th>
+
+                <th>
+                    Исполнитель
+                </th>
+
+                <th>
+                    Крайний срок
+                </th>
+
+                <th>
+                    Дата выполнения
+                </th>
+
+                <th>
+                    Колличество
+                </th>
+
+                <th>
+                    Факт. колличество
+                </th>
+
+                <th>
+                    Качество
+                </th>
+
+                <th>
+                    Факт. качество
+                </th>
+            </tr>
+        </thead>
+
+        <tbody id="performed-tbody">
+            @foreach (var task in tasks.Where(x => x.IsPerformed))
+            {
+                var _class = task.IsPerformedInTime ? "success" : "danger";
+
+                <tr id="@task.MetaEntityDTOResponse.Id" class="@_class performed-chemistry-task">
+
+                    <td>
+                        <a href="/Chemistry/Chemistry/Task/@task.MetaEntityId">
+                            @task.Title
+                        </a>
+                    </td>
+
+                    <td>
+                        <a href="/Chemistry/Chemistry?id=@task.Performer.UserId">
+                            @task.Performer.Name @task.Performer.Email
+                        </a>
+                    </td>
+
+                    <td>
+                        @task.DeadLineDate
+                    </td>
+
+                    <td>
+                        @task.PerformedDate.Value
+                    </td>
+
+                    <td>
+                        @task.AdminQuantity
+                    </td>
+
+                    <td>
+                        @task.PerformerQuantity
+                    </td>
+
+                    <td>
+                        @task.AdminQuality
+                    </td>
+
+                    <td>
+                        @task.PerformerQuality
+                    </td>
+
+                </tr>
+            }
+
+            @if (tasks.Count(x => x.IsPerformed) == 0)
+            {
+                <tr>
+                    <td colspan="8">
+                        <span class="h4 text-center">
+                            Пока выполненных заданий нет
+                        </span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@{
+    var otherText = !isEmailSet ? "Список заданий которые не выполнили исполнители" : $"Список заданий которые не выполнил исполнитель {user.Email}";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="text-center">
+            @otherText <span class="m-menu__link-badge">
+                           <span class="m-badge m-badge--success">@tasks.Count(x => !x.IsPerformed)</span>
+                        </span>  
+        </h2>
+
+        <h2>
+            <span class="pull-right btn" onclick="$('#notPerformedBody').fadeToggle()">[Показать/Скрыть]</span>
+        </h2>
+    </div>
+
+</div>
+
+
+
+<div class="table-responsive" id="notPerformedBody">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Название
+                </th>
+
+                <th>
+                    Исполнитель
+                </th>
+
+                <th>
+                    Крайний срок
+                </th>
+
+                <th>
+                    Метод решения
+                </th>
+
+                <th>
+                    Колличество
+                </th>
+
+                <th>
+                    Качество
+                </th>
+            </tr>
+        </thead>
+
+        <tbody id="not-performed-body">
+            @foreach (var task in tasks.Where(x => !x.IsPerformed))
+            {
+                var _class = task.DeadLineDate > dateNow ? "success" : "danger";
+
+                <tr class="@_class">
+
+                    <td>
+                        @if (!string.IsNullOrEmpty(task.Title))
+                        {
+                            <a href="/Chemistry/Chemistry/Task/@task.MetaEntityId">
+                                @task.Title
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="/Chemistry/Chemistry/Task/@task.MetaEntityId">
+                                [Название не указано]
+                            </a>
+                        }
+
+                    </td>
+
+                    <td>
+                        @if (task.Performer != null)
+                        {
+                            <a href="/Chemistry/Chemistry?id=@task.Performer.UserId">
+                                @task.Performer.Name @task.Performer.Email
+                            </a>
+                        }
+                        else
+                        {
+                            <a>[Исполнитель не указан]</a>
+                        }
+
+                    </td>
+
+                    <td>
+                        @task.DeadLineDate
+                    </td>
+
+                    <td>
+                        @if (task.MethodFile != null)
+                        {
+
+                            <a href="@task.MethodFile.GetLinkToFile()" class="btn btn-primary">
+                                @task.MethodFile.Name
+                            </a>
+                        }
+                        else
+                        {
+                            @Html.Raw("[Метод не указан]")
+                        }
+
+
+
+                    </td>
+
+                    <td>
+                        @task.AdminQuality
+                    </td>
+
+                    <td>
+                        @task.AdminQuantity
+                    </td>
+
+                </tr>
+            }
+
+            @if (tasks.Count(x => !x.IsPerformed) == 0)
+            {
+                <tr>
+                    <td colspan="6">
+                        <span class="h4 text-center">
+                            Пока не выполненных заданий нет
+                        </span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        
+        $("#User").select2({
+            placeholder: "Выберите пользователя",
+
+            "language": {
+                "noResults": function () {
+                    return "Пользователь не найден.";
+                }
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            }
+        })
+
+        $("#q").select2({
+            placeholder: "Введите название",
+
+            "language": {
+                "noResults": function () {
+                    return "Задание не найдено.";
+                }
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            }
+        })
+    })
+    
+</script>
+
+<script>
+        class TaskDrawer {
+            constructor() {
+                this.setHandlers();
+            }
+
+            setHandlers() {
+                this.GetTaskElementForPerformedTr = function (task) {
+
+                    var _class = task.IsPerformedInTime ? "success" : "danger";
+
+                    var tr = document.createElement("tr");
+
+                    tr.classList.add(_class);
+                    tr.classList.add("performed-chemistry-task");
+
+                    var innerHtml = `
+
+                        <td>
+                            <a href="/Chemistry/Chemistry/Task/${task.MetaEntityId}">
+                                ${task.Title}
+                            </a>
+                        </td>
+
+                        <td>
+                            <a href="/Chemistry/Chemistry?id=${task.Performer.UserId}">
+                                ${task.Performer.Name} ${task.Performer.Email}
+                            </a>
+                        </td>
+
+                        <td>
+                            ${moment(task.DeadLineDate).locale('ru').format('DD MMMM YYYY, hh:mm:ss')}
+                        </td>
+
+                        <td>
+                            ${moment(task.PerformedDate).locale('ru').format('DD MMMM YYYY, hh:mm:ss')}
+                        </td>
+
+                        <td>
+                            ${task.AdminQuantity != null ? task.AdminQuantity : ''}
+                        </td>
+
+                        <td>
+                            ${task.PerformerQuantity != null ? task.PerformerQuantity : ''}
+                        </td>
+
+                        <td>
+                            ${task.AdminQuality != null ? task.AdminQuality : ''}
+                        </td>
+
+                        <td>
+                            ${task.PerformerQuality != null ? task.PerformerQuality : ''}
+                        </td>`;
+
+                    tr.innerHTML = innerHtml;
+
+                    return tr;
+                }
+
+
+                this.GetTaskElementForNotPerformedTr = function (task) {
+
+                    var dateNow = new Date();
+
+                    var _class = task.DeadLineDate > dateNow ? "success" : "danger";
+
+                    var tr = document.createElement("tr");
+
+                    tr.classList.add(_class);
+
+                    var innerHtml = `
+
+
+                        <td>
+                            <a href="/Chemistry/Chemistry/Task/${task.MetaEntityId}">
+                                ${task.Title}
+                            </a>
+                        </td>
+
+                        <td>
+                            <a href="/Chemistry/Chemistry?id=${task.Performer.UserId}">
+                                ${task.Performer.Name} ${task.Performer.Email}
+                            </a>
+                        </td>
+
+                        <td>
+                            ${moment(task.DeadLineDate).locale('ru').format('DD MMMM YYYY, hh:mm:ss')}
+                        </td>
+
+                        <td>`;
+
+                    if (task.MethodFile != null) {
+                        innerHtml += `
+                                <a href="/Files/GetDbFileById?id=${task.MethodFile.FileId}" class="btn btn-primary">
+                                    ${task.MethodFile.Name}
+                                </a>`;
+                    }
+                    else {
+                        innerHtml += "[Метод не указан]";
+                    }
+
+                    innerHtml += `
+
+                        </td>
+
+                        <td>
+                            ${task.AdminQuality != null ? task.AdminQuality : ""}
+                        </td>
+
+                        <td>
+                            ${task.AdminQuantity != null ? task.AdminQuantity : ""}
+                        </td>`;
+
+                    tr.innerHTML = innerHtml;
+
+                    return tr;
+                }
+                }
+        }
+</script>
+
+<script>
+        var taskDrawer = new TaskDrawer();
+</script>
+
+<script>
+        class TasksFilter {
+            constructor() {
+                this.Tasks = null;
+                this.setHandlers();
+                this.setOrderByHandlers();
+            }
+
+
+
+            setHandlers() {
+
+                this.SetTasks = function (tasks) {
+                    this.Tasks = tasks;
+                }
+
+                this.ApplyFilter = function () {
+
+                    var days = document.getElementsByName("days")[0].value;
+
+                    if (this.Tasks == null) {
+                        alert("Не установлены названия")
+                    }
+
+                    var tasks = days == null || days == "" ? this.Tasks : this.ApplyDaysFilter(this.Tasks, days);
+
+                    console.log("ApplyFilterBeforeText", tasks);
+
+                    var q = document.getElementsByName("q")[0].value;
+
+                    tasks = this.ApplyTextFilter(tasks, q);
+
+                    console.log("ApplyFilterAfterText", tasks);
+
+                    tasks = this.SortTasks(tasks);
+
+                    this.ShowAndHideTasks(tasks);
+                }
+
+                //this.ApplyUserFilter = function ()
+
+                this.ApplyDaysFilter = function (tasks, n) {
+
+                    console.log("ApplyDaysFilter", tasks, n);
+
+                    var dateNow = Date.now();
+
+                    var result = tasks.filter(function (x) {
+                        var date = Date.parse(x.MetaEntityDTOResponse.CreationDate);
+
+                        var timeDiff = Math.abs(dateNow - date);
+
+                        var diffDays = Math.abs(Math.ceil(timeDiff / (1000 * 3600 * 24)));
+
+                        return diffDays <= n;
+                    });
+
+                    return result;
+                }
+
+                this.ApplyTextFilter = function (tasks, q) {
+                    if (q == null || q == "") {
+                        return tasks;
+                    }
+
+                    var result = tasks.filter(function (x) {
+                        //if (x.PerformerText != null && x.PerformerText.includes(q)) {
+                        //    return true;
+                        //}
+
+                        return (x.Title != null && x.Title.toLowerCase().includes(q.toLowerCase()));
+                    });
+
+                    return result;
+                }
+
+                this.ShowAndHideTasks = function (tasks) {
+
+                    var tBody = document.getElementById("performed-tbody")
+
+                    tBody.innerHTML = "";
+
+                    var performed = tasks.filter(x => x.IsPerformed);
+
+                    for (var i = 0; i < performed.length; i++) {
+                        tBody.appendChild(taskDrawer.GetTaskElementForPerformedTr(performed[i]));
+                    }
+
+                    tBody = document.getElementById("not-performed-body");
+
+                    tBody.innerHTML = "";
+
+                    var notPerfomed = tasks.filter(x => !x.IsPerformed);
+
+                    for (var i = 0; i < notPerfomed.length; i++) {
+                        tBody.appendChild(taskDrawer.GetTaskElementForNotPerformedTr(notPerfomed[i]));
+                    }
+                }
+            }
+
+            setOrderByHandlers() {
+
+                this.SortTasks = function (tasks) {
+
+                    var sort = document.getElementsByName("sort")[0].value;
+
+                    if (sort == 1) {
+
+                        tasks = this.SortByPerformedDate(tasks);
+                        return tasks;
+                    }
+                    else if (sort == 2) {
+                        tasks = this.SortByPerformerName(tasks);
+                        return tasks;
+                    }
+
+                    return tasks;
+                }
+
+
+                this.SortByPerformedDate = function (tasks) {
+
+                    var result = tasks.sort(function (a, b) {
+
+                        var aDate = Date.parse(a.PerformedDate);
+
+                        var bDate = Date.parse(b.PerformedDate);
+
+                        if (aDate > bDate) {
+                            return 1;
+                        }
+                        if (aDate < bDate) {
+                            return -1;
+                        }
+                        // a должно быть равным b
+                        return 0;
+                    })
+
+                    return result;
+                }
+
+                this.SortByPerformerName = function (tasks) {
+
+                    var result = tasks.sort(function (a, b) {
+
+                        
+
+                        if (a.Performer.Name > b.Performer.Name) {
+                            return 1;
+                        }
+                        if (a.Performer.Name < b.Performer.Name) {
+                            return -1;
+                        }
+                        // a должно быть равным b
+                        return 0;
+                    })
+
+                    return result;
+
+                }
+            }
+        }
+</script>
+
+<script>
+    var tasks = @(new HtmlString(JsonConvert.SerializeObject(tasks, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Include })));
+
+    console.log(tasks);
+
+    var tasksFilter = new TasksFilter();
+
+    tasksFilter.SetTasks(tasks);
+
+</script>

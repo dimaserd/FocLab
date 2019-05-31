@@ -1,0 +1,128 @@
+﻿@model ChemistryReagentDto
+@{
+    Layout = ChemistrySettings.LayoutPath;
+    ViewBag.Title = "Создание реагента";
+}
+
+<h2>Редактирование реагента</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+
+        </thead>
+
+        <tbody>
+            <tr>
+                <th>
+                    Название
+                </th>
+
+                <th>
+                    @Html.TextBox(name: "Name", value: Model.Name, htmlAttributes: new { @class = "form-control" })
+                </th>
+            </tr>
+
+            <tr>
+                <th colspan="2">
+                    <button class="btn btn-primary btn-block" onclick="EditReagentHandler()">
+                        
+                        Редактировать реагент
+                    </button>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h2>
+    Задания выполненные пользователями с данным реагентом <span class="badge">@Model.Tasks.Count</span>
+</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Название задания
+                </th>
+
+                <th>
+                    Исполнитель
+                </th>
+
+                <th>
+                    Получено (кг)
+                </th>
+
+                <th>
+                    Сдано (кг)
+                </th>
+
+                <th>
+                    Расход (кг)
+                </th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach(var task in Model.Tasks)
+            {
+            <tr>
+                <td>
+                    <a href="/Chemistry/Chemistry/Task/@task.TaskId">
+                        @task.Task.Title
+                    </a>
+
+                </td>
+
+                <td>
+                    <a href="/Admin/Users/Details/@task.Task.PerformerUser.Id">
+                        @task.Task.PerformerUser.Name
+                    </a>
+                </td>
+
+                <td>
+                    @task.TakenQuantity
+                </td>
+
+                <td>
+                    @task.ReturnedQuantity
+                </td>
+
+                <td>
+                    @(task.TakenQuantity-task.ReturnedQuantity)
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        function EditReagentHandler() {
+            var data = {
+                Id: "@Model.Id",
+                Name: document.getElementsByName("Name")[0].value
+            };
+
+            $.ajax({
+                type: "POST",
+                data: data,
+                url: "/Chemistry/Reagent/EditReagent",
+
+                cache: false,
+                success: function (data) {
+                    console.log(data);
+                    alert(data.Message);
+
+                    if (data.IsSucceeded) {
+                        location.href = '/Chemistry/Reagent/Index';
+                    }
+                }
+            });
+        }
+    </script>
+}

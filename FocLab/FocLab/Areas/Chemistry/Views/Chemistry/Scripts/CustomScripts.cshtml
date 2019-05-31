@@ -1,0 +1,36 @@
+﻿
+@{
+    Layout = null;
+}
+
+<script>
+    function RedirectToChemistry() {
+
+        var currentUrl = window.location.pathname.toLowerCase();
+
+        console.log("RedirectToChemistry",currentUrl);
+
+        var goodUrls = ['/account/resetpassword', '/account/confirmemail', '/account/resetpasswordconfirmation'];
+
+        if (goodUrls.includes(currentUrl)) {
+            return;
+        }
+
+        if (User == null) {
+            window.location.href = "/account/login";
+        }
+        else {
+
+            if (!User.Rights.includes(0) && !User.Rights.includes(1) && !User.Rights.includes(2)) {
+
+                if (!currentUrl.startsWith("/chemistry")) {
+                    window.location.href = "/chemistry";
+                }
+
+                
+            }
+        }
+    }
+
+    RedirectToChemistry();
+</script>

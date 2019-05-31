@@ -1,0 +1,209 @@
+﻿@using FocLab.Logic.Extensions
+@model List<FocLab.Logic.Models.Chemistry_Task>
+@{
+    Layout = null;
+
+    var userId = User.Identity.GetUserId();
+
+    var performerTasks = Model.Where(x => x.Performer.UserId == userId).ToList();
+
+    var dateNow = DateTime.Now;
+}
+
+<div style="height:20px">
+
+</div>
+
+<h2>
+    Список невыполненных заданий назначенных вам администратором
+</h2>
+
+<div style="height:20px">
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Название
+                </th>
+
+                <th>
+                    Крайний срок
+                </th>
+
+                <th>
+                    Колличество
+                </th>
+
+                <th>
+                    Качество
+                </th>
+
+                <th>
+                    Действия
+                </th>
+
+
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var task in performerTasks.Where(x => !x.IsPerformed))
+            {
+                var _class = dateNow < task.DeadLineDate ? "success" : "danger";
+
+                <tr class="@_class">
+
+                    <td>
+                        <a href="/Chemistry/Chemistry/Task/@task.Id">
+                            @task.Title
+                        </a>
+                    </td>
+
+                    <td>
+                        @task.DeadLineDate
+                    </td>
+
+                    <td>
+                        @task.AdminQuantity
+                    </td>
+
+                    <td>
+                        @task.AdminQuality
+                    </td>
+
+                    <td>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a class="btn btn-primary btn-block" onclick="FinishTask('@task.Id', true)">
+                                    Выполнить задание
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+
+                </tr>
+            }
+
+            @if (performerTasks.Count(x => !x.IsPerformed) == 0)
+            {
+                <tr>
+                    <td colspan="5">
+                        <span class="h4 text-center">
+                            У вас нет невыполненных заданий!
+                        </span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<div style="height:50px">
+
+</div>
+
+<h2>
+    Список выполненных вами заданий
+</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Название
+                </th>
+
+                <th>
+                    Крайний срок
+                </th>
+
+                <th>
+                    Дата выполнения
+                </th>
+
+                <th>
+                    Действия
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var task in performerTasks.Where(x => x.IsPerformed))
+            {
+                var _class = task.IsPerformedInTime ? "success" : "danger";
+
+                <tr class="@_class">
+
+                    <td>
+                        <a href="/Chemistry/Chemistry/Task/@task.Id">
+                            @task.Title
+                        </a>
+
+                    </td>
+
+                    <td>
+                        @task.DeadLineDate
+                    </td>
+
+                    <td>
+                        @task.PerformedDate
+                    </td>
+
+                    <td>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn btn-danger btn-block" onclick="FinishTask('@task.Id', false)">
+                                    Отменить выполнение
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+
+                </tr>
+            }
+
+            @if (performerTasks.Count(x => x.IsPerformed) == 0)
+            {
+                <tr>
+                    <td colspan="4">
+                        <span class="h4 text-center">
+                            У вас пока нет выполненных заданий!
+                        </span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+<script>
+
+    function FinishTask(id, flag) {
+
+        console.log("FinishTask", id);
+
+        $.ajax({
+            url: '/Chemistry/Chemistry/PerformTask',
+            type: 'POST',
+            data: { TaskId: id, IsPerformed: flag },
+            async: true,
+            cache: false,
+            dataType: 'json',
+            success: function (response) {
+                alert(response.Message);
+
+                if (response.IsSucceeded) {
+                    location.reload();
+                }
+            }
+        });
+    }
+</script>

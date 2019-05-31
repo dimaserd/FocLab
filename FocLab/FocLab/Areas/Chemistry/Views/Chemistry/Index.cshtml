@@ -1,0 +1,26 @@
+﻿@using FocLab.Logic
+@using FocLab.Logic.Extensions
+@using FocLab.Model.Enumerations
+@model List<FocLab.Logic.Models.Chemistry_Task>
+@{
+    Layout = ChemistrySettings.LayoutPath;
+    ViewBag.Title = "Список заданий";
+
+    const string viewsDir = "~/Areas/Chemistry/Views/Chemistry/Partials";
+
+    var hasAdminRight = User.HasRight(UserRight.Admin);
+    var hasSuperAdminRight = User.HasRight(UserRight.SuperAdmin);
+    var hasRootRight = User.HasRight(UserRight.Root);
+}
+
+@if (hasAdminRight || hasSuperAdminRight || hasRootRight)
+{
+    @await Html.PartialAsync($"{viewsDir}/AdminIndex.cshtml", Model)
+}
+else
+{
+    @await Html.PartialAsync($"{viewsDir}/PerformerIndex.cshtml", Model)
+}
+
+
+

@@ -1,4 +1,4 @@
-﻿namespace FocLab.Logic.Settings
+﻿namespace FocLab.Logic.Settings.Statics
 {
     /// <summary>
     /// Класс настроек для химиков

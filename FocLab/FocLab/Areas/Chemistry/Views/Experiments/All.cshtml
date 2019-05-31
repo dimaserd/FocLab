@@ -1,0 +1,106 @@
+﻿@using FocLab.Logic
+@using Microsoft.AspNetCore.Html
+@model List<IGrouping<FocLab.Logic.EntityDtos.ChemistryTaskDto, FocLab.Logic.EntityDtos.ChemistryTaskExperimentDto>>
+@{
+    Layout = ChemistrySettings.LayoutPath;
+    ViewBag.Title = "Все эксперименты";
+}
+
+<h2>
+    <strong>
+        Все эскперименты по заданиям
+    </strong>
+    <span class="badge">
+        @(Model.Sum(x => 1 * x.Count()))
+    </span>
+</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    Задание
+                </th>
+
+                <th>
+                    Эксперименты
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var group in Model)
+            {
+                <tr>
+                    <td>
+                        <a href="/Chemistry/Chemistry/Task/@group.First().ChemistryTask.Id">
+                            @group.First().ChemistryTask.Title
+                        </a>
+                        
+                    </td>
+
+                    <td>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Название эксперимента
+                                    </th>
+
+                                    <th>
+                                        Пользователь
+                                    </th>
+
+                                    <th>
+                                        Дата выполнения
+                                    </th>
+
+
+
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var experiment in group)
+                                {
+                                    var experimentTitle = string.IsNullOrEmpty(experiment.Title) ? "[Без названия]" : experiment.Title;
+
+                                    <tr>
+                                        <td>
+                                            <a href="/Chemistry/Experiments/Experiment/@experiment.Id">
+                                                @experimentTitle
+                                            </a>
+                                        </td>
+
+                                        <td>
+                                            <a href="/Chemistry/Chemistry/Index/@experiment.Performer.Id">
+                                                @experiment.Performer.Name
+                                            </a>
+                                        </td>
+
+                                        <td>
+                                            @if (experiment.PerformedDate.HasValue)
+                                            {
+                                                @experiment.PerformedDate.Value
+                                            }
+                                            else
+                                            {
+                                                @(new HtmlString("[Не выполнен]"))
+                                            }
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+

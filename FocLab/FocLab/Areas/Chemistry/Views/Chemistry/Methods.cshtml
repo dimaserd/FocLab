@@ -1,0 +1,164 @@
+﻿@using FocLab.Logic
+@model List<FocLab.Model.Entities.Chemistry.ChemistryMethodFile>
+@{
+    Layout = ChemistrySettings.LayoutPath;
+    ViewBag.Title = "Список методов решений";
+
+    var fileUploadId = "fileUploadId";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <a href="/Chemistry/Chemistry" class="btn btn-primary">
+            Задания
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5 class="text-info">
+            <strong>
+                Создать метод решения
+            </strong>
+        </h5>
+    </div>
+
+    <div class="col-md-12">
+        <label class="label label-default">
+            Названия метода решения
+        </label>
+        <div style="height:5px">
+
+        </div>
+        @Html.TextBox("MethodName", "", new { @class = "form-control" })
+
+        <div style="height:10px">
+
+        </div>
+        <input type="file" id="@fileUploadId" />
+    </div>
+
+    
+
+    <div class="col-md-12">
+        <div style="height:10px">
+
+        </div>
+
+        <button class="btn btn-primary" onclick="UploadChemistryFile()">
+            Загрузить
+        </button>
+    </div>
+</div>
+
+<div style="height:20px">
+
+</div>
+
+
+<h4>
+    Список методов решений
+</h4>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Название
+                </th>
+
+                <th>
+                    Файл
+                </th>
+
+                <th>
+                    Дата загрузки
+                </th>
+
+                <th>
+                    Ссылка на файл
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var file in Model)
+            {
+                
+                <tr>
+                    <td>
+                        @file.Name
+                    </td>
+
+                    <td>
+                        @file.FileId
+                    </td>
+
+                    <td>
+                        @file.CreationDate
+                    </td>
+
+                    <td>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="/Files/GetDbFileById/@file.FileId" class="btn btn-success btn-block">
+                                    Скачать файл
+                                </a>
+
+                                <a href="/Files/ReloadFile/@file.FileId" style="margin-top:10px" class="btn btn-block btn-warning">
+                                    Перезалить файл
+                                </a>
+
+                                <a href="/Chemistry/Chemistry/EditMethod/@file.Id" style="margin-top:10px" class="btn btn-block btn-primary">
+                                    Редактировать
+                                </a>
+                            </div>
+
+                            
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+    <script>
+        function UploadChemistryFile() {
+            var file_data = $('#@fileUploadId').prop('files');
+
+            var form_data = new FormData();
+
+            for (var i = 0; i < file_data.length; i++) {
+                form_data.append('model', file_data[i]);
+            }
+
+            form_data.append('MethodName', document.getElementsByName("MethodName")[0].value);
+
+            $.ajax({
+                url: '/Chemistry/Chemistry/UploadMethod',
+                type: 'POST',
+                data: form_data,
+                async: true,
+                cache: false,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    console.log(response);
+
+                    alert(response.Message);
+
+                    if (response.IsSucceeded) {
+                        location.reload();
+                    }
+
+
+                }
+            });
+        }
+    </script>
+}

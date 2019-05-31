@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using Croco.Core.Abstractions;
 
-namespace FocLab.Logic.Settings
+namespace FocLab.Logic.Settings.Statics
 {
     public static class FilesSettings
     {

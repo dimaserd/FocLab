@@ -1,7 +1,7 @@
 ﻿using Croco.Core.Abstractions.Settings;
 using Croco.Core.Settings;
 
-namespace FocLab.Logic.Settings
+namespace FocLab.Logic.Settings.Statics
 {
     public enum ConfirmLoginType
     {

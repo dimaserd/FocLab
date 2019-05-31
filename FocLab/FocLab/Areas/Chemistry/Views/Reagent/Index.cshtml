@@ -1,0 +1,39 @@
+﻿@model List<ChemistryReagentDto>
+@{
+    Layout = ChemistrySettings.LayoutPath;
+    ViewBag.Title = "Список реагентов";
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Название
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach(var reagent in Model)
+            {
+                <tr>
+                    <td>
+                        <a href="/Chemistry/Reagent/Details/@reagent.Id">
+                            @reagent.Name
+                        </a>
+                        
+                    </td>
+                </tr>
+            }
+
+            <tr>
+                <td>
+                    <a href="/Chemistry/Reagent/Create" class="btn btn-success btn-block">
+                        Создать реагент
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

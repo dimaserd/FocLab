@@ -1,0 +1,60 @@
+﻿
+@{
+    Layout = ChemistrySettings.LayoutPath;
+    ViewBag.Title = "Создание реагента";
+}
+
+<h2>Создание нового реагента</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+
+        </thead>
+
+        <tbody>
+            <tr>
+                <th>
+                    Название
+                </th>
+
+                <th>
+                    @Html.TextBox("Name", "", new { @class = "form-control" })
+                </th>
+            </tr>
+
+            <tr>
+                <th colspan="2">
+                    <button class="btn btn-primary btn-block" onclick="CreateReagentHandler()">
+                        <i class="fa fa-plus-circle"></i>
+                        Создать реагент
+                    </button>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        function CreateReagentHandler() {
+            const data = { Name: document.getElementsByName("Name")[0].value };
+
+            $.ajax({
+                type: "POST",
+                data: data,
+                url: "/Chemistry/Reagent/CreateReagent",
+                
+                cache: false,
+                success: function (data) {
+                    console.log(data);
+                    alert(data.Message);
+
+                    if (data.IsSucceeded) {
+                        location.href = '/Chemistry/Reagent/Index';
+                    }
+                }
+            });
+        }
+    </script>
+}

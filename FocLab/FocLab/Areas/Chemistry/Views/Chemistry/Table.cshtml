@@ -1,0 +1,141 @@
+﻿@using Microsoft.AspNetCore.Html
+@model FocLab.Logic.Models.Chemistry_SubstanceCounter
+@{
+    Layout = null;
+
+    var prefix = "";
+
+    var substanceObjectJSON = Model != null? Newtonsoft.Json.JsonConvert.SerializeObject(Model) : "null";
+
+    var tbodySubstancesId = $"{prefix}.tbodySubstances";
+}
+
+<h2>
+    <strong>
+        Вещества учавствующие в реакции
+    </strong>
+    
+    <span class="badge badge-success">
+        @(Model.Substances.Count+1)
+    </span>
+</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Название вещества
+                </th>
+
+                <th>
+                    Масса вещества (г)
+                </th>
+
+                <th>
+                    Молярная масса (г / моль)
+                </th>
+
+                <th>
+                    Коэфициент
+                </th>
+
+                <th>
+                    Действия
+                </th>
+            </tr>
+        </thead>
+
+        <tbody id="@tbodySubstancesId">
+
+
+        </tbody>
+
+        <tr>
+            <td colspan="5">
+                <button class="btn btn-success btn-block" onclick="AddSubstance('@prefix')">
+                    Добавить
+                </button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+
+
+<script>
+
+    var substanceObject = @(new HtmlString(substanceObjectJSON));
+
+    var substance = new SubstanceCounter(substanceObject);
+
+    this.window.substance = substance;
+</script>
+
+<script>
+    function RemoveSubstanceHandler(count) {
+
+        console.log("RemoveSubstanceHandler", count);
+
+        var substanceToDelete = substance.Substances[count];
+
+        
+        var newArray = substance.Substances.filter(x => x != substanceToDelete);
+
+        
+        substance.Substances = newArray;
+        substance.ClearTable();
+        substance.DrawTable();
+        UpdateBtnClickHandler();
+    }
+
+    function EtalonChangedHandler(prefix) {
+
+        if (prefix == "") {
+            window.substance.setProperties();
+            console.log(substance);
+        }
+        
+    }
+
+    function ChangeMassa(count, prefix) {
+
+        var molarMassa = document.getElementsByName(`${prefix}.MolarMassa[${count}]`)[0].value;
+
+        var koef = document.getElementsByName(`${prefix}.Koef[${count}]`)[0].value;
+
+        var massa = substance.getTotalKoef() * koef * molarMassa;
+
+        massa = massa.toFixed(2);
+
+        substance.Substances[count].MolarMassa = molarMassa;
+        substance.Substances[count].Massa = massa;
+        substance.Substances[count].Koef = koef;
+
+        document.getElementsByName(`${prefix}.Massa[${count}]`)[0].value = massa;
+    }
+
+    function WriteMassa(value, count, prefix) {
+        substance.Substances[count].Massa = value;
+    }
+
+    function ChangeName(count, value) {
+        substance.Substances[count].Name = value;
+    }
+
+    function AddSubstance(prefix) {
+
+        if (prefix == "") {
+            substance.AddSubstance(prefix);
+        }
+        
+    }
+
+</script>
+
+<script>
+    class SubstanceChangesHandler {
+
+    }
+</script>

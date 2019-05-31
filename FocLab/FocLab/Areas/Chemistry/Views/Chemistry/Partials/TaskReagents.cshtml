@@ -1,0 +1,239 @@
+﻿@using FocLab.Model.Entities.Chemistry
+
+@{
+    var task = ViewData["task"] as ChemistryTask;
+
+    var reagentSelectList = ViewData["reagentSelectList"] as List<SelectListItem>;
+}
+
+<h2>
+    <strong>
+        Реагенты используемые для задания
+    </strong>
+
+    <span class="badge badge-success">
+        @task.Reagents.Count
+    </span>
+</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Реагент
+                </th>
+
+                <th>
+                    Получено (кг) <i class="fa fa-info-circle" data-toggle="tooltip" title="Сколько килограмм реагента было получено со склада"></i>
+                </th>
+
+                <th>
+                    Сдано (кг) <i class="fa fa-info-circle" data-toggle="tooltip" title="Сколько килограмм реагента было возвращено обратно на склад"></i>
+                </th>
+
+                <th>
+                    Расход (кг) <i class="fa fa-info-circle" data-toggle="tooltip" title="Данную колонку заполнять не нужно, она расчитывается автоматически ( 'Получено' - 'Сдано')"></i>
+                </th>
+
+                <th>
+                    Действия
+                </th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DropDownList("Create.ReagentId", reagentSelectList, new { id = "Create.ReagentId", @class = "form-control" })
+                </td>
+
+                <td>
+                    @Html.TextBox("Create.TakenQuantity", decimal.Zero, new { @class = "form-control", oninput= "ReplaceDotToComma(this)" })
+                </td>
+
+                <td>
+                    @Html.TextBox("Create.ReturnedQuantity", decimal.Zero, new { @class = "form-control", oninput = "ReplaceDotToComma(this)" })
+                </td>
+
+                <td>
+                    @Html.TextBox("Create.SpentQuantity", 0, new { @class = "form-control" })
+                </td>
+
+                <td>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-primary btn-block" onclick="taskReagentWorker.CreateTaskReagent()">
+                                <i class="fa fa-plus-circle"></i>
+                                Создать
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            @foreach(var reagent in task.Reagents)
+            {
+            <tr>
+                <td>
+                    <a href="/Chemistry/Reagent/Details/@reagent.ReagentId" target="_blank">
+                        @reagent.Reagent.Name
+                    </a>
+                </td>
+
+                <td>
+                    @Html.TextBox($"Edit.TakenQuantity.{reagent.ReagentId}", reagent.TakenQuantity, new { @class = "form-control", oninput = "ReplaceDotToComma(this)" })
+                </td>
+
+                <td>
+                    @Html.TextBox($"Edit.ReturnedQuantity.{reagent.ReagentId}", reagent.ReturnedQuantity, new { @class = "form-control", oninput = "ReplaceDotToComma(this)" })
+                </td>
+
+                <td>
+                    @Html.TextBox($"Edit.SomeQuantity.{reagent.ReagentId}", reagent.TakenQuantity - reagent.ReturnedQuantity, new { @class = "form-control" })
+                </td>
+
+                <td>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-warning btn-block" onclick="taskReagentWorker.EditTaskReagent('@reagent.ReagentId')">
+                                <i class="fa fa-refresh"></i>
+                                Обновить данные
+                            </button>
+
+                            <button class="btn btn-danger btn-block" style="margin-top:5px" onclick="taskReagentWorker.RemoveTaskReagent('@reagent.ReagentId')">
+                                <i class="fa fa-trash-o"></i>
+                                Удалить
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            }
+
+
+        </tbody>
+
+    </table>
+</div>
+
+<script>
+    function ReplaceDotToComma(elem) {
+
+        elem.value = elem.value.replace(".", ",");
+        
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        $("#Create.ReagentId").select2({
+            placeholder: "Выберите реагент",
+
+            "language": {
+                "noResults": function() {
+                    return "Реагент не найден.";
+                }
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }
+        });
+    });
+</script>
+
+<script>
+    class TaskReagentWorker {
+        constructor(taskId) {
+            this.TaskId = taskId;
+            this.setHandlers();
+        }
+
+        setHandlers() {
+            this.GetValueByName = function (name) {
+                return document.getElementsByName(name)[0].value;
+            }
+
+            this.CreateTaskReagent = function () {
+                var data = {
+                    TaskId: this.TaskId,
+                    TakenQuantity: this.GetValueByName("Create.TakenQuantity"),
+                    ReturnedQuantity: this.GetValueByName("Create.ReturnedQuantity"),
+                    ReagentId: this.GetValueByName("Create.ReagentId")
+                };
+
+                console.log("CreateTaskReagent", data)
+
+                modalWorker.ShowModal("loadingModal")
+
+                $.ajax({
+                    url: '/Chemistry/Reagent/AddTaskReagent',
+                    type: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    success: function (response) {
+
+                        modalWorker.HideModals();
+                        $("#loadingModal").modal('hide');
+                        alert(response.Message);
+
+                        location.reload();
+                    }
+                });
+            }
+
+            this.EditTaskReagent = function (reagentId) {
+                var data = {
+                    TaskId: this.TaskId,
+                    TakenQuantity: this.GetValueByName(`Edit.TakenQuantity.${reagentId}`),
+                    ReturnedQuantity:  this.GetValueByName(`Edit.ReturnedQuantity.${reagentId}`),
+                    ReagentId: reagentId
+                };
+
+                modalWorker.ShowModal("loadingModal")
+
+                $.ajax({
+                    url: '/Chemistry/Reagent/EditTaskReagent',
+                    type: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    success: function (response) {
+                        modalWorker.HideModals();
+                        $("#loadingModal").modal('hide');
+                        alert(response.Message);
+
+                        location.reload();
+                    }
+                });
+            }
+
+            this.RemoveTaskReagent = function (reagentId) {
+                var data = {
+                    TaskId: this.TaskId,
+                    ReagentId: reagentId
+                };
+
+                modalWorker.ShowModal("loadingModal")
+
+                $.ajax({
+                    url: '/Chemistry/Reagent/RemoveTaskReagent',
+                    type: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    success: function (response) {
+
+                        modalWorker.HideModals();
+                        $("#loadingModal").modal('hide');
+                        alert(response.Message);
+
+                        location.reload();
+                    }
+                });
+            }
+
+        }
+    }
+</script>
+
+<script>
+    var taskReagentWorker = new TaskReagentWorker("@task.Id");
+</script>

@@ -1,4 +1,4 @@
-﻿namespace FocLab.Logic.Settings
+﻿namespace FocLab.Logic.Settings.Statics
 {
     public static class RightsSettings
     {

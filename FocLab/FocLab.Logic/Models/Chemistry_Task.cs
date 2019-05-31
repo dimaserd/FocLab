@@ -41,8 +41,8 @@ namespace FocLab.Logic.Models
             PerformerText = t.PerformerText;
             Title = t.Title;
 
-            MetaEntityId = t.Id;
-
+            Id = t.Id;
+            Deleted = t.Deleted;
             Performer = new Chemistry_Task_Performer
             {
                 UserId = t.PerformerUser.Id,
@@ -56,20 +56,8 @@ namespace FocLab.Logic.Models
             };
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public Chemistry_Task()
-        {
 
-        }
-
-        
-        
-
-        
-
-        void SetObjectJSONProperties(string objJson)
+        void SetObjectJsonProperties(string objJson)
         {
             var objectJson = Tool.JsonConverter.Deserialize<ChemistryTaskObjectJson>(objJson);
 
@@ -116,7 +104,12 @@ namespace FocLab.Logic.Models
         }
 
         #endregion
-        
+
+        /// <summary>
+        /// Флаг удаленности
+        /// </summary>
+        public bool Deleted { get; set; }
+
 
         /// <summary>
         /// 
@@ -125,9 +118,9 @@ namespace FocLab.Logic.Models
 
 
         /// <summary>
-        /// 
+        /// Идентификатор задания
         /// </summary>
-        public string MetaEntityId { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Текст задачи

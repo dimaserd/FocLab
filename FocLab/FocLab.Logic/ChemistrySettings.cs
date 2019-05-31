@@ -8,6 +8,6 @@
         /// <summary>
         /// Путь к мастер-странице
         /// </summary>
-        public const string LayoutPath = "~/Areas/Chemistry/Views/Layout/_Layout.cshtml";
+        public const string LayoutPath = "~/Metronic5.5/Views/Layout/_Layout.cshtml";
     }
 }

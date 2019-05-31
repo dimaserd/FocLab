@@ -6,6 +6,7 @@ using Croco.Core.Common.Models;
 using Croco.Core.Logic.Models.Files;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Settings;
+using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities;
 
 namespace FocLab.Logic.Extensions

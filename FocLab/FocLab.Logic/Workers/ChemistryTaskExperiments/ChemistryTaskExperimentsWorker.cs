@@ -12,6 +12,7 @@ using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models;
 using FocLab.Logic.Settings;
+using FocLab.Logic.Settings.Statics;
 using FocLab.Logic.Workers.Users;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Chemistry;

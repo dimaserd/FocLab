@@ -1,0 +1,42 @@
+﻿@using FocLab.Logic
+@model FocLab.Model.Entities.Chemistry.ChemistryMethodFile
+@{
+    Layout = ChemistrySettings.LayoutPath;
+    ViewBag.Title = "Редактирование метода";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <a href="/Chemistry/Chemistry" class="btn btn-primary">
+            Задания
+        </a>
+    </div>
+</div>
+
+<div style="height:20px">
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>
+                Название
+            </th>
+
+            <th>
+                @Html.TextBox("name", Model.Name, new { @class = "form-control" })
+            </th>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <button class="btn btn-success btn-block" onclick="alert('Функция пока не реализована')">
+                    Обновить данные
+                </button>
+            </th>
+        </tr>
+    </table>
+</div>
+
+

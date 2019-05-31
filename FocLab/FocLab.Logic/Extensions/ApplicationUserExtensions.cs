@@ -5,7 +5,7 @@ using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Enumerations;
-using FocLab.Logic.Settings;
+using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
 

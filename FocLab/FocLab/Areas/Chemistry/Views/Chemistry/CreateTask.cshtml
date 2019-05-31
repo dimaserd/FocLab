@@ -1,0 +1,103 @@
+﻿@using FocLab.Logic
+@model FocLab.Logic.Models.Chemistry_CreateTask
+@{
+    Layout = ChemistrySettings.LayoutPath;
+    ViewBag.Title = "Создать задание";
+
+    var fileMethodsSelectList = ViewData["fileMethodsSelectList"] as List<SelectListItem>;
+
+    var usersSelectList = ViewData["usersSelectList"] as List<SelectListItem>;
+}
+
+<div style="height:20px">
+
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <a href="/Chemistry/Chemistry" class="btn btn-primary" style="padding-bottom:10px">
+            Список заданий
+        </a> |
+
+        <a href="/Chemistry/Chemistry/Methods" class="btn btn-primary">
+            Список методов решений
+        </a>
+    </div>
+</div>
+
+<h2>
+    Создание задачи для исполнителя
+</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <div>
+            @Html.HiddenFor(a => a.AdminId)
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.FileMethodId)
+                @Html.DropDownListFor(x => x.FileMethodId, fileMethodsSelectList, new { @class = "form-control" })
+
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Title)
+                @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.DeadLineDate)
+                @Html.TextBoxFor(x => x.DeadLineDate, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.PerformerId)
+
+                @Html.DropDownListFor(x => x.PerformerId, usersSelectList, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Quality)
+                @Html.TextBoxFor(x => x.Quality, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Quantity)
+                @Html.TextBoxFor(x => x.Quantity, new { @class = "form-control" })
+            </div>
+
+        </div>
+
+        <button class="btn btn-success btn-block" onclick="CreateTask()">Создать</button>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        var date = new Date();
+
+        utils.setDatePicker("input[name='DeadLineDate']");
+
+        function CreateTask() {
+            var data = {
+                AdminId: "",
+                FileMethodId: "",
+                Title: "",
+                DeadLineDate: "",
+                PerformerId: "",
+                Quality: "",
+                Quantity: ""
+            };
+
+            data = CollectData(data);
+            data.DeadLineDate = requester.ParseDate(data.DeadLineDate);
+
+            requester.SendPostRequestWithAnimation("/Api/Chemistry/Tasks/Create", data, x => {
+                if (x.IsSucceeded) {
+                    location.href = "/Chemistry/Chemistry/Index";
+                }
+            });
+        }
+    </script>
+}

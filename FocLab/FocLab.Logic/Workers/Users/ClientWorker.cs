@@ -7,6 +7,7 @@ using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
 using FocLab.Logic.Settings;
+using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
 using Microsoft.EntityFrameworkCore;

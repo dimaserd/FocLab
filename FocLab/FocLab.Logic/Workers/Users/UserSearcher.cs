@@ -10,6 +10,7 @@ using Croco.Core.Search;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Settings;
+using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
