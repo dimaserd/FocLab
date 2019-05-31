@@ -1,7 +1,8 @@
-﻿@using FocLab.Model.Entities.Chemistry
+﻿@using FocLab.Logic
+@using FocLab.Model.Entities.Chemistry
 @model FocLab.Model.Entities.Chemistry.ChemistryTask
 @{
-    Layout = AdminUiSettings.LayoutPath;
+    Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Редактирование задания";
 
     var fileMethodsSelectList = ViewData["fileMethodsSelectList"] as List<SelectListItem>;

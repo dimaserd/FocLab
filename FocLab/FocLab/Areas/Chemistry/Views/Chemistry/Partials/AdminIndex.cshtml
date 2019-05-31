@@ -187,10 +187,10 @@
             {
                 var _class = task.IsPerformedInTime ? "success" : "danger";
 
-                <tr id="@task.MetaEntityDTOResponse.Id" class="@_class performed-chemistry-task">
+                <tr id="@task.Id" class="@_class performed-chemistry-task">
 
                     <td>
-                        <a href="/Chemistry/Chemistry/Task/@task.MetaEntityId">
+                        <a href="/Chemistry/Chemistry/Task/@task.Id">
                             @task.Title
                         </a>
                     </td>
@@ -303,13 +303,13 @@
                     <td>
                         @if (!string.IsNullOrEmpty(task.Title))
                         {
-                            <a href="/Chemistry/Chemistry/Task/@task.MetaEntityId">
+                            <a href="/Chemistry/Chemistry/Task/@task.Id">
                                 @task.Title
                             </a>
                         }
                         else
                         {
-                            <a href="/Chemistry/Chemistry/Task/@task.MetaEntityId">
+                            <a href="/Chemistry/Chemistry/Task/@task.Id">
                                 [Название не указано]
                             </a>
                         }

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Html
+<!DOCTYPE html>
 @{
     var wrap = !(ViewData["NoWrap"] is bool noWrap) || !noWrap;
 
@@ -66,7 +67,6 @@
     <link rel="shortcut icon" href="/Metronic5.5/assets/demo/default/media/img/logo/favicon.ico" />
 </head>
 <!-- end::Head -->
-
 <!-- begin::Body -->
 <body style="font-family: 'MyWebFont', Fallback, sans-serif;" class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--fixed m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
 
