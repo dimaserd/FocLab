@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
 using Croco.Core.Logic.Models.Files;
@@ -61,9 +60,7 @@ namespace FocLab
 
             SetCrocoApplication(services);
 
-            //TODO Implement Hangfire
-            //services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString(ChemistryDbContext.ConnectionString)));
-
+            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString(ChemistryDbContext.ConnectionString)));
 
             services.AddTransient<ApplicationUserManager>();
             services.AddTransient<ApplicationSignInManager>();
@@ -106,8 +103,6 @@ namespace FocLab
                     }
                 });
                 c.EnableAnnotations();
-                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "CrocoShop.Api.xml"));
-                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "CrocoShop.Logic.xml"));
             });
 
             services.AddSignalR().AddJsonProtocol(options => {

@@ -4,10 +4,10 @@
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Задание";
 
-    string viewsChemistry = "~/Areas/Chemistry/Views/Chemistry";
+    const string viewsChemistry = "~/Areas/Chemistry/Views/Chemistry";
 }
 
-@Html.Partial($"{viewsChemistry}/Scripts/SubstanceScripts.cshtml")
+@await Html.PartialAsync($"{viewsChemistry}/Scripts/SubstanceScripts.cshtml")
 
 <div style="height:20px">
 

@@ -17,7 +17,6 @@ using FocLab.Logic.Workers.ChemistryTasks;
 using FocLab.Model.Contexts;
 using FocLab.Model.Enumerations;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
