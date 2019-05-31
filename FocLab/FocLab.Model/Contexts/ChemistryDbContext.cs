@@ -2,6 +2,7 @@
 using Croco.Core.Loggers;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace FocLab.Model.Contexts
 {
@@ -10,6 +11,20 @@ namespace FocLab.Model.Contexts
     /// </summary>
     public class ChemistryDbContext : ApplicationDbContext
     {
+        public const string ServerConnection = "ServerConnection";
+
+        public const string LocalConnection = "DefaultConnection";
+
+        public static string ConnectionString => ServerConnection;
+
+        public static ChemistryDbContext Create(IConfiguration configuration)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<ChemistryDbContext>();
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString(ConnectionString));
+
+            return new ChemistryDbContext(optionsBuilder.Options);
+        }
+
         /// <summary>
         /// Химические задания
         /// </summary>
