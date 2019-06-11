@@ -22,7 +22,6 @@
     <Folder Include="Areas\Chemistry\Models\" />
     <Folder Include="Areas\Chemistry\Views\" />
     <Folder Include="Implementations\" />
-    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>

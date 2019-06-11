@@ -1,0 +1,45 @@
+﻿class AjaxLoader {
+
+    static InitAjaxLoads = function () {
+        const elems = document.getElementsByClassName("ajax-load-html");
+        for (let i = 0; i < elems.length; i++) {
+            AjaxLoader.LoadInnerHtmlToElement(elems[i], () => 2);
+        }
+    }
+
+
+    static LoadInnerHtmlToElement = function (element: Element, onSuccessFunc: Function) : void {
+        var link = $(element).data('ajax-link');
+        var method = $(element).data('ajax-method');
+        const data = $(element).data('request-data');
+        var onSuccessScript = $(element).data('on-finish-script');
+
+        if (method == null) {
+            method = "GET";
+        }
+        
+        $.ajax({
+            type: method,
+            url: link,
+            cache: false,
+            data: data,
+            success: function (response) {
+                $(element).html(response);
+                $(element).removeClass("ajax-load-html");
+                if (onSuccessScript) {
+                    eval(onSuccessScript);
+                }
+                if (onSuccessFunc) {
+                    onSuccessFunc();
+
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(`Произошла ошибка запроса ${link}`);
+                console.log(xhr);
+            }
+        });
+    }
+}
+
+AjaxLoader.InitAjaxLoads();
