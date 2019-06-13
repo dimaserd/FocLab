@@ -1,5 +1,6 @@
 ﻿using System;
 using Croco.Core.Loggers;
+using FocLab.Model.Entities;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -64,6 +65,19 @@ namespace FocLab.Model.Contexts
         /// Задания на день
         /// </summary>
         public DbSet<ChemistryDayTask> ChemistryDayTasks { get; set; }
+
+        public DbSet<DbFile> DbFiles { get; set; }
+
+        public DbSet<ApplicationDbFileHistory> DbFileHistory { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            ChemistryTaskExperimentFile.OnModelCreating(builder);
+            ChemistryTaskReagent.OnModelCreating(builder);
+            ChemistryTaskDbFile.OnModelCreating(builder);
+
+            base.OnModelCreating(builder);
+        }
 
         public ExceptionLogger GetLogger()
         {

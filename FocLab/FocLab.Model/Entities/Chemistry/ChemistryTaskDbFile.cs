@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using FocLab.Model.Enumerations;
+using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Model.Entities.Chemistry
 {
@@ -12,8 +12,6 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Идентификатор задания
         /// </summary>
-        [Key]
-        [Column(Order = 0)]
         [ForeignKey(nameof(ChemistryTask))]
         public string ChemistryTaskId { get; set; }
 
@@ -25,8 +23,6 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Идентификатор файла
         /// </summary>
-        [Key]
-        [Column(Order = 1)]
         [ForeignKey(nameof(File))]
         public int FileId { get; set; }
 
@@ -39,5 +35,11 @@ namespace FocLab.Model.Entities.Chemistry
         /// Тип
         /// </summary>
         public ChemistryTaskDbFileType Type { get; set; }
+
+        public static void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ChemistryTaskDbFile>()
+                .HasKey(p => new { p.ChemistryTaskId, p.FileId });
+        }
     }
 }

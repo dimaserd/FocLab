@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FocLab.Model.Entities.Chemistry
@@ -11,9 +11,7 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Идентификатор задания
         /// </summary>
-        [Key]
         [ForeignKey(nameof(Task))]
-        [Column(Order = 0)]
         public string TaskId { get; set; }
 
         /// <summary>
@@ -24,9 +22,7 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Идентификатор реагента
         /// </summary>
-        [Key]
         [ForeignKey(nameof(Reagent))]
-        [Column(Order = 1)]
         public string ReagentId { get; set; }
 
         /// <summary>
@@ -43,5 +39,11 @@ namespace FocLab.Model.Entities.Chemistry
         /// Колличество которое вернули
         /// </summary>
         public decimal ReturnedQuantity { get; set; }
+
+        public static void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ChemistryTaskReagent>()
+                .HasKey(p => new { p.TaskId, p.ReagentId });
+        }
     }
 }

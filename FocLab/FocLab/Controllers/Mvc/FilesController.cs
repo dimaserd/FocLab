@@ -5,9 +5,11 @@ using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
 using Croco.Core.Model.Entities.Application;
 using FocLab.Controllers.Base;
+using FocLab.Logic.Implementations;
 using FocLab.Logic.Services;
 using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Controllers.Mvc
 {
@@ -20,6 +22,7 @@ namespace FocLab.Controllers.Mvc
         public FilesController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
         {
         }
+
 
         /// <summary>
         /// Возвращает файл по указанному идентификатору
@@ -44,7 +47,7 @@ namespace FocLab.Controllers.Mvc
 
             if (System.IO.File.Exists(filePath))
             {
-                return File(System.IO.File.ReadAllBytes(filePath), MimeMapping.GetMimeMapping(filePath), Path.GetFileName(filePath));
+                return File(System.IO.File.ReadAllBytes(filePath), FocLabWebApplication.GetMimeMapping(filePath), Path.GetFileName(filePath));
             }
 
             var file = await Context.DbFiles.FirstOrDefaultAsync(x => x.Id == id);
@@ -74,7 +77,7 @@ namespace FocLab.Controllers.Mvc
         {
             if (file != null)
             {
-                return File(file.FileData, MimeMapping.GetMimeMapping(file.FileName), file.FileName);
+                return File(file.FileData, FocLabWebApplication.GetMimeMapping(file.FileName), file.FileName);
             }
 
             return HttpNotFound();
