@@ -1,9 +1,10 @@
-﻿@using CrocoShop.Logic.Services
-@inject ApplicationUserManager userManager
+﻿@using FocLab.Extensions
+@using FocLab.Logic.Services
+@inject ApplicationUserManager UserManager
 @{
     Layout = null;
 
-    var user = userManager.GetCachedUser(User);
+    var user = UserManager.GetCachedUser(User);
 }
 
 <script src="~/Metronic5/assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
