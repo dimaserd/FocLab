@@ -1,0 +1,212 @@
+﻿@{ 
+    Layout = null;
+
+    var partialsDir = "~/Views/Metronic5/Partials";
+
+    var includeOwl = true;
+
+    var myTitle = ViewData["MyTitle"] != null? (string)ViewData["MyTitle"] : "";
+
+    var notificationsPlaceId = "notificationsPlaceId";
+
+    var title = string.IsNullOrEmpty(myTitle) ? $"{ViewBag.Title} - {MainSettings.ApplicationName}" : myTitle;
+
+    var template = WebAppSettings.TemplateName;
+}
+
+<!DOCTYPE html>
+<!-- 
+Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 4
+Author: KeenThemes
+Website: http://www.keenthemes.com/
+Contact: support@keenthemes.com
+Follow: www.twitter.com/keenthemes
+Dribbble: www.dribbble.com/keenthemes
+Like: www.facebook.com/keenthemes
+Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
+Renew Support: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
+License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
+-->
+<html lang="en" >
+	<!-- begin::Head -->
+<head>
+    <meta charset="utf-8" />
+    <title>
+        @title
+    </title>
+    <meta name="description" content="Latest updates and statistic charts">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--begin::Web font -->
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <script>
+        WebFont.load({
+            google: { "families": ["Poppins:300,400,500,600,700", "Roboto:300,400,500,600,700"] },
+            active: function () {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+    <link href="~/Plugins/JqueryUI(slider)/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+    <!--end::Web font -->
+    <!--begin::Base Styles -->
+    <!--begin::Page Vendors -->
+    <link href="~/Metronic5/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
+    <!--end::Page Vendors -->
+    <link href="~/Metronic5/assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/Metronic5/assets/demo/demo5/base/style.bundle.css" rel="stylesheet" type="text/css" />
+    <!--end::Base Styles -->
+
+    <link rel="shortcut icon" href="~/Metronic5/assets/demo/demo5/media/img/logo/favicon.ico" />
+
+    @if (includeOwl)
+    {
+
+        <link href="~/Plugins/NewOwlCarousel/css/owl.carousel.min.css" rel="stylesheet" type="text/css" />
+        <link href="~/Plugins/NewOwlCarousel/css/owl.theme.default.min.css" rel="stylesheet" type="text/css" />
+        <!--End OWL Carousel-->
+    }
+    
+</head>
+	<!-- end::Head -->
+    <!-- end::Body -->
+<body class="m-page--wide m-header--fixed m-header--fixed-mobile m-footer--push m-aside--offcanvas-default">
+
+    @await Html.RenderApplicationFilesAsync("Catalogue")
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
+    <style>
+
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        @@media screen and (max-device-width: 768px) {
+            input[type="color"],
+            input[type="date"],
+            input[type="datetime"],
+            input[type="datetime-local"],
+            input[type="email"],
+            input[type="month"],
+            input[type="number"],
+            input[type="password"],
+            input[type="search"],
+            input[type="tel"],
+            input[type="text"],
+            input[type="time"],
+            input[type="url"],
+            input[type="week"],
+            select:focus,
+            textarea {
+                font-size: 16px !important;
+            }
+        }
+    </style>
+
+    <!-- begin:: Page -->
+    <div class="m-grid m-grid--hor m-grid--root m-page">
+
+        <script>
+            function OnLoadImgErrorHandler(obj) {
+                console.log("Ошибка загрузки изображения ", obj);
+
+                const safeImgLink = obj.getAttribute('data-safe-img-link');
+
+                obj.setAttribute("src", safeImgLink);
+            }
+        </script>
+
+        <!-- begin::Header -->
+        @await Html.PartialAsync($"{partialsDir}/Header.cshtml")
+        <!-- end::Header -->
+        <!-- begin::Body -->
+        <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop 	m-container m-container--responsive m-container--xxl m-page__container m-body">
+            <div class="m-grid__item m-grid__item--fluid m-wrapper">
+
+                <div class="m-content">
+
+                    <div id="@notificationsPlaceId">
+
+                    </div>
+
+                    @RenderBody()
+
+                </div>
+            </div>
+        </div>        <!-- begin::Footer -->
+        <footer class="m-grid__item m-footer ">
+            <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
+                <div class="m-footer__wrapper">
+                    <div class="m-stack m-stack--flex-tablet-and-mobile m-stack--ver m-stack--desktop">
+                        <div class="m-stack__item m-stack__item--left m-stack__item--middle m-stack__item--last">
+                            <span class="m-footer__copyright">
+                                @DateTime.Now.Year &copy; @MainSettings.ApplicationName
+
+                            </span>
+                        </div>
+                        <div class="m-stack__item m-stack__item--right m-stack__item--middle m-stack__item--first">
+                            <ul class="m-footer__nav m-nav m-nav--inline m--pull-right">
+                                <li class="m-nav__item">
+                                    <a href="#" class="m-nav__link">
+                                        <span class="m-nav__link-text">
+                                            About
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="m-nav__item">
+                                    <a href="#" class="m-nav__link">
+                                        <span class="m-nav__link-text">
+                                            Privacy
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="m-nav__item">
+                                    <a href="#" class="m-nav__link">
+                                        <span class="m-nav__link-text">
+                                            T&C
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="m-nav__item">
+                                    <a href="#" class="m-nav__link">
+                                        <span class="m-nav__link-text">
+                                            Purchase
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="m-nav__item m-nav__item--last">
+                                    <a href="#" class="m-nav__link" data-toggle="m-tooltip" title="Support Center" data-placement="left">
+                                        <i class="m-nav__link-icon flaticon-info m--icon-font-size-lg3"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- end::Footer -->
+        <!-- end::Body -->
+    </div>
+    <!-- end:: Page -->
+    <!-- begin::Scroll Top -->
+    <div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
+        <i class="la la-arrow-up"></i>
+    </div>
+    <!-- end::Scroll Top -->
+    <!--begin::Base Scripts -->
+
+
+    @await Html.PartialAsync("~/Views/Metronic5/Partials/Metronic5Scripts.cshtml")
+
+    @*<script src="~/js/Hubs/CartHub.js"></script>*@
+
+    @await Html.PartialAsync("~/Areas/Admin/Views/UserNotifications/Scripts.cshtml")
+
+    @await RenderSectionAsync("scripts", false)
+    <!--Мои добавки-->
+</body>
+	<!-- end::Body -->
+
+    
+</html>

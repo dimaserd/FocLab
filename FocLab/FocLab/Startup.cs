@@ -241,6 +241,7 @@ namespace FocLab
             CrocoApp.Application = application;
 
             services.AddSingleton(CrocoApp.Application);
+
         }
     }
 }
