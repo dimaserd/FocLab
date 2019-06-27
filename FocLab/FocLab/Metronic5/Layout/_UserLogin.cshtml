@@ -1,10 +1,8 @@
-﻿@using FocLab.Logic.Extensions
-@using FocLab.Logic.Services
-@inject ApplicationUserManager userManager
+﻿@inject ApplicationUserManager UserManager
 @{
     Layout = null;
 
-    var user = userManager.GetCachedUser(User);
+    var user = UserManager.GetCachedUser(User);
 
     var userAvatarLink = user.GetAvatarLink(ImageSizeType.Icon);
 }

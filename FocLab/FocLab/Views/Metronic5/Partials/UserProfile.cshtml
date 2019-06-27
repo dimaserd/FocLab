@@ -1,12 +1,10 @@
-﻿@using CrocoShop.Logic.Extensions
-@using CrocoShop.Logic.Services
-@inject ApplicationUserManager userManager
+﻿@inject ApplicationUserManager UserManager
 @{
     Layout = null;
 
     var _class = "d-xs-none";
 
-    var user = await userManager.GetUserAsync(User);
+    var user = await UserManager.GetUserAsync(User);
 
     var userAvatarLink = user.GetAvatarLink(ImageSizeType.Icon);
 }

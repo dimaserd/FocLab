@@ -16,7 +16,12 @@ namespace FocLab.Model.Contexts
 
         public const string LocalConnection = "DefaultConnection";
 
+#if DEBUG
+        public static string ConnectionString => LocalConnection;
+
+#else
         public static string ConnectionString => ServerConnection;
+#endif
 
         public static ChemistryDbContext Create(IConfiguration configuration)
         {

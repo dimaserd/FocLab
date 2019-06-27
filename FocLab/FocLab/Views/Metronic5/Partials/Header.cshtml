@@ -36,21 +36,6 @@
                                     }
                                 }
 
-                                <li class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center 	m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true">
-                                    <a href="#" class="m-nav__link m-dropdown__toggle" id="m_topbar_notification_icon">
-                                        <span class="m-nav__link-badge m-badge m-badge--dot m-badge--dot-small m-badge--danger">
-                                        </span>
-                                        <span class="m-nav__link-icon">
-                                            <span class="m-nav__link-icon-wrapper">
-                                                <i class="flaticon-cart"></i>
-                                            </span>
-                                        </span>
-                                    </a>
-                                    <div id="miniCartDiv" class="m-dropdown__wrapper">
-                                        @await Html.PartialAsync(CartSettings.MiniCartViewPath, model: null)
-                                    </div>
-                                </li>
-
                                 @await Html.PartialAsync("~/Views/Metronic5/Partials/UserProfile.cshtml")
                             </ul>
                         </div>
