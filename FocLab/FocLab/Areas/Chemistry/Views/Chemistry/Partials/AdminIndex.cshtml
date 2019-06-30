@@ -1,7 +1,7 @@
 ﻿@using FocLab.Logic.EntityDtos.Users.Default
 @using Microsoft.AspNetCore.Html
 @using Newtonsoft.Json
-@model List<FocLab.Logic.Models.Chemistry_Task>
+@model List<FocLab.Logic.Models.ChemistryTaskModel>
 @{
     Layout = null;
 
@@ -11,7 +11,7 @@
 
     var isEmailSet = user != null;
 
-    var tasks = isEmailSet ? Model.Where(x => x.PerformerId == user.Id).ToList() : Model;
+    var tasks = isEmailSet ? Model.Where(x => x.PerformerUser.UserId == user.Id).ToList() : Model;
 
     var sortSelect = new List<SelectListItem>
     {
@@ -65,17 +65,6 @@
 
 <div class="table-responsive">
     <table class="table table-bordered">
-
-
-        @*<tr>
-            <th>
-                Исполнитель
-            </th>
-
-            <th>
-                @Html.DropDownList(name: "User", selectList: usersSelectList, htmlAttributes: new { id = "User", @class = "form-control" })
-            </th>
-        </tr>*@
 
         <tr>
             <th>

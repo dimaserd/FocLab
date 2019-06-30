@@ -6,6 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Chemistry\Data\**" />
+    <Compile Remove="Areas\Chemistry\Models\**" />
+    <Content Remove="Areas\Chemistry\Data\**" />
+    <Content Remove="Areas\Chemistry\Models\**" />
+    <EmbeddedResource Remove="Areas\Chemistry\Data\**" />
+    <EmbeddedResource Remove="Areas\Chemistry\Models\**" />
+    <None Remove="Areas\Chemistry\Data\**" />
+    <None Remove="Areas\Chemistry\Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.4" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.7.4" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -18,8 +29,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\Chemistry\Controllers\" />
-    <Folder Include="Areas\Chemistry\Data\" />
-    <Folder Include="Areas\Chemistry\Models\" />
     <Folder Include="Areas\Chemistry\Views\" />
     <Folder Include="Implementations\" />
   </ItemGroup>

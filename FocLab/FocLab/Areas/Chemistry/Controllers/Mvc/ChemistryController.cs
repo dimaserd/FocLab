@@ -85,12 +85,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         /// <returns></returns>
         public async Task<ActionResult> Task(string id)
         {
-            var t = await ChemistryTasksWorker.GetChemistryTaskByIdWithExperimentsAsync(id);
-
-            var task = t.Item1;
-
-            ViewData["task"] = task;
-            ViewData["experiments"] = t.Item2;
+            var task = await ChemistryTasksWorker.GetChemistryTaskByIdAsync(id);
 
             var reagents = await ChemistryReagentsWorker.GetReagentsAsync();
 
@@ -107,12 +102,12 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
                 return RedirectToAction("Index");
             }
 
-            if (!User.HasRight(UserRight.Admin) && !User.HasRight(UserRight.SuperAdmin) && task.PerformerUserId != UserId)
+            if (!User.HasRight(UserRight.Admin) && !User.HasRight(UserRight.SuperAdmin) && task.PerformerUser.UserId != UserId)
             {
                 return RedirectToAction("Index");
             }
 
-            return View(new Chemistry_Task(task));
+            return View(task);
         }
 
         /// <summary>

@@ -138,8 +138,4 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\Account\" />
-  </ItemGroup>
-
 </Project>

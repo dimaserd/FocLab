@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions.ContextWrappers;
@@ -8,7 +7,6 @@ using FocLab.Logic.Models;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace FocLab.Logic.Workers.ChemistryTasks
 {
@@ -35,7 +33,9 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 return new BaseApiResponse(false, "Вы не подали модель файла");
             }
 
-            var task = await GetChemistryTaskByIdAsync(model.TaskId);
+            var repo = GetRepository<ChemistryTask>();
+
+            var task = await repo.Query().FirstOrDefaultAsync(x => x.Id == model.TaskId);
 
             if (task == null)
             {
@@ -108,39 +108,21 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task<ChemistryTask> GetChemistryTaskByIdAsync(string id)
+        public Task<ChemistryTaskModel> GetChemistryTaskByIdAsync(string id)
         {
-            return Context.ChemistryTasks
-                    .Include(x => x.PerformerUser)
-                    .Include(x => x.PerformerUser)
-                    .Include(x => x.ChemistryMethodFile)
-                    .Include(x => x.Files)
-                    .Include(x => x.Reagents.Select(r => r.Reagent))
-                    .FirstOrDefaultAsync(x => x.Id == id);
+            return GetRepository<ChemistryTask>().Query()
+                .Select(ChemistryTaskModel.SelectExpression)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        /// <summary>
-        /// Получить задания с экспериментами
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task<Tuple<ChemistryTask, List<ChemistryTaskExperiment>>> GetChemistryTaskByIdWithExperimentsAsync(string id)
-        {
-            var taskFromDb = await GetChemistryTaskByIdAsync(id);
-
-            var experimentsFromDb = await Context.ChemistryTaskExperiments
-                .Include(x => x.Performer).Where(x => x.ChemistryTaskId == id).ToListAsync();
-
-            return new Tuple<ChemistryTask, List<ChemistryTaskExperiment>>(taskFromDb, experimentsFromDb);
-        }
-
+        
         /// <summary>
         /// Получить все задания
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ChemistryTask>> GetAllTasksAsync()
+        public Task<List<ChemistryTaskModel>> GetAllTasksAsync()
         {
-            return await Context.ChemistryTasks.ToListAsync();
+            return GetRepository<ChemistryTask>().Query().Select(ChemistryTaskModel.SelectExpression).ToListAsync();
         }
 
         /// <summary>
@@ -150,24 +132,11 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         ///     <name>myDb</name>
         /// </param>
         /// <returns></returns>
-        public async Task<List<Chemistry_Task>> GetNotDeletedTasksAsync()
+        public Task<List<ChemistryTaskModel>> GetNotDeletedTasksAsync()
         {
-            var tasks = await Context.ChemistryTasks
-                .Include(x => x.PerformerUser)
-                .Include(x => x.AdminUser)
-                .Include(x => x.Files)
-                .Where(x => x.Deleted == false).ToListAsync();
-
-            var tasksWithoutJson = tasks.Where(x => x.SubstanceCounterJson == null)
-                .ToList();
-
-            tasksWithoutJson.ForEach(x => x.SubstanceCounterJson = JsonConvert.SerializeObject(Chemistry_SubstanceCounter.GetDefaultCounter()));
-
-            var result = tasks
-                .Select(x => new Chemistry_Task(x))
-                .ToList();
-
-            return result;
+            return GetRepository<ChemistryTask>().Query()
+                .Where(x => x.Deleted == false)
+                .Select(ChemistryTaskModel.SelectExpression).ToListAsync();
         }
 
         /// <inheritdoc />

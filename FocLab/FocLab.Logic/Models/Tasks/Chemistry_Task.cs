@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 namespace FocLab.Logic.Models
 {
+
     /// <summary>
     /// 
     /// </summary>

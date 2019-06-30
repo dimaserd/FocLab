@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace FocLab.Logic.Models.Methods
+{
+    public class ChemistryMethodFileModel
+    {
+        /// <summary>
+        /// Идентификатор
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Название
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Идентификатор файла
+        /// </summary>
+        public int FileId { get; set; }
+
+
+        /// <summary>
+        /// Дата создания
+        /// </summary>
+        public DateTime CreationDate { get; set; }
+    }
+}

@@ -48,7 +48,7 @@ namespace FocLab.Model.Entities.Chemistry
 
 
         /// <summary>
-        /// Исполнитель кому назначено задание (StringProperty2)
+        /// Исполнитель кому назначено задание
         /// </summary>
         [ForeignKey("PerformerUser")]
         public string PerformerUserId { get; set; }
