@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FocLab.Logic.Models.Methods
 {
@@ -26,5 +24,10 @@ namespace FocLab.Logic.Models.Methods
         /// Дата создания
         /// </summary>
         public DateTime CreationDate { get; set; }
+
+        public string GetLinkToFile()
+        {
+            return $"/Files/GetDbFileById/{FileId}";
+        }
     }
 }

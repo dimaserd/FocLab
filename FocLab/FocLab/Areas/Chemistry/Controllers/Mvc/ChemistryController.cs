@@ -107,6 +107,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
                 return RedirectToAction("Index");
             }
 
+            ViewData["task"] = task;
             return View(task);
         }
 

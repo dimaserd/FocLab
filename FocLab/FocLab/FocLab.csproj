@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\Chemistry\Controllers\" />
-    <Folder Include="Areas\Chemistry\Views\" />
     <Folder Include="Implementations\" />
   </ItemGroup>
 

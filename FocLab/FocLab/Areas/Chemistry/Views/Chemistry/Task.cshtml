@@ -1,31 +1,29 @@
 ﻿@using FocLab.Logic
 @using FocLab.Logic.Extensions
-@using FocLab.Logic.Models
-@using FocLab.Model.Entities.Chemistry
 @using FocLab.Model.Enumerations
-@model FocLab.Logic.Models.Chemistry_Task
+@model FocLab.Logic.Models.Tasks.ChemistryTaskModel
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Задание";
 
-    var files = new[]
+    var types = new[]
     {
-        new Tuple<string, string, int, int>("File1", "Файл1", Model.File1.FileId, 1),
-
-        new Tuple<string, string, int, int>("File2","Файл2", Model.File2.FileId, 2),
-
-        new Tuple<string,string, int, int>("File3","Файл3", Model.File3.FileId, 3),
-
-        new Tuple<string,string, int, int>("File4","Файл4", Model.File4.FileId,4),
+        ChemistryTaskDbFileType.File1,
+        ChemistryTaskDbFileType.File2,
+        ChemistryTaskDbFileType.File3,
+        ChemistryTaskDbFileType.File4
     };
 
     var isNotAdmin = !User.HasRight(UserRight.Admin) && !User.HasRight(UserRight.SuperAdmin);
 
     var userId = User.Identity.GetUserId();
 
-    var experiments = ViewData["experiments"] as List<ChemistryTaskExperiment>;
-
     var viewsChemistry = "~/Areas/Chemistry/Views/Chemistry";
+
+    int ToInt(ChemistryTaskDbFileType @enum)
+    {
+        return (int)@enum;
+    }
 }
 
 @await Html.PartialAsync($"{viewsChemistry}/Scripts/SubstanceScripts.cshtml")
@@ -83,7 +81,6 @@
 
 <hr />
 
-
 <h3>
     Задание <strong>@Model.Title</strong>
 </h3>
@@ -124,20 +121,22 @@
                 </thead>
 
                 <tbody>
-                    @foreach (var file in files)
+                    @foreach (var type in types)
                     {
+                        var file = Model.Files.FirstOrDefault(x => x.Type == type);
+
                         <tr>
                             <td>
-                                @if (file.Item3 == 0)
+                                @if (file != null)
                                 {
                                     <strong>
-                                        <span class="text-danger">@file.Item2 не загружен</span>
+                                        <span class="text-danger">@type.ToDisplayName() не загружен</span>
                                     </strong>
                                 }
                                 else
                                 {
                                     <strong>
-                                        <span class="text-success">@file.Item2 уже загружен</span>
+                                        <span class="text-success">@type.ToDisplayName() уже загружен</span>
                                     </strong>
                                 }
 
@@ -148,7 +147,7 @@
                             {
                                 <td>
 
-                                    <input id="@file.Item4" type="file" name="@file.Item4" />
+                                    <input id="@type" type="file" name="@type" />
                                 </td>
                             }
 
@@ -157,10 +156,10 @@
                                 <div class="row">
 
 
-                                    @if (file.Item3 == 0 && isNotAdmin)
+                                    @if (file == null && isNotAdmin)
                                     {
                                         <div class="col-md-12">
-                                            <button class="btn btn-success btn-block" onclick="UpdateFileByType('@file.Item4')">
+                                            <button class="btn btn-success btn-block" onclick="UpdateFileByType('@ToInt(type)')">
                                                 Загрузить файл
                                             </button>
                                         </div>
@@ -168,7 +167,7 @@
                                     else if (isNotAdmin)
                                     {
                                         <div class="col-md-12">
-                                            <button class="btn btn-success btn-block" onclick="UpdateFileByType('@file.Item4')">
+                                            <button class="btn btn-success btn-block" onclick="UpdateFileByType('@ToInt(type)')">
                                                 Обновить файл
                                             </button>
                                         </div>
@@ -176,10 +175,10 @@
 
 
 
-                                    @if (file.Item3 > 0)
+                                    @if (file != null)
                                     {
                                         <div class="col-md-12" style="margin-top:10px">
-                                            <a class="btn btn-primary btn-block" href="/Files/GetDbFileById/@file.Item3">
+                                            <a class="btn btn-primary btn-block" href="/Files/GetDbFileById/@file.FileId">
                                                 Скачать файл
                                             </a>
                                         </div>
@@ -252,7 +251,7 @@
     </div>
 </div>
 
-@await Html.PartialAsync($"{viewsChemistry}/Partials/TaskExperiments.cshtml", model: experiments)
+@await Html.PartialAsync($"{viewsChemistry}/Partials/TaskExperiments.cshtml", model: Model.Experiments)
 
 
 
@@ -307,8 +306,8 @@
     </table>
 </div>
 
-@*Если там налл то он почему то берет верхний элемент модели*@
-@await Html.PartialAsync($"{viewsChemistry}/Table.cshtml", model: Model.ObjectJson.SubstanceCounter ?? new Chemistry_SubstanceCounter())
+
+@await Html.PartialAsync($"{viewsChemistry}/Table.cshtml", model: Model.SubstanceCounter)
 
 
 <div style="height:20px">
@@ -327,7 +326,7 @@
             </td>
         </tr>
 
-        @if (isNotAdmin && userId == Model.PerformerId || User.HasRight(UserRight.Root))
+        @if (isNotAdmin && userId == Model.PerformerUser.UserId || User.HasRight(UserRight.Root))
         {
             <tr>
                 <td colspan="2">
@@ -358,9 +357,7 @@
             console.log("RemoveTask", id);
 
             var data = { Id: id, Flag: false };
-
-
-
+            
             $.ajax({
                 url: '/Chemistry/Chemistry/RemoveOrCancelRemoving',
                 type: 'POST',
@@ -425,8 +422,6 @@
         form_data.append("TaskFile.Description", "");
 
         console.log("UploadUserFile", form_data);
-
-
 
         $.ajax({
             url: '/Chemistry/Chemistry/UploadTaskFile',

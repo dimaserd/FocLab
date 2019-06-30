@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Croco.Core.Utils;
 using FocLab.Logic.Models.Experiments;
 using FocLab.Logic.Models.Methods;
 using FocLab.Logic.Models.Reagents;
-using FocLab.Logic.Models.Tasks;
 using FocLab.Model.Entities.Chemistry;
+using FocLab.Model.Enumerations;
 using Newtonsoft.Json;
 
-namespace FocLab.Logic.Models
+namespace FocLab.Logic.Models.Tasks
 {
     public class ChemistryTaskModel
     {
@@ -27,6 +28,13 @@ namespace FocLab.Logic.Models
         /// </summary>
         public DateTime DeadLineDate { get; set; }
 
+        public bool IsPerformed => PerformedDate.HasValue;
+
+        public bool IsPerformedInTime => IsPerformed && DeadLineDate > PerformedDate.Value;
+
+        public Chemistry_SubstanceCounter SubstanceCounter => Tool.JsonConverter.Deserialize<Chemistry_SubstanceCounter>(SubstanceCounterJson ?? "") ?? Chemistry_SubstanceCounter.GetDefaultCounter();
+
+
         /// <summary>
         /// Дата выполнения задачи исполнителем
         /// </summary>
@@ -37,6 +45,9 @@ namespace FocLab.Logic.Models
         /// </summary>
         public DateTime CreationDate { get; set; }
 
+        public ChemistryTaskFileModel ReactionSchemaImage => Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage);
+
+        public bool HasReactionSchemaImage => ReactionSchemaImage != null;
 
         #region Свойства отношений
 
@@ -177,7 +188,6 @@ namespace FocLab.Logic.Models
                     Name = x.Reagent.Name
                 }
             }).ToList()
-            
         };
 
     }

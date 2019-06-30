@@ -1,7 +1,7 @@
 ﻿@using FocLab.Logic.EntityDtos.Users.Default
 @using Microsoft.AspNetCore.Html
 @using Newtonsoft.Json
-@model List<FocLab.Logic.Models.ChemistryTaskModel>
+@model List<FocLab.Logic.Models.Tasks.ChemistryTaskModel>
 @{
     Layout = null;
 
@@ -138,35 +138,35 @@
         <thead>
             <tr>
                 <th>
-                    Название
+                    <strong>Название</strong>
                 </th>
 
                 <th>
-                    Исполнитель
+                    <strong>Исполнитель</strong>
                 </th>
 
                 <th>
-                    Крайний срок
+                    <strong>Крайний срок</strong>
                 </th>
 
                 <th>
-                    Дата выполнения
+                    <strong>Дата выполнения</strong>
                 </th>
 
                 <th>
-                    Колличество
+                    <strong>Количество</strong>
                 </th>
 
                 <th>
-                    Факт. колличество
+                    <strong>Факт. колличество</strong>
                 </th>
 
                 <th>
-                    Качество
+                    <strong>Качество</strong>
                 </th>
 
                 <th>
-                    Факт. качество
+                    <strong>Факт. качество</strong>
                 </th>
             </tr>
         </thead>
@@ -185,8 +185,8 @@
                     </td>
 
                     <td>
-                        <a href="/Chemistry/Chemistry?id=@task.Performer.UserId">
-                            @task.Performer.Name @task.Performer.Email
+                        <a href="/Chemistry/Chemistry?id=@task.PerformerUser.UserId">
+                            @task.PerformerUser.Name @task.PerformerUser.Email
                         </a>
                     </td>
 
@@ -257,27 +257,28 @@
         <thead>
             <tr>
                 <th>
-                    Название
+                    <strong>Название</strong>
+                    
                 </th>
 
                 <th>
-                    Исполнитель
+                    <strong>Исполнитель</strong>
                 </th>
 
                 <th>
-                    Крайний срок
+                    <strong>Крайний срок</strong>
                 </th>
 
                 <th>
-                    Метод решения
+                    <strong>Метод решения</strong>
                 </th>
 
                 <th>
-                    Колличество
+                    <strong>Количество</strong>
                 </th>
 
                 <th>
-                    Качество
+                    <strong>Качество</strong>
                 </th>
             </tr>
         </thead>
@@ -306,10 +307,10 @@
                     </td>
 
                     <td>
-                        @if (task.Performer != null)
+                        @if (task.PerformerUser != null)
                         {
-                            <a href="/Chemistry/Chemistry?id=@task.Performer.UserId">
-                                @task.Performer.Name @task.Performer.Email
+                            <a href="/Chemistry/Chemistry?id=@task.PerformerUser.UserId">
+                                @task.PerformerUser.Name @task.PerformerUser.Email
                             </a>
                         }
                         else
@@ -324,20 +325,17 @@
                     </td>
 
                     <td>
-                        @if (task.MethodFile != null)
+                        @if (task.ChemistryMethodFile != null)
                         {
 
-                            <a href="@task.MethodFile.GetLinkToFile()" class="btn btn-primary">
-                                @task.MethodFile.Name
+                            <a href="@task.ChemistryMethodFile.GetLinkToFile()" class="btn btn-primary">
+                                @task.ChemistryMethodFile.Name
                             </a>
                         }
                         else
                         {
                             @Html.Raw("[Метод не указан]")
                         }
-
-
-
                     </td>
 
                     <td>
@@ -687,7 +685,7 @@
 </script>
 
 <script>
-    var tasks = @(new HtmlString(JsonConvert.SerializeObject(tasks, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Include })));
+    var tasks = @Html.GetJson(tasks);
 
     console.log(tasks);
 

@@ -1,4 +1,7 @@
-﻿namespace FocLab.Model.Enumerations
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace FocLab.Model.Enumerations
 {
     /// <summary>
     /// Тип файла для химического задания
@@ -8,26 +11,32 @@
         /// <summary>
         /// Изображение реакции
         /// </summary>
+        [Display(Name = "Изображение реакции")]
         ReactionSchemaImage,
 
         /// <summary>
         /// Файл 1
         /// </summary>
+        [Display(Name = "Файл 1")]
         File1,
 
         /// <summary>
         /// Файл 2
         /// </summary>
-        File2, 
+        [Display(Name = "Файл 2")]
+        File2,
 
         /// <summary>
         /// Файл 3
         /// </summary>
+        [Display(Name = "Файл 3")]
         File3,
 
         /// <summary>
         /// Файл 4
         /// </summary>
+        [Display(Name = "Файл 4")]
         File4,
     }
+
 }

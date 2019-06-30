@@ -1,11 +1,11 @@
 ﻿@using FocLab.Logic.Extensions
-@model List<FocLab.Logic.Models.Chemistry_Task>
+@model List<FocLab.Logic.Models.Tasks.ChemistryTaskModel>
 @{
     Layout = null;
 
     var userId = User.Identity.GetUserId();
 
-    var performerTasks = Model.Where(x => x.Performer.UserId == userId).ToList();
+    var performerTasks = Model.Where(x => x.PerformerUser.UserId == userId).ToList();
 
     var dateNow = DateTime.Now;
 }
@@ -27,23 +27,23 @@
         <thead>
             <tr>
                 <th>
-                    Название
+                    <strong>Название</strong>
                 </th>
 
                 <th>
-                    Крайний срок
+                    <strong>Крайний срок</strong>
                 </th>
 
                 <th>
-                    Колличество
+                    <strong>Количество</strong>
                 </th>
 
                 <th>
-                    Качество
+                    <strong>Качество</strong>
                 </th>
 
                 <th>
-                    Действия
+                    <strong>Действия</strong>
                 </th>
 
 
@@ -116,19 +116,19 @@
         <thead>
             <tr>
                 <th>
-                    Название
+                    <strong>Название</strong>
                 </th>
 
                 <th>
-                    Крайний срок
+                    <strong>Крайний срок</strong>
                 </th>
 
                 <th>
-                    Дата выполнения
+                    <strong>Дата выполнения</strong>
                 </th>
 
                 <th>
-                    Действия
+                    <strong>Действия</strong>
                 </th>
             </tr>
         </thead>

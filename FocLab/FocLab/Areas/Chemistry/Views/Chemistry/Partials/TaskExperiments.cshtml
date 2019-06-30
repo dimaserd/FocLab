@@ -1,11 +1,9 @@
-﻿@using FocLab.Model.Entities.Chemistry
-@model List<FocLab.Model.Entities.Chemistry.ChemistryTaskExperiment>
+﻿@using FocLab.Logic.Models.Tasks
+@model List<FocLab.Logic.Models.Experiments.ChemistryTaskExperimentModel>
 @{
     Layout = null;
 
-    var task = ViewData["task"] as ChemistryTask;
-
-    
+    var task = ViewData["task"] as ChemistryTaskModel;
 }
 
 <h2>

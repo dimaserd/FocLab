@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Croco.Core.Abstractions.ContextWrappers;
 using Croco.Core.Common.Models;
 using FocLab.Logic.Models;
+using FocLab.Logic.Models.Tasks;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
