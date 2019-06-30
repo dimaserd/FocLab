@@ -1,7 +1,7 @@
-﻿@using FocLab.Model.Entities.Chemistry
+﻿@using FocLab.Logic.Models.Tasks
 
 @{
-    var task = ViewData["task"] as ChemistryTask;
+    var task = (ChemistryTaskModel)ViewData["task"];
 
     var reagentSelectList = ViewData["reagentSelectList"] as List<SelectListItem>;
 }
@@ -21,23 +21,27 @@
         <thead>
             <tr>
                 <th>
-                    Реагент
+                    <strong>Реагент</strong>
                 </th>
 
                 <th>
-                    Получено (кг) <i class="fa fa-info-circle" data-toggle="tooltip" title="Сколько килограмм реагента было получено со склада"></i>
+                    <strong>Получено (кг) </strong>
+                    <i class="fa fa-info-circle" data-toggle="tooltip" title="Сколько килограмм реагента было получено со склада"></i>
                 </th>
 
                 <th>
-                    Сдано (кг) <i class="fa fa-info-circle" data-toggle="tooltip" title="Сколько килограмм реагента было возвращено обратно на склад"></i>
+                    <strong>Сдано (кг) </strong>
+                    <i class="fa fa-info-circle" data-toggle="tooltip" title="Сколько килограмм реагента было возвращено обратно на склад"></i>
                 </th>
 
                 <th>
-                    Расход (кг) <i class="fa fa-info-circle" data-toggle="tooltip" title="Данную колонку заполнять не нужно, она расчитывается автоматически ( 'Получено' - 'Сдано')"></i>
+                    <strong>Расход (кг) <i class="fa fa-info-circle" data-toggle="tooltip" title="Данную колонку заполнять не нужно, она расчитывается автоматически ( 'Получено' - 'Сдано')"></i></strong>
+                    
                 </th>
 
                 <th>
-                    Действия
+                    <strong>Действия</strong>
+                    
                 </th>
             </tr>
         </thead>
@@ -75,32 +79,32 @@
             {
             <tr>
                 <td>
-                    <a href="/Chemistry/Reagent/Details/@reagent.ReagentId" target="_blank">
+                    <a href="/Chemistry/Reagent/Details/@reagent.Reagent.Id" target="_blank">
                         @reagent.Reagent.Name
                     </a>
                 </td>
 
                 <td>
-                    @Html.TextBox($"Edit.TakenQuantity.{reagent.ReagentId}", reagent.TakenQuantity, new { @class = "form-control", oninput = "ReplaceDotToComma(this)" })
+                    @Html.TextBox($"Edit.TakenQuantity.{reagent.Reagent.Id}", reagent.TakenQuantity, new { @class = "form-control", oninput = "ReplaceDotToComma(this)" })
                 </td>
 
                 <td>
-                    @Html.TextBox($"Edit.ReturnedQuantity.{reagent.ReagentId}", reagent.ReturnedQuantity, new { @class = "form-control", oninput = "ReplaceDotToComma(this)" })
+                    @Html.TextBox($"Edit.ReturnedQuantity.{reagent.Reagent.Id}", reagent.ReturnedQuantity, new { @class = "form-control", oninput = "ReplaceDotToComma(this)" })
                 </td>
 
                 <td>
-                    @Html.TextBox($"Edit.SomeQuantity.{reagent.ReagentId}", reagent.TakenQuantity - reagent.ReturnedQuantity, new { @class = "form-control" })
+                    @Html.TextBox($"Edit.SomeQuantity.{reagent.Reagent.Id}", reagent.TakenQuantity - reagent.ReturnedQuantity, new { @class = "form-control" })
                 </td>
 
                 <td>
                     <div class="row">
                         <div class="col-md-12">
-                            <button class="btn btn-warning btn-block" onclick="taskReagentWorker.EditTaskReagent('@reagent.ReagentId')">
+                            <button class="btn btn-warning btn-block" onclick="taskReagentWorker.EditTaskReagent('@reagent.Reagent.Id')">
                                 <i class="fa fa-refresh"></i>
                                 Обновить данные
                             </button>
 
-                            <button class="btn btn-danger btn-block" style="margin-top:5px" onclick="taskReagentWorker.RemoveTaskReagent('@reagent.ReagentId')">
+                            <button class="btn btn-danger btn-block" style="margin-top:5px" onclick="taskReagentWorker.RemoveTaskReagent('@reagent.Reagent.Id')">
                                 <i class="fa fa-trash-o"></i>
                                 Удалить
                             </button>

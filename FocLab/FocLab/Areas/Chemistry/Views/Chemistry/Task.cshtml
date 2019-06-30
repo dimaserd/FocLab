@@ -103,19 +103,22 @@
                 <thead>
                     <tr>
                         <th>
-                            Статус файла
+                            <strong>Статус файла</strong>
+                            
                         </th>
 
                         @if (isNotAdmin)
                         {
                             <th>
-                                Загрузка файла
+                                <strong>Загрузка файла</strong>
+                                
                             </th>
                         }
 
 
                         <th>
-                            Действия
+                            <strong>Действия</strong>
+                            
                         </th>
                     </tr>
                 </thead>
@@ -127,7 +130,7 @@
 
                         <tr>
                             <td>
-                                @if (file != null)
+                                @if (file == null)
                                 {
                                     <strong>
                                         <span class="text-danger">@type.ToDisplayName() не загружен</span>
@@ -207,11 +210,12 @@
                 <tbody>
                     <tr>
                         <th>
-                            Уст. качество
+                            <strong>Уст. качество</strong>
                         </th>
 
                         <th>
-                            Получ. качество
+                            <strong>Получ. качество</strong>
+                            
                         </th>
                     </tr>
 
@@ -227,11 +231,12 @@
 
                     <tr>
                         <th>
-                            Уст. колличество
+                            <strong>Уст. количество</strong>
                         </th>
 
                         <th>
-                            Получ. колличество
+                            <strong>Получ. количество</strong>
+                            
                         </th>
                     </tr>
 
