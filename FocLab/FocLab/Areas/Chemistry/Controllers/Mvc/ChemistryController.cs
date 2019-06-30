@@ -27,6 +27,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     /// <summary>
     /// Контроллер для работы с химическими заданиями
     /// </summary>
+    [Area("Chemistry")]
     [Authorize]
     public class ChemistryController : BaseChemistryCustomController
     {

@@ -181,7 +181,7 @@ namespace FocLab
             {
                 routes.MapRoute(
                     "areas",
-                    "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    "{area:exists}/{controller=Chemistry}/{action=Index}/{id?}");
 
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });

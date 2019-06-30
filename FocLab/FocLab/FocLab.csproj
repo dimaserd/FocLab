@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.3" />
-    <PackageReference Include="Hangfire.SqlServer" Version="1.7.3" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.4" />
+    <PackageReference Include="Hangfire.SqlServer" Version="1.7.4" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
@@ -25,7 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FocLab.Api\FocLab.Api.csproj" />
     <ProjectReference Include="..\FocLab.Logic\FocLab.Logic.csproj" />
+    <ProjectReference Include="..\MigrationTool\MigrationTool.csproj" />
   </ItemGroup>
 
 </Project>
