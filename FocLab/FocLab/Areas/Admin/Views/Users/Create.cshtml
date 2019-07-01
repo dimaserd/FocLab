@@ -1,0 +1,123 @@
+﻿@model FocLab.Logic.Models.Users.CreateUserModel
+@{
+    ViewBag.Title = "Создание пользователя";
+
+    Layout = ChemistrySettings.LayoutPath;
+
+    var list = (MultiSelectList)ViewBag.Rights;
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <a href="/Admin/Users" class="btn btn-primary">
+            <i class="fa fa-list-ol"></i>
+            Список пользователей
+        </a>
+    </div>
+</div>
+
+
+<div style="height:20px">
+
+</div>
+
+<h2>Создание пользователя</h2>
+
+<div style="height:20px">
+
+</div>
+
+<div class="form-group m-form__group">
+    @Html.LabelFor(x => x.Email)
+    <input type="email" class="form-control m-input" name="@nameof(Model.Email)"  aria-describedby="emailHelp" placeholder="">
+</div>
+
+<div class="form-group m-form__group">
+    @Html.LabelFor(x => x.Name)
+    <input type="text" class="form-control m-input" name="@nameof(Model.Name)" aria-describedby="emailHelp" placeholder="">
+</div>
+
+<div class="form-group m-form__group">
+    @Html.LabelFor(x => x.Surname)
+    <input type="text" class="form-control m-input" name="@nameof(Model.Surname)" aria-describedby="emailHelp" placeholder="">
+</div>
+
+<div class="form-group m-form__group">
+    @Html.LabelFor(x => x.Patronymic)
+    <input type="text" class="form-control m-input" name="@nameof(Model.Patronymic)" aria-describedby="emailHelp" placeholder="">
+</div>
+
+<div class="form-group m-form__group">
+    @Html.LabelFor(x => x.Password)
+    <input type="password" class="form-control m-input" name="@nameof(Model.Password)" aria-describedby="emailHelp" placeholder="">
+</div>
+
+<div class="form-group m-form__group">
+    @Html.LabelFor(x => x.ConfirmPassword)
+    <input type="password" class="form-control m-input" name="@nameof(Model.ConfirmPassword)" aria-describedby="emailHelp" placeholder="">
+</div>
+
+<div class="form-group m-form__group">
+    @Html.LabelFor(x => x.PhoneNumber)
+    <input type="text" class="form-control m-input" name="@nameof(Model.PhoneNumber)" aria-describedby="emailHelp" placeholder="">
+</div>
+
+
+<div class="form-group m-form__group">
+    @Html.LabelFor(x => x.Rights)
+    @Html.DropDownListFor(x => x.Rights, list, new { @multiple = "", @class = "form-control m-input m-bootstrap-select m_selectpicker" })
+</div>
+
+
+
+
+<div style="height:40px">
+
+</div>
+
+<button type="button" onclick="ClickHandler()" class="btn btn-success btn-block">Добавить</button>
+
+@section Scripts{
+    <script>
+        class UserCreator {
+            constructor() {
+                this.setHandlers();
+            }
+
+            setHandlers() {
+                this.CreateUser = function() {
+                    
+                    var data = {
+                        Email: "",
+                        Name: "",
+                        Surname: "",
+                        Patronymic: "",
+                        Password: "",
+                        ConfirmPassword: "",
+                        PhoneNumber: "",
+                        Rights: ""
+                    };
+
+                    data = FormDataHelper.CollectData(data);
+
+                    Requester.SendPostRequestWithAnimation("/Api/User/Create", data, x => {
+                            if (x.IsSucceeded) {
+                                setTimeout(function() { location.href = "/Admin/Users" }, 1000);
+                            }
+                    });
+                }
+            }
+        }
+    </script>
+
+    <script>
+        var userCreator = new UserCreator();
+    </script>
+
+    <script>
+        function ClickHandler() {
+            userCreator.CreateUser();
+        }
+    </script>
+}

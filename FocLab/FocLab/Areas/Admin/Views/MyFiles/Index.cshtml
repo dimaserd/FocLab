@@ -1,0 +1,154 @@
+﻿@using FocLab.Logic
+@model GetListResult<FocLab.Logic.EntityDtos.DbFileDto>
+@{
+    Layout = ChemistrySettings.LayoutPath;
+    ViewBag.Title = "Список файлов";
+
+    var uniqueId = Guid.NewGuid().ToString();
+
+    const string btnId = "loadBtn";
+
+
+    const string fileUploadId = "UploadUserFile";
+}
+
+<div class="m-portlet">
+
+
+    <div class="m-portlet__body">
+
+        <h3>
+            Список файлов имеющихся на вашем сайте <span class="m-badge m-badge--success">@Model.TotalCount</span>
+        </h3>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="text-info">
+                    <strong>
+                        Загрузить пользовательский файл
+                    </strong>
+                </h5>
+            </div>
+
+            <div class="col-md-6">
+
+                <input type="file" id="@fileUploadId" />
+            </div>
+
+            <div class="col-md-6">
+                <button class="btn btn-primary" onclick="UploadUserFile()">
+                    Загрузить
+                </button>
+            </div>
+        </div>
+
+        <div style="height:20px">
+
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            <strong>Идентификатор</strong>
+                            
+                        </th>
+
+                        <th>
+                            <strong>Имя файла</strong>
+                            
+                        </th>
+
+                        <th>
+                            <strong>Дата загрузки</strong>
+                            
+                        </th>
+
+                        <th>
+                            <strong>Предпросмотр</strong>
+                            
+                        </th>
+
+                        <th>
+                            <strong>Перевязки</strong>
+                            
+                        </th>
+
+                        <th>
+                            <strong>Действия</strong>
+                            
+                        </th>
+
+
+                    </tr>
+                </thead>
+
+                <tbody id="@uniqueId">
+                    @await Html.PartialAsync("~/Areas/Admin/Views/MyFiles/Partials/FilesListPartial.cshtml", model: Model)
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+        @section Scripts{
+            <script>
+    function LoadMoreToTable(count, offSet) {
+        $.ajax({
+            url: '/Admin/MyFiles/FileListPartialIndex',
+            type: 'GET',
+            data: { count: count, offSet: offSet },
+            async: true,
+            cache: false,
+            dataType: 'html',
+            success: function (response) {
+                console.log(response);
+
+                var elem = document.getElementById("@btnId");
+
+                elem.parentElement.removeChild(elem);
+
+                document.getElementById("@uniqueId").innerHTML += response;
+                //document.getElementById(divId).innerHTML = response;
+            }
+        });
+        }
+
+
+
+        function UploadUserFile() {
+            var file_data = $('#@fileUploadId').prop('files');
+
+            var form_data = new FormData();
+
+            for (let i = 0; i < file_data.length; i++) {
+                form_data.append('model', file_data[i]);
+            }
+
+
+
+            $.ajax({
+                url: '/Admin/MyFiles/UploadUserFile',
+                type: 'POST',
+                data: form_data,
+                async: true,
+                cache: false,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    console.log(response);
+
+                    alert(response.Message);
+
+                    if (response.IsSucceeded) {
+                        location.reload();
+                    }
+
+
+                }
+            });
+        }
+            </script>
+        }

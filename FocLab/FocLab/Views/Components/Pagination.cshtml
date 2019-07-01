@@ -1,0 +1,20 @@
+﻿@model PagerModel
+@{
+    Layout = null;
+}
+    <div class="table-responsive">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                @for (var i = 0; i < Model.PagesCount; i++)
+                {
+                    var _class = i == Model.CurrentPage ? "active" : "";
+
+                    var link = string.Format(Model.LinkFormat, Model.PageSize, i * Model.PageSize);
+
+                    <li class="page-item @_class">
+                        <a class="page-link" href="@link">@(i + 1)</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>

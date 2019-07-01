@@ -4,8 +4,8 @@ using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
 using Croco.Core.Common.Models;
 using Croco.Core.Logic.Models.Files;
+using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Implementations;
-using FocLab.Logic.Settings;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities;
 

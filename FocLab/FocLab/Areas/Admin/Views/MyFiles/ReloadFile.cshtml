@@ -1,0 +1,109 @@
+﻿@using FocLab.Logic
+@using FocLab.Logic.Extensions
+@model FocLab.Model.Entities.DbFile
+@{
+    Layout = ChemistrySettings.LayoutPath;
+    
+    string _class = Model.FileName.EndsWith(".webp") ? "danger" : "";
+
+    string id = Model.Id + "NewFile";
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-success" href="/Admin/MyFiles">
+            <i class="fa fa-list-ol"></i>
+            Список файлов
+        </a>
+    </div>
+</div>
+
+<div style="height:20px">
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                @if(Model.IsImage())
+                {
+                <th>
+                    Картинка
+                </th>
+                }
+                
+                <th>
+                    Файл
+                </th>
+
+
+                <th>
+                    Действия
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+
+
+            <tr class="@_class">
+
+                @if(Model.IsImage())
+                {
+                <td>
+                    <img src="data:image;base64,@Convert.ToBase64String(Model.FileData)" class="img-responsive" />
+                </td>
+                }
+                
+
+
+
+                <td>
+                    <input type="file" id="@id" />
+                </td>
+
+                <td>
+
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top:10px">
+                            <a class="btn btn-warning" onclick="ReloadFile('@Model.Id')">
+                                Перезалить файл
+                            </a>
+                        </div>
+
+                        <div class="col-md-12" style="margin-top:10px">
+                            <a class="btn btn-success" href="@Model.GetLinkToDownload()">
+                                Скачать файл
+                            </a>
+                        </div>
+                    </div>
+
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts{
+    <script>
+        function ReloadFile(FileId) {
+            
+            Requester.ReloadFileData(FileId, '@id',  (resp) => {
+
+                console.log(resp);
+                if (resp.IsSucceeded) {
+                    
+                    ToastrWorker.HandleBaseApiResponse(resp);
+                    setTimeout(location.reload(), 2000);
+
+                }
+            });
+
+        }
+    </script>
+}

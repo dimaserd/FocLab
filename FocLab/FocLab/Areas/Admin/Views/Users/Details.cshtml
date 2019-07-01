@@ -1,0 +1,100 @@
+﻿@model FocLab.Logic.EntityDtos.Users.Default.ApplicationUserDto
+
+@{
+    Layout = ChemistrySettings.LayoutPath;
+    ViewBag.Title = "Подробнее о пользователе";
+}
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="float-left">
+            <h2>Подробнее о пользователе</h2>
+        </div>
+        <div class="float-right">
+            <div class="btn-group">
+                <button type="button" class="btn btn-brand">Действия</button>
+                <button type="button" class="btn btn-brand dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(101px, 40px, 0px);">
+                    <a class="dropdown-item" href="/Admin/MailMessage/Send?userId=@Model.Id">Отправить Email</a>
+                    <a class="dropdown-item" href="/Admin/Users/Edit/@Model.Id">Редактировать</a>
+                    <a class="dropdown-item" href="/Admin/UserNotifications/CreateForUser/@Model.Id">Создать уведомления</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div>
+    <h4>Пользователь</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Balance)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Balance)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailConfirmed)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailConfirmed)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    <div class="m-form__actions">
+        <button type="reset" class="btn btn-warning" onclick="location.href='/Admin/Users/Edit/@Model.Id'">Редактировать</button>
+        <button onclick="location.href='/Admin/Users'" class="btn btn-secondary">Назад к списку</button>
+    </div>
+   
+</p>

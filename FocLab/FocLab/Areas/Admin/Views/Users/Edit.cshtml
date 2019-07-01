@@ -1,0 +1,186 @@
+﻿@using System.Globalization
+
+@model FocLab.Logic.EntityDtos.Users.Default.ApplicationUserDto
+@{
+    ViewData["Title"] = "Редактирование пользователя";
+
+    Layout = ChemistrySettings.LayoutPath;
+
+    var sexes = ViewData["sexes"] as List<SelectListItem>;
+
+    var roles = ViewData["UserRoles"] as IEnumerable<KeyValuePair<UserRight, bool>>;
+
+    var birthDate = Model.BirthDate.HasValue ? Model.BirthDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "";
+
+}
+
+
+<div class="m-portlet__head">
+    <div class="m-portlet__head-caption">
+        <div class="m-portlet__head-title">
+            <span class="m-portlet__head-icon m--hide">
+                <i class="fas fa-cogs"></i>
+            </span>
+            <h3 class="m-portlet__head-text">
+                Вы редактируете пользователя @Model.Email
+            </h3>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="form-group m-form__group m--margin-top-10">
+        <div class="alert m-alert m-alert--default" role="alert">
+            После того как вы нажмете кнопку сохранить, данные пользователя будут обновлены. Данное действие необратимо.
+        </div>
+    </div>
+
+    @Html.HiddenFor(x => x.Id)
+
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.Email)
+        @Html.TextBoxFor(x => x.Email, new { @class = "form-control m-input" })
+    </div>
+
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.Name)
+        @Html.TextBoxFor(x => x.Name, new { @class = "form-control m-input" })
+    </div>
+
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.Surname)
+        @Html.TextBoxFor(x => x.Surname, new { @class = "form-control m-input" })
+    </div>
+
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.Patronymic)
+        @Html.TextBoxFor(x => x.Patronymic, new { @class = "form-control m-input" })
+    </div>
+
+    <div class="form-group m-form__group">
+
+        @Html.LabelFor(x => x.PhoneNumber)
+        @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control m-input" })
+    </div>
+
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.BirthDate)
+        <div class="date w-100">
+            <input id="BirthDate" name="BirthDate" class="form-control m-input" type="text" value="@birthDate">
+        </div>
+    </div>
+
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.Sex)
+        @Html.DropDownListFor(x => x.Sex, sexes, new { @class = "form-control m-input m-bootstrap-select m_selectpicker" })
+    </div>
+    <div class="form-group m-form__group">
+        @foreach (var item in roles)
+        {
+            <input class="m-checkbox" type="checkbox" name="@item.Key" id="@item.Key" @(item.Value ? "checked=\"checked\"" : "")>
+            <label for="@item.Key">@item.Key.ToDisplayName()</label> <br />
+        }
+    </div>
+    <div class="m-portlet__foot m-portlet__foot--fit">
+        <div class="m-form__actions">
+            <button type="reset" class="btn btn-primary" onclick="CreateValue()">Сохранить</button>
+            <button onclick="location.href='/Admin/Users/Index'" class="btn btn-secondary">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .img-min-80 {
+        max-height: 80px;
+    }
+
+    .img-min-50 {
+        max-height: 50px;
+    }
+</style>
+
+@section Scripts{
+    <script>
+        $.fn.datepicker.dates['ru'] = {
+            days: ['понедельник', 'воскресенье', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
+            daysShort: ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
+            daysMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+            months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+                'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+            monthsShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн',
+                'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+            today: "Today"
+        };
+
+        $(document).ready(function () {
+            $("#@(nameof(Model.BirthDate))").datepicker({
+                todayHighlight: true,
+                isRTL: true,
+                format: 'dd.mm.yyyy',
+                autoclose: true,
+                language: 'ru',
+            });
+        });
+
+    </script>
+
+    <script>
+        $(".m-checkbox").change(function () {
+
+            if (this.checked) {
+                AddRoleToUser('@Model.Id', $(this).attr('name'));
+            }
+            else {
+                RemoveRoleToUser('@Model.Id', $(this).attr('name'));
+            }
+        });
+
+        function AddRoleToUser(userId, role) {
+            RoleToUserAjax(true, userId, role);
+        }
+
+        function RemoveRoleToUser(userId, role) {
+            RoleToUserAjax(false, userId, role);
+        }
+
+        function RoleToUserAjax(type, userId, role) {
+            const url = (type) ? '/Api/User/Role/Add' : '/Api/User/Role/Remove';
+
+            Requester.SendPostRequestWithAnimation(url, { userId: userId, role: role }, x => {
+                if (x.IsSucceeded) {
+                    ToastrWorker.HandleBaseApiResponse(response);
+                    t.prop('checked', true);
+                } else {
+                    const t = $('#' + role);
+                    if (t.is(':checked') === true) {
+                        t.prop('checked', false);
+                    }
+                }
+            });
+        }
+    </script>
+    <script>
+
+        function CreateValue() {
+
+            var data = {
+                Id: "",
+                Email: "",
+                Name: "",
+                Surname: "",
+                Patronymic: "",
+                PhoneNumber: "",
+                BirthDate:"",
+                Sex: ""
+            };
+
+            data = CollectData(data);
+
+            if (data.BirthDate !== "") {
+                data.BirthDate = Requester.ParseDate(data.BirthDate);
+            }
+
+            Requester.SendPostRequestWithAnimation("/Api/User/Edit", data);
+        }
+    </script>
+}

@@ -1,0 +1,112 @@
+﻿@using FocLab.Logic.Settings.Statics
+@model GetListResult<FocLab.Logic.EntityDtos.Users.Default.ApplicationUserDto>
+@{
+    Layout = null;
+
+    string myId = User.Identity.GetUserId();
+}
+
+
+
+@foreach (var user in Model.List.Where(x => x.Id != myId))
+{
+
+    string _class = user.DeActivated ? "bg-danger" : "";
+
+    <tr scope="row" class="@_class">
+
+        <td>
+            @Html.DisplayFor(modelItem => user.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => user.Email)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => user.CreatedOn)
+        </td>
+
+        <td>
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="/Admin/Users/Edit/@user.Id" class="btn m--btn--pill active btn-warning btn-block">
+                        <i class="fas fa-edit"></i>
+                        Редактировать
+                    </a>
+
+                    <a href="/Admin/Users/Details/@user.Id" style="margin-top:10px" class="btn btn-primary btn-block">
+                        <i class="far fa-eye"></i>
+                        Подробнее
+                    </a>
+
+
+
+
+                    @if (user.DeActivated)
+                    {
+
+                        <a onclick="ActivateOrDeactivateUser('@user.Id', 'false')" style="margin-top:10px" class="btn btn-success btn-block">
+                            <i class="fas fa-plug"></i>
+                            Активировать
+                        </a>
+
+                    }
+                    else
+                    {
+
+                        <a onclick="ActivateOrDeactivateUser('@user.Id', 'true')" style="margin-top:10px" class="btn btn-danger btn-block">
+                            <i class="fas fa-unlink"></i>
+                            Деактивировать
+                        </a>
+
+                    }
+
+                    <a onclick="$('#anotherActions_@user.Id').fadeToggle()" style="margin-top:10px" class="btn btn-primary btn-block">
+                        Другие действия
+                    </a>
+
+                    <div class="anotherActions" id="anotherActions_@user.Id">
+
+                        <a href="/Admin/UserNotifications/CreateForUser/@user.Id" style="margin-top:10px" class="btn btn-primary btn-block">
+                            <i class="fas fa-plus-square"></i>
+                            Создать уведомление
+                        </a>
+
+                        @if (User.HasRight(UserRight.Root) && RightsSettings.UserRemovingEnabled)
+                        {
+                            <a onclick="RemoveUser('@user.Id')" style="margin-top:10px" class="btn btn-danger btn-block">
+                                <i class="fas fa-trash-alt"></i>
+                                Удалить
+                            </a>
+                        }
+
+                        @if ((User.HasRight(UserRight.Root) || User.HasRight(UserRight.SuperAdmin)) && user.Rights.All(x => x != UserRight.SuperAdmin))
+                        {
+
+                            <a href="/Admin/Users/ChangePassword/@user.Id" style="margin-top:10px" class="btn btn-warning btn-block">
+                                <i class="fa fa-pencil-square-o"></i>
+                                Изменить пароль
+                            </a>
+
+                        }
+
+                        <a href="/Admin/Users/ShowBalances/@user.Id" style="margin-top:10px" class="btn btn-primary btn-block">
+                            <i class="fa fa-eye"></i>
+                            Балансы
+                        </a>
+
+                        @if(User.HasRight(UserRight.Root))
+                        {
+                            <a style="margin-top:10px" class="btn btn-success btn-block" onclick="LoginAsUser('@user.Id')">
+                                Войти в систему как @user.Email
+                            </a>
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+
+        </td>
+    </tr>
+}

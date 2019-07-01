@@ -1,0 +1,84 @@
+﻿@using FocLab.Logic.Extensions
+@model GetListResult<FocLab.Logic.EntityDtos.DbFileDto>
+@{
+    Layout = null;
+
+    var newOffSet = Model.Count.HasValue? Model.OffSet + Model.Count.Value : Model.OffSet;
+
+    const string btnId = "loadBtn";
+}
+
+@foreach (var file in Model.List)
+{
+
+    var _class = "";
+
+    <tr class="@_class">
+        <td>
+            @file.Id
+        </td>
+        <td>
+            @file.FileName
+        </td>
+        <td>
+            @file.CreatedOn
+        </td>
+
+        <td>
+            <div class="row">
+                @if (file.IsImage())
+                {
+                    <div class="col-md-12">
+                        <img src="@file.GetUnSafeImgLink(ImageSizeType.Small)" class="img-responsive" />
+                    </div>
+                }
+                <div class="col-md-12">
+                    <a href="@file.GetLinkToDownload()" class="btn btn-success btn-block">
+                        <i class="fas fa-download"></i>
+                        Скачать файл
+                    </a>
+                </div>
+            </div>
+        </td>
+
+        <td>
+
+
+            <table class="table table-bordered table-hover">
+
+                
+
+
+            </table>
+        </td>
+
+        <td>
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-danger btn-block">
+                        <i class="fas fa-trash-alt"></i> Удалить
+                    </button>
+
+                    <a href="/Admin/MyFiles/ReloadFile/@file.Id" class="btn btn-warning btn-block" style="margin-top:5px">
+                        <i class="fas fa-sync-alt"></i> Перезалить
+                    </a>
+                </div>
+            </div>
+        </td>
+    </tr>
+
+}
+
+@if (newOffSet < Model.TotalCount)
+{
+
+    <tr id="@btnId">
+        <td colspan="6">
+            <button class="btn-lg btn-primary btn-block" onclick="LoadMoreToTable('@Model.Count', '@newOffSet')">
+                Загрузить еще
+            </button>
+        </td>
+    </tr>
+
+}
+

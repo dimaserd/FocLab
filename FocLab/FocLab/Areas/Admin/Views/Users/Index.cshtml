@@ -1,0 +1,247 @@
+﻿@using FocLab.Logic.Models.Users
+@model GetListResult<FocLab.Logic.EntityDtos.Users.Default.ApplicationUserDto>
+@{
+    ViewBag.Title = "Список пользователей";
+
+    var searchModel = ViewData["searchModel"] as UserSearch;
+
+    var q = searchModel.Q;
+
+    Layout = ChemistrySettings.LayoutPath;
+
+    const string linkFormat = "/Admin/Users/Index?Count={0}&OffSet={1}";
+
+    var shownOnPage = Model.TotalCount < Model.List.Count ? Model.TotalCount : Model.List.Count;
+
+}
+
+<style>
+    b, strong {
+        font-size: initial;
+        font-weight: bold;
+    }
+
+    .myBadge {
+        background: #eaeaea;
+        color: #444;
+        font-size: 1rem;
+        line-height: 20px;
+        min-height: 20px;
+        min-width: 20px;
+        vertical-align: middle;
+        text-align: center;
+        display: inline-block;
+        padding: 4px 4px;
+        border-radius: 0.9rem;
+    }
+
+    .margin5px {
+        margin: 5px 5px 5px 5px;
+    }
+
+    .selectWidth {
+        width: 140px !important
+    }
+</style>
+<div class="row">
+    <div class="col-12">
+        <h2>
+            Всего пользователей <span class="m-badge myBadge m-badge--success">@Model.TotalCount</span>
+            <span class="pull-right">Показано на странице <span class="m-badge myBadge m-badge--success">@shownOnPage</span> </span>
+        </h2>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <a href="/Admin/Users/Create" class="btn btn-success margin5px">
+            <i class="fa fa-plus-circle"></i>
+            Создать нового пользователя
+        </a>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-md-10 ml-1">
+        <label class="m-checkbox">
+            <input type="checkbox" name="Filter.Deactivated" class="filter-apply"> Показывать деактивированных пользователей
+            <span></span>
+        </label>
+    </div>
+
+    <div class="col-6">
+
+    </div>
+</div>
+
+<div class="col-md-10 pl-1 mb-3">
+    <label for="Sex" class="control-label">Фильтровать по полу</label>
+    <select class="form-control selectpicker" data-val="true" title="" id="Sex" name="Filter.Sex">
+        <option selected>Любой</option>
+        <option value="false">Женский</option>
+        <option value="true">Мужской</option>
+    </select>
+</div>
+
+<div class="col-md-10 pl-1 mb-3">
+    <label for="RegistrationDate" class="control-label">Фильтровать по дате регистрации</label>
+    <input type="text" class="form-control" id="RegistrationDate" name="Filter.RegistrationDate" value="" />
+</div>
+<div class="col-md-10 pl-1 mb-3">
+    <label class="control-label">Пользователь</label>
+    @Html.TextBox("Filter.q", q, new { @class = "form-control" })
+</div>
+<div class="col-md-10 pl-1 mb-3">
+    <button type="button" class=" btn btn-success m-btn m-btn--custom" onclick="ApplyFilter()">Применить фильтр</button>
+</div>
+
+@await Html.RenderPaginationAsync(Model, linkFormat)
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+
+                <th scope="col">
+                    <strong>
+                        Имя
+                    </strong>
+                </th>
+                <th scope="col">
+                    <strong>
+                        Email
+                    </strong>
+
+                </th>
+
+                <th scope="col">
+                    <strong>
+                        Дата регистрации
+                    </strong>
+
+                </th>
+
+                <th scope="col">
+                    <strong>
+                        Действия
+                    </strong>
+
+                </th>
+            </tr>
+        </thead>
+
+        <tbody id="tableBody">
+
+            @await Html.PartialAsync("~/Areas/Admin/Views/Users/Partials/UsersList.cshtml", model: Model)
+        </tbody>
+    </table>
+</div>
+@await Html.RenderPaginationAsync(Model, linkFormat)
+
+
+@section Scripts{
+    <link href="http://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css" rel="Stylesheet" />
+    <script src='https://cdn.rawgit.com/pguso/jquery-plugin-circliful/master/js/jquery.circliful.min.js'></script>
+    <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+    <script>
+
+        var model = @Html.GetJson(Model.List);
+        const filterPrefix = "Filter.";
+
+        var searchModel = @Html.GetJson(searchModel);
+        FillDataByPrefix(searchModel, filterPrefix);
+
+
+        var regDate = '';
+        if (searchModel['RegistrationDate'] != null) {
+            if (searchModel['RegistrationDate'].Min != null) {
+                regDate = searchModel['RegistrationDate'].Min.split('T')[0].split("-").reverse().join("/");
+                document.getElementById('RegistrationDate').value = regDate;
+            }
+            if (searchModel['RegistrationDate'].Max != null)
+                document.getElementById('RegistrationDate').value = regDate + " - " + searchModel['RegistrationDate'].Max.split('T')[0].split("-").reverse().join("/");
+        }
+        function LoginAsUser(id) {
+            Requester.SendPostRequestWithAnimation("/Api/Account/Login/AsUser", { Id: id }, x => {
+                if (x.IsSucceeded) {
+                    setTimeout(function () { location.reload() }, 1000);
+                }
+            });
+        }
+
+        function SearchUser() {
+            var q = document.getElementsByName("Filter.q")[0].value;
+
+            location.href = `/Admin/Users?q=${q}`;
+        }
+
+        $(function () {
+            var availableTags = [
+            ];
+
+            for (var x in model) {
+                if (model[x].Name != null)
+                    availableTags.push(model[x].Name);
+                if (model[x].Email != null)
+                    availableTags.push(model[x].Email);
+
+            };
+            console.log("availableTags", availableTags);
+            $("input[name='Filter.q']").autocomplete({
+                source: availableTags
+            });
+        });
+
+        function ApplyFilter() {
+            var data = {
+                Deactivated: null,
+                Sex: null,
+                q: null
+            };
+
+            data = CollectDataByPrefix(data, filterPrefix);
+            var dateRange = Utils.GetDateFromDateRangePicker('RegistrationDate');
+            if (dateRange !== {})
+                data.RegistrationDate = dateRange;
+
+            if (data.Sex === "")
+                delete data.Sex;
+            
+            if (data.RegistrationDate === "")
+                delete data.RegistrationDate;
+            location.href = `/Admin/Users/Index?${Requester.GetParams(data)}`;
+        }
+    </script>
+
+    <script>
+        $(".anotherActions").fadeOut();
+
+        $(function () {
+            Utils.SetDateRangePicker("input[name='Filter.RegistrationDate']");
+        });
+    </script>
+
+    <script>
+        function RemoveUser(userId) {
+            Requester.SendPostRequestWithAnimation("/Api/User/Remove", { Id: userId }, x => {
+                if (x.IsSucceeded) {
+                    setTimeout(function () { location.reload() }, 1000);
+                }
+            });
+        }
+
+        function ActivateOrDeactivateUser(userId, flag) {
+            Requester.SendPostRequestWithAnimation("/Api/User/ActivateOrDeActivateUser", { Id: userId, DeActivated: flag }, x => {
+                if (x.IsSucceeded) {
+                    setTimeout(function () { location.reload() }, 1000);
+                }
+            });
+        }
+
+
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+    </script>
+}

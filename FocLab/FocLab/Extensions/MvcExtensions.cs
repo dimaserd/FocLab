@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Croco.Core.Logic.Workers.Documentation;
+using FocLab.Logic.EntityDtos.Users.Default;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FocLab.Extensions
@@ -22,6 +23,31 @@ namespace FocLab.Extensions
                 Text = x.DisplayName,
                 Value = x.StringRepresentation
             });
+        }
+
+        public static IEnumerable<SelectListItem> GetSexesSelectList(ApplicationUserDto applicationUser)
+        {
+            yield return new SelectListItem
+            {
+                Text = "Мужской",
+                Value = true.ToString(),
+                Selected = applicationUser.Sex == true
+            };
+
+            yield return new SelectListItem
+            {
+                Text = "Женский",
+                Value = false.ToString(),
+
+                Selected = applicationUser.Sex == false
+            };
+
+            yield return new SelectListItem
+            {
+                Text = "Не указано",
+                Value = "",
+                Selected = applicationUser.Sex == null
+            };
         }
     }
 }
