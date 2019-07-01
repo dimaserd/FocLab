@@ -1,6 +1,6 @@
 ﻿using FocLab.Model.Enumerations;
 
-namespace FocLab.Logic.Models
+namespace FocLab.Logic.Models.Tasks
 {
     public class ChemistryTaskFileModel
     {

@@ -1,0 +1,129 @@
+﻿@using FocLab.Logic
+@model Croco.Core.Common.Models.BaseApiResponse<FocLab.Logic.Models.Users.ClientModel>
+@{
+    ViewBag.Title = "Профиль";
+    
+    Layout = ChemistrySettings.LayoutPath;
+
+}
+<h2>Профиль пользователя @Model.ResponseObject.Name</h2>
+<div class="m-content">
+    <div class="row">
+        <div class="col-xl-3 col-lg-4">
+            <div class="m-portlet m-portlet--full-height  ">
+                <div class="m-portlet__body">
+                    <div class="m-card-profile">
+                        <div class="m-card-profile__title m--hide">
+                            Профиль
+                        </div>
+                        <div class="m-card-profile__pic">
+                            <div class="m-card-profile__pic-wrapper">
+                                <img src="@Model.ResponseObject.GetImgLink(ImageSizeType.Medium)" alt="No avatar found">
+                            </div>
+                        </div>
+                        <div class="m-card-profile__details">
+                            <span class="m-card-profile__name">@Model.ResponseObject.Name</span>
+                            <a href="" class="m-card-profile__email m-link">@Model.ResponseObject.Email</a>
+                        </div>
+                    </div>
+                    <ul class="m-nav m-nav--hover-bg m-portlet-fit--sides">
+                        <li class="m-nav__separator m-nav__separator--fit"></li>
+                        <li class="m-nav__item">
+                            <a href="/Chat/Index" class="m-nav__link">
+                                <i class="m-nav__link-icon flaticon-chat-1"></i>
+                                <span class="m-nav__link-text">Написать сообщение</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="m-portlet__body-separator"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-9 col-lg-8">
+            <div class="m-portlet m-portlet--full-height m-portlet--tabs  ">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-tools">
+                        <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--left m-tabs-line--primary" role="tablist">
+                            <li class="nav-item m-tabs__item">
+                                <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_user_profile_tab_1" role="tab">
+                                    <i class="flaticon-share m--hide"></i>
+                                    Профиль
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="m_user_profile_tab_1">
+                        <div class="m-form m-form--fit m-form--label-align-right">
+                            <div class="m-portlet__body">
+                                <div class="form-group m-form__group row">
+                                    <div class="col-10 ml-auto">
+                                        <h3 class="m-form__section">1. Персональные данные</h3>
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group">
+                                    <label for="example-text-input" class="p-3 col-form-label mob-input">Имя</label>
+                                    <span id="Name"></span>
+                                </div>
+
+                                <div class="form-group m-form__group row">
+                                    <label for="example-text-input" class="ml-3 p-3  col-form-label mob-input">Email</label>
+                                    <div class="col-4 mt-2 pt-1">
+                                        <span id="Email"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group m-form__group row">
+                                    <label for="example-text-input" class="ml-3 p-3  col-form-label mob-input">Дата рождения</label>
+                                    <div class="col-4 mt-2 pt-1">
+                                        <span id="BirthDate"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group m-form__group row">
+                                    <label for="example-text-input" class="ml-3 p-3  col-form-label mob-input">Пол</label>
+                                    <div class="col-4 mt-2 pt-1">
+                                        <div id="Sex"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group m-form__group ">
+                                    <label for="example-text-input" class=" p-3 col-form-label" style="min-width:100px">Номер телефона</label>
+                                    <span id="PhoneNumber"></span>
+                                </div>
+
+                                <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane " id="m_user_profile_tab_2">
+                    </div>
+                    <div class="tab-pane " id="m_user_profile_tab_3">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        getSex = (sex) => {
+            if (sex) {
+                return 'Мужской';
+            }
+            else {
+                return 'Женский';
+            };
+        };
+
+        var model = @Html.GetJson(Model);
+
+        document.getElementById("Name").innerHTML = model.ResponseObject.Name === null ? 'Не указано' : model.ResponseObject.Name;
+        document.getElementById("Email").innerHTML = model.ResponseObject.Email === null ? 'Не указано' : model.ResponseObject.Email;
+        document.getElementById("PhoneNumber").innerHTML = model.ResponseObject.PhoneNumber === null ? 'Не указано' : model.ResponseObject.PhoneNumber;
+        document.getElementById("BirthDate").innerHTML = model.ResponseObject.BirthDate === null ? 'Не указано' : model.ResponseObject.BirthDate.split('T')[0];
+        document.getElementById("Sex").innerHTML = model.ResponseObject.Sex === null ? 'Не указано' : getSex(model.ResponseObject.Sex);
+    </script>
+}

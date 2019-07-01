@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FocLab.Logic.Models.Experiments;
 
 namespace FocLab.Logic.Models
 {

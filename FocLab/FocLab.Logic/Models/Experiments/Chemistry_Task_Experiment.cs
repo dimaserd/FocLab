@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FocLab.Logic.Models
+namespace FocLab.Logic.Models.Experiments
 {
     /// <summary>
     /// Сущность описывающая эксперимент для химической задачи, получается из мета-сущности по определенному типу

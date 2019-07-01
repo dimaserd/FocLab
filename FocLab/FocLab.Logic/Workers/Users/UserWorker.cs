@@ -7,6 +7,7 @@ using Croco.Core.Common.Models;
 using Croco.Core.Model.Entities.Store;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models;
+using FocLab.Logic.Models.Account;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
 using FocLab.Logic.Services;

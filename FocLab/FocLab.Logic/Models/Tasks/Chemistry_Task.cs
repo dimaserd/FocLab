@@ -5,7 +5,7 @@ using FocLab.Model.Entities.Chemistry;
 using FocLab.Model.Enumerations;
 using Newtonsoft.Json;
 
-namespace FocLab.Logic.Models
+namespace FocLab.Logic.Models.Tasks
 {
 
     /// <summary>

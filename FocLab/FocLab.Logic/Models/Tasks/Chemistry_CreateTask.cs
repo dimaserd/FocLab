@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace FocLab.Logic.Models
+namespace FocLab.Logic.Models.Tasks
 {
     /// <summary>
     /// Модель для создания химического задания

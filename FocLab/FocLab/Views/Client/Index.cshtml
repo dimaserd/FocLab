@@ -1,0 +1,256 @@
+﻿@using System.Globalization
+@using FocLab.Logic
+@model FocLab.Logic.Models.Users.ClientModel
+
+@{
+    ViewBag.Title = "Профиль";
+
+    Layout = ChemistrySettings.LayoutPath;
+
+    var birthDate = Model.BirthDate.HasValue ? Model.BirthDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "";
+}
+
+<h2>Мой профиль</h2>
+<div class="m-content">
+    <div class="row">
+        <div class="col-xl-3 col-lg-4">
+            <div class="m-portlet m-portlet--full-height  ">
+                <div class="m-portlet__body">
+                    <div class="m-card-profile">
+                        <div class="m-card-profile__title m--hide">
+                            Ваш профиль
+                        </div>
+                        <div class="m-card-profile__pic">
+                            <div class="m-card-profile__pic-wrapper">
+                                <img src="@Model.GetImgLink(ImageSizeType.Medium)" alt="No avatar found">
+                            </div>
+                        </div>
+                        <div class="m-card-profile__details">
+                            <span class="m-card-profile__name">@Model.Name</span>
+                            <a href="" class="m-card-profile__email m-link">@Model.Email</a>
+                        </div>
+                    </div>
+                    <ul class="m-nav m-nav--hover-bg m-portlet-fit--sides">
+                        <li class="m-nav__separator m-nav__separator--fit"></li>
+                        <li class="m-nav__item">
+                            <a href="/Chat/Index" class="m-nav__link">
+                                <i class="m-nav__link-icon flaticon-chat-1"></i>
+                                <span class="m-nav__link-text">Сообщения</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="m-portlet__body-separator"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-9 col-lg-8">
+            <div class="m-portlet m-portlet--full-height m-portlet--tabs  ">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-tools">
+                        <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--left m-tabs-line--primary" role="tablist">
+                            <li class="nav-item m-tabs__item">
+                                <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_user_profile_tab_1" role="tab">
+                                    <i class="flaticon-share m--hide"></i>
+                                    Профиль
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="m_user_profile_tab_1">
+                        <div class="m-form m-form--fit m-form--label-align-right">
+                            <div class="m-portlet__body">
+                                <div class="form-group m-form__group row">
+                                    <div class="col-10 ml-auto">
+                                        <h3 class="m-form__section">1. Персональные данные</h3>
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group">
+                                    <label for="example-text-input" class="p-3 col-form-label mob-input">Имя</label>
+                                    <div class="w-100 pl-3 pr-3">
+                                        <input name="Name" class="form-control m-input" type="text" value="@Model.Name">
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group ">
+                                    <label for="example-text-input" class="col-1 col-form-label mob-input">Фамилия</label>
+                                    <div class="w-100 pl-3 pr-3">
+                                        <input name="Surname" class="form-control m-input" type="text" value="@Model.Surname">
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group">
+                                    <label for="example-text-input" class="col-1 col-form-label mob-input">Отчество</label>
+                                    <div class="w-100 pl-3 pr-3">
+                                        <input name="Patronymic" class="form-control m-input" type="text" value="@Model.Patronymic">
+                                    </div>
+                                </div>
+
+                                <div class="form-group m-form__group row">
+                                    <label for="example-text-input" class="ml-3 pl-3 col-form-label">Пол</label>
+                                    <div class="custom-control custom-radio ml-4 mt-2">
+                                        <input type="radio" class="custom-control-input sexCheckbox" value="true" selected="@Model.Sex" id="male" name="Sex" required>
+                                        <label class="custom-control-label" for="male">Мужской</label>
+                                    </div>
+                                    <div class="custom-control custom-radio mb-3 ml-3 mt-2">
+                                        <input type="radio" class="custom-control-input sexCheckbox" value="false" selected="@Model.Sex" id="female" name="Sex" required>
+                                        <label class="custom-control-label" for="female">Женский</label>
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group">
+                                    <label for="example-text-input" class="p-3 col-form-label mob-input" style="min-width:100px">Дата рождения</label>
+                                    <div class="date w-100 pl-3 pr-3">
+                                        <input id="birthDate" name="BirthDate" class="form-control m-input" type="text" value="@birthDate">
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label for="example-text-input" class="ml-3 p-3  col-form-label mob-input">Email</label>
+                                    <div class="col-4 mt-2 pt-1">
+                                        <span>@Model.Email</span>
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group ">
+                                    <label for="example-text-input" class=" p-3 col-form-label" style="min-width:100px">Номер телефона</label>
+
+                                    <div class="w-100 pl-3 pr-3">
+                                        <input name="PhoneNumber" class="form-control m-input" type="text" value="@Model.PhoneNumber">
+                                    </div>
+                                </div>
+
+                                <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+                                <div class="form-group m-form__group row">
+                                    <div class="col-10 ml-auto">
+                                        <h3 class="m-form__section">2. Обновить фото профиля</h3>
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group row pl-5 pr-5 m-0">
+                                    <input class="form-control m-input" id="ImageInput" name="Images" type="file" style="margin: 0 9px 0">
+                                </div>
+                                <div class="col-7 ml-3">
+                                    <button type="reset" class="ml-4 btn btn-brand" onclick="BtnUpdateAvatar()">Обновить фото</button>
+                                </div>
+                            </div>
+                            <div class="m-portlet__foot m-portlet__foot--fit">
+                                <div class="m-form__actions">
+                                    <div class="row">
+                                        <div class="col-7 ml-3">
+                                            <button type="reset" class="btn btn-accent m-btn m-btn--air m-btn--custom mr-3 mb-3" onclick="BtnSaveChanges()">Сохранить изменения</button>
+                                            <button type="reset" class="btn btn-secondary m-btn m-btn--air m-btn--custom mr-3 mb-3" onclick="location.reload()">Отменить</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane " id="m_user_profile_tab_2">
+                    </div>
+                    <div class="tab-pane " id="m_user_profile_tab_3">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        Utils.SetDatePicker("input[name='BirthDate']");
+
+        class Editor {
+            constructor() {
+                this.setHandlers();
+            }
+
+            setHandlers() {
+
+                this.getUserData = function () {
+                    var data = {
+                        Name: "",
+                        BirthDate: "",
+                        Surname: "",
+                        Sex: null,
+                        Patronymic: "",
+                        PhoneNumber: ""
+                    }
+                    data = FormDataHelper.CollectData(data);
+
+                    if (data.BirthDate !== "")
+                    {
+                        data.BirthDate = Requester.ParseDate(data.BirthDate.split('/').join('.'));
+                    }
+
+                    if (data.Sex != null)
+                    {
+                        data.Sex = data.Sex === "true";
+                    }
+
+                    return data;
+                }
+
+                this.Edit = () => {
+                    const data = this.getUserData();
+
+                    console.log("data  ", data);
+
+                    Requester.SendPostRequestWithAnimation("/Api/Client/Update", data, (resp) => resp.IsSucceeded
+
+                        ? setTimeout(() => { location.href = '/Client' }, 1000)
+                        : console.log("Succeed", resp.IsSucceeded));
+                }
+
+                this.onSuccessAnimationHandler = function () {
+                    location.reload();
+                    ModalWorker.HideModals();
+                }
+
+                this.BtnUpdateAvatar = () => {
+
+                    ModalWorker.ShowModal("loadingModal");
+
+                    //Загружаю файлы на сервер по идентификатору инпута где находятся файлы
+                    Requester.UploadFilesToServer("ImageInput", x => {
+
+                        //При успешной загрузке файлов метод вернет идентификаторы файлов из бд
+                        if (x.IsSucceeded) {
+                            //Устанавливаю идентификаторы файлов
+                            const fileId = Number(x.ResponseObject);
+
+                            Requester.SendPostRequestWithAnimation(`/Api/Client/UpdateClientPhoto?fileId=${fileId}`,
+                                {},
+                                resp => resp.IsSucceeded
+                                ? setTimeout(function() {
+                                        location.reload();
+                                    },
+                                    1200)
+                                : console.log("Ошибка"));
+                        }
+                    }, ModalWorker.HideModals());
+                }
+            }
+        }
+    </script>
+
+    <script>
+    window.onload = function () {
+        const sexCheckboxes = Array.from(document.getElementsByClassName("sexCheckbox"));
+
+        sexCheckboxes.map(checkbox => {
+            const value = checkbox.getAttribute("value");
+            const modelValue = checkbox.getAttribute("selected");
+
+            if (value === modelValue) {
+                checkbox.setAttribute("checked", "checked");
+            }
+        });
+    };
+
+    const editor = new Editor();
+
+    BtnSaveChanges = () => {
+        editor.Edit();
+    };
+
+    BtnUpdateAvatar = () => {
+        editor.BtnUpdateAvatar();
+    };
+    </script>
+}

@@ -1,4 +1,5 @@
 ﻿using Croco.Core.Abstractions;
+using FocLab.Logic.Models.Experiments;
 
 namespace FocLab.Logic.Models
 {

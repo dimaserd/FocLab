@@ -8,6 +8,7 @@ using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.ChemistryTasks;
+using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryMethods;

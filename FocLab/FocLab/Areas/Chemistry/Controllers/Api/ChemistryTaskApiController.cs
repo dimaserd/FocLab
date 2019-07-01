@@ -2,6 +2,7 @@
 using Croco.Core.Common.Models;
 using FocLab.Areas.Chemistry.Controllers.Base;
 using FocLab.Logic.Models;
+using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryTasks;
 using FocLab.Model.Contexts;

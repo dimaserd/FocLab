@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using FocLab.Logic.Models.Account;
 using FocLab.Model.Enumerations;
 
 namespace FocLab.Logic.Models.Users

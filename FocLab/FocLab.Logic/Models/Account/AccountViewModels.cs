@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace FocLab.Logic.Models
+namespace FocLab.Logic.Models.Account
 {
 
     public class LoginModelBase

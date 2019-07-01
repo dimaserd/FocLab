@@ -7,6 +7,7 @@ using Croco.Core.Common.Models;
 using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models;
+using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Workers.Users;
 using FocLab.Model.Contexts;
