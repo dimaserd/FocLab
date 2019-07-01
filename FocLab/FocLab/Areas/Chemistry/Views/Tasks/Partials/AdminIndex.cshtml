@@ -177,13 +177,13 @@
                 <tr id="@task.Id" class="@_class performed-chemistry-task">
 
                     <td>
-                        <a href="/Chemistry/Chemistry/Task/@task.Id">
+                        <a href="/Chemistry/Tasks/Task/@task.Id">
                             @task.Title
                         </a>
                     </td>
 
                     <td>
-                        <a href="/Chemistry/Chemistry?id=@task.PerformerUser.UserId">
+                        <a href="/Chemistry/Tasks/Index?id=@task.PerformerUser.UserId">
                             @task.PerformerUser.Name @task.PerformerUser.Email
                         </a>
                     </td>
@@ -307,7 +307,7 @@
                     <td>
                         @if (task.PerformerUser != null)
                         {
-                            <a href="/Chemistry/Chemistry?id=@task.PerformerUser.UserId">
+                            <a href="/Chemistry/Tasks/Index?id=@task.PerformerUser.UserId">
                                 @task.PerformerUser.Name @task.PerformerUser.Email
                             </a>
                         }
@@ -363,32 +363,32 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        
+
         $("#User").select2({
             placeholder: "Выберите пользователя",
 
             "language": {
-                "noResults": function () {
+                "noResults": function() {
                     return "Пользователь не найден.";
                 }
             },
-            escapeMarkup: function (markup) {
+            escapeMarkup: function(markup) {
                 return markup;
             }
-        })
+        });
 
         $("#q").select2({
             placeholder: "Введите название",
 
             "language": {
-                "noResults": function () {
+                "noResults": function() {
                     return "Задание не найдено.";
                 }
             },
-            escapeMarkup: function (markup) {
+            escapeMarkup: function(markup) {
                 return markup;
             }
-        })
+        });
     })
     
 </script>
@@ -579,7 +579,7 @@
                 }
 
                 this.ApplyTextFilter = function (tasks, q) {
-                    if (q == null || q == "") {
+                    if (q == null || q === "") {
                         return tasks;
                     }
 
@@ -596,7 +596,7 @@
 
                 this.ShowAndHideTasks = function (tasks) {
 
-                    var tBody = document.getElementById("performed-tbody")
+                    var tBody = document.getElementById("performed-tbody");
 
                     tBody.innerHTML = "";
 
@@ -610,10 +610,10 @@
 
                     tBody.innerHTML = "";
 
-                    var notPerfomed = tasks.filter(x => !x.IsPerformed);
+                    var notPerformed = tasks.filter(x => !x.IsPerformed);
 
-                    for (var i = 0; i < notPerfomed.length; i++) {
-                        tBody.appendChild(taskDrawer.GetTaskElementForNotPerformedTr(notPerfomed[i]));
+                    for (let i = 0; i < notPerformed.length; i++) {
+                        tBody.appendChild(taskDrawer.GetTaskElementForNotPerformedTr(notPerformed[i]));
                     }
                 }
             }
@@ -624,12 +624,12 @@
 
                     var sort = document.getElementsByName("sort")[0].value;
 
-                    if (sort == 1) {
+                    if (sort === 1) {
 
                         tasks = this.SortByPerformedDate(tasks);
                         return tasks;
                     }
-                    else if (sort == 2) {
+                    else if (sort === 2) {
                         tasks = this.SortByPerformerName(tasks);
                         return tasks;
                     }
