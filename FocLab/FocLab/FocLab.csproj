@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Chemistry\Controllers\" />
     <Folder Include="Implementations\" />
   </ItemGroup>
 

@@ -1,5 +1,4 @@
-﻿@using FocLab.Logic
-@using Microsoft.AspNetCore.Html
+﻿@using Microsoft.AspNetCore.Html
 @model List<FocLab.Model.Entities.Chemistry.ChemistryTaskExperiment>
 @{
     Layout = ChemistrySettings.LayoutPath;
@@ -15,6 +14,10 @@
     </div>
 </div>
 
+<div style="height:20px">
+
+</div>
+
 <h2>
     Ваши эксперименты
 </h2>
@@ -24,19 +27,19 @@
         <thead>
             <tr>
                 <th>
-                    Задача
+                    <strong>Задача</strong>
                 </th>
 
                 <th>
-                    Дата создания
+                    <strong>Дата создания</strong>
                 </th>
 
                 <th>
-                    Дата завершения
+                    <strong>Дата завершения</strong>
                 </th>
 
                 <th>
-                    Действия
+                    <strong>Действия</strong>
                 </th>
             </tr>
         </thead>

@@ -1,12 +1,10 @@
-﻿@using FocLab.Logic
-@using FocLab.Logic.Extensions
-@using FocLab.Model.Enumerations
+﻿@using FocLab.Logic.Extensions
 @model List<FocLab.Logic.Models.Tasks.ChemistryTaskModel>
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Список заданий";
 
-    const string viewsDir = "~/Areas/Chemistry/Views/Chemistry/Partials";
+    const string viewsDir = "~/Areas/Chemistry/Views/Tasks/Partials";
 
     var hasAdminRight = User.HasRight(UserRight.Admin);
     var hasSuperAdminRight = User.HasRight(UserRight.SuperAdmin);
