@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions.ContextWrappers;
 using Croco.Core.Common.Models;
@@ -18,6 +19,29 @@ using Newtonsoft.Json;
 
 namespace FocLab.Logic.Workers.ChemistryTasks
 {
+    public class FileMethodModel
+    {
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Название
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Идентификатор файла
+        /// </summary>
+        public int FileId { get; set; }
+
+        [JsonIgnore]
+        internal static Expression<Func<ChemistryMethodFile, FileMethodModel>> SelectExpression = x => new FileMethodModel
+        {
+            Id = x.Id,
+            FileId = x.FileId,
+            Name = x.Name
+        };
+    }
+
     /// <inheritdoc />
     /// <summary>
     /// Класс работающий с химическими заданиями
@@ -28,20 +52,10 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// Получить список файлов как методы решений
         /// </summary>
         /// <returns></returns>
-        public async Task<List<TempSelectListItem>> GetFileMethodsSelectListAsync()
+        public Task<List<FileMethodModel>> GetFileMethodsAsync()
         {
-            var fileMethods = await Context.ChemistryMethodFiles.ToListAsync();
-
-            var fileMethodsSelectList = fileMethods
-                .Select(x => new TempSelectListItem
-                {
-                    Value = x.Id,
-                    Text = x.Name
-                }).ToList();
-
-            fileMethodsSelectList.Add(new TempSelectListItem { Selected = true, Text = "Метод не выбран", Value = 0.ToString() });
-
-            return fileMethodsSelectList;
+            return GetRepository<ChemistryMethodFile>().Query()
+                .Select(FileMethodModel.SelectExpression).ToListAsync();
         }
 
         /// <summary>
@@ -73,14 +87,16 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> CreateTaskAsync(Chemistry_CreateTask model)
+        public async Task<BaseApiResponse> CreateTaskAsync(ChemistryCreateTask model)
         {
-            var method = model.FileMethodId != 0 ? await Context.ChemistryMethodFiles.FirstOrDefaultAsync(x => x.Id == model.FileMethodId.ToString()) : null;
+            var method = !string.IsNullOrEmpty(model.FileMethodId) ? await Context.ChemistryMethodFiles.FirstOrDefaultAsync(x => x.Id == model.FileMethodId.ToString()) : null;
 
-            if(method == null)
+            if(method == null && !string.IsNullOrEmpty(model.FileMethodId))
             {
-                return new BaseApiResponse(false, "Не найден метод решения задачи (Обратитесь к разработчикам приложения)");
+                return new BaseApiResponse(false, "Не найден выбранный метод решения задачи");
             }
+
+            var repo = GetRepository<ChemistryTask>();
 
             var chemistryTask = new ChemistryTask
             {
@@ -97,7 +113,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 SubstanceCounterJson = JsonConvert.SerializeObject(Chemistry_SubstanceCounter.GetDefaultCounter())
             };
 
-            Context.ChemistryTasks.Add(chemistryTask);
+            repo.CreateHandled(chemistryTask);
 
             return await TrySaveChangesAndReturnResultAsync("Успешно создано");
         }

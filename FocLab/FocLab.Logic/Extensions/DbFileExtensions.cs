@@ -58,16 +58,6 @@ namespace FocLab.Logic.Extensions
             });
         }
 
-        public static BaseApiResponse<DbFile> ToDbFileImage(this IFileData file)
-        {
-            if (!file.IsImage())
-            {
-                return new BaseApiResponse<DbFile>(false, "Файл не является изображением", null);
-            }
-
-            return ToDbFile(file);
-        }
-
         public static string GetLinkToDownload(this int fileId, ImageSizeType sizeType = ImageSizeType.Original)
         {
             return $"/Files/GetDbFileById?id={fileId}&type={sizeType}";

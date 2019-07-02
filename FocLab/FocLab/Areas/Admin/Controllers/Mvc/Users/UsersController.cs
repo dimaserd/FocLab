@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FocLab.Consts;
 using FocLab.Controllers.Base;
 using FocLab.Extensions;
 using FocLab.Logic.Extensions;
@@ -19,7 +20,7 @@ namespace FocLab.Areas.Admin.Controllers.Mvc.Users
     /// Mvc-контроллер предоставляющий методы для работы с пользователями
     /// </summary>
     [Authorize(Roles = "Admin,SuperAdmin,Root")]
-    [Area("Admin")]
+    [Area(AreaConsts.Admin)]
     public class UsersController : BaseController
     {
         public UsersController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)

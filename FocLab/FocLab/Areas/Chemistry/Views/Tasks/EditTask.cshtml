@@ -1,6 +1,5 @@
-﻿@using FocLab.Logic
-@using FocLab.Model.Entities.Chemistry
-@model FocLab.Model.Entities.Chemistry.ChemistryTask
+﻿@using FocLab.Model.Entities.Chemistry
+@model FocLab.Logic.Models.Tasks.ChemistryTaskModel
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Редактирование задания";
@@ -14,11 +13,11 @@
 
 <div class="row">
     <div class="col-md-12">
-        <a href="/Chemistry/Chemistry" class="btn btn-primary" >
+        <a href="/Chemistry/Tasks/Index" class="btn btn-primary">
             Список заданий
         </a> |
 
-        <a href="/Chemistry/Chemistry/Methods" class="btn btn-primary" >
+        <a href="/Chemistry/Chemistry/Methods" class="btn btn-primary">
             Список методов решений
         </a>
     </div>
@@ -35,34 +34,34 @@
 
         <div class="form-group">
             @Html.LabelFor(x => x.MethodFileId)
-            @Html.DropDownListFor(x => x.MethodFileId, fileMethodsSelectList, new {@class = "form-control"})
+            @Html.DropDownListFor(x => x.MethodFileId, fileMethodsSelectList, new { @class = "form-control" })
 
         </div>
 
         <div class="form-group">
             @Html.LabelFor(x => x.Title)
-            @Html.TextBoxFor(x => x.Title, new {@class = "form-control"})
+            @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
         </div>
 
         <div class="form-group">
             @Html.LabelFor(x => x.DeadLineDate)
-            @Html.TextBoxFor(x => x.DeadLineDate, new {@class = "form-control"})
+            @Html.TextBoxFor(x => x.DeadLineDate, new { @class = "form-control" })
         </div>
 
         <div class="form-group">
             @Html.LabelFor(x => x.PerformerUserId)
 
-            @Html.DropDownListFor(x => x.PerformerUserId, usersSelectList, new {@class = "form-control"})
+            @Html.DropDownListFor(x => x.PerformerUserId, usersSelectList, new { @class = "form-control" })
         </div>
 
         <div class="form-group">
             @Html.LabelFor(x => x.AdminQuality)
-            @Html.TextBoxFor(x => x.AdminQuality, new {@class = "form-control"})
+            @Html.TextBoxFor(x => x.AdminQuality, new { @class = "form-control" })
         </div>
 
         <div class="form-group">
             @Html.LabelFor(x => x.AdminQuantity)
-            @Html.TextBoxFor(x => x.AdminQuantity, new {@class = "form-control"})
+            @Html.TextBoxFor(x => x.AdminQuantity, new { @class = "form-control" })
         </div>
 
         <button class="btn btn-success btn-block" onclick="EditTask()">Редактировать</button>

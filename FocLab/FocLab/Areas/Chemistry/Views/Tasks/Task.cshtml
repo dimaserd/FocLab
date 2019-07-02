@@ -15,7 +15,7 @@
 
     var userId = User.Identity.GetUserId();
 
-    var viewsChemistry = "~/Areas/Chemistry/Views/Chemistry";
+    const string viewsChemistry = "~/Areas/Chemistry/Views/Tasks";
 
     int ToInt(ChemistryTaskDbFileType @enum)
     {
@@ -44,7 +44,7 @@
 
         @if (User.IsAdmin())
         {
-            <a href="/Chemistry/Chemistry/EditTask/@Model.Id" class="btn btn-warning" style="margin-top:5px">
+            <a href="/Chemistry/Tasks/EditTask/@Model.Id" class="btn btn-warning" style="margin-top:5px">
                 <i class="fa fa-pencil-square"></i>
                 Редактировать
             </a>
@@ -68,7 +68,7 @@
         }
 
 
-        <a href="/Chemistry/Chemistry/PrintTask/@Model.Id" class="btn btn-success" style="margin-top:5px">
+        <a href="/Chemistry/Tasks/PrintTask/@Model.Id" class="btn btn-success" style="margin-top:5px">
             <i class="fa fa-print" aria-hidden="true"></i>
             Печать документа
         </a>

@@ -1,4 +1,4 @@
-﻿@model FocLab.Logic.Models.Tasks.Chemistry_CreateTask
+﻿@model FocLab.Logic.Models.Tasks.ChemistryCreateTask
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Создать задание";
@@ -14,7 +14,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <a href="/Chemistry/Chemistry" class="btn btn-primary" style="padding-bottom:10px">
+        <a href="/Chemistry/Tasks/Index" class="btn btn-primary" style="padding-bottom:10px">
             Список заданий
         </a> |
 
@@ -35,7 +35,7 @@
 
             <div class="form-group">
                 @Html.LabelFor(x => x.FileMethodId)
-                @Html.DropDownListFor(x => x.FileMethodId, fileMethodsSelectList, new { @class = "form-control" })
+                @Html.DropDownList("FileMethodId", fileMethodsSelectList, new { @class = "form-control" })
 
             </div>
 
@@ -76,7 +76,7 @@
     <script>
         var date = new Date();
 
-        utils.setDatePicker("input[name='DeadLineDate']");
+        Utils.setDatePicker("input[name='DeadLineDate']");
 
         function CreateTask() {
             var data = {
@@ -90,9 +90,9 @@
             };
 
             data = CollectData(data);
-            data.DeadLineDate = requester.ParseDate(data.DeadLineDate);
+            data.DeadLineDate = Requester.ParseDate(data.DeadLineDate);
 
-            requester.SendPostRequestWithAnimation("/Api/Chemistry/Tasks/Create", data, x => {
+            Requester.SendPostRequestWithAnimation("/Api/Chemistry/Tasks/Create", data, x => {
                 if (x.IsSucceeded) {
                     location.href = "/Chemistry/Chemistry/Index";
                 }

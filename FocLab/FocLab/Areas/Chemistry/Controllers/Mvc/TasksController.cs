@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using FocLab.Areas.Chemistry.Controllers.Base;
+using FocLab.Helpers;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Models.Users;
@@ -28,6 +29,9 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(ContextWrapper);
 
         private AdminChemistryTasksWorker AdminChemistryTasksWorker => new AdminChemistryTasksWorker(ContextWrapper);
+
+        private ChemistryTasksHtmlHelper ChemistryTasksHtmlHelper => new ChemistryTasksHtmlHelper(ChemistryTasksWorker);
+
         /// <summary>
         /// 
         /// </summary>
@@ -45,7 +49,9 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
 
             ViewData["User"] = user;
 
+            
             var model = await ChemistryTasksWorker.GetNotDeletedTasksAsync();
+
 
             var tasksSelectList = model.Select(x => new SelectListItem { Text = x.Title, Value = x.Title }).ToList();
 
@@ -111,7 +117,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
 
 
             ViewData["model"] = task;
-            ViewData["fileMethodsSelectList"] = await AdminChemistryTasksWorker.GetFileMethodsSelectListAsync();
+            ViewData["fileMethodsSelectList"] = await ChemistryTasksHtmlHelper.GetMethodsSelectListAsync();
 
             ViewData["usersSelectList"] = await AdminChemistryTasksWorker.GetUsersSelectListAsync();
 
@@ -126,13 +132,12 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         [HttpGet]
         public async Task<ActionResult> CreateTask()
         {
-            var model = new Chemistry_CreateTask
+            var model = new ChemistryCreateTask
             {
                 AdminId = UserId,
             };
 
-            ViewData["fileMethodsSelectList"] = await AdminChemistryTasksWorker.GetFileMethodsSelectListAsync();
-
+            ViewData["fileMethodsSelectList"] = await ChemistryTasksHtmlHelper.GetMethodsSelectListAsync();
             ViewData["usersSelectList"] = await AdminChemistryTasksWorker.GetUsersSelectListAsync();
 
             return View(model);

@@ -7,18 +7,6 @@ namespace FocLab.Logic.EntityDtos
 {
     public class DbFileDto : DbFileIntId
     {
-        #region Свойства
-        
-        #region Свойства отношений
-
-        //public List<ProductColorGroupFileDto> ColorGroupFiles { get; set; }
-
-        //public List<ProductFileDto> ProductFiles { get; set; }
-
-        #endregion
-
-        #endregion
-
         public static Expression<Func<DbFile, DbFileDto>> SelectExpression = x => new DbFileDto
         {
             Id = x.Id,

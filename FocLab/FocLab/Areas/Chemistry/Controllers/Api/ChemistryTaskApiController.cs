@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Croco.Core.Common.Models;
 using FocLab.Areas.Chemistry.Controllers.Base;
-using FocLab.Logic.Models;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryTasks;
@@ -25,7 +24,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Api
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost, Route(nameof(Create))]
-        public Task<BaseApiResponse> Create(Chemistry_CreateTask model)
+        public Task<BaseApiResponse> Create(ChemistryCreateTask model)
         {
             return AdminChemistryTasksWorker.CreateTaskAsync(model);
         }

@@ -6,7 +6,7 @@ namespace FocLab.Logic.Models.Tasks
     /// <summary>
     /// Модель для создания химического задания
     /// </summary>
-    public class Chemistry_CreateTask
+    public class ChemistryCreateTask
     {
         /// <summary>
         /// Идентифкатор администратора
@@ -29,7 +29,7 @@ namespace FocLab.Logic.Models.Tasks
         /// Идентификатор файла
         /// </summary>
         [Display(Name = "Метод решения задачи")]
-        public int FileMethodId { get; set; }
+        public string FileMethodId { get; set; }
 
         /// <summary>
         /// Колличество

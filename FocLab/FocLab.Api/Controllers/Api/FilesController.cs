@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api
 {
-
     /// <inheritdoc />
     /// <summary>
     /// Апи-контроллер предоставляющий методы для работы с локальными файлами
@@ -32,7 +31,7 @@ namespace FocLab.Api.Controllers.Api
 
 
         /// <summary>
-        /// Перезагагрузить содержимое файла
+        /// Перезагрузить содержимое файла
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -63,7 +62,7 @@ namespace FocLab.Api.Controllers.Api
                 }
 
                 //TODO Implement Files Upload
-                return await FileWorker.UploadFilesAsImagesAsync(files.Select(x => x.ToFileData()));
+                return await FileWorker.UploadFilesAsync(files.Select(x => x.ToFileData()));
             }
             catch(Exception ex)
             {
