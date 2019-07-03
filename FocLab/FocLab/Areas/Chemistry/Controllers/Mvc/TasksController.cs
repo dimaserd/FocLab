@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FocLab.Areas.Chemistry.Controllers.Base;
 using FocLab.Helpers;
 using FocLab.Logic.Extensions;
+using FocLab.Logic.Models.ChemistryTasks;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Services;
@@ -71,6 +72,8 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         {
             var task = await ChemistryTasksWorker.GetChemistryTaskByIdAsync(id);
 
+            
+
             var reagents = await ChemistryReagentsWorker.GetReagentsAsync();
 
             var reagentSelectList = reagents.Select(x => new SelectListItem
@@ -114,14 +117,14 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
             {
                 return RedirectToAction("Index");
             }
-
+            var model = EditChemistryTask.ToEditChemistryTask(task);
 
             ViewData["model"] = task;
             ViewData["fileMethodsSelectList"] = await ChemistryTasksHtmlHelper.GetMethodsSelectListAsync();
 
             ViewData["usersSelectList"] = await AdminChemistryTasksWorker.GetUsersSelectListAsync();
 
-            return View(task);
+            return View(model);
         }
 
 

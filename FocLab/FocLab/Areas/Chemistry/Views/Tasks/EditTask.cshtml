@@ -1,5 +1,4 @@
-﻿@using FocLab.Model.Entities.Chemistry
-@model FocLab.Logic.Models.Tasks.ChemistryTaskModel
+﻿@model FocLab.Logic.Models.ChemistryTasks.EditChemistryTask
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Редактирование задания";
@@ -7,8 +6,6 @@
     var fileMethodsSelectList = ViewData["fileMethodsSelectList"] as List<SelectListItem>;
 
     var usersSelectList = ViewData["usersSelectList"] as List<SelectListItem>;
-
-    var task = ViewData["model"] as ChemistryTask;
 }
 
 <div class="row">
@@ -30,7 +27,6 @@
 <div class="row">
     <div class="col-md-12">
         @Html.HiddenFor(x => x.Id)
-        @Html.HiddenFor(a => a.AdminUserId)
 
         <div class="form-group">
             @Html.LabelFor(x => x.MethodFileId)
@@ -71,14 +67,12 @@
 
 @section Scripts{
     <script>
-        var date = new Date();
 
-        utils.setDatePicker("DeadLineDate");
+        Utils.SetDatePicker("DeadLineDate", new Date());
 
         function EditTask() {
             var data = {
                 Id: "",
-                AdminId: "",
                 FileMethodId: "",
                 Title: "",
                 DeadLineDate: "",
@@ -88,9 +82,9 @@
             };
 
             data = CollectData(data);
-            data.DeadLineDate = requester.ParseDate(data.DeadLineDate);
+            data.DeadLineDate = Requester.ParseDate(data.DeadLineDate);
 
-            requester.SendPostRequestWithAnimation("/Api/Chemistry/Tasks/Create", data, x => {
+            Requester.SendPostRequestWithAnimation("/Api/Chemistry/Tasks/Create", data, x => {
                 if (x.IsSucceeded) {
                     location.href = "/Chemistry/Chemistry/Index";
                 }

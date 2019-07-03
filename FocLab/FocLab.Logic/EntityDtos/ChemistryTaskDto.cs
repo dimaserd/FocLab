@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Model.Entities.Chemistry;

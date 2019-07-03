@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions.ContextWrappers;
 using Croco.Core.Common.Models;
-using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models;
+using FocLab.Logic.Models.ChemistryTasks;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Workers.Users;
@@ -19,29 +18,6 @@ using Newtonsoft.Json;
 
 namespace FocLab.Logic.Workers.ChemistryTasks
 {
-    public class FileMethodModel
-    {
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Название
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Идентификатор файла
-        /// </summary>
-        public int FileId { get; set; }
-
-        [JsonIgnore]
-        internal static Expression<Func<ChemistryMethodFile, FileMethodModel>> SelectExpression = x => new FileMethodModel
-        {
-            Id = x.Id,
-            FileId = x.FileId,
-            Name = x.Name
-        };
-    }
-
     /// <inheritdoc />
     /// <summary>
     /// Класс работающий с химическими заданиями
@@ -89,9 +65,11 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// <returns></returns>
         public async Task<BaseApiResponse> CreateTaskAsync(ChemistryCreateTask model)
         {
-            var method = !string.IsNullOrEmpty(model.FileMethodId) ? await Context.ChemistryMethodFiles.FirstOrDefaultAsync(x => x.Id == model.FileMethodId.ToString()) : null;
+            var isNull = string.IsNullOrEmpty(model.FileMethodId);
 
-            if(method == null && !string.IsNullOrEmpty(model.FileMethodId))
+            var method = !isNull ? await Context.ChemistryMethodFiles.FirstOrDefaultAsync(x => x.Id == model.FileMethodId.ToString()) : null;
+
+            if(method == null && !isNull)
             {
                 return new BaseApiResponse(false, "Не найден выбранный метод решения задачи");
             }
@@ -107,7 +85,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 AdminQuality = model.Quality,
                 AdminQuantity = model.Quantity,
                 AdminUserId = UserId,
-                MethodFileId = method.Id,
+                MethodFileId = method?.Id,
                 Title = model.Title,
                 PerformerUserId = model.PerformerId,
                 SubstanceCounterJson = JsonConvert.SerializeObject(Chemistry_SubstanceCounter.GetDefaultCounter())
@@ -123,7 +101,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> EditTaskAsync(ChemistryTaskDto model)
+        public async Task<BaseApiResponse> EditTaskAsync(EditChemistryTask model)
         {
             if (model == null)
             {
@@ -137,24 +115,22 @@ namespace FocLab.Logic.Workers.ChemistryTasks
 
             var searcher = new UserSearcher(ApplicationContextWrapper);
 
-
             //нахожу исполнителя
             var user = await searcher.GetUserByIdAsync(model.PerformerUserId);
-
 
             if (user == null)
             {
                 return new BaseApiResponse(false, "Пользователь не найден по указанному идентификатору в поле PerformerId");
             }
 
-            var task = await Context.ChemistryTasks.FirstOrDefaultAsync(x => x.Id == model.Id);
+            var repo = GetRepository<ChemistryTask>();
+
+            var task = await repo.Query().FirstOrDefaultAsync(x => x.Id == model.Id);
             
             if(task == null)
             {
                 return new BaseApiResponse(false, "Задание не найдено по указанному идентификатору");
             }
-
-            Context.Entry(task).State = EntityState.Modified;
 
             task.MethodFileId = model.MethodFileId;
             task.Title = model.Title;
@@ -163,27 +139,24 @@ namespace FocLab.Logic.Workers.ChemistryTasks
             task.DeadLineDate = model.DeadLineDate;
             task.PerformerUserId = model.PerformerUserId;
 
+            repo.UpdateHandled(task);
+
             return await TrySaveChangesAndReturnResultAsync("Задание отредактировано");
         }
 
         /// <summary>
         /// Удалить химическое задание
         /// </summary>
-        /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> RemoveTaskAsync(ChemistryTaskDto model)
+        public async Task<BaseApiResponse> RemoveTaskAsync(string id)
         {
             if (!User.IsAdmin())
             {
                 return new BaseApiResponse(false, "Вы не имеете прав для редактирования данной задачи");
             }
+            var repo = GetRepository<ChemistryTask>();
 
-            if(model == null)
-            {
-                return new BaseApiResponse(false, "Вы подали пустую модель");
-            }
-
-            var task = await Context.ChemistryTasks.FirstOrDefaultAsync(x => x.Id == model.Id);
+            var task = await repo.Query().FirstOrDefaultAsync(x => x.Id == id);
 
             if(task == null)
             {
@@ -195,9 +168,9 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 return new BaseApiResponse(false, "Задание уже является удаленным");
             }
 
-            Context.Entry(task).State = EntityState.Modified;
             task.Deleted = true;
 
+            repo.UpdateHandled(task);
 
             return await TrySaveChangesAndReturnResultAsync("Задание отправлено в удаленные");
         }
@@ -205,21 +178,17 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// <summary>
         /// Отмена удаления химического задания
         /// </summary>
-        /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> CancelRemoveTaskAsync(ChemistryTaskDto model)
+        public async Task<BaseApiResponse> CancelRemoveTaskAsync(string id)
         {
             if (!User.IsAdmin())
             {
                 return new BaseApiResponse(false, "Вы не имеете прав для редактирования данной задачи");
             }
 
-            if (model == null)
-            {
-                return new BaseApiResponse(false, "Вы подали пустую модель");
-            }
+            var repo = GetRepository<ChemistryTask>();
 
-            var task = await Context.ChemistryTasks.FirstOrDefaultAsync(x => x.Id == model.Id);
+            var task = await repo.Query().FirstOrDefaultAsync(x => x.Id == id);
 
             if (task == null)
             {
@@ -231,9 +200,8 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 return new BaseApiResponse(false, "Задание уже является не удаленным");
             }
 
-            Context.Entry(task).State = EntityState.Modified;
             task.Deleted = false;
-
+            repo.UpdateHandled(task);
 
             return await TrySaveChangesAndReturnResultAsync("Задание востановлено");
         }
