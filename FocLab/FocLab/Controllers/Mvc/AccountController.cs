@@ -97,7 +97,7 @@ namespace FocLab.Controllers.Mvc
 
             if(!User.Identity.IsAuthenticated)
             {
-                return View("~/Views/Metronic5/Login.cshtml");
+                return View("~/Metronic5/Login.cshtml");
             }
             
             return Redirect("~/");

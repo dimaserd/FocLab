@@ -74,9 +74,8 @@
 
 @section Scripts{
     <script>
-        var date = new Date();
-
-        Utils.setDatePicker("input[name='DeadLineDate']");
+        
+        Utils.SetDatePicker("input[name='DeadLineDate']", new Date());
 
         function CreateTask() {
             var data = {

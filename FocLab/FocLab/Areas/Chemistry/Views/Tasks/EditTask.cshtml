@@ -84,7 +84,7 @@
             data = CollectData(data);
             data.DeadLineDate = Requester.ParseDate(data.DeadLineDate);
 
-            Requester.SendPostRequestWithAnimation("/Api/Chemistry/Tasks/Create", data, x => {
+            Requester.SendPostRequestWithAnimation("/Api/Chemistry/Tasks/Edit", data, x => {
                 if (x.IsSucceeded) {
                     location.href = "/Chemistry/Chemistry/Index";
                 }
