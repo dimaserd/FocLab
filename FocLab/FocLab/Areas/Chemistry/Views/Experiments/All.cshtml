@@ -11,7 +11,7 @@
         Все эскперименты по заданиям
     </strong>
     <span class="badge">
-        @(Model.Sum(x => 1 * x.Count()))
+        @(Model.Sum(x => x.Count()))
     </span>
 </h2>
 
@@ -65,7 +65,7 @@
                             <tbody>
                                 @foreach (var experiment in group)
                                 {
-                                    var experimentTitle = string.IsNullOrEmpty(experiment.Title) ? "[Без названия]" : experiment.Title;
+                                    var experimentTitle = string.IsNullOrEmpty((experiment.Title ?? "").Trim()) ? "[Без названия]" : experiment.Title;
 
                                     <tr>
                                         <td>
@@ -75,7 +75,7 @@
                                         </td>
 
                                         <td>
-                                            <a href="/Chemistry/Chemistry/Index/@experiment.Performer.Id">
+                                            <a href="/Chemistry/Tasks/Index/@experiment.Performer.Id">
                                                 @experiment.Performer.Name
                                             </a>
                                         </td>

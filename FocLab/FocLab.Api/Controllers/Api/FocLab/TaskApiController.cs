@@ -6,20 +6,21 @@ using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryTasks;
 using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api.FocLab
 {
+    [Route("Api/Task")]
     public class TaskApiController : BaseApiController
     {
         public TaskApiController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, httpContextAccessor)
         {
         }
 
-        private ChemistryTasksWorker ChemistryTasksWorker => new ChemistryTasksWorker(ContextWrapper);
-
         private AdminChemistryTasksWorker AdminChemistryTasksWorker => new AdminChemistryTasksWorker(ContextWrapper);
 
-
+        [Route("Create")]
+        [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         public Task<BaseApiResponse> Create(ChemistryCreateTask model)
         {
             return AdminChemistryTasksWorker.CreateTaskAsync(model);

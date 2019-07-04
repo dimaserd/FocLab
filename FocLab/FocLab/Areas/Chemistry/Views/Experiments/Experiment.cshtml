@@ -3,6 +3,7 @@
 @using FocLab.Logic.Models
 @using FocLab.Model.Enumerations
 @using Microsoft.AspNetCore.Html
+@using Croco.Core.Utils
 @model FocLab.Logic.EntityDtos.ChemistryTaskExperimentDto
 @{
 
@@ -259,7 +260,7 @@ new Tuple<string, string, int, int, bool>("File4", "Файл4", 4, Model.Files.A
 
         function UpdateExperiment() {
 
-            var experimentJSON = @(new HtmlString(Newtonsoft.Json.JsonConvert.SerializeObject(Model)));
+            var experimentJSON = @(new HtmlString(Tool.JsonConverter.Serialize(Model)));
 
             experimentJSON["PerformerText"] = document.getElementsByName("PerformerText")[0].value;
 

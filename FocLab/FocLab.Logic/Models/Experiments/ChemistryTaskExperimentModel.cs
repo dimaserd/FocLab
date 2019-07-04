@@ -34,7 +34,7 @@ namespace FocLab.Logic.Models.Experiments
         /// <summary>
         /// Исполнитель
         /// </summary>
-        public virtual ChemistryTaskUserModelBase Performer { get; set; }
+        public ChemistryTaskUserModelBase Performer { get; set; }
         #endregion
 
         /// <summary>

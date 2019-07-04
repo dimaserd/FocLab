@@ -1,11 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Html
+@using Croco.Core.Utils
 @model FocLab.Logic.Models.Chemistry_SubstanceCounter
 @{
     Layout = null;
 
     var prefix = "";
 
-    var substanceObjectJSON = Model != null? Newtonsoft.Json.JsonConvert.SerializeObject(Model) : "null";
+    var substanceObjectJSON = Model != null? Tool.JsonConverter.Serialize(Model) : "null";
 
     var tbodySubstancesId = $"{prefix}.tbodySubstances";
 }
@@ -25,23 +26,28 @@
         <thead>
             <tr>
                 <th>
-                    Название вещества
+                    <strong>Название вещества</strong>
+                    
                 </th>
 
                 <th>
-                    Масса вещества (г)
+                    <strong>Масса вещества (г)</strong>
+                    
                 </th>
 
                 <th>
-                    Молярная масса (г / моль)
+                    <strong>Молярная масса (г / моль)</strong>
+                    
                 </th>
 
                 <th>
-                    Коэфициент
+                    <strong>Коэфициент</strong>
+                    
                 </th>
 
                 <th>
-                    Действия
+                    <strong>Действия</strong>
+                    
                 </th>
             </tr>
         </thead>

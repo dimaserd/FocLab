@@ -17,35 +17,60 @@ class TemplateJoined {
 class TableParser {
 
     static GetTemplate(elem: HTMLTableDataCellElement): Template {
+
+        if (elem == null) {
+            return null;
+        }
+
         return {
-            Text: elem.innerText,
+            Text: elem != null? elem.innerText : null,
             Translation: ""
         };
     }
 
     static Mapper(row: HTMLTableRowElement): TemplateJoined {
+
+        console.log("Mapper", row);
+
+        if (row.cells[1] == null) {
+            return null;
+        }
+
         return {
-            Trigger: row.cells[1].innerText,
-            Rules: row.cells[2].innerText,
-            Description: row.cells[3].innerText,
+            Trigger: row.cells[1] != null ? row.cells[1].innerText : null,
+            Rules: row.cells[2] != null ? row.cells[2].innerText : null,
+            Description: row.cells[3] != null ? row.cells[3].innerText : null,
             SmsTemplate: TableParser.GetTemplate(row.cells[4]),
             EmailTemplate: TableParser.GetTemplate(row.cells[5]),
-            Time: row.cells[6].innerText,
-            Initiator: row.cells[7].innerText,
-            Type: row.cells[8].innerText
+            Time: row.cells[6] != null ? row.cells[6].innerText : null,
+            Initiator: row.cells[7] != null ? row.cells[7].innerText : null,
+            Type: row.cells[8] != null ? row.cells[8].innerText : null
         }
     }
 
     static GetArray(rows: Array<HTMLTableRowElement>): Array<TemplateJoined> {
 
-        return rows.map(TableParser.Mapper);
+        console.log("GetArray", rows);
+        return rows.map(TableParser.Mapper)
+            .filter(x => x != null)
+            .filter(x => !(x.Description == null && x.EmailTemplate == null && x.Initiator == null && x.Rules == null && x.SmsTemplate == null && x.Time == null))
+            .filter(x => !(x.Description === "↵" && x.Type == "↵" && x.Initiator == "↵"));
     }
 }
 
 class TableFounder {
     static Find(): Array<HTMLTableRowElement> {
         var t = document.getElementById("myTable");
-        return (t.children[1] as unknown as Array<HTMLTableRowElement>);
+
+        console.log("Find", t);
+
+        var s: HTMLCollection = t.children[1].children;
+
+        var d = Array.from(s);
+
+        d.shift();
+
+        return d as Array<HTMLTableRowElement>;
     }
 }
 

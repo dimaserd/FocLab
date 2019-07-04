@@ -51,8 +51,8 @@
 
             if (!Model.Deleted)
             {
-                <a onclick="RemoveTask('@Model.Id')" class="btn btn-danger" style="margin-top:5px">
-                    <i class="fa fa-trash-o"></i>
+                <a onclick="RemoveTask('@Model.Id')" href="#delete" class="btn btn-danger" style="margin-top:5px">
+                    <i class="fas fa-trash"></i>
                     Удалить
                 </a>
             }
@@ -267,7 +267,7 @@
                 </th>
             </tr>
 
-            @if (Model.ReactionSchemaImage.FileId > 0)
+            @if (Model.ReactionSchemaImage != null)
             {
                 <tr>
                     <th colspan="2">
@@ -277,7 +277,7 @@
 
             }
             @{
-                var btnText = Model.ReactionSchemaImage.FileId > 0 ? "Перезагрузить файл реакции" : "Загрузить файл реакции";
+                var btnText = Model.ReactionSchemaImage != null ? "Перезагрузить файл реакции" : "Загрузить файл реакции";
             }
             <tr>
                 <th>
@@ -292,7 +292,7 @@
                         @btnText
                     </button>
 
-                    @if (Model.ReactionSchemaImage.FileId > 0)
+                    @if (Model.ReactionSchemaImage != null)
                     {
                         <a class="btn btn-primary" href="/Files/GetDbFileById/@Model.ReactionSchemaImage.FileId">
                             Скачать изображение реакции

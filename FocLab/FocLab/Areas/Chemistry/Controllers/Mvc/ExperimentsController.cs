@@ -52,7 +52,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         /// <returns></returns>
         public async Task<ActionResult> All()
         {
-            var model = await ChemistryTaskExperimentsWorker.GetAllExperimentsWithUsers();
+            var model = await ChemistryTaskExperimentsWorker.GetAllExperimentsAsync();
 
             return View(model);
         }
@@ -64,7 +64,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         /// <returns></returns>
         public async Task<ActionResult> Experiment(string id)
         {
-            var experiment = await ChemistryTaskExperimentsWorker.GetExperimentDtoAsync(id);
+            var experiment = await ChemistryTaskExperimentsWorker.GetExperimentAsync(id);
 
             if (experiment == null)
             {
@@ -92,18 +92,6 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
             return View(task);
         }
 
-        /// <summary>
-        /// Создание метод Апи
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<JsonResult> Create(ChemistryTaskExperimentDto model)
-        {
-            var experimentCreateResult = await ChemistryTaskExperimentsWorker.CreateExperimentForTaskAsync(model);
-
-            return Json(experimentCreateResult);
-        }
         #endregion
 
         public ExperimentsController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)

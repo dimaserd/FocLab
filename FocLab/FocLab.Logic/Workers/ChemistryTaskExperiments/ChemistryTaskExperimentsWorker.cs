@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using Croco.Core.Abstractions.ContextWrappers;
 using Croco.Core.Application;
 using Croco.Core.Common.Models;
+using Croco.Core.Utils;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.EntityDtos;
-using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models;
+using FocLab.Logic.Models.Experiments;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Logic.Workers.Users;
 using FocLab.Model.Contexts;
@@ -37,7 +38,7 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
                 return new BaseApiResponse(false, "Вы подали пустую модель");
             }
 
-            var experiment = await Context.ChemistryTaskExperiments.FirstOrDefaultAsync(x => x.Id == model.ExperimentId);
+            var experiment = await GetRepository<ChemistryTaskExperiment>().Query().FirstOrDefaultAsync(x => x.Id == model.ExperimentId);
 
             if (experiment == null)
             {
@@ -92,34 +93,7 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
             return await TrySaveChangesAndReturnResultAsync("Вы отменили заверешение эксперимента");
         }
 
-        /// <summary>
-        /// Получить все эксперименты вместе с пользователями
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<IGrouping<ChemistryTaskDto, ChemistryTaskExperimentDto>>> GetAllExperimentsWithUsers()
-        {
-            var query = Context.ChemistryTaskExperiments.Select(x => new ChemistryTaskExperimentDto
-            {
-                Id = x.Id,
-                Title = x.Title,
-                ChemistryTask = new ChemistryTaskDto
-                {
-                    Id = x.ChemistryTask.Id,
-                    Title = x.ChemistryTask.Title,
-                },
-                CreationDate = x.CreationDate,
-                PerformedDate = x.PerformedDate,
-                Performer = new ApplicationUserDto
-                {
-                    Email = x.Performer.Email,
-                    Id = x.Performer.Id,
-                    Name = x.Performer.Name
-                }
-            }).GroupBy(x => x.ChemistryTask);
-
-            return await query.ToListAsync();
-        }
-
+        
         /// <summary>
         /// Обновить заголовок эксперимента
         /// </summary>
@@ -132,7 +106,7 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
                 return new BaseApiResponse(false, "Вы подали пустую модель");
             }
 
-            var experiment = await Context.ChemistryTaskExperiments
+            var experiment = await GetRepository<ChemistryTaskExperiment>().Query()
                 .FirstOrDefaultAsync(x => x.Id == model.Id);
 
             if(experiment == null)
@@ -259,41 +233,39 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
         /// Создать эксперимент к задаче
         /// </summary>
         /// <param name="model"></param>
-        /// <param name="Context"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse<ChemistryTaskExperiment>> CreateExperimentForTaskAsync(ChemistryTaskExperimentDto model)
+        public async Task<BaseApiResponse> CreateExperimentForTaskAsync(CreateExperiment model)
         {
             if(model == null)
             {
-                return new BaseApiResponse<ChemistryTaskExperiment>(false, "Вы подали пустую модель");
+                return new BaseApiResponse(false, "Вы подали пустую модель");
             }
 
             if (!IsAuthenticated)
             {
-                return new BaseApiResponse<ChemistryTaskExperiment>(false, "Вы не авторизованы");
+                return new BaseApiResponse(false, "Вы не авторизованы");
             }
 
-            if(!await Context.ChemistryTasks.AnyAsync(x => x.Id == model.ChemistryTaskId))
+            if(!await Context.ChemistryTasks.AnyAsync(x => x.Id == model.TaskId))
             {
-                return new BaseApiResponse<ChemistryTaskExperiment>(false, "Задача к которой создается эксперимент не найдена по указанному идентификатору");
+                return new BaseApiResponse(false, "Задача к которой создается эксперимент не найдена по указанному идентификатору");
             }
 
             var experiment = new ChemistryTaskExperiment
             {
-                Id = Guid.NewGuid().ToString(),
                 Title = model.Title,
-                ChemistryTaskId = model.ChemistryTaskId,
+                ChemistryTaskId = model.TaskId,
                 CreationDate = DateTime.Now,
                 Deleted = false,
                 PerformerId = UserId,
-                SubstanceCounterJson = Newtonsoft.Json.JsonConvert.SerializeObject(Chemistry_SubstanceCounter.GetDefaultCounter()),
+                SubstanceCounterJson = Tool.JsonConverter.Serialize(Chemistry_SubstanceCounter.GetDefaultCounter()),
             };
 
-            Context.ChemistryTaskExperiments.Add(experiment);
+            var repo = GetRepository<ChemistryTaskExperiment>();
 
-            await Context.SaveChangesAsync();
+            repo.CreateHandled(experiment);
 
-            return new BaseApiResponse<ChemistryTaskExperiment>(true, "Создан эксперимент для химической задачи", experiment);
+            return await TrySaveChangesAndReturnResultAsync("Создан эксперимент для химической задачи");
         }
 
         /// <summary>
@@ -301,92 +273,40 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
         /// </summary>
         /// <param name="experimentId"></param>
         /// <returns></returns>
-        public async Task<ChemistryTaskExperiment> GetExperimentAsync(string experimentId)
+        public async Task<ChemistryTaskExperimentModel> GetExperimentAsync(string experimentId)
         {
             if (!IsAuthenticated)
             {
                 return null;
             }
-            
-            var experiment = await Context.ChemistryTaskExperiments
-                .Include(x => x.Files)
-                .Include(x => x.ChemistryTask)
+            return await GetRepository<ChemistryTaskExperiment>().Query()
+                .Select(ChemistryTaskExperimentModel.SelectExpression)
                 .FirstOrDefaultAsync(x => x.Id == experimentId);
-
-            return experiment;
         }
 
-        /// <summary>
-        /// Получить эксперименты
-        /// </summary>
-        /// <param name="experimentId"></param>
-        /// <returns></returns>
-        public async Task<ChemistryTaskExperimentDto> GetExperimentDtoAsync(string experimentId)
-        {
-            if (!IsAuthenticated)
-            {
-                return null;
-            }
-
-            var experiment = await Context.ChemistryTaskExperiments
-                .Select(x => new ChemistryTaskExperimentDto
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    Deleted = x.Deleted,
-                    CreationDate = x.CreationDate,
-                    ChemistryTaskId = x.ChemistryTaskId,
-                    PerformerId = x.PerformerId,
-                    PerformerText = x.PerformerText,
-                    SubstanceCounterJson = x.SubstanceCounterJson,
-
-                    Performer = new ApplicationUserDto
-                    {
-                        Id = x.Performer.Id,
-                        Name = x.Performer.Name,
-                        Email = x.Performer.Email,
-                    },
-
-                    ChemistryTask = new ChemistryTaskDto
-                    {
-                        Id = x.ChemistryTask.Id,
-                        Title = x.ChemistryTask.Title,
-                        
-                    },
-                    
-                    Files = x.Files.Select(t => new ChemistryTaskExperimentFileDto
-                    {
-                        FileId = t.FileId,
-                        Type = t.Type,
-                        ChemistryTaskExperimentId = t.ChemistryTaskExperimentId
-                    }).ToList()
-                    
-                })
-                .FirstOrDefaultAsync(x => x.Id == experimentId);
-
-            return experiment;
-        }
-
+        
         /// <summary>
         /// Получить все эксперименты
         /// </summary>
         /// <param name="Context"></param>
         /// <returns></returns>
-        public async Task<List<ChemistryTaskExperiment>> GetAllExperimentsAsync()
+        public async Task<List<ChemistryTaskExperimentModel>> GetAllExperimentsAsync()
         {
             if (!IsAuthenticated)
             {
                 return null;
             }
             
-            return await Context.ChemistryTaskExperiments.Include(x => x.Performer).ToListAsync();
+            return await GetRepository<ChemistryTaskExperiment>().Query()
+                .Select(ChemistryTaskExperimentModel.SelectExpression)
+                .ToListAsync();
         }
 
         /// <summary>
         /// Получить мои эксперименты
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ChemistryTaskExperiment>> GetMyExperimentsAsync()
+        public async Task<List<ChemistryTaskExperimentModel>> GetMyExperimentsAsync()
         {
             if (!IsAuthenticated)
             {
@@ -395,7 +315,9 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
 
             var userId = UserId;
 
-            return await Context.ChemistryTaskExperiments.Include(x => x.ChemistryTask).Where(x => x.PerformerId == userId).ToListAsync();
+            return await GetRepository<ChemistryTaskExperiment>().Query()
+                .Where(x => x.PerformerId == userId)
+                .Select(ChemistryTaskExperimentModel.SelectExpression).ToListAsync();
         }
 
         /// <summary>
@@ -406,7 +328,9 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
         /// <returns></returns>
         public async Task<BaseApiResponse> RemoveExperimentAsync(string experimentId)
         {
-            var experiment = await GetExperimentAsync(experimentId);
+            var repo = GetRepository<ChemistryTaskExperiment>();
+
+            var experiment = await repo.Query().FirstOrDefaultAsync(x => x.Id == experimentId);
 
             if (experiment == null)
             {
@@ -425,9 +349,8 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
                 return new BaseApiResponse(false, "Эксперимент уже является удаленным");
             }
 
-            Context.Entry(experiment).State = EntityState.Modified;
-
             experiment.Deleted = true;
+            repo.UpdateHandled(experiment);
 
             return await TrySaveChangesAndReturnResultAsync("Эксперимент отправлен в удаленные");
         }
@@ -439,7 +362,9 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
         /// <returns></returns>
         public async Task<BaseApiResponse> CancelRemovingExperimentAsync(string experimentId)
         {
-            var experiment = await GetExperimentAsync(experimentId);
+            var repo = GetRepository<ChemistryTaskExperiment>();
+
+            var experiment = await repo.Query().FirstOrDefaultAsync(x => x.Id == experimentId);
 
             if (experiment == null)
             {
@@ -458,10 +383,10 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
                 return new BaseApiResponse(false, "Эксперимент уже является востановленным");
             }
 
-            Context.Entry(experiment).State = EntityState.Modified;
-
+            
             experiment.Deleted = false;
-
+            repo.UpdateHandled(experiment);
+            
             return await TrySaveChangesAndReturnResultAsync("Эксперимент востановлен");
         }
 
