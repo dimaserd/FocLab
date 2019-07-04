@@ -35,30 +35,6 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         }
 
         /// <summary>
-        /// Получить список пользователей переложенный в выпадющий список
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<TempSelectListItem>> GetUsersSelectListAsync()
-        {
-            var userId = ContextWrapper.UserId;
-
-            var searcher = new UserSearcher(ApplicationContextWrapper);
-
-            var users = await searcher.SearchUsersAsync(UserSearch.GetAllUsers);
-
-            var usersSelectList = users.List.Where(x => x.Rights.All(t => t != UserRight.Admin) && x.Rights.All(t => t != UserRight.SuperAdmin))
-                .Select(x => new TempSelectListItem
-                {
-                    Value = x.Id,
-                    Text = $"{x.Name} {x.Email}"
-                }).ToList();
-
-            usersSelectList = usersSelectList.Where(x => x.Value != userId).ToList();
-
-            return usersSelectList;
-        }
-
-        /// <summary>
         /// Создать химическое задание
         /// </summary>
         /// <param name="model"></param>

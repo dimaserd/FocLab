@@ -7,7 +7,6 @@ using System.Linq.Expressions;
 
 namespace FocLab.Logic.Models.Experiments
 {
-
     public class ChemistryTaskExperimentModel
     {
         /// <summary>

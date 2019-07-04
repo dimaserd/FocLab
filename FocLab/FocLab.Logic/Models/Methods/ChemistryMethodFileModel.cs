@@ -1,4 +1,7 @@
-﻿using System;
+﻿using FocLab.Model.Entities.Chemistry;
+using Newtonsoft.Json;
+using System;
+using System.Linq.Expressions;
 
 namespace FocLab.Logic.Models.Methods
 {
@@ -29,5 +32,14 @@ namespace FocLab.Logic.Models.Methods
         {
             return $"/Files/GetDbFileById/{FileId}";
         }
+
+        [JsonIgnore]
+        internal static Expression<Func<ChemistryMethodFile, ChemistryMethodFileModel>> SelectExpression = x => new ChemistryMethodFileModel
+        {
+            Id = x.Id,
+            FileId = x.FileId,
+            Name = x.Name,
+            CreationDate = x.CreationDate
+        };
     }
 }

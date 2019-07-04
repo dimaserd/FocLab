@@ -1,9 +1,8 @@
-﻿using Croco.Core.Abstractions;
-using FocLab.Logic.Models.Experiments;
+﻿using FocLab.Model.Enumerations;
 
 namespace FocLab.Logic.Models
 {
-    
+
     /// <summary>
     /// Изменить файл для эксперимента
     /// </summary>
@@ -15,13 +14,13 @@ namespace FocLab.Logic.Models
         public string ExperimentId { get; set; }
 
         /// <summary>
-        /// Файл
+        /// Тип файла для эксперимента
         /// </summary>
-        public IFileData File { get; set; }
-
+        public ChemistryTaskDbFileType FileType { get; set; }
+        
         /// <summary>
-        /// Если 0 это Изображение реакции, Далее Файл 1, Файл 2, Файл 3, Файл 4, 
+        /// Идентифкатор нового файла
         /// </summary>
-        public Chemistry_Task_Experiment_File ExperimentFile { get; set; }
+        public int FileId { get;set;}
     }
 }

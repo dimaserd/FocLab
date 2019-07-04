@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Abstractions;
 using Croco.Core.Abstractions.ContextWrappers;
 using Croco.Core.Common.Models;
+using FocLab.Logic.Models.Methods;
 using FocLab.Model.Contexts;
+using FocLab.Model.Entities;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,48 +22,45 @@ namespace FocLab.Logic.Workers.ChemistryMethods
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task<ChemistryMethodFile> GetMethodAsync(string id)
+        public Task<ChemistryMethodFileModel> GetMethodAsync(string id)
         {
-            return  Context.ChemistryMethodFiles.FirstOrDefaultAsync(x => x.Id == id);
+            return  Context.ChemistryMethodFiles.Select(ChemistryMethodFileModel.SelectExpression).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         /// <summary>
         /// Загрузить метод решения задачи
         /// </summary>
         /// <param name="model"></param>
-        /// <param name="methodName"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> UploadMethodAsync(IFileData model, string methodName)
+        public async Task<BaseApiResponse> UploadMethodAsync(CreateChemistryMethod model)
         {
-            if (await Context.ChemistryMethodFiles.AnyAsync(x => x.Name == methodName))
+            var validation = ValidateModel(model);
+
+            if(!validation.IsSucceeded)
             {
-                return new BaseApiResponse(false, $"Метод решения с именем {methodName} уже существует");
+                return validation;
             }
 
-            if (model == null)
+            var repo = GetRepository<ChemistryMethodFile>();
+
+            if (await repo.Query().AnyAsync(x => x.Name == model.Name))
             {
-                return new BaseApiResponse(false, "Файл не подан");
+                return new BaseApiResponse(false, $"Метод решения с именем {model.Name} уже существует");
             }
 
-            var fileWorker = new DbFileWorker(ApplicationContextWrapper);
-
-            var fileUploadResult = await fileWorker.UploadUserFileAsync(model);
-
-            if (!fileUploadResult.IsSucceeded)
+            if(!await GetRepository<DbFile>().Query().AnyAsync(x => x.Id == model.FileId))
             {
-                return new BaseApiResponse(fileUploadResult.IsSucceeded, fileUploadResult.Message);
+                return new BaseApiResponse(false, "Файл не найден по указанному идентификатору");
             }
-
             
             var methodFile = new ChemistryMethodFile
             {
                 CreationDate = DateTime.Now,
-                FileId = fileUploadResult.ResponseObject.Id,
-                Id = Guid.NewGuid().ToString(),
-                Name = methodName
+                FileId = model.FileId,
+                Name = model.Name
             };
 
-            Context.ChemistryMethodFiles.Add(methodFile);
+            repo.CreateHandled(methodFile);
 
             return await TrySaveChangesAndReturnResultAsync("Метод решения химической задачи создан");
         }

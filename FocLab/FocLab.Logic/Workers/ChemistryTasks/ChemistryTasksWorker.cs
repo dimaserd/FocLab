@@ -22,16 +22,11 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> LoadOrReloadFileForTaskAsync(Chemistry_ChangeFileForTask model)
+        public async Task<BaseApiResponse> LoadOrReloadFileForTaskAsync(ChemistryChangeFileForTask model)
         {
             if (model == null)
             {
                 return new BaseApiResponse(false, "Вы подали пустую модель");
-            }
-
-            if (model.TaskFile == null)
-            {
-                return new BaseApiResponse(false, "Вы не подали модель файла");
             }
 
             var repo = GetRepository<ChemistryTask>();
@@ -55,20 +50,11 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 return new BaseApiResponse(false, "Задание является удаленным");
             }
 
-            if (model.File == null)
-            {
-                return new BaseApiResponse(false, "Файл не подан");
-            }
 
-            var existedFile = await Context.ChemistryTaskDbFiles.FirstOrDefaultAsync(x => x.ChemistryTaskId == task.Id && x.Type == model.TaskFile.FileType);
+            var existedFile = await Context.ChemistryTaskDbFiles.FirstOrDefaultAsync(x => x.ChemistryTaskId == task.Id && x.Type == model.FileType);
 
-            var fileWorker = new DbFileWorker(ApplicationContextWrapper);
-
-            //загружаю файл
-            var fileUploadResult = await fileWorker.UploadUserFileAsync(model.File);
-
-            var file = fileUploadResult.ResponseObject;
-
+            
+            var fileRepo = GetRepository<ChemistryTaskDbFile>();
 
             ChemistryTaskDbFile taskFile;
             //Если файла пока не существует
@@ -76,29 +62,25 @@ namespace FocLab.Logic.Workers.ChemistryTasks
             {
                 taskFile = new ChemistryTaskDbFile
                 {
-                    FileId = file.Id,
-                    Type = model.TaskFile.FileType,
-                    ChemistryTaskId = task.Id
+                    FileId = model.FileId,
+                    Type = model.FileType,
+                    ChemistryTaskId = model.TaskId
                 };
 
-                Context.ChemistryTaskDbFiles.Add(taskFile);
+                fileRepo.CreateHandled(taskFile);
 
-                await Context.SaveChangesAsync();
-
-                return new BaseApiResponse(true, "Файл загружен");
+                return await TrySaveChangesAndReturnResultAsync("Файл обновлен");
             }
-
-            Context.ChemistryTaskDbFiles.Remove(existedFile);
 
             taskFile = new ChemistryTaskDbFile
             {
                    
-                FileId = file.Id,
-                Type = model.TaskFile.FileType,
-                ChemistryTaskId = task.Id
+                FileId = model.FileId,
+                Type = model.FileType,
+                ChemistryTaskId = model.TaskId
             };
 
-            Context.ChemistryTaskDbFiles.Add(taskFile);
+            fileRepo.UpdateHandled(taskFile);
 
             return await TrySaveChangesAndReturnResultAsync("Файл загружен и обновлен");
         }

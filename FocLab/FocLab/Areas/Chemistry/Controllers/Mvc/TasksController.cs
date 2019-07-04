@@ -122,7 +122,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
             ViewData["model"] = task;
             ViewData["fileMethodsSelectList"] = await ChemistryTasksHtmlHelper.GetMethodsSelectListAsync();
 
-            ViewData["usersSelectList"] = await AdminChemistryTasksWorker.GetUsersSelectListAsync();
+            ViewData["usersSelectList"] = await ChemistryTasksHtmlHelper.GetUsersSelectListAsync(ContextWrapper);
 
             return View(model);
         }
@@ -141,7 +141,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
             };
 
             ViewData["fileMethodsSelectList"] = await ChemistryTasksHtmlHelper.GetMethodsSelectListAsync();
-            ViewData["usersSelectList"] = await AdminChemistryTasksWorker.GetUsersSelectListAsync();
+            ViewData["usersSelectList"] = await ChemistryTasksHtmlHelper.GetUsersSelectListAsync(ContextWrapper);
 
             return View(model);
         }
