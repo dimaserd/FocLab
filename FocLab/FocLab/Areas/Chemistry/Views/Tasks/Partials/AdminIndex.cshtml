@@ -70,7 +70,7 @@
             </th>
 
             <th>
-                @Html.DropDownList("SearchTasks.Q", tasksSelectList, new { id = "SearchTasks.Q", @class = "form-control" })
+                @Html.DropDownList("SearchTasks.Q", tasksSelectList, new { id = "SearchTasks", @class = "form-control" })
             </th>
         </tr>
 
@@ -377,7 +377,7 @@
             }
         });
 
-        $("#SearchTasks.Q").select2({
+        $("#SearchTasks").select2({
             placeholder: "Введите название",
 
             "language": {
