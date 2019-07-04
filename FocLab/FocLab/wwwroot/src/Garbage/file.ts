@@ -44,7 +44,7 @@ class TableParser {
 
 class TableFounder {
     static Find(): Array<HTMLTableRowElement> {
-        var t = document.getElementsByClassName("wrapped relative-table confluenceTable")[0];
+        var t = document.getElementById("myTable");
         return (t.children[1] as unknown as Array<HTMLTableRowElement>);
     }
 }
