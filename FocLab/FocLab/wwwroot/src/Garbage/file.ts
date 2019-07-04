@@ -36,7 +36,7 @@ class TableParser {
         }
     }
 
-    static Func(rows: Array<HTMLTableRowElement>): Array<TemplateJoined> {
+    static GetArray(rows: Array<HTMLTableRowElement>): Array<TemplateJoined> {
 
         return rows.map(TableParser.Mapper);
     }
@@ -48,3 +48,9 @@ class TableFounder {
         return (t.children[1] as unknown as Array<HTMLTableRowElement>);
     }
 }
+
+var t = TableFounder.Find();
+var s = TableParser.GetArray(t);
+
+console.log(s);
+

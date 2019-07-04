@@ -11,7 +11,6 @@ using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models;
-using FocLab.Logic.Settings;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Logic.Workers.Users;
 using FocLab.Model.Contexts;
@@ -196,11 +195,6 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
                 return new BaseApiResponse(false, "Вы подали пустую модель");
             }
 
-            if (model.ExperimentFile == null)
-            {
-                return new BaseApiResponse(false, "Вы не подали модель файла");
-            }
-
             var experiment = await GetExperimentAsync(model.ExperimentId);
 
             if (experiment == null)
@@ -220,55 +214,42 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
                 return new BaseApiResponse(false, "Эксперимент является удаленным");
             }
 
-            if (model.File == null)
-            {
-                return new BaseApiResponse(false, "Файл не подан");
-            }
+            var repo = GetRepository<ChemistryTaskExperimentFile>();
 
-            var existedFile = await Context.ChemistryTaskExperimentFiles.FirstOrDefaultAsync(x => x.ChemistryTaskExperimentId == experiment.Id && x.Type == model.ExperimentFile.FileType);
-
-            var fileWorker = new DbFileWorker(ApplicationContextWrapper);
-
-            //загружаю файл
-            var fileUploadResult = await fileWorker.UploadUserFileAsync(model.File);
             
-            var file = fileUploadResult.ResponseObject;
-
-           
+            var existedFile = await repo.Query().FirstOrDefaultAsync(x => x.ChemistryTaskExperimentId == experiment.Id && x.Type == model.FileType);
 
             ChemistryTaskExperimentFile experimentFile;
+
+
             //Если файла пока не существует
-            if (existedFile == null)
+            if (existedFile != null)
             {
                 experimentFile = new ChemistryTaskExperimentFile
                 {
-                    FileId = file.Id,
-                    Type = model.ExperimentFile.FileType,
+                    FileId = model.FileId,
+                    Type = model.FileType,
                     ChemistryTaskExperimentId = experiment.Id
                 };
 
-                Context.ChemistryTaskExperimentFiles.Add(experimentFile);
-
-                await Context.SaveChangesAsync();
-
-                return new BaseApiResponse(true, "Файл загружен");
+                repo.CreateHandled(experimentFile);
+                
+                return await TrySaveChangesAndReturnResultAsync("Файл обновлен");
             }
             else
             {
-                Context.ChemistryTaskExperimentFiles.Remove(existedFile);
+                repo.DeleteHandled(existedFile);
 
                 experimentFile = new ChemistryTaskExperimentFile
                 {
-                    FileId = file.Id,
-                    Type = model.ExperimentFile.FileType,
+                    FileId = model.FileId,
+                    Type = model.FileType,
                     ChemistryTaskExperimentId = experiment.Id
                 };
 
-                Context.ChemistryTaskExperimentFiles.Add(experimentFile);
+                repo.CreateHandled(experimentFile);
 
-                await Context.SaveChangesAsync();
-
-                return new BaseApiResponse(true, "Файл загружен и обновлен");
+                return await TrySaveChangesAndReturnResultAsync("Файл обновлен");
 
             }
             

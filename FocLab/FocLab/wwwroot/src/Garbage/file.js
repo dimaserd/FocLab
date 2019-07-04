@@ -29,7 +29,7 @@ var TableParser = /** @class */ (function () {
             Type: row.cells[8].innerText
         };
     };
-    TableParser.Func = function (rows) {
+    TableParser.GetArray = function (rows) {
         return rows.map(TableParser.Mapper);
     };
     return TableParser;
@@ -43,3 +43,6 @@ var TableFounder = /** @class */ (function () {
     };
     return TableFounder;
 }());
+var t = TableFounder.Find();
+var s = TableParser.GetArray(t);
+console.log(s);

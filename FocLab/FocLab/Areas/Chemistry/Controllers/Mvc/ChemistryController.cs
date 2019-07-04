@@ -41,18 +41,8 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
 
             return View(model);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="methodName"></param>
-        /// <returns></returns>
-        [Authorize(Roles = "Admin,SuperAdmin,Root")]
-        public async Task<JsonResult> UploadMethod(IFileData model, string methodName)
-        {
-            //TODO Переделать загрузку файлов на единичный случай
-            return Json(await ChemistryMethodsWorker.UploadMethodAsync(model, methodName));
-        }
+
+
         /// <summary>
         /// 
         /// </summary>
