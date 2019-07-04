@@ -2,7 +2,7 @@
   {
     "outputFileName": "wwwroot/js/Core.js",
     "inputFiles": [
-      "src/Core/*.js"
+      "wwwroot/src/Core/*.js"
     ],
     "minify": {
       "enabled": true,

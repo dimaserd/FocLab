@@ -17,6 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\src\FocLab\Models.ts" />
+    <Content Remove="wwwroot\src\FocLab\TaskDrawer.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.4" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.7.4" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -32,9 +37,44 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\src\Core\AccountWorker.d.ts" />
+    <None Include="wwwroot\src\Core\AccountWorker.js" />
+    <None Include="wwwroot\src\Core\AccountWorker.ts" />
+    <None Include="wwwroot\src\Core\AjaxLoader.d.ts" />
+    <None Include="wwwroot\src\Core\AjaxLoader.js" />
+    <None Include="wwwroot\src\Core\AjaxLoader.ts" />
+    <None Include="wwwroot\src\Core\CookieWorker.d.ts" />
+    <None Include="wwwroot\src\Core\CookieWorker.js" />
+    <None Include="wwwroot\src\Core\CookieWorker.ts" />
+    <None Include="wwwroot\src\Core\FormDataHelper.d.ts" />
+    <None Include="wwwroot\src\Core\FormDataHelper.js" />
+    <None Include="wwwroot\src\Core\FormDataHelper.ts" />
+    <None Include="wwwroot\src\Core\Logger.d.ts" />
+    <None Include="wwwroot\src\Core\Logger.js" />
+    <None Include="wwwroot\src\Core\Logger.ts" />
+    <None Include="wwwroot\src\Core\ModalWorker.d.ts" />
+    <None Include="wwwroot\src\Core\ModalWorker.js" />
+    <None Include="wwwroot\src\Core\ModalWorker.ts" />
+    <None Include="wwwroot\src\Core\Requester.d.ts" />
+    <None Include="wwwroot\src\Core\Requester.js" />
+    <None Include="wwwroot\src\Core\Requester.ts" />
+    <None Include="wwwroot\src\Core\ToastrWorker.d.ts" />
+    <None Include="wwwroot\src\Core\ToastrWorker.js" />
+    <None Include="wwwroot\src\Core\ToastrWorker.ts" />
+    <None Include="wwwroot\src\Core\Utils.d.ts" />
+    <None Include="wwwroot\src\Core\Utils.js" />
+    <None Include="wwwroot\src\Core\Utils.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FocLab.Api\FocLab.Api.csproj" />
     <ProjectReference Include="..\FocLab.Logic\FocLab.Logic.csproj" />
     <ProjectReference Include="..\MigrationTool\MigrationTool.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\src\FocLab\Models.ts" />
+    <TypeScriptCompile Include="wwwroot\src\FocLab\TaskDrawer.ts" />
   </ItemGroup>
 
 </Project>

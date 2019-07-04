@@ -70,7 +70,7 @@
             </th>
 
             <th>
-                @Html.DropDownList("q", tasksSelectList, new { id = "q", @class = "form-control" })
+                @Html.DropDownList("SearchTasks.Q", tasksSelectList, new { id = "SearchTasks.Q", @class = "form-control" })
             </th>
         </tr>
 
@@ -412,14 +412,14 @@
                     var innerHtml = `
 
                         <td>
-                            <a href="/Chemistry/Chemistry/Task/${task.MetaEntityId}">
+                            <a href="/Chemistry/Tasks/Task/${task.Id}">
                                 ${task.Title}
                             </a>
                         </td>
 
                         <td>
-                            <a href="/Chemistry/Chemistry?id=${task.Performer.UserId}">
-                                ${task.Performer.Name} ${task.Performer.Email}
+                            <a href="/Chemistry/Chemistry?id=${task.PerformerUser.UserId}">
+                                ${task.PerformerUser.Name} ${task.PerformerUser.Email}
                             </a>
                         </td>
 
@@ -467,14 +467,14 @@
 
 
                         <td>
-                            <a href="/Chemistry/Chemistry/Task/${task.MetaEntityId}">
+                            <a href="/Chemistry/Tasks/Task/${task.Id}">
                                 ${task.Title}
                             </a>
                         </td>
 
                         <td>
-                            <a href="/Chemistry/Chemistry?id=${task.Performer.UserId}">
-                                ${task.Performer.Name} ${task.Performer.Email}
+                            <a href="/Chemistry/Chemistry?id=${task.PerformerUser.UserId}">
+                                ${task.PerformerUser.Name} ${task.PerformerUser.Email}
                             </a>
                         </td>
 
@@ -544,10 +544,10 @@
 
                     var tasks = days == null || days == "" ? this.Tasks : this.ApplyDaysFilter(this.Tasks, days);
 
-                    console.log("ApplyFilterBeforeText", tasks);
+                    var q = document.getElementsByName("SearchTasks.Q")[0].value;
 
-                    var q = document.getElementsByName("q")[0].value;
-
+                    console.log(`ApplyFilterBeforeText q = ${q}`, tasks);
+                    
                     tasks = this.ApplyTextFilter(tasks, q);
 
                     console.log("ApplyFilterAfterText", tasks);
@@ -665,10 +665,10 @@
 
                         
 
-                        if (a.Performer.Name > b.Performer.Name) {
+                        if (a.PerformerUser.Name > b.PerformerUser.Name) {
                             return 1;
                         }
-                        if (a.Performer.Name < b.Performer.Name) {
+                        if (a.PerformerUser.Name < b.PerformerUser.Name) {
                             return -1;
                         }
                         // a должно быть равным b
