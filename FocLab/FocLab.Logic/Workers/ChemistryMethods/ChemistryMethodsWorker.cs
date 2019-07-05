@@ -34,7 +34,10 @@ namespace FocLab.Logic.Workers.ChemistryMethods
         /// <returns></returns>
         public Task<List<ChemistryMethodFileModel>> GetMethodsAsync()
         {
-            return GetRepository<ChemistryMethodFile>().Query().Select(ChemistryMethodFileModel.SelectExpression).ToListAsync();
+            return GetRepository<ChemistryMethodFile>().Query()
+                .OrderByDescending(x => x.CreationDate)
+                .Select(ChemistryMethodFileModel.SelectExpression)
+                .ToListAsync();
         }
 
         /// <summary>

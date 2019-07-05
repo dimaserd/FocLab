@@ -1,4 +1,5 @@
 ﻿using FocLab.Areas.Chemistry.Controllers.Base;
+using FocLab.Consts;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryMethods;
 using FocLab.Model.Contexts;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
+    [Area(AreaConsts.Chemistry)]
     public class MethodsController : BaseFocLabController
     {
         public MethodsController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)

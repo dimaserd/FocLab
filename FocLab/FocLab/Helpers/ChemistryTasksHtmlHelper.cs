@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions.ContextWrappers;
 using FocLab.Logic.Models.Users;
+using FocLab.Logic.Workers.ChemistryMethods;
 using FocLab.Logic.Workers.ChemistryTasks;
 using FocLab.Logic.Workers.Users;
 using FocLab.Model.Contexts;
@@ -14,18 +15,18 @@ namespace FocLab.Helpers
 {
     public class ChemistryTasksHtmlHelper
     {
-        private readonly ChemistryTasksWorker _tasksWorker;
+        private readonly ChemistryMethodsWorker _methodsWorker;
 
-        public ChemistryTasksHtmlHelper(ChemistryTasksWorker tasksWorker)
+        public ChemistryTasksHtmlHelper(ChemistryMethodsWorker methodsWorker)
         {
-            _tasksWorker = tasksWorker;
+            _methodsWorker = methodsWorker;
         }
 
         public async Task<List<SelectListItem>> GetMethodsSelectListAsync()
         {
-            var model = await _tasksWorker.GetNotDeletedTasksAsync();
+            var model = await _methodsWorker.GetMethodsAsync();
 
-            var tasksSelectList = model.Select(x => new SelectListItem { Text = x.Title, Value = x.Title }).ToList();
+            var tasksSelectList = model.Select(x => new SelectListItem { Text = x.Name, Value = x.Id }).ToList();
 
             tasksSelectList.Add(new SelectListItem { Text = "Не указано", Value = "", Selected = true });
 

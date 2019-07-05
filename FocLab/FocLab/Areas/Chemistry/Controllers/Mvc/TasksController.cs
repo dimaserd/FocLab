@@ -1,12 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using FocLab.Areas.Chemistry.Controllers.Base;
+using FocLab.Consts;
 using FocLab.Helpers;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.ChemistryTasks;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Services;
+using FocLab.Logic.Workers.ChemistryMethods;
 using FocLab.Logic.Workers.ChemistryReagents;
 using FocLab.Logic.Workers.ChemistryTasks;
 using FocLab.Model.Contexts;
@@ -17,7 +19,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
-    [Area("Chemistry")]
+    [Area(AreaConsts.Chemistry)]
     [Authorize]
     public class TasksController : BaseFocLabController
     {
@@ -29,9 +31,9 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
 
         private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(ContextWrapper);
 
-        private AdminChemistryTasksWorker AdminChemistryTasksWorker => new AdminChemistryTasksWorker(ContextWrapper);
+        private ChemistryMethodsWorker ChemistryMethodsWorker => new ChemistryMethodsWorker(ContextWrapper);
 
-        private ChemistryTasksHtmlHelper ChemistryTasksHtmlHelper => new ChemistryTasksHtmlHelper(ChemistryTasksWorker);
+        private ChemistryTasksHtmlHelper ChemistryTasksHtmlHelper => new ChemistryTasksHtmlHelper(ChemistryMethodsWorker);
 
         /// <summary>
         /// 
@@ -50,9 +52,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
 
             ViewData["User"] = user;
 
-            
             var model = await ChemistryTasksWorker.GetNotDeletedTasksAsync();
-
 
             var tasksSelectList = model.Select(x => new SelectListItem { Text = x.Title, Value = x.Title }).ToList();
 

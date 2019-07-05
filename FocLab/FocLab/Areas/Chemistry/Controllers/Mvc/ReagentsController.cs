@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FocLab.Areas.Chemistry.Controllers.Base;
+using FocLab.Consts;
 using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryReagents;
@@ -12,8 +13,8 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     /// <summary>
     /// Контроллер для реагентов
     /// </summary>
-    [Area("Chemistry")]
-    public class ReagentController : BaseFocLabController
+    [Area(AreaConsts.Chemistry)]
+    public class ReagentsController : BaseFocLabController
     {
         private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(ContextWrapper);
 
@@ -112,7 +113,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
             return View();
         }
 
-        public ReagentController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
+        public ReagentsController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
         {
         }
     }

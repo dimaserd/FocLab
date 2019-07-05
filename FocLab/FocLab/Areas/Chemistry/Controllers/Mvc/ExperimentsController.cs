@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Croco.Core.Common.Models;
 using FocLab.Areas.Chemistry.Controllers.Base;
-using FocLab.Logic.EntityDtos;
+using FocLab.Consts;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryTaskExperiments;
 using FocLab.Logic.Workers.ChemistryTasks;
@@ -14,7 +14,8 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     /// <summary>
     /// Контроллер содержащий методы для работы с экспериментами
     /// </summary>
-    [Area("Chemistry")]
+    [Area(AreaConsts.Chemistry)]
+
     public class ExperimentsController : BaseFocLabController
     {
         #region Методы Апи

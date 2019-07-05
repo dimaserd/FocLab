@@ -1,41 +1,72 @@
-﻿@model FocLab.Model.Entities.Chemistry.ChemistryMethodFile
+﻿@model FocLab.Logic.Models.Methods.ChemistryMethodFileModel
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Редактирование метода";
 }
 
-<div class="row">
-    <div class="col-md-12">
-        <a href="/Chemistry/Chemistry/Tasks/Index" class="btn btn-primary">
-            Задания
-        </a>
+
+<div class="m-portlet__body">
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/Chemistry/Chemistry/Tasks/Index" class="btn btn-primary">
+                Задания
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-form__section m-form__section--first">
+                <div class="form-group m-form__group m--margin-top-10">
+                    <div class="alert m-alert m-alert--default" role="alert">
+                        Вы редактируете метод решения химической задачи
+                    </div>
+                </div>
+
+                @Html.Hidden("Method.Id", Model.Id)
+
+                <div class="form-group m-form__group">
+                    <label for="Name">Название</label>
+                    <input type="text" class="form-control m-input" value="@Model.Name" autocomplete="false" name="Method.Name" placeholder="Название">
+                </div>
+
+
+                <div class="m-portlet__foot m-portlet__foot--fit">
+                    <div class="m-form__actions m-form__actions">
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <button type="reset" class="btn btn-brand action-btn">Изменить</button>
+                                <button type="reset" onclick="location.href='/Chemistry/Methods/Index'" class="btn btn-secondary">Отмена</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
     </div>
 </div>
 
-<div style="height:20px">
+@section Scripts{ 
+    <script>
+        $(".action-btn").on('click', () => UpdateMethod());
 
-</div>
+        function UpdateMethod() {
+            var data = {
+                Id: "",
+                Name: ""
+            };
 
-<div class="table-responsive">
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>
-                Название
-            </th>
+            data = FormDataHelper.CollectDataByPrefix(data, "Method.");
 
-            <th>
-                @Html.TextBox("name", Model.Name, new { @class = "form-control" })
-            </th>
-        </tr>
+            Requester.SendPostRequestWithAnimation("/Api/Chemistry/Methods/Update", data, x => {
 
-        <tr>
-            <th colspan="2">
-                <button class="btn btn-success btn-block" onclick="alert('Функция пока не реализована')">
-                    Обновить данные
-                </button>
-            </th>
-        </tr>
-    </table>
-</div>
-
-
+                if (x.IsSucceeded) {
+                    setTimeout(() => location.href = '/Chemistry/Methods/Index', 1500);
+                }
+            })
+        }
+    </script>
+}

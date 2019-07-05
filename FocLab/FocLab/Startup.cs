@@ -128,9 +128,6 @@ namespace FocLab
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            //TODO Удалить когда будут убраны все баги
-            app.UseDeveloperExceptionPage();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -138,6 +135,8 @@ namespace FocLab
             }
             else
             {
+                //TODO Удалить когда будут убраны все баги
+                app.UseDeveloperExceptionPage();
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }

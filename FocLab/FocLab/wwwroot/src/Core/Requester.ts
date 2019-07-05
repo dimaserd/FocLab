@@ -20,6 +20,8 @@ class Requester {
     }
 
     static ParseDate = (date: string): string => {
+
+        date = date.replace(new RegExp("/", 'g'), ".");
         const from = date.split(".");
 
         const d = new Date(+from[2], +from[1] - 1, +from[0]);

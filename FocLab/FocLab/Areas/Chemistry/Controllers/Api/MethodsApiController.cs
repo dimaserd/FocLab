@@ -30,6 +30,15 @@ namespace FocLab.Areas.Chemistry.Controllers.Api
             return ChemistryMethodsWorker.CreateMethodAsync(model);
         }
 
-        
+        /// <summary>
+        /// Создать задание
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("Update")]
+        public Task<BaseApiResponse> Update(EditChemistryMethod model)
+        {
+            return ChemistryMethodsWorker.EditMethodAsync(model);
+        }
     }
 }

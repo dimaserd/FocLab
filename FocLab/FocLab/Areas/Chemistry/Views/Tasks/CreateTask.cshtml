@@ -6,68 +6,91 @@
     var fileMethodsSelectList = ViewData["fileMethodsSelectList"] as List<SelectListItem>;
 
     var usersSelectList = ViewData["usersSelectList"] as List<SelectListItem>;
+
+    const string NotSelectedValue = "[Not_Selected]";
+
+    var s = fileMethodsSelectList.FirstOrDefault(x => string.IsNullOrWhiteSpace(x.Value));
+
+    s.Value = NotSelectedValue;
 }
 
 <div style="height:20px">
 
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <a href="/Chemistry/Tasks/Index" class="btn btn-primary" style="padding-bottom:10px">
-            Список заданий
-        </a> |
 
-        <a href="/Chemistry/Chemistry/Methods" class="btn btn-primary">
+
+<div class="row">
+    <div class="col-12">
+        <a class="btn btn-success" href="/Chemistry/Tasks/Index">
+            <i class="fas fa-globe"></i>
+            Список заданий
+        </a>
+        |
+        <a class="btn btn-success" href="/Chemistry/Methods/Index">
+            <i class="fas fa-globe"></i>
             Список методов решений
         </a>
     </div>
 </div>
 
-<h2>
-    Создание задачи для исполнителя
-</h2>
+<div style="height:20px">
 
-<div class="row">
-    <div class="col-md-12">
-        <div>
-            @Html.HiddenFor(a => a.AdminId)
+</div>
 
-            <div class="form-group">
-                @Html.LabelFor(x => x.FileMethodId)
-                @Html.DropDownList("FileMethodId", fileMethodsSelectList, new { @class = "form-control" })
+<form autocomplete="off">
 
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(x => x.Title)
-                @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(x => x.DeadLineDate)
-                @Html.TextBoxFor(x => x.DeadLineDate, new { @class = "form-control" })
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(x => x.PerformerId)
-
-                @Html.DropDownListFor(x => x.PerformerId, usersSelectList, new { @class = "form-control" })
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(x => x.Quality)
-                @Html.TextBoxFor(x => x.Quality, new { @class = "form-control" })
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(x => x.Quantity)
-                @Html.TextBoxFor(x => x.Quantity, new { @class = "form-control" })
-            </div>
-
+    <div class="form-group m-form__group m--margin-top-10">
+        <div class="alert m-alert m-alert--default" role="alert">
+            Создание задачи для исполнителя
         </div>
+    </div>
 
-        <button class="btn btn-success btn-block" onclick="CreateTask()">Создать</button>
+    @Html.HiddenFor(a => a.AdminId)
+
+
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.FileMethodId)
+        @Html.DropDownList("FileMethodId", fileMethodsSelectList, new { id = "FileMethodsSelect", @class = "form-control" })
+    </div>
+
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.Title)
+        @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.DeadLineDate)
+        @Html.TextBoxFor(x => x.DeadLineDate, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.PerformerId)
+
+        @Html.DropDownListFor(x => x.PerformerId, usersSelectList, new { id = "PerformerSelect", @class = "form-control" })
+    </div>
+
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.Quality)
+        @Html.TextBoxFor(x => x.Quality, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.Quantity)
+        @Html.TextBoxFor(x => x.Quantity, new { @class = "form-control" })
+    </div>
+
+</form>
+
+
+<div class="m-portlet__foot m-portlet__foot--fit">
+    <div class="m-form__actions m-form__actions">
+        <div class="row">
+            <div class="col-lg-9">
+                <button type="reset" class="btn btn-brand form-action-btn">Создать</button>
+                <button type="reset" onclick="location.href='/Chemistry/Methods/Index'" class="btn btn-secondary">Отмена</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -75,7 +98,35 @@
 @section Scripts{
     <script>
         
+        $("#FileMethodsSelect").select2({
+            placeholder: "Выберите метод решения",
+
+            "language": {
+                "noResults": function() {
+                    return "Метод решения не найден.";
+                }
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }
+        });
+
+        $("#PerformerSelect").select2({
+            placeholder: "Выберите исполнителя",
+
+            "language": {
+                "noResults": function() {
+                    return "Исполнитель не найден.";
+                }
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }
+        });
+
         Utils.SetDatePicker("input[name='DeadLineDate']", new Date());
+
+        $(".form-action-btn").on("click", () => CreateTask());
 
         function CreateTask() {
             var data = {
@@ -88,12 +139,17 @@
                 Quantity: ""
             };
 
-            data = CollectData(data);
+            data = FormDataHelper.CollectData(data);
+            console.log("Собраные данные", data);
             data.DeadLineDate = Requester.ParseDate(data.DeadLineDate);
+
+            if (data.FileMethodId === "@NotSelectedValue") {
+                data.FileMethodId = null;
+            }
 
             Requester.SendPostRequestWithAnimation("/Api/Chemistry/Tasks/Create", data, x => {
                 if (x.IsSucceeded) {
-                    location.href = "/Chemistry/Chemistry/Index";
+                    setTimeout(() => location.href = "/Chemistry/Tasks/Index", 1500);
                 }
             });
         }

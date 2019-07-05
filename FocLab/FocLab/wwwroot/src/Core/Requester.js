@@ -134,6 +134,7 @@ var Requester = /** @class */ (function () {
         Requester.GoingRequests = Requester.GoingRequests.filter(function (x) { return x !== link; });
     };
     Requester.ParseDate = function (date) {
+        date = date.replace(new RegExp("/", 'g'), ".");
         var from = date.split(".");
         var d = new Date(+from[2], +from[1] - 1, +from[0]);
         return d.toISOString();

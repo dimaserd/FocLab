@@ -1,9 +1,14 @@
 ﻿class FormDataHelper {
-    static FillData = function (object: Object) : void {
+    static FillData(object: Object) : void {
         FormDataHelper.FillDataByPrefix(object, "");
     }
 
-    static FillDataByPrefix = function (object: Object, prefix: string) : void {
+    /**
+     * Собрать данные для свойств объекта с Html страницы
+     * @param object   объект, свойства которого нужно заполнить
+     * @param prefix   префикс стоящий перед свойствами объекта
+     */
+    static FillDataByPrefix(object: Object, prefix: string) : void {
 
         for (let index in object) {
 
@@ -52,10 +57,16 @@
 
     }
 
-    static CollectData = function (object: Object): Object {
+    
+    static CollectData(object: Object): Object {
         return FormDataHelper.CollectDataByPrefix(object, "");
     }
 
+    /**
+     *   Собрать данные с формы по префиксу
+     * @param object  объект, свойства которого нужно собрать с формы
+     * @param prefix  префикс для свойств объекта
+     */
     static CollectDataByPrefix(object: Object, prefix: string): Object {
 
         for (let index in object) {
