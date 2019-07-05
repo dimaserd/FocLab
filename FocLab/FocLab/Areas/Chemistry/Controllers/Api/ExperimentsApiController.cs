@@ -13,7 +13,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Api
     /// Апи контроллер содержащий методы для работы с экспериментами
     /// </summary>
     [Route("Api/Chemistry/Experiments")]
-    public class ExperimentsApiController : CustomChemistryBaseApiController
+    public class ExperimentsApiController : BaseFocLabApiController
     {
         private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker =>
             new ChemistryTaskExperimentsWorker(ContextWrapper);

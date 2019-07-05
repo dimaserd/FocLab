@@ -1,4 +1,4 @@
-﻿@model List<FocLab.Model.Entities.Chemistry.ChemistryMethodFile>
+﻿@model List<FocLab.Logic.Models.Methods.ChemistryMethodFileModel>
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Список методов решений";
@@ -110,7 +110,7 @@
                                     Перезалить файл
                                 </a>
 
-                                <a href="/Chemistry/Chemistry/EditMethod/@file.Id" style="margin-top:10px" class="btn btn-block btn-primary">
+                                <a href="/Chemistry/Methods/Edit/@file.Id" style="margin-top:10px" class="btn btn-block btn-primary">
                                     Редактировать
                                 </a>
                             </div>
@@ -127,37 +127,19 @@
 @section Scripts{
     <script>
         function UploadChemistryFile() {
-            var file_data = $('#@fileUploadId').prop('files');
 
-            var form_data = new FormData();
+            Requester.UploadFilesToServer("@fileUploadId", x => {
+                var data = {
+                    FileId: x.ResponseObject[0],
+                    Name: document.getElementsByName("MethodName")[0].value
+                };
 
-            for (var i = 0; i < file_data.length; i++) {
-                form_data.append('model', file_data[i]);
-            }
-
-            form_data.append('MethodName', document.getElementsByName("MethodName")[0].value);
-
-            $.ajax({
-                url: '/Chemistry/Chemistry/UploadMethod',
-                type: 'POST',
-                data: form_data,
-                async: true,
-                cache: false,
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    console.log(response);
-
-                    alert(response.Message);
-
-                    if (response.IsSucceeded) {
-                        location.reload();
+                Requester.SendPostRequestWithAnimation("/Api/Chemistry/Methods/Create", data, t => {
+                    if (t.IsSucceeded) {
+                        setTimeout(() => location.href = "/Chemistry/Methods/Index", 1500);
                     }
-
-
-                }
-            });
+                });
+            })
         }
     </script>
 }

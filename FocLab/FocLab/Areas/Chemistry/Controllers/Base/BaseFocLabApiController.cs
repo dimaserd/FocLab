@@ -8,10 +8,10 @@ namespace FocLab.Areas.Chemistry.Controllers.Base
     /// <summary>
     /// Кастомный контроллер для приложения Химия
     /// </summary>
-    public class CustomChemistryBaseApiController : BaseController
+    public class BaseFocLabApiController : BaseController
     {
 
-        public CustomChemistryBaseApiController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
+        public BaseFocLabApiController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
         {
         }
     }

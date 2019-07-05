@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions.ContextWrappers;
 using Croco.Core.Common.Models;
+using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Methods;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities;
@@ -24,7 +25,16 @@ namespace FocLab.Logic.Workers.ChemistryMethods
         /// <returns></returns>
         public Task<ChemistryMethodFileModel> GetMethodAsync(string id)
         {
-            return  Context.ChemistryMethodFiles.Select(ChemistryMethodFileModel.SelectExpression).FirstOrDefaultAsync(x => x.Id == id);
+            return GetRepository<ChemistryMethodFile>().Query().Select(ChemistryMethodFileModel.SelectExpression).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        /// <summary>
+        /// Получить все методы
+        /// </summary>
+        /// <returns></returns>
+        public Task<List<ChemistryMethodFileModel>> GetMethodsAsync()
+        {
+            return GetRepository<ChemistryMethodFile>().Query().Select(ChemistryMethodFileModel.SelectExpression).ToListAsync();
         }
 
         /// <summary>
@@ -32,13 +42,18 @@ namespace FocLab.Logic.Workers.ChemistryMethods
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> UploadMethodAsync(CreateChemistryMethod model)
+        public async Task<BaseApiResponse> CreateMethodAsync(CreateChemistryMethod model)
         {
             var validation = ValidateModel(model);
 
             if(!validation.IsSucceeded)
             {
                 return validation;
+            }
+
+            if(!User.IsAdmin())
+            {
+                return new BaseApiResponse(false, "Только администраторы имеют право создавать и редактирвать методы");
             }
 
             var repo = GetRepository<ChemistryMethodFile>();
@@ -65,13 +80,34 @@ namespace FocLab.Logic.Workers.ChemistryMethods
             return await TrySaveChangesAndReturnResultAsync("Метод решения химической задачи создан");
         }
 
-        /// <summary>
-        /// Получить методы решения заданий
-        /// </summary>
-        /// <returns></returns>
-        public Task<List<ChemistryMethodFile>> GetTaskMethodsAsync()
+        public async Task<BaseApiResponse> EditMethodAsync(EditChemistryMethod model)
         {
-            return Context.ChemistryMethodFiles.ToListAsync();
+            var validation = ValidateModel(model);
+
+            if (!validation.IsSucceeded)
+            {
+                return validation;
+            }
+
+            if (!User.IsAdmin())
+            {
+                return new BaseApiResponse(false, "Только администраторы имеют право создавать и редактирвать методы");
+            }
+
+            var repo = GetRepository<ChemistryMethodFile>();
+
+            var method = await repo.Query().FirstOrDefaultAsync(x => x.Id == model.Id);
+
+            if(method == null)
+            {
+                return new BaseApiResponse(false, "Метод не найден по указанному идентифиатору");
+            }
+
+            method.Name = model.Name;
+
+            repo.UpdateHandled(method);
+
+            return await TrySaveChangesAndReturnResultAsync("Название метода изменено");
         }
 
         /// <summary>

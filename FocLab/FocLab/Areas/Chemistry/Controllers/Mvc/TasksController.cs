@@ -19,7 +19,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
     [Area("Chemistry")]
     [Authorize]
-    public class TasksController : BaseChemistryCustomController
+    public class TasksController : BaseFocLabController
     {
         public TasksController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
         {

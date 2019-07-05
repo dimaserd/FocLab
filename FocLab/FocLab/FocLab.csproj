@@ -33,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Chemistry\Views\Chemistry\" />
     <Folder Include="Implementations\" />
     <Folder Include="wwwroot\src\Garbage\" />
   </ItemGroup>

@@ -1,25 +1,45 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FocLab.Areas.Chemistry.Controllers.Base;
+using FocLab.Logic.Services;
+using FocLab.Logic.Workers.ChemistryMethods;
+using FocLab.Model.Contexts;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
-    public class MethodsController : Controller
+    public class MethodsController : BaseFocLabController
     {
-        // GET: Methods
-        public ActionResult Index()
+        public MethodsController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
         {
-            return View();
         }
 
-        // GET: Methods/Details/5
-        public ActionResult Details(int id)
+        private ChemistryMethodsWorker ChemistryMethodsWorker => new ChemistryMethodsWorker(ContextWrapper);
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin,SuperAdmin,Root")]
+        public async Task<ActionResult> Index()
         {
-            return View();
+            var model = await ChemistryMethodsWorker.GetMethodsAsync();
+
+            return View(model);
         }
 
-        // GET: Methods/Create
-        public ActionResult Create()
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ActionResult> Edit(string id)
         {
-            return View();
+            var method = await ChemistryMethodsWorker.GetMethodAsync(id);
+
+            return View(method);
         }
     }
 }

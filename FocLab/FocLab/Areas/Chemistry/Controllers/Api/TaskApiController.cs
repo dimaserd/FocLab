@@ -15,7 +15,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Api
     /// Апи контроллер предоставляющий методы для работы с химическими заданиями
     /// </summary>
     [Route("Api/Chemistry/Tasks")]
-    public class ChemistryTaskApiController : CustomChemistryBaseApiController
+    public class TaskApiController : BaseFocLabApiController
     {
         private AdminChemistryTasksWorker AdminChemistryTasksWorker => new AdminChemistryTasksWorker(ContextWrapper);
 
@@ -24,32 +24,32 @@ namespace FocLab.Areas.Chemistry.Controllers.Api
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost, Route("Create")]
+        [HttpPost("Create")]
         public Task<BaseApiResponse> Create(ChemistryCreateTask model)
         {
             return AdminChemistryTasksWorker.CreateTaskAsync(model);
         }
 
-        [HttpPost, Route("Edit")]
+        [HttpPost("Edit")]
         public Task<BaseApiResponse> Edit(EditChemistryTask model)
         {
             return AdminChemistryTasksWorker.EditTaskAsync(model);
         }
 
-        [HttpPost, Route("Remove")]
+        [HttpPost("Remove")]
         public Task<BaseApiResponse> Remove(string id)
         {
             return AdminChemistryTasksWorker.RemoveTaskAsync(id);
         }
 
 
-        [HttpPost, Route("CancelRemove")]
+        [HttpPost("CancelRemove")]
         public Task<BaseApiResponse> CancelRemove(string id)
         {
             return AdminChemistryTasksWorker.CancelRemoveTaskAsync(id);
         }
 
-        public ChemistryTaskApiController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
+        public TaskApiController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
         {
         }
     }

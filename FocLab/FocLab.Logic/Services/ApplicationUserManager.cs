@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using FocLab.Logic.Extensions;
+using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities.Users.Default;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,12 @@ namespace FocLab.Logic.Services
         {
             var userId = claimsPrincipal.GetUserId();
 
-            return Users.Cached().FirstOrDefault(x => x.Id == userId);
+            if (SourceSettings.UseInternalCaching)
+            {
+                return Users.Cached().FirstOrDefault(x => x.Id == userId);
+            }
+
+            return Store.FindByIdAsync(userId, CancellationToken).GetAwaiter().GetResult();
         }
     }
 }

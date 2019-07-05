@@ -1,13 +1,12 @@
 ﻿using CrocoShop.Logic.Jobs.TaskGivers;
 using FocLab.Logic.Workers;
-using System;
 using System.Threading.Tasks;
 
 namespace FocLab.Logic.Jobs.TaskGivers
 {
     public class RestoreSomeFilesTaskGiver : BaseTaskGiver
     {
-        int _countSetting = 5;
+        int _countSetting = 15;
 
         public override void ExecuteTask()
         {

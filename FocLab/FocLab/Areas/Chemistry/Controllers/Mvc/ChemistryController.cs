@@ -21,41 +21,14 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     /// </summary>
     [Area("Chemistry")]
     [Authorize]
-    public class ChemistryController : BaseChemistryCustomController
+    public class ChemistryController : BaseFocLabController
     {
-        private ChemistryMethodsWorker ChemistryMethodsWorker => new ChemistryMethodsWorker(ContextWrapper);
-
+        
         private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker =>
             new ChemistryTaskExperimentsWorker(ContextWrapper);
 
 
-        #region Методы
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [Authorize(Roles = "Admin,SuperAdmin,Root")]
-        public async Task<ActionResult> Methods()
-        {
-            var model = await ChemistryMethodsWorker.GetTaskMethodsAsync();
-
-            return View(model);
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task<ActionResult> EditMethod(string id)
-        {
-            var method = await ChemistryMethodsWorker.GetMethodAsync(id);
-
-            return View(method);
-        }
-        #endregion
-
+        
         #region Эксперименты
         
         /// <summary>

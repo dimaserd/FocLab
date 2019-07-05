@@ -13,7 +13,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     /// Контроллер для реагентов
     /// </summary>
     [Area("Chemistry")]
-    public class ReagentController : BaseChemistryCustomController
+    public class ReagentController : BaseFocLabController
     {
         private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(ContextWrapper);
 

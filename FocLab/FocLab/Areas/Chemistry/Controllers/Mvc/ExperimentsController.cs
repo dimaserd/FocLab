@@ -15,7 +15,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     /// Контроллер содержащий методы для работы с экспериментами
     /// </summary>
     [Area("Chemistry")]
-    public class ExperimentsController : BaseChemistryCustomController
+    public class ExperimentsController : BaseFocLabController
     {
         #region Методы Апи
 
