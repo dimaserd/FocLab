@@ -125,14 +125,16 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
         /// </summary>
         /// <param name="experiment"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> UpdateExperimentAsync(ChemistryTaskExperimentDto experiment)
+        public async Task<BaseApiResponse> UpdateExperimentAsync(UpdateExperiment experiment)
         {
             if (experiment == null)
             {
                 return new BaseApiResponse(false, "Вы подали пустую модель");
             }
 
-            var dbExperiment = await GetExperimentAsync(experiment.Id);
+            var repo = GetRepository<ChemistryTaskExperiment>();
+
+            var dbExperiment = await repo.Query().FirstOrDefaultAsync(x => x.Id == experiment.Id);
 
             if (dbExperiment == null)
             {
@@ -146,15 +148,12 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
                 return new BaseApiResponse(false, "Вы не являетесь исполнителем данного эксперимента");
             }
 
-            Context.Entry(dbExperiment).State = EntityState.Modified;
-
             dbExperiment.PerformerText = experiment.PerformerText;
             dbExperiment.SubstanceCounterJson = experiment.SubstanceCounterJson;
 
-            await Context.SaveChangesAsync();
-            
+            repo.UpdateHandled(dbExperiment);
 
-            return new BaseApiResponse(true, "Данные эксперимента обновлены");
+            return await TrySaveChangesAndReturnResultAsync("Данные эксперимента обновлены");
         }
 
         /// <summary>
@@ -178,7 +177,7 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
 
             var userId = UserId;
 
-            if (experiment.PerformerId != userId)
+            if (experiment.Performer.Id != userId)
             {
                 return new BaseApiResponse(false, "Вы не имеете прав для редактирования эксперимента. Так как вы не являетесь экспериментатором.");
             }
@@ -193,40 +192,23 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
             
             var existedFile = await repo.Query().FirstOrDefaultAsync(x => x.ChemistryTaskExperimentId == experiment.Id && x.Type == model.FileType);
 
-            ChemistryTaskExperimentFile experimentFile;
-
-
             //Если файла пока не существует
             if (existedFile != null)
             {
-                experimentFile = new ChemistryTaskExperimentFile
-                {
-                    FileId = model.FileId,
-                    Type = model.FileType,
-                    ChemistryTaskExperimentId = experiment.Id
-                };
-
-                repo.CreateHandled(experimentFile);
-                
-                return await TrySaveChangesAndReturnResultAsync("Файл обновлен");
-            }
-            else
-            {
                 repo.DeleteHandled(existedFile);
-
-                experimentFile = new ChemistryTaskExperimentFile
-                {
-                    FileId = model.FileId,
-                    Type = model.FileType,
-                    ChemistryTaskExperimentId = experiment.Id
-                };
-
-                repo.CreateHandled(experimentFile);
-
-                return await TrySaveChangesAndReturnResultAsync("Файл обновлен");
-
             }
-            
+
+            var experimentFile = new ChemistryTaskExperimentFile
+            {
+                FileId = model.FileId,
+                Type = model.FileType,
+                ChemistryTaskExperimentId = experiment.Id
+            };
+
+            repo.CreateHandled(experimentFile);
+
+            return await TrySaveChangesAndReturnResultAsync("Файл обновлен");
+
         }
 
         /// <summary>
@@ -383,7 +365,6 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
                 return new BaseApiResponse(false, "Эксперимент уже является востановленным");
             }
 
-            
             experiment.Deleted = false;
             repo.UpdateHandled(experiment);
             

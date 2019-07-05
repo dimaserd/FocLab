@@ -9,7 +9,7 @@
 
     var isEmailSet = user != null;
 
-    var tasks = isEmailSet ? Model.Where(x => x.PerformerUser.UserId == user.Id).ToList() : Model;
+    var tasks = isEmailSet ? Model.Where(x => x.PerformerUser.Id == user.Id).ToList() : Model;
 
     var sortSelect = new List<SelectListItem>
     {
@@ -183,7 +183,7 @@
                     </td>
 
                     <td>
-                        <a href="/Chemistry/Tasks/Index?id=@task.PerformerUser.UserId">
+                        <a href="/Chemistry/Tasks/Index?id=@task.PerformerUser.Id">
                             @task.PerformerUser.Name @task.PerformerUser.Email
                         </a>
                     </td>
@@ -307,7 +307,7 @@
                     <td>
                         @if (task.PerformerUser != null)
                         {
-                            <a href="/Chemistry/Tasks/Index?id=@task.PerformerUser.UserId">
+                            <a href="/Chemistry/Tasks/Index?id=@task.PerformerUser.Id">
                                 @task.PerformerUser.Name @task.PerformerUser.Email
                             </a>
                         }

@@ -4,7 +4,6 @@ using Croco.Core.Application;
 using Croco.Core.Application.Options;
 using Croco.Core.Common.Enumerations;
 using Croco.Core.Logic.Models.Files;
-using Croco.Core.Logic.Workers.Files;
 using Croco.WebApplication.Application;
 using FocLab.Extensions;
 using FocLab.Implementations;

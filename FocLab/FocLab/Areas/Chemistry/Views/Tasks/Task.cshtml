@@ -328,7 +328,7 @@
             </td>
         </tr>
 
-        @if (isNotAdmin && userId == Model.PerformerUser.UserId || User.HasRight(UserRight.Root))
+        @if (isNotAdmin && userId == Model.PerformerUser.Id || User.HasRight(UserRight.Root))
         {
             <tr>
                 <td colspan="2">

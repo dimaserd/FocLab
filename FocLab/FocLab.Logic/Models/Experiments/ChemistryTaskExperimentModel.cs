@@ -25,12 +25,6 @@ namespace FocLab.Logic.Models.Experiments
         /// </summary>
         public string ChemistryTaskId { get; set; }
 
-        
-        /// <summary>
-        /// Идентификатор пользователя
-        /// </summary>
-        public string PerformerId { get; set; }
-
         /// <summary>
         /// Исполнитель
         /// </summary>
@@ -84,12 +78,11 @@ namespace FocLab.Logic.Models.Experiments
             PerformedDate = x.PerformedDate,
             Performer = new ChemistryTaskUserModelBase
             {
-                UserId = x.Performer.Id,
+                Id = x.Performer.Id,
                 Email = x.Performer.Email,
                 Name = x.Performer.Name
             },
             PerformerText = x.PerformerText,
-            PerformerId = x.PerformerId,
             SubstanceCounterJson = x.SubstanceCounterJson,
             Title = x.Title
         };

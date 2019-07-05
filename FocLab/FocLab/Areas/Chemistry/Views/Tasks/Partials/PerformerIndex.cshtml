@@ -5,7 +5,7 @@
 
     var userId = User.Identity.GetUserId();
 
-    var performerTasks = Model.Where(x => x.PerformerUser.UserId == userId).ToList();
+    var performerTasks = Model.Where(x => x.PerformerUser.Id == userId).ToList();
 
     var dateNow = DateTime.Now;
 }
@@ -188,22 +188,10 @@
 
     function FinishTask(id, flag) {
 
-        console.log("FinishTask", id);
-
-        $.ajax({
-            url: '/Chemistry/Chemistry/PerformTask',
-            type: 'POST',
-            data: { TaskId: id, IsPerformed: flag },
-            async: true,
-            cache: false,
-            dataType: 'json',
-            success: function (response) {
-                alert(response.Message);
-
-                if (response.IsSucceeded) {
-                    location.reload();
-                }
+        Requester.SendPostRequestWithAnimation('/Chemistry/Chemistry/PerformTask', { TaskId: id, IsPerformed: flag }, x => {
+            if (x.IsSucceeded) {
+                setTimeout(() => location.reload(), 1500);
             }
-        });
+        })
     }
 </script>

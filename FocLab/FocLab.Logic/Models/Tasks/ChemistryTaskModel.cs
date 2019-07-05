@@ -131,11 +131,11 @@ namespace FocLab.Logic.Models.Tasks
             {
                 Email = a.AdminUser.Email,
                 Name = a.AdminUser.Name,
-                UserId = a.AdminUser.Id
+                Id = a.AdminUser.Id
             },
             PerformerUser = new ChemistryTaskUserModelBase
             {
-                UserId = a.PerformerUser.Id,
+                Id = a.PerformerUser.Id,
                 Name = a.PerformerUser.Name,
                 Email = a.PerformerUser.Email
             },
@@ -169,12 +169,11 @@ namespace FocLab.Logic.Models.Tasks
                 PerformedDate = x.PerformedDate,
                 Performer = new ChemistryTaskUserModelBase
                 {
-                    UserId = x.Performer.Id,
+                    Id = x.Performer.Id,
                     Email = x.Performer.Email,
                     Name = x.Performer.Name
                 },
                 PerformerText = x.PerformerText,
-                PerformerId = x.PerformerId,
                 SubstanceCounterJson = x.SubstanceCounterJson,
                 Title = x.Title
             }).ToList(),

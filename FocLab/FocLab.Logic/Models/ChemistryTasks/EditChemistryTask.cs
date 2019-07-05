@@ -44,7 +44,7 @@ namespace FocLab.Logic.Models.ChemistryTasks
                 CreationDate = model.CreationDate,
                 DeadLineDate = model.DeadLineDate,
                 MethodFileId = model.ChemistryMethodFile.Id,
-                PerformerUserId = model.PerformerUser.UserId,
+                PerformerUserId = model.PerformerUser.Id,
                 Title = model.Title
             };
         }

@@ -6,6 +6,7 @@ using Croco.Core.Abstractions.ContextWrappers;
 using Croco.Core.Common.Models;
 using FocLab.Logic.EntityDtos;
 using FocLab.Logic.EntityDtos.Users.Default;
+using FocLab.Logic.Models.Reagents;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
@@ -21,13 +22,11 @@ namespace FocLab.Logic.Workers.ChemistryReagents
         /// Получить реагенты
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ChemistryReagentDto>> GetReagentsAsync()
+        public Task<List<ChemistryReagentNameAndIdModel>> GetReagentsAsync()
         {
-            return await Context.ChemistryReagents.Select(x => new ChemistryReagentDto
-            {
-                Id = x.Id,
-                Name = x.Name,
-            }).ToListAsync();
+            return GetRepository<ChemistryReagent>().Query()
+                .Select(ChemistryReagentNameAndIdModel.SelectExpression)
+                .ToListAsync();
         }
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace FocLab.Logic.Workers.ChemistryReagents
         /// <returns></returns>
         public Task<ChemistryReagentDto> GetReagentAsync(ChemistryReagentDto model)
         {
-            return Context.ChemistryReagents.Select(x => new ChemistryReagentDto
+            return GetRepository<ChemistryReagent>().Query().Select(x => new ChemistryReagentDto
             {
                 Id = x.Id,
                 Name = x.Name,
