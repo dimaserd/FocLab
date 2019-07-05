@@ -9,7 +9,7 @@ var TSClassTypeMapper = /** @class */ (function () {
         { key: "String", value: "string" },
         { key: "Int32", value: "number" },
         { key: "Decimal", value: "number" },
-        { key: "Boolean", value: "bool" },
+        { key: "Boolean", value: "boolean" },
         { key: "DateTime", value: "Date" }
     ]);
     return TSClassTypeMapper;
@@ -42,8 +42,8 @@ var TSClassGenerator = /** @class */ (function () {
             return [];
         }
         if (typeDescription.IsEnumerable) {
-            var t = this.GetUniqueTypes(typeDescription.EnumeratedType);
-            return t;
+            var t_1 = this.GetUniqueTypes(typeDescription.EnumeratedType);
+            return t_1;
         }
         if (typeDescription.IsEnumeration) {
             return [typeDescription];

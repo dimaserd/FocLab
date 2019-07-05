@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Areas.Admin.Controllers.Developer
 {
+    [Area(Consts.AreaConsts.Admin)]
     public class DocumentationController : BaseController
     {
         public DocumentationController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
