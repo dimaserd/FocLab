@@ -25,8 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />
+    <Content Remove="wwwroot\src\FocLab\DefaultHandlers.ts" />
     <Content Remove="wwwroot\src\FocLab\Models.ts" />
     <Content Remove="wwwroot\src\FocLab\TaskDrawer.ts" />
+    <Content Remove="wwwroot\src\FocLab\TaskReagentWorker.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -83,8 +86,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />
+    <TypeScriptCompile Include="wwwroot\src\FocLab\DefaultHandlers.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Models.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\TaskDrawer.ts" />
+    <TypeScriptCompile Include="wwwroot\src\FocLab\TaskReagentWorker.ts" />
   </ItemGroup>
 
 </Project>

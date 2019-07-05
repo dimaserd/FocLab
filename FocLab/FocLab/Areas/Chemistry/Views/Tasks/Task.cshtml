@@ -359,39 +359,15 @@
             console.log("RemoveTask", id);
 
             var data = { Id: id, Flag: false };
-            
-            $.ajax({
-                url: '/Chemistry/Chemistry/RemoveOrCancelRemoving',
-                type: 'POST',
-                data: data,
-                async: true,
-                cache: false,
-                dataType: 'json',
-                success: function (response) {
-                    alert(response.Message);
 
-                    location.reload();
-                }
-            });
+            Requester.SendPostRequestWithAnimation('/Chemistry/Chemistry/RemoveOrCancelRemoving', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs);
         }
 
         function CancelRemoving(id) {
 
             var data = { Id: id, Flag: true };
 
-            $.ajax({
-                url: '/Chemistry/Chemistry/RemoveOrCancelRemoving',
-                type: 'POST',
-                data: data,
-                async: true,
-                cache: false,
-                dataType: 'json',
-                success: function (response) {
-                    alert(response.Message);
-
-                    location.reload();
-                }
-            });
+            Requester.SendPostRequestWithAnimation('/Chemistry/Chemistry/RemoveOrCancelRemoving', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs);
         }
     </script>
     <!--Методы удаления и восстановления-->
@@ -483,7 +459,7 @@
             });
         }
 
-        $("#Create.ReagentId").select2({
+        $("#Create_ReagentId").select2({
             placeholder: "Выберите реагент",
 
             "language": {

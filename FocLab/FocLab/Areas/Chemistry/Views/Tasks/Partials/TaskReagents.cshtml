@@ -1,5 +1,4 @@
 ﻿@using FocLab.Logic.Models.Tasks
-
 @{
     var task = (ChemistryTaskModel)ViewData["task"];
 
@@ -36,12 +35,10 @@
 
                 <th>
                     <strong>Расход (кг) <i class="fa fa-info-circle" data-toggle="tooltip" title="Данную колонку заполнять не нужно, она расчитывается автоматически ( 'Получено' - 'Сдано')"></i></strong>
-                    
                 </th>
 
                 <th>
                     <strong>Действия</strong>
-                    
                 </th>
             </tr>
         </thead>
@@ -49,7 +46,7 @@
         <tbody>
             <tr>
                 <td>
-                    @Html.DropDownList("Create.ReagentId", reagentSelectList, new { id = "Create.ReagentId", @class = "form-control" })
+                    @Html.DropDownList("Create.ReagentId", reagentSelectList, new { id = "Create_ReagentId", @class = "form-control" })
                 </td>
 
                 <td>
@@ -67,7 +64,7 @@
                 <td>
                     <div class="row">
                         <div class="col-md-12">
-                            <button class="btn btn-primary btn-block" onclick="taskReagentWorker.CreateTaskReagent()">
+                            <button class="btn btn-primary btn-block create-reagent-btn">
                                 <i class="fa fa-plus-circle"></i>
                                 Создать
                             </button>
@@ -99,12 +96,12 @@
                 <td>
                     <div class="row">
                         <div class="col-md-12">
-                            <button class="btn btn-warning btn-block" onclick="taskReagentWorker.EditTaskReagent('@reagent.Reagent.Id')">
+                            <button class="btn btn-warning btn-block task-reagent-refresh" data-task-reagent-id="@reagent.Reagent.Id">
                                 <i class="fa fa-refresh"></i>
                                 Обновить данные
                             </button>
 
-                            <button class="btn btn-danger btn-block" style="margin-top:5px" onclick="taskReagentWorker.RemoveTaskReagent('@reagent.Reagent.Id')">
+                            <button class="btn btn-danger btn-block task-reagent-refresh-delete" style="margin-top:5px" data-task-reagent-id="@reagent.Reagent.Id">
                                 <i class="fa fa-trash-o"></i>
                                 Удалить
                             </button>
@@ -119,14 +116,6 @@
 
     </table>
 </div>
-
-<script>
-    function ReplaceDotToComma(elem) {
-
-        elem.value = elem.value.replace(".", ",");
-        
-    }
-</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -145,99 +134,12 @@
     });
 </script>
 
-<script>
-    class TaskReagentWorker {
-        constructor(taskId) {
-            this.TaskId = taskId;
-            this.setHandlers();
-        }
-
-        setHandlers() {
-            this.GetValueByName = function (name) {
-                return document.getElementsByName(name)[0].value;
-            }
-
-            this.CreateTaskReagent = function () {
-                var data = {
-                    TaskId: this.TaskId,
-                    TakenQuantity: this.GetValueByName("Create.TakenQuantity"),
-                    ReturnedQuantity: this.GetValueByName("Create.ReturnedQuantity"),
-                    ReagentId: this.GetValueByName("Create.ReagentId")
-                };
-
-                console.log("CreateTaskReagent", data)
-
-                modalWorker.ShowModal("loadingModal")
-
-                $.ajax({
-                    url: '/Chemistry/Reagent/AddTaskReagent',
-                    type: 'POST',
-                    data: data,
-                    dataType: 'json',
-                    success: function (response) {
-
-                        modalWorker.HideModals();
-                        $("#loadingModal").modal('hide');
-                        alert(response.Message);
-
-                        location.reload();
-                    }
-                });
-            }
-
-            this.EditTaskReagent = function (reagentId) {
-                var data = {
-                    TaskId: this.TaskId,
-                    TakenQuantity: this.GetValueByName(`Edit.TakenQuantity.${reagentId}`),
-                    ReturnedQuantity:  this.GetValueByName(`Edit.ReturnedQuantity.${reagentId}`),
-                    ReagentId: reagentId
-                };
-
-                modalWorker.ShowModal("loadingModal")
-
-                $.ajax({
-                    url: '/Chemistry/Reagent/EditTaskReagent',
-                    type: 'POST',
-                    data: data,
-                    dataType: 'json',
-                    success: function (response) {
-                        modalWorker.HideModals();
-                        $("#loadingModal").modal('hide');
-                        alert(response.Message);
-
-                        location.reload();
-                    }
-                });
-            }
-
-            this.RemoveTaskReagent = function (reagentId) {
-                var data = {
-                    TaskId: this.TaskId,
-                    ReagentId: reagentId
-                };
-
-                modalWorker.ShowModal("loadingModal")
-
-                $.ajax({
-                    url: '/Chemistry/Reagent/RemoveTaskReagent',
-                    type: 'POST',
-                    data: data,
-                    dataType: 'json',
-                    success: function (response) {
-
-                        modalWorker.HideModals();
-                        $("#loadingModal").modal('hide');
-                        alert(response.Message);
-
-                        location.reload();
-                    }
-                });
-            }
-
-        }
-    }
-</script>
+<script src="~/src/FocLab/TaskReagentWorker.js"></script>
 
 <script>
     var taskReagentWorker = new TaskReagentWorker("@task.Id");
+
+    $(".task-reagent-refresh").on("click", () => taskReagentWorker.EditTaskReagent($(this).data("task-reagent-id")));
+    $(".task-reagent-refresh-delete").on("click", () => taskReagentWorker.RemoveTaskReagent($(this).data("task-reagent-id")));
+    $(".create-reagent-btn").on("click", () => taskReagentWorker.CreateTaskReagent());
 </script>
