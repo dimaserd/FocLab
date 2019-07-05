@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Croco.Core.Logic.Models.Documentation;
 using Croco.Core.Logic.Workers.Documentation;
 using FocLab.Api.Controllers.Base;
@@ -21,16 +22,34 @@ namespace FocLab.Api.Controllers.Api.Developer
         {
         }
 
-
         /// <summary>
         /// Получить документацию по SignalR хабам
         /// </summary>
         /// <returns></returns>
         [HttpPost("Class")]
         [ProducesDefaultResponseType(typeof(CrocoTypeDescription))]
-        public CrocoTypeDescription GetTypeDocumentations(string typeName)
+        public CrocoTypeDescription GetTypeDocumentation(string typeName)
         {
-            return ClassModelDescriptor.GetDocumentationForClass(typeName);
+            if (typeName == null)
+            {
+                return null;
+            }
+
+            var res = ClassModelDescriptor.GetDocumentationForClass(typeName);
+
+            if (res != null)
+            {
+                return res;
+            }
+
+            var types = ClassModelDescriptor.SearchClassTypes(typeName);
+
+            if (types.Count == 0)
+            {
+                return null;
+            }
+
+            return ClassModelDescriptor.GetDocumentationForClass(types.First());
         }
 
         /// <summary>

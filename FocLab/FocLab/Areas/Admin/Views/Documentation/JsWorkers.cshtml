@@ -1,0 +1,161 @@
+﻿@using Zoo.ServerJs.Services
+@{
+    ViewBag.Title = "Документация JS OPEN-API";
+
+    Layout = AdminUiSettings.LayoutPath;
+
+    const string ExampleMethod = "SendMail";
+    const string ExampleWorkerName = "EmailSender";
+
+    var exampleCall = $"{JsConsts.ApiObjectName}.{JsConsts.CallFunctionName}(\"{ExampleWorkerName}\", \"{ExampleMethod}\", \"somemail.@mail.com\")";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <a href="/Admin/JsConsole/Index" class="btn btn-primary">
+            Js консоль
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <p>
+
+        </p>
+        <p>
+            Для вызова метода JS OPEN-API нужно воспользоваться объектом @JsConsts.ApiObjectName и его методом @JsConsts.CallFunctionName.
+            Например, если вам нужно вызвать метод, который отправляет сообщение на почту. 
+        </p>
+        <p>
+            И такой метод <strong>@ExampleMethod</strong> имеется у класса <strong>@ExampleWorkerName</strong>
+            Вы можете вызвать его используя  <strong>@exampleCall</strong> 
+        </p>
+    </div>
+</div>
+
+<div style="height:20px">
+
+</div>
+
+<div class="table-responsive">
+    <table class="table-bordered table">
+        <thead>
+            <tr>
+                <th>
+                    <strong>
+                        Имя класса
+                    </strong>
+                </th>
+
+                <th>
+                    <strong>
+                        Методы
+                    </strong>
+                </th>
+            </tr>
+        </thead>
+        <tbody id="docsBody">
+
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+    <script>
+        class JsDocsWorker {
+            constructor() {
+                this.setHandlers();
+            }
+
+            setHandlers() {
+                this.DrawDocs = function () {
+                    Requester.SendAjaxPost("/Api/Documentation/JsWorkers", {}, x => {
+                        console.log(x);
+
+                        let html = '';
+
+                        for (var i = 0; i < x.length; i++) {
+                            html += this.GetSingleWorkerHtml(x[i]);
+                        }
+
+                        var docsBody = document.getElementById("docsBody");
+                        docsBody.innerHTML = html;
+                    })
+                }
+
+                this.GetSingleWorkerHtml = function (worker) {
+
+                    let html = '';
+
+                    html +=
+                        `<tr>
+                                <td>${worker.WorkerName}</td>
+                                <td>${this.GetMethodsHtml(worker)}</td>
+                            </tr>`;
+
+                    return html;
+                }
+
+                this.GetMethodsHtml = function (worker) {
+                    let html = '<table class="table-bordered table">';
+
+                    html += `<thead>
+                        <tr>
+                        <td><strong>Название метода</strong></td>
+                        <td><strong>Описание</strong></td>
+                        <td><strong>Параметры метода</strong></td>
+                        </tr>
+                    </thead>`;
+
+                    for (var i = 0; i < worker.Methods.length; i++) {
+                        html +=
+                            `<tr>
+                            <td>${worker.Methods[i].MethodName}</td>
+                            <td>${worker.Methods[i].Description}</td>
+                            <td>${this.RenderParametersForMethod(worker.Methods[i])}</td>
+                        </tr>`
+                    }
+
+                    html += "</table>";
+
+                    return html;
+                }
+
+                this.RenderParametersForMethod = function (workerMethod) {
+                    let html = '';
+
+                    if (workerMethod.Parameters === null || workerMethod.Parameters.length === 0) {
+                        html += 'Метод без параметров';
+                    }
+                    else {
+                        html += this.GetMethodParameters(workerMethod);
+                    }
+
+                    return html;
+                }
+
+                this.GetMethodParameters = function (workerMethod) {
+
+                    let html = '';
+
+                    for (var i = 0; i < workerMethod.Parameters.length; i++) {
+
+                        html += `<p><a href="${this.GetLinkForParameter(workerMethod.Parameters[i])}">${workerMethod.Parameters[i].DisplayName}</a></p>`
+                        
+                    }
+
+                    return html;
+                }
+
+                this.GetLinkForParameter = function (workerMethodParameter) {
+                    return `/Admin/Documentation/Class?typeName=${workerMethodParameter.FullTypeName}`
+                }
+            }
+        }
+
+        var docsWorker = new JsDocsWorker();
+
+        docsWorker.DrawDocs();
+    </script>
+}

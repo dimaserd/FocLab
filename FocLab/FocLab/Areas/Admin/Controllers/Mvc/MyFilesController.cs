@@ -1,16 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Croco.Core.Application;
+﻿using System.Threading.Tasks;
 using Croco.Core.Search;
 using FocLab.Controllers.Base;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers;
 using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Areas.Admin.Controllers.Mvc
