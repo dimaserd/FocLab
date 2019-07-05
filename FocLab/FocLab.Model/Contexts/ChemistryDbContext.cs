@@ -1,5 +1,6 @@
 ﻿using System;
 using Croco.Core.Loggers;
+using Croco.Core.Model.Entities.Store;
 using FocLab.Model.Entities;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ namespace FocLab.Model.Contexts
         public const string LocalConnection = "DefaultConnection";
 
 #if DEBUG
-        public static string ConnectionString => ServerConnection;
+        public static string ConnectionString => LocalConnection;
 
 #else
         public static string ConnectionString => ServerConnection;
@@ -30,6 +31,19 @@ namespace FocLab.Model.Contexts
 
             return new ChemistryDbContext(optionsBuilder.Options);
         }
+
+
+        #region Схема Store        
+        public DbSet<LoggedUserInterfaceAction> UserInterfaceActions { get; set; }
+
+        public DbSet<LoggedApplicationAction> ApplicationActions { get; set; }
+
+        public DbSet<Snapshot> Snapshots { get; set; }
+        #endregion
+
+        public DbSet<DbFile> DbFiles { get; set; }
+
+        public DbSet<ApplicationDbFileHistory> DbFileHistory { get; set; }
 
         /// <summary>
         /// Химические задания
@@ -71,9 +85,7 @@ namespace FocLab.Model.Contexts
         /// </summary>
         public DbSet<ChemistryDayTask> ChemistryDayTasks { get; set; }
 
-        public DbSet<DbFile> DbFiles { get; set; }
-
-        public DbSet<ApplicationDbFileHistory> DbFileHistory { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

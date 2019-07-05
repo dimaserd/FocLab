@@ -19,7 +19,7 @@ namespace FocLab.Api.Controllers.Api.FocLab
 
         private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker => new ChemistryTaskExperimentsWorker(ContextWrapper);
 
-        [Route("Create")]
+        [HttpPost("Create")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         public Task<BaseApiResponse> Create(CreateExperiment model)
         {

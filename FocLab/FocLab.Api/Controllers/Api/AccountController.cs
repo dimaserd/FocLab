@@ -29,8 +29,6 @@ namespace FocLab.Api.Controllers.Api
 
         private AccountLoginWorker AccountLoginWorker => new AccountLoginWorker(ContextWrapper);
 
-        private AccountRegistrationWorker AccountRegistrationWorker => new AccountRegistrationWorker(ContextWrapper);
-
         #region Методы логинирования
 
         /// <summary>
