@@ -3,6 +3,7 @@ using Croco.Core.Loggers;
 using Croco.Core.Model.Entities.Store;
 using FocLab.Model.Entities;
 using FocLab.Model.Entities.Chemistry;
+using FocLab.Model.Entities.Tasker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -45,6 +46,11 @@ namespace FocLab.Model.Contexts
 
         public DbSet<ApplicationDbFileHistory> DbFileHistory { get; set; }
 
+        public DbSet<ApplicationDayTask> DayTasks { get; set; }
+
+        public DbSet<ApplicationDayTaskComment> DayTaskComments { get; set; }
+
+        #region Химимя
         /// <summary>
         /// Химические задания
         /// </summary>
@@ -84,8 +90,8 @@ namespace FocLab.Model.Contexts
         /// Задания на день
         /// </summary>
         public DbSet<ChemistryDayTask> ChemistryDayTasks { get; set; }
+        #endregion
 
-        
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
