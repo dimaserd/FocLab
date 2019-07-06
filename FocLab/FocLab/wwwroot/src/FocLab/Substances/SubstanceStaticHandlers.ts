@@ -1,13 +1,6 @@
 ﻿class SubstanceStaticHandlers {
     static substance: SubstanceCounter;
-    static SetHandlerForClass(className: string, eventName: string, handlerFunction: EventListenerOrEventListenerObject) {
-        var classNameElems = document.getElementsByClassName(className);
-
-        console.log("SubstanceStaticHandlers.SetHandlerForClass", classNameElems)
-
-        
-        Array.from(classNameElems).forEach(x => x.addEventListener(eventName, handlerFunction, false));
-    }
+    
     static RemoveSubstanceHandler(count: number) {
         console.log("RemoveSubstanceHandler", count);
         var substanceToDelete = SubstanceStaticHandlers.substance.Substances[count];
@@ -24,10 +17,17 @@
         }
     }
     static ChangeMassa(count: number, prefix: string) {
-        console.log("SubstanceStaticHandlers.ChangeMassa", count, prefix);
         var molarMassa = +(document.getElementsByName(`${prefix}.MolarMassa[${count}]`)[0] as HTMLInputElement).value;
         var koef = +(document.getElementsByName(`${prefix}.Koef[${count}]`)[0] as HTMLInputElement).value;
         var massa = SubstanceStaticHandlers.substance.getTotalKoef() * koef * molarMassa;
+
+        var debugData = {
+            Molar: molarMassa,
+            Koef: koef,
+            Massa: massa
+        };
+        console.log("SubstanceStaticHandlers.ChangeMassa", count, prefix, debugData);
+
         massa = +massa.toFixed(2);
         SubstanceStaticHandlers.substance.Substances[count].MolarMassa = molarMassa;
         SubstanceStaticHandlers.substance.Substances[count].Massa = massa;

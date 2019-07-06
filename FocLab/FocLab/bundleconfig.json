@@ -4,6 +4,32 @@
     "inputFiles": [
       "wwwroot/src/Core/*.js"
     ],
+
+
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+
+  {
+    "outputFileName": "wwwroot/js/Substance.js",
+    "inputFiles": [
+      "wwwroot/src/FocLab/Substances/*.js"
+    ],
+
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+
+  {
+    "outputFileName": "wwwroot/js/Task.js",
+    "inputFiles": [
+      "wwwroot/src/FocLab/Task/*.js"
+    ],
+
     "minify": {
       "enabled": true,
       "renameLocals": true

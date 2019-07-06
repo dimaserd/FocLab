@@ -22,10 +22,15 @@ var SubstanceStaticHandlers = /** @class */ (function () {
         }
     };
     SubstanceStaticHandlers.ChangeMassa = function (count, prefix) {
-        console.log("SubstanceStaticHandlers.ChangeMassa", count, prefix);
         var molarMassa = +document.getElementsByName(prefix + ".MolarMassa[" + count + "]")[0].value;
         var koef = +document.getElementsByName(prefix + ".Koef[" + count + "]")[0].value;
         var massa = SubstanceStaticHandlers.substance.getTotalKoef() * koef * molarMassa;
+        var debugData = {
+            Molar: molarMassa,
+            Koef: koef,
+            Massa: massa
+        };
+        console.log("SubstanceStaticHandlers.ChangeMassa", count, prefix, debugData);
         massa = +massa.toFixed(2);
         SubstanceStaticHandlers.substance.Substances[count].MolarMassa = molarMassa;
         SubstanceStaticHandlers.substance.Substances[count].Massa = massa;

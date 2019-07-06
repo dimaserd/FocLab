@@ -261,7 +261,7 @@
 
             <tr>
                 <th colspan="2" class="text-center">
-                    Изображение реакции
+                    <strong>Изображение реакции</strong>
                 </th>
             </tr>
 
@@ -317,7 +317,11 @@
 <div class="table-responsive">
     <table class="table table-hover">
         <tr>
-            <th colspan="2" class="">Текст выполнения</th>
+            
+            <th colspan="2" class="">
+                <strong>Текст выполнения</strong>
+                
+            </th>
         </tr>
 
         <tr>
@@ -350,9 +354,8 @@
 
 @section Scripts{
 
-    <script src="~/src/FocLab/Substances/SubstanceStaticHandlers.js"></script>
-    <script src="~/src/FocLab/Substances/Substance.js"></script>
-
+    <script src="~/js/Task.js"></script>
+    <script src="~/js/Substance.js"></script>
 
     <script>
         var substanceObject = @Html.GetJson(Model.SubstanceCounter);
