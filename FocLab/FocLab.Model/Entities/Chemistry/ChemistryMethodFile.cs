@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Croco.Core.Model.Interfaces.Auditable;
+using Croco.Core.Model.Models;
+using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FocLab.Model.Entities.Chemistry
@@ -6,7 +9,7 @@ namespace FocLab.Model.Entities.Chemistry
     /// <summary>
     /// Метод решения (Является файлом)
     /// </summary>
-    public class ChemistryMethodFile
+    public class ChemistryMethodFile : AuditableEntityBase, IAuditableStringId
     {
         /// <summary>
         /// Идентификатор
@@ -27,6 +30,7 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Файл
         /// </summary>
+        [JsonIgnore]
         public virtual DbFile File { get; set; }
 
         /// <summary>

@@ -1,13 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Croco.Core.Model.Interfaces.Auditable;
+using Croco.Core.Model.Models;
 using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace FocLab.Model.Entities.Chemistry
 {
     /// <summary>
     /// Файл для химического задания
     /// </summary>
-    public class ChemistryTaskDbFile
+    public class ChemistryTaskDbFile : AuditableEntityBase, IAuditableComposedId
     {
         /// <summary>
         /// Идентификатор задания
@@ -18,6 +21,7 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Задание
         /// </summary>
+        [JsonIgnore]
         public virtual ChemistryTask ChemistryTask { get; set; }
 
         /// <summary>
@@ -29,6 +33,7 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Файл
         /// </summary>
+        [JsonIgnore]
         public virtual DbFile File { get; set; }
 
         /// <summary>
@@ -40,6 +45,11 @@ namespace FocLab.Model.Entities.Chemistry
         {
             modelBuilder.Entity<ChemistryTaskDbFile>()
                 .HasKey(p => new { p.ChemistryTaskId, p.FileId });
+        }
+
+        public string GetComposedId()
+        {
+            return $"ChemistryTaskId={ChemistryTaskId}&FileId={FileId}";
         }
     }
 }

@@ -4,12 +4,12 @@ using Croco.Core.Abstractions.ContextWrappers;
 using Croco.Core.Application;
 using Croco.Core.Common.Models;
 using FocLab.Logic.Abstractions;
-using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Implementations;
-using FocLab.Logic.Settings;
+using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Logic.Workers.Users;
 using FocLab.Model.Contexts;
+using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers.ChemistryTasks
@@ -24,19 +24,23 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> UpdateTaskAsync(ChemistryTaskDto model)
+        public async Task<BaseApiResponse> UpdateTaskAsync(UpdateTaskAsPerformer model)
         {
             if(!IsAuthenticated)
             {
                 return new BaseApiResponse(false, "Вы не авторизованы в системе");
             }
 
-            if(model == null)
+            var validation = ValidateModel(model);
+
+            if(!validation.IsSucceeded)
             {
-                return new BaseApiResponse(false, "Вы подали пустую модель");
+                return validation;
             }
 
-            var chemistryTask = await Context.ChemistryTasks.FirstOrDefaultAsync(x => x.Id == model.Id);
+            var repo = GetRepository<ChemistryTask>();
+
+            var chemistryTask = await repo.Query().FirstOrDefaultAsync(x => x.Id == model.Id);
 
             if(chemistryTask == null)
             {
@@ -50,23 +54,20 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 return new BaseApiResponse(false, "Вы не являетесь исполнителем этого задания");
             }
 
-            Context.Entry(chemistryTask).State = EntityState.Modified;
-
             chemistryTask.PerformerQuality = model.PerformerQuality;
             chemistryTask.PerformerQuantity = model.PerformerQuantity;
             chemistryTask.PerformerText = model.PerformerText;
             chemistryTask.SubstanceCounterJson = model.SubstanceCounterJson;
 
-            await Context.SaveChangesAsync();
+            repo.UpdateHandled(chemistryTask);
 
-            return new BaseApiResponse(true, "Характеристики задачи обновлены");
+            return await TrySaveChangesAndReturnResultAsync("Характеристики задачи обновлены");
         }
 
         /// <summary>
         /// Выполнить задание
         /// </summary>
         /// <param name="model"></param>
-        /// <param name="Context"></param>
         /// <param name="mailSender"></param>
         /// <returns></returns>
         public async Task<BaseApiResponse> PerformTaskAsync(PerformTaskModel model, IUserMailSender mailSender)
@@ -76,7 +77,9 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 return new BaseApiResponse(false, "Вы подали пустую модель");
             }
 
-            var task = await Context.ChemistryTasks.FirstOrDefaultAsync(x => x.Id == model.TaskId);
+            var repo = GetRepository<ChemistryTask>();
+
+            var task = await repo.Query().FirstOrDefaultAsync(x => x.Id == model.TaskId);
 
             if(task == null)
             {

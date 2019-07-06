@@ -1,4 +1,4 @@
-﻿namespace FocLab.Logic.Workers.ChemistryTasks
+﻿namespace FocLab.Logic.Models.Tasks
 {
     /// <summary>
     /// Класс описыващий модель для завершения или отмены завершенности задания

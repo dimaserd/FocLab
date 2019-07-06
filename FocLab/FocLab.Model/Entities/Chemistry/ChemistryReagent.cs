@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Croco.Core.Model.Interfaces.Auditable;
+using Croco.Core.Model.Models;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace FocLab.Model.Entities.Chemistry
 {
     /// <summary>
     /// Реагент химической задачи которые нужно использовать для задания
     /// </summary>
-    public class ChemistryReagent
+    public class ChemistryReagent : AuditableEntityBase, IAuditableStringId
     {
         /// <summary>
         /// Идентификатор
@@ -20,6 +23,7 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Задания
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ChemistryTaskReagent> Tasks { get; set; }
     }
 }

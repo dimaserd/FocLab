@@ -1,4 +1,4 @@
-﻿namespace FocLab
+﻿namespace FocLab.Consts
 {
     public static class ApplicationUserClaims
     {

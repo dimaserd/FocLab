@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Croco.Core.Model.Interfaces.Auditable;
+using Croco.Core.Model.Models;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FocLab.Model.Entities.Chemistry
@@ -6,7 +9,7 @@ namespace FocLab.Model.Entities.Chemistry
     /// <summary>
     /// Реагент для химического задания
     /// </summary>
-    public class ChemistryTaskReagent
+    public class ChemistryTaskReagent : AuditableEntityBase, IAuditableComposedId
     {
         /// <summary>
         /// Идентификатор задания
@@ -17,6 +20,7 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Химическое задание
         /// </summary>
+        [JsonIgnore]
         public virtual ChemistryTask Task { get; set; }
 
         /// <summary>
@@ -28,6 +32,7 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Химический реагент
         /// </summary>
+        [JsonIgnore]
         public virtual ChemistryReagent Reagent { get; set; }
 
         /// <summary>
@@ -44,6 +49,11 @@ namespace FocLab.Model.Entities.Chemistry
         {
             modelBuilder.Entity<ChemistryTaskReagent>()
                 .HasKey(p => new { p.TaskId, p.ReagentId });
+        }
+
+        public string GetComposedId()
+        {
+            return $"TaskId={TaskId}&ReagentId={ReagentId}";
         }
     }
 }

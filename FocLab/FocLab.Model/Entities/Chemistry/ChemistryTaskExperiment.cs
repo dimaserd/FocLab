@@ -1,4 +1,7 @@
-﻿using FocLab.Model.Entities.Users.Default;
+﻿using Croco.Core.Model.Interfaces.Auditable;
+using Croco.Core.Model.Models;
+using FocLab.Model.Entities.Users.Default;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +11,7 @@ namespace FocLab.Model.Entities.Chemistry
     /// <summary>
     /// Сущность описывающая эксперимент к химическому заданию
     /// </summary>
-    public class ChemistryTaskExperiment
+    public class ChemistryTaskExperiment : AuditableEntityBase, IAuditableStringId
     {
         /// <summary>
         /// Идентификатор эксперимента
@@ -24,12 +27,13 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Идентификатор химического задания
         /// </summary>
-        [ForeignKey("ChemistryTask")]
+        [ForeignKey(nameof(ChemistryTask))]
         public string ChemistryTaskId { get; set; }
 
         /// <summary>
         /// Химическое задание
         /// </summary>
+        [JsonIgnore]
         public virtual ChemistryTask ChemistryTask { get; set; }
 
        
@@ -43,6 +47,7 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Исполнитель
         /// </summary>
+        [JsonIgnore]
         public virtual ApplicationUser Performer { get; set; }
         #endregion
 
@@ -76,6 +81,7 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Файлы принадлежащие к данному заданию
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ChemistryTaskExperimentFile> Files { get; set; }
     }
 }

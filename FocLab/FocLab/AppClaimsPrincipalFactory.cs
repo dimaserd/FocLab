@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FocLab.Consts;
 using FocLab.Model.Entities.Users.Default;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;

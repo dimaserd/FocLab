@@ -1,4 +1,7 @@
-﻿using FocLab.Model.Entities.Users.Default;
+﻿using Croco.Core.Model.Interfaces.Auditable;
+using Croco.Core.Model.Models;
+using FocLab.Model.Entities.Users.Default;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +11,7 @@ namespace FocLab.Model.Entities.Chemistry
     /// <summary>
     /// Химическое задание
     /// </summary>
-    public class ChemistryTask
+    public class ChemistryTask : AuditableEntityBase, IAuditableStringId
     {
         public string Id { get; set; } 
 
@@ -38,51 +41,57 @@ namespace FocLab.Model.Entities.Chemistry
         /// <summary>
         /// Тот кто дал задание (StringProperty1)
         /// </summary>
-        [ForeignKey("AdminUser")]
+        [ForeignKey(nameof(AdminUser))]
         public string AdminUserId { get; set; }
 
         /// <summary>
         /// Администратор задания
         /// </summary>
+        [JsonIgnore]
         public virtual ApplicationUser AdminUser { get; set; }
 
 
         /// <summary>
         /// Исполнитель кому назначено задание
         /// </summary>
-        [ForeignKey("PerformerUser")]
+        [ForeignKey(nameof(PerformerUser))]
         public string PerformerUserId { get; set; }
 
         /// <summary>
         /// Исполнитель задания
         /// </summary>
+        [JsonIgnore]
         public virtual ApplicationUser PerformerUser { get; set; }
 
 
         /// <summary>
         /// Ссылка на метод решения данной задачи (ссылка на файл в системе)
         /// </summary>
-        [ForeignKey("ChemistryMethodFile")]
+        [ForeignKey(nameof(ChemistryMethodFile))]
         public string MethodFileId { get; set; }
 
         /// <summary>
         /// Метод для решения
         /// </summary>
+        [JsonIgnore]
         public virtual ChemistryMethodFile ChemistryMethodFile { get; set; }
 
         /// <summary>
         /// Файлы
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ChemistryTaskDbFile> Files { get; set; }
 
         /// <summary>
         /// Эксперименты
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ChemistryTaskExperiment> Experiments { get; set; }
 
         /// <summary>
         /// Реагенты
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ChemistryTaskReagent> Reagents { get; set; }
         #endregion
         /// <summary>

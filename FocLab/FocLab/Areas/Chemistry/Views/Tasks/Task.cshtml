@@ -23,7 +23,7 @@
     }
 }
 
-@await Html.PartialAsync($"{viewsChemistry}/Scripts/SubstanceScripts.cshtml")
+
 
 <div style="height:20px">
 
@@ -101,21 +101,21 @@
                     <tr>
                         <th>
                             <strong>Статус файла</strong>
-                            
+
                         </th>
 
                         @if (isNotAdmin)
                         {
                             <th>
                                 <strong>Загрузка файла</strong>
-                                
+
                             </th>
                         }
 
 
                         <th>
                             <strong>Действия</strong>
-                            
+
                         </th>
                     </tr>
                 </thead>
@@ -212,7 +212,7 @@
 
                         <th>
                             <strong>Получ. качество</strong>
-                            
+
                         </th>
                     </tr>
 
@@ -222,7 +222,7 @@
                         </td>
 
                         <td>
-                            @Html.TextBox( "Quality", Model.PerformerQuality, new { @class = "form-control" })
+                            @Html.TextBox("Quality", Model.PerformerQuality, new { @class = "form-control" })
                         </td>
                     </tr>
 
@@ -233,7 +233,7 @@
 
                         <th>
                             <strong>Получ. количество</strong>
-                            
+
                         </th>
                     </tr>
 
@@ -243,7 +243,7 @@
                         </td>
 
                         <td>
-                            @Html.TextBox( "Quantity", value: Model.PerformerQuantity, htmlAttributes: new { @class = "form-control" })
+                            @Html.TextBox("Quantity", value: Model.PerformerQuantity, htmlAttributes: new { @class = "form-control" })
                         </td>
                     </tr>
 
@@ -324,7 +324,7 @@
 
         <tr>
             <td colspan="2">
-                @Html.TextArea( "Text", Model.PerformerText, new { @class = "form-control", style = "height:150px" })
+                @Html.TextArea("Text", Model.PerformerText, new { @class = "form-control", style = "height:150px" })
             </td>
         </tr>
 
@@ -332,7 +332,7 @@
         {
             <tr>
                 <td colspan="2">
-                    <div class="btn btn-success btn-block" onclick="UpdateBtnClickHandler()">
+                    <div class="btn btn-success btn-block btn-task-update">
                         <strong>
                             Обновить данные
                         </strong>
@@ -352,29 +352,42 @@
 
 @section Scripts{
 
-    <!--Методы удаления и восстановления-->
+    <script src="~/src/FocLab/Models/TaskStaticHandlers.js"></script>
+
+    <script src="~/src/FocLab/Models/Substance.js"></script>
+
     <script>
-        function RemoveTask(id) {
 
-            console.log("RemoveTask", id);
+        TaskStaticHandlers.TaskId = "@(Model.Id)";
 
-            var data = { Id: id, Flag: false };
+        $("#Create_ReagentId").select2({
+            placeholder: "Выберите реагент",
 
-            Requester.SendPostRequestWithAnimation('/Chemistry/Chemistry/RemoveOrCancelRemoving', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs);
-        }
+            "language": {
+                "noResults": function () {
+                    return "Реагент не найден.";
+                }
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            }
+        })
 
-        function CancelRemoving(id) {
+        var substanceObject = @Html.GetJson(Model.SubstanceCounter);
 
-            var data = { Id: id, Flag: true };
+        var substance = new SubstanceCounter(substanceObject);
 
-            Requester.SendPostRequestWithAnimation('/Chemistry/Chemistry/RemoveOrCancelRemoving', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs);
-        }
+        this.window.substance = substance;
     </script>
-    <!--Методы удаления и восстановления-->
-    <!--Методы загрузки файлов-->
+
+
+
+
     <script>
+        $(".btn-task-update").on("click", () => TaskStaticHandlers.UpdateBtnClickHandler());
+    </script>
 
-
+    <script>
 
     function UpdateFileByType(fileType) {
 
@@ -426,51 +439,6 @@
     <!--/Методы загрузки файлов-->
 
 
-    <script>
 
-
-        function UpdateBtnClickHandler() {
-
-            modalWorker.ShowModal("loadingModal");
-
-            var data = {
-                Id: "@Model.Id",
-                PerformerQuality: document.getElementsByName("Quality")[0].value,
-                PerformerQuantity: document.getElementsByName("Quantity")[0].value,
-                PerformerText: document.getElementsByName("Text")[0].value,
-                SubstanceCounterJSON: JSON.stringify(substance.getJSON()),
-            };
-
-            $.ajax({
-                url: '/Chemistry/Chemistry/UpdateTaskByPerformer',
-                type: 'POST',
-                data: data,
-                async: true,
-                cache: false,
-                dataType: 'json',
-                success: function (response) {
-
-                    modalWorker.HideModals();
-
-                    alert(response.Message);
-
-                    location.reload();
-                }
-            });
-        }
-
-        $("#Create_ReagentId").select2({
-            placeholder: "Выберите реагент",
-
-            "language": {
-                "noResults": function () {
-                    return "Реагент не найден.";
-                }
-            },
-            escapeMarkup: function (markup) {
-                return markup;
-            }
-        })
-    </script>
 
 }

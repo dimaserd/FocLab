@@ -19,32 +19,45 @@ namespace FocLab.Areas.Chemistry.Controllers.Api
     {
         private AdminChemistryTasksWorker AdminChemistryTasksWorker => new AdminChemistryTasksWorker(ContextWrapper);
 
+        private PerformerChemistryTasksWorker PerformerChemistryTasksWorker => new PerformerChemistryTasksWorker(ContextWrapper);
+
+        /// <summary>
+        /// Обновить поля задания как исполнитель
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("Performer/Update")]
+        public Task<BaseApiResponse> PerformerUpdate(UpdateTaskAsPerformer model)
+        {
+            return PerformerChemistryTasksWorker.UpdateTaskAsync(model);
+        }
+
         /// <summary>
         /// Создать задание
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost("Create")]
-        public Task<BaseApiResponse> Create(ChemistryCreateTask model)
+        [HttpPost("Admin/Create")]
+        public Task<BaseApiResponse> AdminCreate(ChemistryCreateTask model)
         {
             return AdminChemistryTasksWorker.CreateTaskAsync(model);
         }
 
-        [HttpPost("Edit")]
-        public Task<BaseApiResponse> Edit(EditChemistryTask model)
+        [HttpPost("Admin/Edit")]
+        public Task<BaseApiResponse> AdminEdit(EditChemistryTask model)
         {
             return AdminChemistryTasksWorker.EditTaskAsync(model);
         }
 
-        [HttpPost("Remove")]
-        public Task<BaseApiResponse> Remove(string id)
+        [HttpPost("Admin/Remove")]
+        public Task<BaseApiResponse> AdminRemove(string id)
         {
             return AdminChemistryTasksWorker.RemoveTaskAsync(id);
         }
 
 
-        [HttpPost("CancelRemove")]
-        public Task<BaseApiResponse> CancelRemove(string id)
+        [HttpPost("Admin/CancelRemove")]
+        public Task<BaseApiResponse> AdminCancelRemove(string id)
         {
             return AdminChemistryTasksWorker.CancelRemoveTaskAsync(id);
         }
