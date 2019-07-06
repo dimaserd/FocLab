@@ -16,7 +16,7 @@
 </h2>
 
 <div class="table-responsive">
-    <table class="table table-bordered table-striped">
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th>
@@ -76,7 +76,7 @@
             {
             <tr>
                 <td>
-                    <a href="/Chemistry/Reagent/Details/@reagent.Reagent.Id" target="_blank">
+                    <a href="/Chemistry/Reagents/Details/@reagent.Reagent.Id" target="_blank">
                         @reagent.Reagent.Name
                     </a>
                 </td>
@@ -102,7 +102,7 @@
                             </button>
 
                             <button class="btn btn-danger btn-block task-reagent-refresh-delete" style="margin-top:5px" data-task-reagent-id="@reagent.Reagent.Id">
-                                <i class="fa fa-trash-o"></i>
+                                <i class="fas fa-trash"></i>
                                 Удалить
                             </button>
                         </div>
@@ -134,7 +134,7 @@
     });
 </script>
 
-<script src="~/src/FocLab/TaskReagentWorker.js"></script>
+<script src="~/src/FocLab/Task/TaskReagentWorker.js"></script>
 
 <script>
     var taskReagentWorker = new TaskReagentWorker("@task.Id");

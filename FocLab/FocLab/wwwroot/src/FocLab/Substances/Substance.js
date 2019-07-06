@@ -1,14 +1,39 @@
 var SubstanceCounter = /** @class */ (function () {
     function SubstanceCounter(substanceObj) {
+        console.log("SubstanceCounter.constructor", substanceObj);
         this.prefix = "";
         //this.setProperties();
         this.Substances = [];
         if (substanceObj != null && substanceObj != undefined) {
+            console.log("SubstanceCounter.constructor", "Попадание в условие");
             this.Etalon = substanceObj.Etalon;
             this.Substances = substanceObj.Substances;
         }
         this.DrawTable();
     }
+    SubstanceCounter.prototype.InitHandlers = function () {
+        SubstanceStaticHandlers.SetHandlerForClass("substance-name", "change", function (x) {
+            var count = +$(x.target).data("count");
+            SubstanceStaticHandlers.ChangeName(count, $(x.target).val().toString());
+        });
+        SubstanceStaticHandlers.SetHandlerForClass("substance-massa", "change", function (x) {
+            var count = +$(x.target).data("count");
+            SubstanceStaticHandlers.WriteMassa(+$(x.target).val(), count);
+        });
+        var evHandler = function (x) {
+            var count = +$(x.target).data("count");
+            var prefix = $(x.target).data("prefix").toString();
+            SubstanceStaticHandlers.ChangeMassa(count, prefix);
+        };
+        for (var elem in ["substance-mollar-massa", "substance-koef"]) {
+            SubstanceStaticHandlers.SetHandlerForClass(elem, "change", evHandler);
+            SubstanceStaticHandlers.SetHandlerForClass(elem, "input", evHandler);
+        }
+        SubstanceStaticHandlers.SetHandlerForClass("substance-remove", "click", function (x) {
+            var count = +$(x.target).data("count");
+            SubstanceStaticHandlers.RemoveSubstanceHandler(count);
+        });
+    };
     SubstanceCounter.prototype.ClearTable = function () {
         document.getElementById(this.prefix + ".tbodySubstances").innerHTML = "";
     };
@@ -19,44 +44,15 @@ var SubstanceCounter = /** @class */ (function () {
         document.getElementById(this.prefix + ".tbodySubstances").appendChild(tr);
     };
     SubstanceCounter.prototype.DrawSubstance = function (count) {
-        var _this = this;
         var tr = document.createElement("tr");
         var html = "\n                    <td>\n                        <input class=\"form-control substance-name\" name=\"" + this.prefix + ".Name[" + count + "]\" data-count=\"" + count + "\" type=\"text\" value=\"\">\n                    </td>\n\n                    <td>\n                        <input class=\"form-control substance-massa\" name=\"" + this.prefix + ".Massa[" + count + "]\" data-count=\"" + count + "\" data-prefix=\"" + this.prefix + "\" type=\"number\" value=\"\">\n                    </td>\n\n                    <td>\n                        <input class=\"form-control substance-mollar-massa\" data-count=\"" + count + "\" data-prefix=\"" + this.prefix + "\" name=\"" + this.prefix + ".MolarMassa[" + count + "]\" type=\"number\" value=\"\">\n                    </td>\n\n                    <td>\n                        <input class=\"form-control substance-koef\" data-count=\"" + count + "\" data-prefix=\"" + this.prefix + "\" name=\"" + this.prefix + ".Koef[" + count + "]\" type=\"number\" value=\"\">\n                    </td>\n\n                    <td>\n                        <button class=\"btn btn-danger substance-remove\" data-count=\"" + count + "\" data-prefix=\"" + this.prefix + "\">\n                            <i class=\"fas fa-trash\">\n\n                            </i>\n                        </button>\n                    </td>";
         tr.innerHTML = html;
         document.getElementById(this.prefix + ".tbodySubstances").appendChild(tr);
-        $(".substance-name").on("change", function () {
-            var count = +$(_this).data("count");
-            SubstanceStaticHandlers.ChangeName(count, $(_this).val().toString());
-        });
-        $(".substance-massa").on("change", function () {
-            var count = +$(_this).data("count");
-            SubstanceStaticHandlers.WriteMassa(+$(_this).val(), count);
-        });
-        for (var elem in [".substance-mollar-massa", ".substance-koef"]) {
-            $(elem).on("change", function () {
-                var count = +$(_this).data("count");
-                var prefix = $(_this).data("prefix").toString();
-                SubstanceStaticHandlers.ChangeMassa(count, prefix);
-            }).on("input", function () {
-                var count = +$(_this).data("count");
-                var prefix = $(_this).data("prefix").toString();
-                SubstanceStaticHandlers.ChangeMassa(count, prefix);
-            });
-        }
-        $(".substance-remove").on("click", function () {
-            var count = +$(_this).data("count");
-            SubstanceStaticHandlers.RemoveSubstanceHandler(count);
-        });
     };
     SubstanceCounter.prototype.DrawTable = function () {
         if (this.Etalon == null) {
-            alert("Не указано эталонное вещество");
-            this.Etalon = {
-                Name: "",
-                Koef: 1,
-                Massa: 1,
-                MolarMassa: 1
-            };
+            ToastrWorker.ShowError("Не указано эталонное вещество");
+            this.Etalon = { Name: "", Koef: 1, Massa: 1, MolarMassa: 1 };
         }
         this.DrawEtalon();
         this.setValueToName(this.prefix + ".etalon.Name", this.Etalon.Name);
@@ -67,6 +63,7 @@ var SubstanceCounter = /** @class */ (function () {
             this.DrawSubstance(i);
             this.setValuesToSubstance(i);
         }
+        this.InitHandlers();
     };
     SubstanceCounter.prototype.AddSubstance = function () {
         var count = window['substance'].Substances.length;
@@ -108,46 +105,4 @@ var SubstanceCounter = /** @class */ (function () {
         return (this.Etalon.Massa / this.Etalon.MolarMassa / this.Etalon.Koef);
     };
     return SubstanceCounter;
-}());
-var substance = new SubstanceCounter(window['substanceObject']);
-var SubstanceStaticHandlers = /** @class */ (function () {
-    function SubstanceStaticHandlers() {
-    }
-    SubstanceStaticHandlers.RemoveSubstanceHandler = function (count) {
-        console.log("RemoveSubstanceHandler", count);
-        var substanceToDelete = substance.Substances[count];
-        substance.Substances = substance.Substances.filter(function (x) { return x != substanceToDelete; });
-        ;
-        substance.ClearTable();
-        substance.DrawTable();
-        TaskStaticHandlers.UpdateBtnClickHandler();
-    };
-    SubstanceStaticHandlers.EtalonChangedHandler = function (prefix) {
-        if (prefix == "") {
-            substance.setProperties();
-            console.log(substance);
-        }
-    };
-    SubstanceStaticHandlers.ChangeMassa = function (count, prefix) {
-        var molarMassa = +document.getElementsByName(prefix + ".MolarMassa[" + count + "]")[0].value;
-        var koef = +document.getElementsByName(prefix + ".Koef[" + count + "]")[0].value;
-        var massa = substance.getTotalKoef() * koef * molarMassa;
-        massa = +massa.toFixed(2);
-        substance.Substances[count].MolarMassa = molarMassa;
-        substance.Substances[count].Massa = massa;
-        substance.Substances[count].Koef = koef;
-        document.getElementsByName(prefix + ".Massa[" + count + "]")[0].value = massa.toFixed(2);
-    };
-    SubstanceStaticHandlers.WriteMassa = function (value, count) {
-        substance.Substances[count].Massa = value;
-    };
-    SubstanceStaticHandlers.ChangeName = function (count, value) {
-        substance.Substances[count].Name = value;
-    };
-    SubstanceStaticHandlers.AddSubstance = function (prefix) {
-        if (prefix === "") {
-            substance.AddSubstance();
-        }
-    };
-    return SubstanceStaticHandlers;
 }());

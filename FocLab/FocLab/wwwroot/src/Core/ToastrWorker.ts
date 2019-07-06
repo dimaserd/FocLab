@@ -22,7 +22,7 @@ class ToastrWorker {
             Message: text
         };
 
-        this.HandleBaseApiResponse(data);
+        ToastrWorker.HandleBaseApiResponse(data);
     }
 
 
@@ -32,7 +32,7 @@ class ToastrWorker {
             Message: text
         };
 
-        this.HandleBaseApiResponse(data);
+        ToastrWorker.HandleBaseApiResponse(data);
     }
 
     public static HandleBaseApiResponse = function (data: BaseApiResponse): void {

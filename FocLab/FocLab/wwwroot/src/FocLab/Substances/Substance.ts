@@ -21,11 +21,15 @@ class SubstanceCounter {
 
     constructor(substanceObj: SubstancesObject) {
 
+        console.log("SubstanceCounter.constructor", substanceObj);
+
         this.prefix = "";
         //this.setProperties();
         this.Substances = [];
 
         if (substanceObj != null && substanceObj != undefined) {
+
+            console.log("SubstanceCounter.constructor", "Попадание в условие")
             this.Etalon = substanceObj.Etalon;
             this.Substances = substanceObj.Substances;
 
@@ -34,6 +38,37 @@ class SubstanceCounter {
         this.DrawTable();
     }
 
+    
+
+    InitHandlers(): void {
+
+        SubstanceStaticHandlers.SetHandlerForClass("substance-name", "change", x => {
+            var count = +$(x.target).data("count");
+            SubstanceStaticHandlers.ChangeName(count, $(x.target).val().toString());
+        })
+
+        SubstanceStaticHandlers.SetHandlerForClass("substance-massa", "change", x => {
+            var count = +$(x.target).data("count");
+            SubstanceStaticHandlers.WriteMassa(+$(x.target).val(), count);
+        });
+
+        var evHandler = x => {
+            var count = +$(x.target).data("count");
+            var prefix = $(x.target).data("prefix").toString();
+            SubstanceStaticHandlers.ChangeMassa(count, prefix);
+        };
+
+        for (let elem in ["substance-mollar-massa", "substance-koef"]) {
+
+            SubstanceStaticHandlers.SetHandlerForClass(elem, "change", evHandler);
+            SubstanceStaticHandlers.SetHandlerForClass(elem, "input", evHandler);
+        }
+
+        SubstanceStaticHandlers.SetHandlerForClass("substance-remove", "click", x => {
+            var count = +$(x.target).data("count");
+            SubstanceStaticHandlers.RemoveSubstanceHandler(count);
+        });
+    }
     
         ClearTable() : void {
             document.getElementById(`${this.prefix}.tbodySubstances`).innerHTML = "";
@@ -102,43 +137,13 @@ class SubstanceCounter {
 
             document.getElementById(`${this.prefix}.tbodySubstances`).appendChild(tr);
 
-            $(".substance-name").on("change", () => {
-                var count = +$(this).data("count");
-                SubstanceStaticHandlers.ChangeName(count, $(this).val().toString());
-            });
-
-            $(".substance-massa").on("change", () => {
-                var count = +$(this).data("count");
-                SubstanceStaticHandlers.WriteMassa(+$(this).val(), count);
-            });
-
-            for (let elem in [".substance-mollar-massa", ".substance-koef"]) {
-                $(elem).on("change", () => {
-                    var count = +$(this).data("count");
-                    var prefix = $(this).data("prefix").toString();
-                    SubstanceStaticHandlers.ChangeMassa(count, prefix);
-                }).on("input", () => {
-                    var count = +$(this).data("count");
-                    var prefix = $(this).data("prefix").toString();
-                    SubstanceStaticHandlers.ChangeMassa(count, prefix);
-                });
-            }
-
-            $(".substance-remove").on("click", () => {
-                var count = +$(this).data("count");
-                SubstanceStaticHandlers.RemoveSubstanceHandler(count);
-            })
+            
         }
 
         DrawTable() : void {
             if (this.Etalon == null) {
-                alert("Не указано эталонное вещество");
-                this.Etalon = {
-                    Name: "",
-                    Koef: 1,
-                    Massa: 1,
-                    MolarMassa: 1
-                };
+                ToastrWorker.ShowError("Не указано эталонное вещество");
+                this.Etalon = { Name: "", Koef: 1, Massa: 1, MolarMassa: 1 };
             }
             this.DrawEtalon();
 
@@ -152,6 +157,8 @@ class SubstanceCounter {
                 this.DrawSubstance(i);
                 this.setValuesToSubstance(i);
             }
+
+            this.InitHandlers();
         }
     
 
@@ -209,57 +216,3 @@ class SubstanceCounter {
     }
 }
 
-var substance = new SubstanceCounter(window['substanceObject']);
-
-class SubstanceStaticHandlers {
-    static RemoveSubstanceHandler(count: number) {
-
-        console.log("RemoveSubstanceHandler", count);
-
-        var substanceToDelete = substance.Substances[count];
-
-        substance.Substances = substance.Substances.filter(x => x != substanceToDelete);;
-        substance.ClearTable();
-        substance.DrawTable();
-        TaskStaticHandlers.UpdateBtnClickHandler();
-    }
-
-    static EtalonChangedHandler(prefix) {
-
-        if (prefix == "") {
-            substance.setProperties();
-            console.log(substance);
-        }
-    }
-
-
-    static ChangeMassa(count: number, prefix: string) {
-
-        var molarMassa = +(document.getElementsByName(`${prefix}.MolarMassa[${count}]`)[0] as HTMLInputElement).value;
-
-        var koef = +(document.getElementsByName(`${prefix}.Koef[${count}]`)[0] as HTMLInputElement).value;
-
-        var massa = substance.getTotalKoef() * koef * molarMassa;
-
-        massa = +massa.toFixed(2);
-        substance.Substances[count].MolarMassa = molarMassa;
-        substance.Substances[count].Massa = massa;
-        substance.Substances[count].Koef = koef;
-
-        (document.getElementsByName(`${prefix}.Massa[${count}]`)[0] as HTMLInputElement).value = massa.toFixed(2);
-    }
-
-    static WriteMassa(value: number, count: number) {
-        substance.Substances[count].Massa = value;
-    }
-
-    static ChangeName(count: number, value: string) {
-        substance.Substances[count].Name = value;
-    }
-
-    static AddSubstance(prefix: string) {
-        if (prefix === "") {
-            substance.AddSubstance();
-        }
-    }
-}

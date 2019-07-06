@@ -13,14 +13,14 @@ var ToastrWorker = /** @class */ (function () {
             IsSucceeded: false,
             Message: text
         };
-        this.HandleBaseApiResponse(data);
+        ToastrWorker.HandleBaseApiResponse(data);
     };
     ToastrWorker.ShowSuccess = function (text) {
         var data = {
             IsSucceeded: true,
             Message: text
         };
-        this.HandleBaseApiResponse(data);
+        ToastrWorker.HandleBaseApiResponse(data);
     };
     ToastrWorker.HandleBaseApiResponse = function (data) {
         console.log("HandleBaseApiResponse", data);
