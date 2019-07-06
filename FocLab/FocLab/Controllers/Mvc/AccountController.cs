@@ -80,6 +80,12 @@ namespace FocLab.Controllers.Mvc
 
         #region Обычные методы
         
+        [AllowAnonymous]
+        public IActionResult AccessDenied(string returnUrl)
+        {
+            return View();
+        }
+
         /// <summary>
         /// 
         /// </summary>

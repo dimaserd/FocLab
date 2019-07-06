@@ -103,10 +103,13 @@
         }
     }
     setValuesToSubstance(count) {
-        this.setValueToName(`${this.prefix}.Name[${count}]`, this.Substances[count].Name);
-        this.setValueToName(`${this.prefix}.Massa[${count}]`, this.Substances[count].Massa.toString());
-        this.setValueToName(`${this.prefix}.MolarMassa[${count}]`, this.Substances[count].MolarMassa.toString());
-        this.setValueToName(`${this.prefix}.Koef[${count}]`, this.Substances[count].Koef.toString());
+
+        var sub = this.Substances[count];
+
+        this.setValueToName(`${this.prefix}.Name[${count}]`, sub.Name);
+        this.setValueToName(`${this.prefix}.Massa[${count}]`, sub.Massa != null ? sub.Massa.toString() : "");
+        this.setValueToName(`${this.prefix}.MolarMassa[${count}]`, sub.MolarMassa != null ? sub.MolarMassa.toString() : "");
+        this.setValueToName(`${this.prefix}.Koef[${count}]`, sub.Koef != null ? sub.Koef.toString() : "");
     }
     setValueToName(name: string, value: string): void {
         (document.getElementsByName(name)[0] as HTMLInputElement).value = value;

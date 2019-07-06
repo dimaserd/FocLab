@@ -101,7 +101,7 @@
                                 Обновить данные
                             </button>
 
-                            <button class="btn btn-danger btn-block task-reagent-refresh-delete" style="margin-top:5px" data-task-reagent-id="@reagent.Reagent.Id">
+                            <button class="btn btn-danger btn-block task-reagent-delete" style="margin-top:5px" data-task-reagent-id="@reagent.Reagent.Id">
                                 <i class="fas fa-trash"></i>
                                 Удалить
                             </button>
@@ -141,7 +141,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         $(".task-reagent-refresh").on("click", () => window.taskReagentWorker.EditTaskReagent($(this).data("task-reagent-id")));
-        $(".task-reagent-refresh-delete").on("click", () => window.taskReagentWorker.RemoveTaskReagent($(this).data("task-reagent-id")));
+        $(".task-reagent-delete").on("click", () => window.taskReagentWorker.RemoveTaskReagent($(this).data("task-reagent-id")));
         $(".create-reagent-btn").on("click", () => window.taskReagentWorker.CreateTaskReagent());
     })
 

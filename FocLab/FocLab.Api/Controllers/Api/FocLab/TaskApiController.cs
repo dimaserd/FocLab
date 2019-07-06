@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Croco.Core.Common.Models;
 using FocLab.Api.Controllers.Base;
+using FocLab.Logic.Abstractions;
+using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.ChemistryTasks;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Services;
@@ -26,6 +28,8 @@ namespace FocLab.Api.Controllers.Api.FocLab
 
         private PerformerChemistryTasksWorker PerformerChemistryTasksWorker => new PerformerChemistryTasksWorker(ContextWrapper);
 
+        private readonly IUserMailSender MailSender = new FocLabEmailSender();
+
         /// <summary>
         /// Обновить поля задания как исполнитель
         /// </summary>
@@ -35,6 +39,17 @@ namespace FocLab.Api.Controllers.Api.FocLab
         public Task<BaseApiResponse> PerformerUpdate(UpdateTaskAsPerformer model)
         {
             return PerformerChemistryTasksWorker.UpdateTaskAsync(model);
+        }
+
+        /// <summary>
+        /// Пометить задание, как завершенное
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("Performer/Perform")]
+        public Task<BaseApiResponse> PerformerPerformTask(PerformTaskModel model)
+        {
+            return PerformerChemistryTasksWorker.PerformTaskAsync(model, MailSender);
         }
 
         /// <summary>

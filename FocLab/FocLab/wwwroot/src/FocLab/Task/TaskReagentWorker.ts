@@ -29,7 +29,6 @@
             ReagentId: reagentId
         };
 
-
         Requester.SendPostRequestWithAnimation('/Chemistry/Reagent/EditTaskReagent', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null)
     }    
 

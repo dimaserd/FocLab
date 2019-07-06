@@ -20,17 +20,29 @@
             SubstanceStaticHandlers.WriteMassa(+$(x.target).val(), count);
         });
 
-        var evHandler = x => {
+        
+        //for (let elem in ["substance-mollar-massa", "substance-koef"]) {
+
+            SubstanceEventSetter.SetHandlerForClass("substance-mollar-massa", "change", x => {
+                var count = +$(x.target).data("count");
+                var prefix = $(x.target).data("prefix").toString();
+                SubstanceStaticHandlers.ChangeMassa(count, prefix);
+            });
+            SubstanceEventSetter.SetHandlerForClass("substance-mollar-massa", "input", x => {
+                var count = +$(x.target).data("count");
+                var prefix = $(x.target).data("prefix").toString();
+                SubstanceStaticHandlers.ChangeMassa(count, prefix);
+            });
+        SubstanceEventSetter.SetHandlerForClass("substance-koef", "change", x => {
             var count = +$(x.target).data("count");
             var prefix = $(x.target).data("prefix").toString();
             SubstanceStaticHandlers.ChangeMassa(count, prefix);
-        };
-
-        for (let elem in ["substance-mollar-massa", "substance-koef"]) {
-
-            SubstanceEventSetter.SetHandlerForClass(elem, "change", evHandler);
-            SubstanceEventSetter.SetHandlerForClass(elem, "input", evHandler);
-        }
+        });
+        SubstanceEventSetter.SetHandlerForClass("substance-koef", "input", x => {
+            var count = +$(x.target).data("count");
+            var prefix = $(x.target).data("prefix").toString();
+            SubstanceStaticHandlers.ChangeMassa(count, prefix);
+        });
 
         SubstanceEventSetter.SetHandlerForClass("substance-remove", "click", x => {
             var count = +$(x.target).data("count");

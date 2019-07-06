@@ -160,19 +160,6 @@ namespace FocLab
 
             app.UseAuthentication();
 
-            app.UseExceptionHandler(a => a.Run(async context =>
-            {
-                var feature = context.Features.Get<IExceptionHandlerPathFeature>();
-                var exception = feature.Error;
-
-                using (var db = (ChemistryDbContext)CrocoApp.Application.GetDbContext())
-                {
-                    var logger = db.GetLogger();
-
-                    await logger.LogExceptionAsync(exception);
-                }
-            }));
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

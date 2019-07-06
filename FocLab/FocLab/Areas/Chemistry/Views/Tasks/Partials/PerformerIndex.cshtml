@@ -15,7 +15,7 @@
 </div>
 
 <h2>
-    Список невыполненных заданий назначенных вам администратором
+    Список невыполненных заданий назначенных вам администратором <span class="m-badge m-badge--success">@performerTasks.Where(x => !x.IsPerformed).Count()</span>
 </h2>
 
 <div style="height:20px">
@@ -23,7 +23,7 @@
 </div>
 
 <div class="table-responsive">
-    <table class="table table-bordered table-striped">
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th>
@@ -58,7 +58,7 @@
                 <tr class="@_class">
 
                     <td>
-                        <a href="/Chemistry/Chemistry/Task/@task.Id">
+                        <a href="/Chemistry/Tasks/Task/@task.Id">
                             @task.Title
                         </a>
                     </td>
@@ -78,7 +78,7 @@
                     <td>
                         <div class="row">
                             <div class="col-md-12">
-                                <a class="btn btn-primary btn-block" onclick="FinishTask('@task.Id', true)">
+                                <a class="btn btn-primary btn-block" href="#perform" onclick="FinishTask('@task.Id', true)">
                                     Выполнить задание
                                 </a>
                             </div>
@@ -108,11 +108,11 @@
 </div>
 
 <h2>
-    Список выполненных вами заданий
+    Список выполненных вами заданий <span class="m-badge m-badge--success">@performerTasks.Where(x => x.IsPerformed).Count()</span>
 </h2>
 
 <div class="table-responsive">
-    <table class="table table-bordered table-striped">
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th>
@@ -141,7 +141,7 @@
                 <tr class="@_class">
 
                     <td>
-                        <a href="/Chemistry/Chemistry/Task/@task.Id">
+                        <a href="/Chemistry/Tasks/Task/@task.Id">
                             @task.Title
                         </a>
 
@@ -188,7 +188,7 @@
 
     function FinishTask(id, flag) {
 
-        Requester.SendPostRequestWithAnimation('/Chemistry/Chemistry/PerformTask', { TaskId: id, IsPerformed: flag }, x => {
+        Requester.SendPostRequestWithAnimation('/Api/Chemistry/Tasks/Performer/Perform', { TaskId: id, IsPerformed: flag }, x => {
             if (x.IsSucceeded) {
                 setTimeout(() => location.reload(), 1500);
             }
