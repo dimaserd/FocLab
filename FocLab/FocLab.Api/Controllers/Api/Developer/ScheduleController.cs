@@ -22,16 +22,29 @@ namespace FocLab.Api.Controllers.Api.Developer
 
 
         /// <summary>
-        /// Добавление отложенной задачи
+        /// Взять значение джоб по-умолчанию из кода
         /// </summary>
         /// <returns></returns>
-        [HttpPost(nameof(AddJob))]
+        [HttpPost(nameof(UpdateJobs))]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public BaseApiResponse AddJob()
+        public BaseApiResponse UpdateJobs()
         {
             ApplicationJobManager.UpdateJobs();
 
             return new BaseApiResponse(true, "Добавлено");
+        }
+
+        /// <summary>
+        /// Взять значение джоб по-умолчанию из кода
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost(nameof(UpdateJobs))]
+        [ProducesDefaultResponseType(typeof(BaseApiResponse))]
+        public BaseApiResponse RemoveJobs()
+        {
+            ApplicationJobManager.RemoveJobs();
+
+            return new BaseApiResponse(true, "Удалены");
         }
     }
 }

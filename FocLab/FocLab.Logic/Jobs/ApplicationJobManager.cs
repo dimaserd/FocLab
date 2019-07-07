@@ -31,5 +31,17 @@ namespace FocLab.Logic.Jobs
                 manager.AddOrUpdate(job.Id, job.Job, job.CronExpression);
             }
         }
+
+        public static void RemoveJobs()
+        {
+            var manager = new RecurringJobManager();
+
+            var jobs = GetJobs();
+
+            foreach(var job in jobs)
+            {
+                manager.RemoveIfExists(job.Id);
+            }
+        }
     }
 }

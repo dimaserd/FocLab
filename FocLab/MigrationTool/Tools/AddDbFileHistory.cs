@@ -2,6 +2,7 @@
 using Croco.Core.Common.Models;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,6 +25,11 @@ namespace MigrationTool.Tools
             var doneBatchesCount = await ExecuteBatch(count);
 
             return new BaseApiResponse(true, $"Выполнено преобразований {doneBatchesCount}");
+        }
+
+        public Task<int> GetCountLeftAsync()
+        {
+            return Context.DbContext.DbFiles.Where(x => !x.History.Any()).CountAsync();
         }
 
         public async Task<int> ExecuteBatch(int count)
