@@ -38,7 +38,7 @@ namespace FocLab.Api.Controllers.Api.Developer
         /// Взять значение джоб по-умолчанию из кода
         /// </summary>
         /// <returns></returns>
-        [HttpPost(nameof(UpdateJobs))]
+        [HttpPost("RemoveJobs")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         public BaseApiResponse RemoveJobs()
         {
