@@ -140,9 +140,9 @@
     var taskReagentWorker = new TaskReagentWorker("@task.Id");
 
     document.addEventListener("DOMContentLoaded", () => {
-        $(".task-reagent-refresh").on("click", () => window.taskReagentWorker.EditTaskReagent($(this).data("task-reagent-id")));
-        $(".task-reagent-delete").on("click", () => window.taskReagentWorker.RemoveTaskReagent($(this).data("task-reagent-id")));
-        $(".create-reagent-btn").on("click", () => window.taskReagentWorker.CreateTaskReagent());
+        $(".task-reagent-refresh").on("click", e => window.taskReagentWorker.EditTaskReagent($(e.target).data("task-reagent-id")));
+        $(".task-reagent-delete").on("click", e => window.taskReagentWorker.RemoveTaskReagent($(e.target).data("task-reagent-id")));
+        $(".create-reagent-btn").on("click", e => window.taskReagentWorker.CreateTaskReagent());
     })
 
     

@@ -8,7 +8,6 @@ using System.Linq.Expressions;
 
 namespace FocLab.Logic.Models.Reagents
 {
-
     public class ChemistryReagentModel
     {
         public string Id { get; set; }

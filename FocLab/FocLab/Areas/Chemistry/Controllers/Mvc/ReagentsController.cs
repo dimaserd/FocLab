@@ -18,68 +18,6 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     {
         private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(ContextWrapper);
 
-        #region методы Апи
-
-        /// <summary>
-        /// Создание реагента
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<JsonResult> CreateReagent(ChemistryReagentDto model)
-        {
-            return Json(await ChemistryReagentsWorker.CreateReagentAsync(model));
-        }
-
-        /// <summary>
-        /// Редактировние реагента
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<JsonResult> EditReagent(ChemistryReagentDto model)
-        {
-            return Json(await ChemistryReagentsWorker.EditReagentAsync(model));
-        }
-
-        #region Реагенты к заданию
-
-        /// <summary>
-        /// Добавление реагента к заданию
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<JsonResult> AddTaskReagent(ChemistryTaskReagentDto model)
-        {
-            return Json(await ChemistryReagentsWorker.AddTaskReagentAsync(model));
-        }
-
-        /// <summary>
-        /// Редактирование реагента к заданию
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<JsonResult> EditTaskReagent(ChemistryTaskReagentDto model)
-        {
-            return Json(await ChemistryReagentsWorker.EditTaskReagentAsync(model));
-        }
-
-        /// <summary>
-        /// Удаление реагента
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<JsonResult> RemoveTaskReagent(ChemistryTaskReagentDto model)
-        {
-            return Json(await ChemistryReagentsWorker.RemoveTaskReagentAsync(model));
-        }
-        #endregion
-
-        #endregion
-        
         /// <summary>
         /// Список реагентов
         /// </summary>
@@ -98,7 +36,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         /// <returns></returns>
         public async Task<ActionResult> Details(string id)
         {
-            var model = await ChemistryReagentsWorker.GetReagentAsync(new ChemistryReagentDto { Id = id });
+            var model = await ChemistryReagentsWorker.GetReagentAsync(id);
 
             return View(model);
         }

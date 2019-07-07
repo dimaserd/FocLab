@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions.ContextWrappers;
+using Croco.Core.Abstractions.Repository;
 using Croco.Core.Common.Models;
 using FocLab.Logic.EntityDtos;
 using FocLab.Logic.EntityDtos.Users.Default;
@@ -34,40 +35,21 @@ namespace FocLab.Logic.Workers.ChemistryReagents
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public Task<ChemistryReagentDto> GetReagentAsync(ChemistryReagentDto model)
+        public Task<ChemistryReagentModel> GetReagentAsync(string id)
         {
-            return GetRepository<ChemistryReagent>().Query().Select(x => new ChemistryReagentDto
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Tasks = x.Tasks.Select(t => new ChemistryTaskReagentDto
-                {
-                    ReagentId = t.ReagentId,
-                    Task = new ChemistryTaskDto
-                    {
-                        Id = t.Task.Id,
-                        Title = t.Task.Title,
-                        PerformerUser = new ApplicationUserDto
-                        {
-                            Id = t.Task.PerformerUser.Id,
-                            Name = t.Task.PerformerUser.Name,
-                            Email = t.Task.PerformerUser.Email
-                        }
-                    },
-                    TakenQuantity = t.TakenQuantity,
-                    ReturnedQuantity = t.ReturnedQuantity,
-                    TaskId = t.TaskId
-                }).ToList(),
-
-            }).FirstOrDefaultAsync(x => x.Id == model.Id);
+            return GetRepository<ChemistryReagent>().Query()
+                .Select(ChemistryReagentModel.SelectExpression)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
+
+
 
         /// <summary>
         /// Создание реагента
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> CreateReagentAsync(ChemistryReagentDto model)
+        public async Task<BaseApiResponse> CreateOrUpdateReagentAsync(ChemistryReagentNameAndIdModel model)
         {
             if(!IsAuthenticated)
             {
@@ -81,14 +63,20 @@ namespace FocLab.Logic.Workers.ChemistryReagents
 
             model.Name = model.Name.Trim();
 
-            if(await Context.ChemistryReagents.AnyAsync(x => x.Name == model.Name))
+            var repo = GetRepository<ChemistryReagent>();
+
+            if(!string.IsNullOrWhiteSpace(model.Id))
+            {
+                return await EditReagentAsync(model, repo);
+            }
+
+            if(await repo.Query().AnyAsync(x => x.Name == model.Name))
             {
                 return new BaseApiResponse(false, "Реагент с данным именем уже существует");
             }
 
-            Context.ChemistryReagents.Add(new ChemistryReagent
+            repo.CreateHandled(new ChemistryReagent
             {
-                Id = Guid.NewGuid().ToString(),
                 Name = model.Name,
             });
 
@@ -102,35 +90,23 @@ namespace FocLab.Logic.Workers.ChemistryReagents
         /// <param name="model"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> EditReagentAsync(ChemistryReagentDto model)
+        private async Task<BaseApiResponse> EditReagentAsync(ChemistryReagentNameAndIdModel model, IRepository<ChemistryReagent> repo)
         {
-            if (!IsAuthenticated)
-            {
-                return new BaseApiResponse(false, "Вы не авторизованы");
-            }
-
-            if (model == null)
-            {
-                return new BaseApiResponse(false, "Вы подали пустую модель");
-            }
-
-            model.Name = model.Name.Trim();
-
-            if (await Context.ChemistryReagents.AnyAsync(x => x.Name == model.Name))
+            if (await repo.Query().AnyAsync(x => x.Name == model.Name && x.Id != model.Id)) 
             {
                 return new BaseApiResponse(false, "Реагент с данным именем уже существует");
             }
 
-            var chemistryReagent = await Context.ChemistryReagents.FirstOrDefaultAsync(x => x.Id == model.Id);
+            var chemistryReagent = await repo.Query().FirstOrDefaultAsync(x => x.Id == model.Id);
 
             if(chemistryReagent == null)
             {
                 return new BaseApiResponse(false, "Реагент не найден по указанному идентификатору");
             }
 
-            Context.Entry(chemistryReagent).State = EntityState.Modified;
-
             chemistryReagent.Name = model.Name;
+
+            repo.UpdateHandled(chemistryReagent);
 
             return await TrySaveChangesAndReturnResultAsync("Реагент отредактирован");
         }
@@ -141,19 +117,26 @@ namespace FocLab.Logic.Workers.ChemistryReagents
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> AddTaskReagentAsync(ChemistryTaskReagentDto model)
+        public async Task<BaseApiResponse> CreateOrUpdateTaskReagentAsync(CreateOrUpdateTaskReagent model)
         {
             if(model == null)
             {
                 return new BaseApiResponse(false, "Вы подали  пустую модель");
             }
 
-            if(!IsAuthenticated)
+            if (model.TakenQuantity < model.ReturnedQuantity)
+            {
+                return new BaseApiResponse(false, "Вы не можете вернуть больше чем взяли");
+            }
+
+            if (!IsAuthenticated)
             {
                 return new BaseApiResponse(false, "Вы не авторизованы");
             }
 
-            var chemistryTask = await Context.ChemistryTasks.FirstOrDefaultAsync(x => x.Id == model.TaskId);
+            var taskRepo = GetRepository<ChemistryTask>();
+
+            var chemistryTask = await taskRepo.Query().FirstOrDefaultAsync(x => x.Id == model.TaskId);
 
             if(chemistryTask == null)
             {
@@ -167,22 +150,28 @@ namespace FocLab.Logic.Workers.ChemistryReagents
                 return new BaseApiResponse(false, "Вы не являетесь исполнителем задания");
             }
 
-            if(!await Context.ChemistryReagents.AnyAsync(x => x.Id == model.ReagentId))
+            if(!await GetRepository<ChemistryReagent>().Query().AnyAsync(x => x.Id == model.ReagentId))
             {
                 return new BaseApiResponse(false, "Реагент не найден по указанному идентификатору");
             }
 
-            if(await Context.ChemistryTaskReagents.AnyAsync(x => x.TaskId == model.TaskId && x.ReagentId == model.ReagentId))
-            {
-                return new BaseApiResponse(false, "Данный реагент уже добавлен к данному заданию");
-            }
+            var taskReagentRepo = GetRepository<ChemistryTaskReagent>();
 
-            if(model.TakenQuantity < model.ReturnedQuantity)
-            {
-                return new BaseApiResponse(false, "Вы не можете вернуть больше чем взяли");
-            }
+            var taskReagent = await taskReagentRepo.Query()
+                .FirstOrDefaultAsync(x => x.TaskId == model.TaskId && x.ReagentId == model.ReagentId);
 
-            Context.ChemistryTaskReagents.Add(new ChemistryTaskReagent
+            if(taskReagent != null)
+            {
+                taskReagent.TakenQuantity = model.TakenQuantity;
+                taskReagent.ReturnedQuantity = model.ReturnedQuantity;
+
+                taskReagentRepo.UpdateHandled(taskReagent);
+
+                return await TrySaveChangesAndReturnResultAsync("Реагент к химическому заданию отредактирован");
+            }
+            
+
+            taskReagentRepo.CreateHandled(new ChemistryTaskReagent
             {
                 TaskId = model.TaskId,
                 ReagentId = model.ReagentId,
@@ -194,55 +183,11 @@ namespace FocLab.Logic.Workers.ChemistryReagents
         }
 
         /// <summary>
-        /// Редактирование реагента
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public async Task<BaseApiResponse> EditTaskReagentAsync(ChemistryTaskReagentDto model)
-        {
-            if (model == null)
-            {
-                return new BaseApiResponse(false, "Вы подали  пустую модель");
-            }
-
-            if (!IsAuthenticated)
-            {
-                return new BaseApiResponse(false, "Вы не авторизованы");
-            }
-
-            var chemistryTaskReagent = await Context.ChemistryTaskReagents.Include(x => x.Task).FirstOrDefaultAsync(x => x.TaskId == model.TaskId && x.ReagentId == model.ReagentId);
-
-            if (chemistryTaskReagent == null)
-            {
-                return new BaseApiResponse(false, "Редактируемый реагент не найден по указанным идентификаторам");
-            }
-
-            var userId = UserId;
-
-            if (chemistryTaskReagent.Task.PerformerUserId != userId)
-            {
-                return new BaseApiResponse(false, "Вы не являетесь исполнителем задания");
-            }
-
-            if (model.TakenQuantity < model.ReturnedQuantity)
-            {
-                return new BaseApiResponse(false, "Вы не можете вернуть больше чем взяли");
-            }
-
-            Context.Entry(chemistryTaskReagent).State = EntityState.Modified;
-
-            chemistryTaskReagent.TakenQuantity = model.TakenQuantity;
-            chemistryTaskReagent.ReturnedQuantity = model.ReturnedQuantity;
-
-            return await TrySaveChangesAndReturnResultAsync("Реагент к химическому заданию отредактирован");
-        }
-
-        /// <summary>
         /// Удалить реагент
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> RemoveTaskReagentAsync(ChemistryTaskReagentDto model)
+        public async Task<BaseApiResponse> RemoveTaskReagentAsync(TaskReagentIdModel model)
         {
             if (model == null)
             {
@@ -254,21 +199,21 @@ namespace FocLab.Logic.Workers.ChemistryReagents
                 return new BaseApiResponse(false, "Вы не авторизованы");
             }
 
-            var chemistryTaskReagent = await Context.ChemistryTaskReagents.Include(x => x.Task).FirstOrDefaultAsync(x => x.TaskId == model.TaskId && x.ReagentId == model.ReagentId);
+            var repo = GetRepository<ChemistryTaskReagent>();
+
+            var chemistryTaskReagent = await repo.Query().Include(x => x.Task).FirstOrDefaultAsync(x => x.TaskId == model.TaskId && x.ReagentId == model.ReagentId);
 
             if (chemistryTaskReagent == null)
             {
                 return new BaseApiResponse(false, "Редактируемый реагент не найден по указанным идентификаторам");
             }
 
-            var userId = UserId;
-
-            if (chemistryTaskReagent.Task.PerformerUserId != userId)
+            if (chemistryTaskReagent.Task.PerformerUserId != UserId)
             {
                 return new BaseApiResponse(false, "Вы не являетесь исполнителем задания");
             }
 
-            Context.ChemistryTaskReagents.Remove(chemistryTaskReagent);
+            repo.DeleteHandled(chemistryTaskReagent);
 
             return await TrySaveChangesAndReturnResultAsync("Реагент к химическому заданию удален");
         }

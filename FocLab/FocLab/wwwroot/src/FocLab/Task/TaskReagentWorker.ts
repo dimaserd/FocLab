@@ -11,6 +11,7 @@
     }
 
     public CreateTaskReagent() {
+
         var data = {
             TaskId: this.TaskId,
             TakenQuantity: this.GetValueByName("Create.TakenQuantity"),
@@ -18,10 +19,13 @@
             ReagentId: this.GetValueByName("Create.ReagentId")
         };
 
-        Requester.SendPostRequestWithAnimation('/Chemistry/Reagent/AddTaskReagent', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null)
+        Requester.SendPostRequestWithAnimation('/Api/Chemistry/Reagents/ForTask/CreateOrUpdate', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null)
     }    
 
     public EditTaskReagent(reagentId: string) {
+
+        console.log("TaskReagentWorker.EditTaskReagent", reagentId);
+
         var data = {
             TaskId: this.TaskId,
             TakenQuantity: this.GetValueByName(`Edit.TakenQuantity.${reagentId}`),
@@ -29,15 +33,18 @@
             ReagentId: reagentId
         };
 
-        Requester.SendPostRequestWithAnimation('/Chemistry/Reagent/EditTaskReagent', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null)
+        Requester.SendPostRequestWithAnimation('/Api/Chemistry/Reagents/ForTask/CreateOrUpdate', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null)
     }    
 
     public RemoveTaskReagent(reagentId: string) {
+
+        console.log("TaskReagentWorker.RemoveTaskReagent", reagentId);
+
         var data = {
             TaskId: this.TaskId,
             ReagentId: reagentId
         };
 
-        Requester.SendPostRequestWithAnimation('/Chemistry/Reagent/RemoveTaskReagent', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null)
+        Requester.SendPostRequestWithAnimation('/Api/Chemistry/Reagents/ForTask/Remove', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null)
     }    
 }

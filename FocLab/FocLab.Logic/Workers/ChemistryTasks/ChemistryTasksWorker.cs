@@ -22,7 +22,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> LoadOrReloadFileForTaskAsync(ChemistryChangeFileForTask model)
+        public async Task<BaseApiResponse> ChangeFileFileForTaskAsync(ChemistryChangeFileForTask model)
         {
             if (model == null)
             {
@@ -50,41 +50,31 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 return new BaseApiResponse(false, "Задание является удаленным");
             }
 
-
-            var existedFile = await Context.ChemistryTaskDbFiles.FirstOrDefaultAsync(x => x.ChemistryTaskId == task.Id && x.Type == model.FileType);
-
-            
             var fileRepo = GetRepository<ChemistryTaskDbFile>();
 
-            ChemistryTaskDbFile taskFile;
-            //Если файла пока не существует
-            if (existedFile == null)
+            var existedFile = await fileRepo.Query()
+                .FirstOrDefaultAsync(x => x.ChemistryTaskId == task.Id && x.Type == model.FileType);
+
+            if(existedFile != null)
             {
-                taskFile = new ChemistryTaskDbFile
-                {
-                    FileId = model.FileId,
-                    Type = model.FileType,
-                    ChemistryTaskId = model.TaskId
-                };
-
-                fileRepo.CreateHandled(taskFile);
-
-                return await TrySaveChangesAndReturnResultAsync("Файл обновлен");
+                fileRepo.DeleteHandled(existedFile);
             }
 
-            taskFile = new ChemistryTaskDbFile
+            fileRepo.CreateHandled(new ChemistryTaskDbFile
             {
-                   
                 FileId = model.FileId,
                 Type = model.FileType,
                 ChemistryTaskId = model.TaskId
-            };
+            });
 
-            fileRepo.UpdateHandled(taskFile);
-
-            return await TrySaveChangesAndReturnResultAsync("Файл загружен и обновлен");
+            return await TrySaveChangesAndReturnResultAsync("Файл обновлен");
         }
 
+        private IQueryable<ChemistryTaskModel> GetInitQuery()
+        {
+            return GetRepository<ChemistryTask>().Query()
+                .Select(ChemistryTaskModel.SelectExpression);
+        }
 
         /// <summary>
         /// Получить задание по идентификатору
@@ -93,9 +83,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// <returns></returns>
         public Task<ChemistryTaskModel> GetChemistryTaskByIdAsync(string id)
         {
-            return GetRepository<ChemistryTask>().Query()
-                .Select(ChemistryTaskModel.SelectExpression)
-                .FirstOrDefaultAsync(x => x.Id == id);
+            return GetInitQuery().FirstOrDefaultAsync(x => x.Id == id);
         }
 
         
@@ -105,7 +93,8 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// <returns></returns>
         public Task<List<ChemistryTaskModel>> GetAllTasksAsync()
         {
-            return GetRepository<ChemistryTask>().Query().Select(ChemistryTaskModel.SelectExpression).ToListAsync();
+            return GetInitQuery()
+                .ToListAsync();
         }
 
         /// <summary>
@@ -117,9 +106,9 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// <returns></returns>
         public Task<List<ChemistryTaskModel>> GetNotDeletedTasksAsync()
         {
-            return GetRepository<ChemistryTask>().Query()
+            return GetInitQuery()
                 .Where(x => x.Deleted == false)
-                .Select(ChemistryTaskModel.SelectExpression).ToListAsync();
+                .ToListAsync();
         }
 
         /// <inheritdoc />

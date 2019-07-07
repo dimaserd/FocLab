@@ -145,7 +145,7 @@
                             {
                                 <td>
 
-                                    <input id="@type" type="file" name="@type" />
+                                    <input id="@ToInt(type)" type="file" name="@type" />
                                 </td>
                             }
 
@@ -281,12 +281,12 @@
                 <th>
                     @if (!User.HasRight(UserRight.Admin) && !User.HasRight(UserRight.SuperAdmin))
                     {
-                        <input type="file" accept="image/*" id="0" />
+                        <input type="file" accept="image/*" id="@ToInt(ChemistryTaskDbFileType.ReactionSchemaImage)" />
                     }
                 </th>
 
                 <th>
-                    <button class="btn btn-success" onclick="UpdateFileByType('0')">
+                    <button class="btn btn-success" onclick="UpdateFileByType('@(ToInt(ChemistryTaskDbFileType.ReactionSchemaImage))')">
                         @btnText
                     </button>
 
@@ -387,54 +387,32 @@
 
     function UpdateFileByType(fileType) {
 
-        UploadUserFile(fileType);
-    }
+        var fileInputId = fileType;
 
-    function UploadUserFile(fileType) {
-        var file_data = $('#' + fileType).prop('files');
+        var file_data = $(`#${fileInputId}`).prop('files');
 
         if (file_data == null || file_data.length == 0) {
-            alert("Файл для загрузки не выбран")
+            ToastrWorker.ShowError("Файл для загрузки не выбран")
             return;
         }
 
-        var form_data = new FormData();
+        Requester.UploadFilesToServer(fileInputId, x => {
+            if (x.IsSucceeded) {
 
-        for (var i = 0; i < file_data.length; i++) {
-            form_data.append('File', file_data[i]);
-        }
+                var data = {
+                    TaskId: '@Model.Id',
+                    FileId: x.ResponseObject[0],
+                    FileType: fileType
+                };
 
-        form_data.append("TaskId", '@Model.Id');
-        form_data.append("TaskFile.FileType", fileType);
-        form_data.append("TaskFile.Description", "");
-
-        console.log("UploadUserFile", form_data);
-
-        $.ajax({
-            url: '/Chemistry/Chemistry/UploadTaskFile',
-            type: 'POST',
-            data: form_data,
-            async: true,
-            cache: false,
-            dataType: 'json',
-            contentType: false,
-            processData: false,
-            success: function (response) {
-
-                console.log("UploadUserFile", response);
-
-                alert(response.Message);
-
-                if (response.IsSucceeded) {
-                    location.reload();
-                }
+                Requester.SendPostRequestWithAnimation('/Api/Chemistry/Tasks/ChangeFileForTask', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs);
+            }
+            else {
+                ToastrWorker.ShowError(x.Message);
             }
         });
     }
+
     </script>
     <!--/Методы загрузки файлов-->
-
-
-
-
 }

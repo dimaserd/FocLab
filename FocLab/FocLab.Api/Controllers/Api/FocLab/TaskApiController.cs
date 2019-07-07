@@ -3,6 +3,7 @@ using Croco.Core.Common.Models;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Implementations;
+using FocLab.Logic.Models;
 using FocLab.Logic.Models.ChemistryTasks;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Services;
@@ -28,6 +29,9 @@ namespace FocLab.Api.Controllers.Api.FocLab
 
         private PerformerChemistryTasksWorker PerformerChemistryTasksWorker => new PerformerChemistryTasksWorker(ContextWrapper);
 
+        private ChemistryTasksWorker ChemistryTasksWorker => new ChemistryTasksWorker(ContextWrapper);
+
+
         private readonly IUserMailSender MailSender = new FocLabEmailSender();
 
         /// <summary>
@@ -39,6 +43,17 @@ namespace FocLab.Api.Controllers.Api.FocLab
         public Task<BaseApiResponse> PerformerUpdate(UpdateTaskAsPerformer model)
         {
             return PerformerChemistryTasksWorker.UpdateTaskAsync(model);
+        }
+
+        /// <summary>
+        /// Изменить тип файла для задания
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("ChangeFileForTask")]
+        public Task<BaseApiResponse> ChangeFileForTask(ChemistryChangeFileForTask model)
+        {
+            return ChemistryTasksWorker.ChangeFileFileForTaskAsync(model);
         }
 
         /// <summary>

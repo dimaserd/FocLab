@@ -1,6 +1,4 @@
-﻿using Croco.Core.Abstractions;
-using FocLab.Logic.Models.Experiments;
-using FocLab.Model.Enumerations;
+﻿using FocLab.Model.Enumerations;
 
 namespace FocLab.Logic.Models
 {
