@@ -93,33 +93,6 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
             return await TrySaveChangesAndReturnResultAsync("Вы отменили заверешение эксперимента");
         }
 
-        
-        /// <summary>
-        /// Обновить заголовок эксперимента
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public async Task<BaseApiResponse> UpdateExperimentTitleAsync(ChemistryTaskExperimentDto model)
-        {
-            if(model == null)
-            {
-                return new BaseApiResponse(false, "Вы подали пустую модель");
-            }
-
-            var experiment = await GetRepository<ChemistryTaskExperiment>().Query()
-                .FirstOrDefaultAsync(x => x.Id == model.Id);
-
-            if(experiment == null)
-            {
-                return new BaseApiResponse(false, "Эксперимент не найден по указанному идентификатору");
-            }
-
-            Context.Entry(experiment).State = EntityState.Modified;
-            experiment.Title = model.Title;
-
-            return await TrySaveChangesAndReturnResultAsync("Название эксперимента изменено");
-        }
-
         /// <summary>
         /// Обновить эксперимент
         /// </summary>
@@ -148,6 +121,7 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
                 return new BaseApiResponse(false, "Вы не являетесь исполнителем данного эксперимента");
             }
 
+            dbExperiment.Title = experiment.Title;
             dbExperiment.PerformerText = experiment.PerformerText;
             dbExperiment.SubstanceCounterJson = experiment.SubstanceCounterJson;
 

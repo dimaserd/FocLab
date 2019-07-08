@@ -43,6 +43,18 @@ namespace FocLab.Logic.Workers.Account
         {
             await CreateRolesAsync(roleManager);
             
+            var maybeRoot = await CreateOrUpdateRoot(userManager);
+
+            foreach (UserRight right in Enum.GetValues(typeof(UserRight)))
+            {
+                userManager.AddRight(maybeRoot, right);
+            }
+
+            return new BaseApiResponse(true, "Пользователь root создан");
+        }
+
+        private async Task<ApplicationUser> CreateOrUpdateRoot(ApplicationUserManager userManager)
+        {
             var maybeRoot = await userManager.FindByEmailAsync(RightsSettings.RootEmail);
 
             if (maybeRoot == null)
@@ -58,15 +70,23 @@ namespace FocLab.Logic.Workers.Account
                 };
 
                 await userManager.CreateAsync(maybeRoot, RightsSettings.RootPassword);
+                return maybeRoot;
             }
 
+            
+            var userRepo = GetRepository<ApplicationUser>();
 
-            foreach (UserRight right in Enum.GetValues(typeof(UserRight)))
-            {
-                userManager.AddRight(maybeRoot, right);
-            }
+            var passHasher = new PasswordHasher<ApplicationUser>();
 
-            return new BaseApiResponse(true, "Пользователь root создан");
+            var pass = passHasher.HashPassword(maybeRoot, RightsSettings.RootPassword);
+
+            maybeRoot.PasswordHash = pass;
+
+            userRepo.UpdateHandled(maybeRoot);
+
+            await TrySaveChangesAndReturnResultAsync("Ok");
+
+            return maybeRoot;
         }
 
         public BaseApiResponse<ApplicationUserDto> CheckUserChanges(IApplicationAuthenticationManager authenticationManager, ApplicationSignInManager signInManager)
@@ -77,13 +97,7 @@ namespace FocLab.Logic.Workers.Account
             }
 
             return new BaseApiResponse<ApplicationUserDto>(true, "", null);
-
-            //TODO Implement CheckUserChanges
         }
-
-        
-
-        
 
         #region Методы изменения
 

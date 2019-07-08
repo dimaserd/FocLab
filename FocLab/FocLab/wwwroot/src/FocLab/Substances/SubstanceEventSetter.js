@@ -3,7 +3,6 @@ var SubstanceEventSetter = /** @class */ (function () {
     }
     SubstanceEventSetter.SetHandlerForClass = function (className, eventName, handlerFunction) {
         var classNameElems = document.getElementsByClassName(className);
-        console.log("SubstanceStaticHandlers.SetHandlerForClass", classNameElems);
         Array.from(classNameElems).forEach(function (x) { return x.addEventListener(eventName, handlerFunction, false); });
     };
     SubstanceEventSetter.InitHandlers = function () {
@@ -15,7 +14,10 @@ var SubstanceEventSetter = /** @class */ (function () {
             var count = +$(x.target).data("count");
             SubstanceStaticHandlers.WriteMassa(+$(x.target).val(), count);
         });
-        //for (let elem in ["substance-mollar-massa", "substance-koef"]) {
+        SubstanceEventSetter.SetHandlerForClass("add-substance-btn", "click", function (x) {
+            var prefix = $(x.target).data("prefix").toString();
+            SubstanceStaticHandlers.AddSubstance(prefix);
+        });
         SubstanceEventSetter.SetHandlerForClass("substance-mollar-massa", "change", function (x) {
             var count = +$(x.target).data("count");
             var prefix = $(x.target).data("prefix").toString();

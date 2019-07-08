@@ -43,7 +43,7 @@ var SubstanceCounter = /** @class */ (function () {
         SubstanceEventSetter.InitHandlers();
     };
     SubstanceCounter.prototype.AddSubstance = function () {
-        var count = window['substance'].Substances.length;
+        var count = SubstanceStaticHandlers.substance.Substances.length;
         this.DrawSubstance(count);
         this.Substances.push({
             Koef: 1,
@@ -90,7 +90,6 @@ var SubstanceEventSetter = /** @class */ (function () {
     }
     SubstanceEventSetter.SetHandlerForClass = function (className, eventName, handlerFunction) {
         var classNameElems = document.getElementsByClassName(className);
-        console.log("SubstanceStaticHandlers.SetHandlerForClass", classNameElems);
         Array.from(classNameElems).forEach(function (x) { return x.addEventListener(eventName, handlerFunction, false); });
     };
     SubstanceEventSetter.InitHandlers = function () {
@@ -102,7 +101,10 @@ var SubstanceEventSetter = /** @class */ (function () {
             var count = +$(x.target).data("count");
             SubstanceStaticHandlers.WriteMassa(+$(x.target).val(), count);
         });
-        //for (let elem in ["substance-mollar-massa", "substance-koef"]) {
+        SubstanceEventSetter.SetHandlerForClass("add-substance-btn", "click", function (x) {
+            var prefix = $(x.target).data("prefix").toString();
+            SubstanceStaticHandlers.AddSubstance(prefix);
+        });
         SubstanceEventSetter.SetHandlerForClass("substance-mollar-massa", "change", function (x) {
             var count = +$(x.target).data("count");
             var prefix = $(x.target).data("prefix").toString();
@@ -142,13 +144,15 @@ var SubstanceStaticHandlers = /** @class */ (function () {
     function SubstanceStaticHandlers() {
     }
     SubstanceStaticHandlers.RemoveSubstanceHandler = function (count) {
-        console.log("RemoveSubstanceHandler", count);
-        var substanceToDelete = SubstanceStaticHandlers.substance.Substances[count];
-        SubstanceStaticHandlers.substance.Substances = SubstanceStaticHandlers.substance.Substances.filter(function (x) { return x != substanceToDelete; });
-        ;
+        console.log("RemoveSubstanceHandler BeforeRemove", SubstanceStaticHandlers.substance);
+        SubstanceStaticHandlers.substance.Substances.splice(count, 1);
+        console.log("RemoveSubstanceHandler AfterRemove", SubstanceStaticHandlers.substance);
         SubstanceStaticHandlers.substance.ClearTable();
         SubstanceStaticHandlers.substance.DrawTable();
-        TaskStaticHandlers.UpdateBtnClickHandler();
+        //setTimeout(function () {
+        //    console.log("RemoveSubstanceHandler", SubstanceStaticHandlers.substance);
+        //    TaskStaticHandlers.UpdateBtnClickHandler();
+        //}, 200);
     };
     SubstanceStaticHandlers.EtalonChangedHandler = function (prefix) {
         if (prefix == "") {

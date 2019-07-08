@@ -43,7 +43,7 @@ var SubstanceCounter = /** @class */ (function () {
         SubstanceEventSetter.InitHandlers();
     };
     SubstanceCounter.prototype.AddSubstance = function () {
-        var count = window['substance'].Substances.length;
+        var count = SubstanceStaticHandlers.substance.Substances.length;
         this.DrawSubstance(count);
         this.Substances.push({
             Koef: 1,

@@ -3,8 +3,6 @@
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Задание";
-
-    const string viewsChemistry = "~/Areas/Chemistry/Views/Tasks";
 }
 
 <div style="height:20px">
@@ -60,27 +58,16 @@
     <script>
         function CreateExperiment() {
 
+            ToastrWorker.ShowError("Эксперименты пока находятся в разработке");
+            return;
+
             var data = {
                 ChemistryTaskId: "@Model.Id"
             };
 
-            Requester.SendPostRequestWithAnimation
-
-            $.ajax({
-                url: '/Chemistry/Experiments/Create',
-                type: 'POST',
-                data: data,
-                dataType: 'json',
-                success: function (response) {
-
-                    modalWorker.HideModals();
-                    $("#loadingModal").modal('hide');
-                    alert(response.Message);
-
-                    if (response.IsSucceeded) {
-                        location.href = "/Chemistry/Experiments/Index";
-                    }
-                    
+            Requester.SendPostRequestWithAnimation('/Chemistry/Experiments/Create', data, x => {
+                if (x.IsSucceeded) {
+                    setTimeout(() => { location.href = "/Chemistry/Experiments/Index" }, 1500);
                 }
             });
         }

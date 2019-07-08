@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Croco.Core.Abstractions.ContextWrappers;
 using Croco.Core.Common.Models;
 using Croco.Core.Model.Entities.Store;
+using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.Account;
@@ -18,7 +19,6 @@ using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using ApplicationUserDto = FocLab.Logic.EntityDtos.Users.Default.ApplicationUserDto;
 
 namespace FocLab.Logic.Workers.Users
 {
@@ -90,15 +90,6 @@ namespace FocLab.Logic.Workers.Users
             var t = passHasher.VerifyHashedPassword(user, user.PasswordHash, pass) != PasswordVerificationResult.Failed && user.UserName == userName;
 
             return new BaseApiResponse(t, "");
-        }
-
-        public async Task<List<ApplicationUserDto>> GetUsersAsync()
-        {
-            return await ContextWrapper.GetRepository<ApplicationUser>().Query().Select(x => new ApplicationUserDto
-            {
-                Id = x.Id,
-                Name = x.Name
-            }).ToListAsync();
         }
 
         public async Task<BaseApiResponse> RemoveUserAsync(UserIdModel model)
