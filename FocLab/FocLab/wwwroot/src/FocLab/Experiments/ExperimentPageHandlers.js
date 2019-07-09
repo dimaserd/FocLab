@@ -2,13 +2,9 @@ var ExperimentPageHandlers = /** @class */ (function () {
     function ExperimentPageHandlers() {
     }
     ExperimentPageHandlers.UpdateFileByType = function (fileType) {
-        GenericUtil.GenericUpdateFileByType(fileType, '/Api/Chemistry/Tasks/ChangeFileForTask', {
-            TaskId: TaskStaticHandlers.TaskId,
-            FileType: fileType
+        GenericUtil.GenericUpdateFileByType(fileType, '/Api/Chemistry/Experiments/ChangeFile', {
+            ExperimentId: ExperimentPageHandlers.ExperimentId
         });
-    };
-    ExperimentPageHandlers.SetHandlers = function () {
-        //EventSetter.SetHandlerForClass("")
     };
     return ExperimentPageHandlers;
 }());

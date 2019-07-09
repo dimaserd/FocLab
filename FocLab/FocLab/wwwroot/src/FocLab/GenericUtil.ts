@@ -18,6 +18,7 @@
 
                 var data = preData;
                 preData["FileId"] = t.ResponseObject[0];
+                preData["FileType"] = fileType
 
                 Requester.SendPostRequestWithAnimation(link, data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
             }

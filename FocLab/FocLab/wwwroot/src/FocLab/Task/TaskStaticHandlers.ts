@@ -18,8 +18,7 @@
 
     static UpdateFileByType(fileType: string) : void {
         GenericUtil.GenericUpdateFileByType(fileType, '/Api/Chemistry/Tasks/ChangeFileForTask', {
-            TaskId: TaskStaticHandlers.TaskId,
-            FileType: fileType
+            TaskId: TaskStaticHandlers.TaskId
         });
     }
 

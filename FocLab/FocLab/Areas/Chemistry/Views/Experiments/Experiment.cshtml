@@ -1,9 +1,6 @@
 ﻿@using FocLab.Logic
 @using FocLab.Logic.Extensions
-@using FocLab.Logic.Models
 @using FocLab.Model.Enumerations
-@using Microsoft.AspNetCore.Html
-@using Croco.Core.Utils
 @model FocLab.Logic.Models.Experiments.ChemistryTaskExperimentModel
 @{
 
@@ -16,53 +13,44 @@
 
     var userId = User.Identity.GetUserId();
 
-    Tuple<string, string, int, int, bool>[] files = {
-
-
-new Tuple<string, string, int, int, bool>("File1", "Файл1", 1, Model.Files.Any(x => x.Type == ChemistryTaskDbFileType.File1) ? Model.Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.File1).FileId : 0,  Model.Files.Any(x => x.Type == ChemistryTaskDbFileType.File1)),
-
-new Tuple<string, string, int, int, bool>("File2", "Файл2", 2, Model.Files.Any(x => x.Type == ChemistryTaskDbFileType.File2) ? Model.Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.File2).FileId : 0,  Model.Files.Any(x => x.Type == ChemistryTaskDbFileType.File2)),
-
-new Tuple<string, string, int, int, bool>("File3", "Файл3", 3, Model.Files.Any(x => x.Type == ChemistryTaskDbFileType.File3) ? Model.Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.File3).FileId : 0,  Model.Files.Any(x => x.Type == ChemistryTaskDbFileType.File3)),
-
-new Tuple<string, string, int, int, bool>("File4", "Файл4", 4, Model.Files.Any(x => x.Type == ChemistryTaskDbFileType.File4) ? Model.Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.File4).FileId : 0,  Model.Files.Any(x => x.Type == ChemistryTaskDbFileType.File4)),
-
-
-    };
-
     var json = Model.SubstanceCounterJson ?? "";
 
-    var counter = Newtonsoft.Json.JsonConvert.DeserializeObject<Chemistry_SubstanceCounter>(json);
-
-    counter = counter?.Etalon == null || counter.Substances == null ? Chemistry_SubstanceCounter.GetDefaultCounter() : counter;
-
     var title = string.IsNullOrEmpty(Model.Title) ? "[Без названия]" : Model.Title;
+
+    var types = new[]
+    {
+        ChemistryTaskDbFileType.File1,
+        ChemistryTaskDbFileType.File2,
+        ChemistryTaskDbFileType.File3,
+        ChemistryTaskDbFileType.File4
+    };
+
+    int ToInt(ChemistryTaskDbFileType @enum)
+    {
+        return (int)@enum;
+    }
 }
 
 
-<div style="height:20px">
+<div>
 
-</div>
-
-
-<h2>
-    Эксперимент к задаче <strong><a href="/Chemistry/Tasks/Task/@Model.Task.Id">@Model.Task.Title</a></strong>
-</h2>
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="input-group">
-            <input type="text" class="form-control" value="@title" id="experiment.Title" placeholder="Название эксперимента">
-            <div class="input-group-addon" onclick="UpdateTitleClickHandler()" data-toggle="tooltip" data-placement="top" title="Сохранить новое название эксперимента">
-                    <i class="fa fa-floppy-o">
-
-                    </i>
-            </div>
+    <div class="form-group m-form__group m--margin-top-10">
+        <div class="alert m-alert m-alert--default" role="alert">
+            <h5>
+                Эксперимент к задаче <strong><a href="/Chemistry/Tasks/Task/@Model.Task.Id">@Model.Task.Title</a></strong>
+            </h5>
         </div>
-
-        
     </div>
+
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.Title)
+        @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+    </div>
+
+
 </div>
+
+
 
 <div style="height:20px">
 
@@ -74,47 +62,45 @@ new Tuple<string, string, int, int, bool>("File4", "Файл4", 4, Model.Files.A
             <tr>
                 <th>
                     <strong>Статус файла</strong>
-                    
                 </th>
                 @if (Model.Performer.Id == userId)
                 {
                     <th>
                         <strong>Загрузка файла</strong>
-                        
                     </th>
                 }
                 <th>
                     <strong>Действия</strong>
-                    
                 </th>
             </tr>
         </thead>
 
         <tbody>
-            @foreach (var file in files)
+            @foreach (var type in types)
             {
+
+                var file = Model.Files.FirstOrDefault(x => x.Type == type);
+
                 <tr>
                     <td>
-                        @if (!file.Item5)
+                        @if (file == null)
                         {
                             <strong>
-                                <span class="text-danger">@file.Item2 не загружен</span>
+                                <span class="text-danger">@type.ToDisplayName() не загружен</span>
                             </strong>
                         }
                         else
                         {
                             <strong>
-                                <span class="text-success">@file.Item2 уже загружен</span>
+                                <span class="text-success">@type.ToDisplayName() уже загружен</span>
                             </strong>
                         }
                     </td>
 
                     @if (Model.Performer.Id == userId)
                     {
-
-
                         <td>
-                            <input id="@file.Item1" type="file" name="@file.Item2" />
+                            <input id="@ToInt(type)" type="file" name="@type" />
                         </td>
                     }
 
@@ -122,26 +108,24 @@ new Tuple<string, string, int, int, bool>("File4", "Файл4", 4, Model.Files.A
                         <div class="row">
 
                             <div class="col-md-12">
-                                @if (!file.Item5 && Model.Performer.Id == userId)
+                                @if (file != null && Model.Performer.Id == userId)
                                 {
 
-                                    <button class="btn btn-success btn-block" onclick="LoadOrReloadFileForExperiment('@file.Item3')">
+                                    <button class="btn btn-success btn-block" data-file-type="" onclick="LoadOrReloadFileForExperiment('@ToInt(type)')">
                                         Загрузить файл
                                     </button>
 
                                 }
                                 else if (Model.Performer.Id == userId)
                                 {
-                                    <button class="btn btn-success btn-block" style="" onclick="LoadOrReloadFileForExperiment('@file.Item3')">
+                                    <button class="btn btn-success btn-block" style="" onclick="LoadOrReloadFileForExperiment('@ToInt(type)')">
                                         Обновить файл
                                     </button>
                                 }
 
-
-
-                                @if (file.Item5)
+                                @if (file != null)
                                 {
-                                    <a class="btn btn-primary btn-block" style="margin-top:10px" href="/Files/GetDbFileById/@file.Item4">
+                                    <a class="btn btn-primary btn-block" style="margin-top:10px" href="/Files/GetDbFileById/@file.FileId">
                                         Скачать файл
                                     </a>
                                 }
@@ -179,23 +163,25 @@ new Tuple<string, string, int, int, bool>("File4", "Файл4", 4, Model.Files.A
             }
             @{
                 string btnText = Model.Files.Any(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage) ? "Перезагрузить файл реакции" : "Загрузить файл реакции";
+
+                var specType = ChemistryTaskDbFileType.ReactionSchemaImage;
             }
             <tr>
                 <th>
                     @if (Model.Performer.Id == userId)
                     {
-                        <input type="file" id="File0" accept="image/*" />
+                        <input type="file" id="@ToInt(specType)" accept="image/*" />
                     }
                 </th>
 
                 <th>
-                    <button class="btn btn-success" onclick="LoadOrReloadFileForExperiment('0')">
+                    <button class="btn btn-success" onclick="LoadOrReloadFileForExperiment('@ToInt(specType)')">
                         @btnText
                     </button>
 
                     @if (Model.Files.Any(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage))
                     {
-                        <a class="btn btn-primary" href="/Files/GetDbFileById/@Model.Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage).FileId">
+                        <a class="btn btn-primary" href="/Files/GetDbFileById/@Model.Files.FirstOrDefault(x => x.Type == specType).FileId">
                             Скачать изображение реакции
                         </a>
                     }
@@ -208,7 +194,7 @@ new Tuple<string, string, int, int, bool>("File4", "Файл4", 4, Model.Files.A
     </table>
 </div>
 @*Если там налл то он почему то берет верхний элемент модели*@
-@await Html.PartialAsync($"{viewsChemistry}/Tasks/Table.cshtml", model: counter)
+@await Html.PartialAsync($"{viewsChemistry}/Tasks/Table.cshtml", model: Model.SubstanceCounter)
 
 
 
@@ -247,105 +233,40 @@ new Tuple<string, string, int, int, bool>("File4", "Файл4", 4, Model.Files.A
     </table>
 </div>
 
+
+<div class="m-portlet__foot m-portlet__foot--fit">
+    <div class="m-form__actions m-form__actions">
+        <div class="row">
+            <div class="col-lg-9">
+                @if (userId == Model.Performer.Id)
+                {
+
+                    <button type="reset" class="btn btn-brand form-action-btn">Обновить</button>
+                }
+                <button type="reset" onclick="location.href='/Chemistry/Experiments/Index'" class="btn btn-secondary">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @section Scripts{
 
 
     <script src="~/js/Substance.min.js"></script>
+    <script src="~/js/Experiments.min.js"></script>
+
     <script>
 
         var substanceObject = @Html.GetJson(Model.SubstanceCounter);
 
         SubstanceStaticHandlers.substance = new SubstanceCounter(substanceObject);
 
-
-        function UpdateExperiment() {
-
-            var experimentJSON = @(new HtmlString(Tool.JsonConverter.Serialize(Model)));
-
-            experimentJSON["PerformerText"] = document.getElementsByName("PerformerText")[0].value;
-
-            experimentJSON["SubstanceCounterJSON"] = JSON.stringify(substance.getJSON());
-
-            console.log("UpdateExperiment", experimentJSON);
-
-
-
-            $.ajax({
-                url: '/Chemistry/Chemistry/UpdateExperiment',
-                type: 'POST',
-                data: experimentJSON,
-                async: true,
-                dataType: 'json',
-                success: function (response) {
-                    console.log(response);
-
-                    alert(response.Message);
-
-                    location.reload();
-                }
-            });
-        }
-
-
+        ExperimentPageHandlers.ExperimentId = "@Model.Id";
 
         function LoadOrReloadFileForExperiment(fileType) {
 
-            //проверка на то загружается ли файл
-            if (filesLoader.IsFileLoading) {
-
-                alert("Файл уже загружается");
-                return;
-            }
-
-            //ставлю флаг о том что файл загнружается
-            filesLoader.IsFileLoading = true;
-
-            console.log(fileType);
-
-            var file_data = $('#File' + fileType).prop('files');
-
-            var form_data = new FormData();
-
-            if (file_data.length == 0) {
-                alert("Файл не выбран");
-                filesLoader.IsFileLoading = false;
-                return;
-            }
-
-            for (var i = 0; i < file_data.length; i++) {
-                form_data.append('File', file_data[i]);
-            }
-
-
-            form_data.append("ExperimentId", '@Model.Id');
-            form_data.append("ExperimentFile.FileType", fileType);
-            form_data.append("ExperimentFile.Description", "")
-
-
-            $.ajax({
-                url: '/Chemistry/Chemistry/LoadOrReloadFileForExperiment',
-                type: 'POST',
-                data: form_data,
-                async: true,
-                cache: false,
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-                success: function (response) {
-
-                    //убираю флаг загружаемости файла
-                    filesLoader.IsFileLoading = false;
-                    console.log(response);
-
-                    alert(response.Message);
-
-                    location.reload();
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert("Произошла ошибка! Обратитесь к разработчикам приложения.")
-                    filesLoader.IsFileLoading = false;
-                }
-            });
+            ExperimentPageHandlers.UpdateFileByType(fileType);
 
         }
 
@@ -353,55 +274,6 @@ new Tuple<string, string, int, int, bool>("File4", "Файл4", 4, Model.Files.A
     </script>
 
     <!--Скрипты связанные с редактированием названия-->
-
-    <script>
-        class ExperimentWorker {
-            constructor(props) {
-                this.Id = props["Id"];
-
-                this.IsAjaxLoading = false;
-                this.setHandlers();
-            }
-
-            setHandlers() {
-                this.UpdateTitle = function (data) {
-
-                    data.Id = this.Id;
-
-                    console.log("UpdateTitle", data);
-
-                    if (this.IsAjaxLoading) {
-                        return;
-                    }
-
-                    this.IsAjaxLoading = true;
-
-                    $.ajax({
-                        url: '/Api/Chemistry/Experiments/UpdateTitle',
-                        type: 'POST',
-                        data: data,
-                        async: true,
-                        cache: false,
-                        dataType: 'json',
-                        success: function (response) {
-
-                            //убираю флаг загружаемости файла
-                            this.IsAjaxLoading = false;
-                            console.log(response);
-
-                            alert(response.Message);
-
-                            location.reload();
-                        },
-                        error: function () {
-                            alert("Произошла ошибка! Обратитесь к разработчикам приложения.")
-                            this.IsAjaxLoading = false;
-                        }
-                    });
-                }.bind(this)
-            }
-        }
-    </script>
 
     <script>
         var props = {

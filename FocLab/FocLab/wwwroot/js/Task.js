@@ -53,8 +53,7 @@ var TaskStaticHandlers = /** @class */ (function () {
     };
     TaskStaticHandlers.UpdateFileByType = function (fileType) {
         GenericUtil.GenericUpdateFileByType(fileType, '/Api/Chemistry/Tasks/ChangeFileForTask', {
-            TaskId: TaskStaticHandlers.TaskId,
-            FileType: fileType
+            TaskId: TaskStaticHandlers.TaskId
         });
     };
     TaskStaticHandlers.RemoveTask = function (id) {

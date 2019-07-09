@@ -1,75 +1,62 @@
-﻿@using FocLab.Logic
-@model FocLab.Logic.Models.Tasks.ChemistryTaskModel
+﻿@using FocLab.Logic.Models.Experiments
+@model CreateExperiment
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Задание";
+
+    List<SelectListItem> selectData = ViewData["selectData"] as List<SelectListItem>;
 }
 
-<div style="height:20px">
+<form autocomplete="off">
 
-</div>
+    <div class="form-group m-form__group m--margin-top-10">
+        <div class="alert m-alert m-alert--default" role="alert">
+            Создание эксперимента к задаче
+        </div>
+    </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <a href="/Chemistry/Tasks/Index" class="btn btn-primary">
-            <i class="fa fa-list"></i>
-            Список задач
-        </a>
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.Title)
+        @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+    </div>
 
-        <a href="/Chemistry/Experiments/Index" class="btn btn-primary">
-            <i class="fa fa-list"></i>
-            Список экспериментов
-        </a>
+    <div class="form-group m-form__group">
+        @Html.LabelFor(x => x.TaskId)
+        @Html.DropDownList(nameof(CreateExperiment.TaskId), selectData, new { id = "TasksSelect", @class = "form-control" })
+    </div>
+
+    
+</form>
+
+
+<div class="m-portlet__foot m-portlet__foot--fit">
+    <div class="m-form__actions m-form__actions">
+        <div class="row">
+            <div class="col-lg-9">
+                <button type="reset" class="btn btn-brand form-action-btn btn-exp-create">Создать</button>
+                <button type="reset" onclick="location.href='/Chemistry/Experiments/Index'" class="btn btn-secondary">Отмена</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<div style="height:20px">
-
-</div>
-
-<h2>
-    Вы создаете эксперимент к задаче <strong>@Model.Title</strong>
-</h2>
-
-
-<div class="table-responsive">
-    <table class="table table-bordered table-striped">
-        <thead>
-
-        </thead>
-
-        <tbody>
-            <tr>
-                <th>
-                    <button class="btn btn-primary btn-block" onclick="CreateExperiment()">
-                        <strong>
-                            Создать эксперимент
-                        </strong>
-                    </button>
-                </th>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-
 
 @section Scripts{
+
+    <script src="~/js/Experiments.min.js"></script>
+    
     <script>
-        function CreateExperiment() {
+        $("#TasksSelect").select2({
+            placeholder: "Выберите задачу",
 
-            ToastrWorker.ShowError("Эксперименты пока находятся в разработке");
-            return;
-
-            var data = {
-                ChemistryTaskId: "@Model.Id"
-            };
-
-            Requester.SendPostRequestWithAnimation('/Chemistry/Experiments/Create', data, x => {
-                if (x.IsSucceeded) {
-                    setTimeout(() => { location.href = "/Chemistry/Experiments/Index" }, 1500);
+            "language": {
+                "noResults": function() {
+                    return "Задача не найдена.";
                 }
-            });
-        }
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }
+        });
     </script>
 }

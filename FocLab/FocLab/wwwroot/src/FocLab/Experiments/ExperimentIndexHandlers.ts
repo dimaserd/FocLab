@@ -1,5 +1,9 @@
 ﻿class ExperimentIndexHandlers {
-    static PerformExperiment(id: string, flag: boolean) : void {
+
+    
+    
+
+    static PerformExperiment(id: string, flag: boolean): void {
 
         var data = {
             ExperimentId: id,

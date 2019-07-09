@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Croco.Core.Common.Models;
-using Croco.Core.Logic.Workers.Log;
 using Croco.WebApplication.Models.Exceptions;
 using Croco.WebApplication.Models.Log;
 using Croco.WebApplication.Workers.Log;

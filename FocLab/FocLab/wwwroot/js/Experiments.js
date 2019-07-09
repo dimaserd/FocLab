@@ -1,3 +1,24 @@
+var CreateExperimentHandlers = /** @class */ (function () {
+    function CreateExperimentHandlers() {
+    }
+    CreateExperimentHandlers.Create = function () {
+        var data = {
+            TaskId: "",
+            Title: ""
+        };
+        Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Create', FormDataHelper.CollectData(data), function (x) {
+            if (x.IsSucceeded) {
+                setTimeout(function () { location.href = "/Chemistry/Experiments/Index"; }, 1500);
+            }
+        }, null);
+    };
+    CreateExperimentHandlers.SetHandlers = function () {
+        EventSetter.SetHandlerForClass("btn-exp-create", "click", function () { return CreateExperimentHandlers.Create(); });
+    };
+    return CreateExperimentHandlers;
+}());
+CreateExperimentHandlers.SetHandlers();
+
 var ExperimentIndexHandlers = /** @class */ (function () {
     function ExperimentIndexHandlers() {
     }
@@ -40,13 +61,9 @@ var ExperimentPageHandlers = /** @class */ (function () {
     function ExperimentPageHandlers() {
     }
     ExperimentPageHandlers.UpdateFileByType = function (fileType) {
-        GenericUtil.GenericUpdateFileByType(fileType, '/Api/Chemistry/Tasks/ChangeFileForTask', {
-            TaskId: TaskStaticHandlers.TaskId,
-            FileType: fileType
+        GenericUtil.GenericUpdateFileByType(fileType, '/Api/Chemistry/Experiments/ChangeFile', {
+            ExperimentId: ExperimentPageHandlers.ExperimentId
         });
-    };
-    ExperimentPageHandlers.SetHandlers = function () {
-        //EventSetter.SetHandlerForClass("")
     };
     return ExperimentPageHandlers;
 }());

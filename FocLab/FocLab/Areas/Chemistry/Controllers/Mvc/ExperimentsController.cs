@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using FocLab.Areas.Chemistry.Controllers.Base;
 using FocLab.Consts;
 using FocLab.Logic.Services;
@@ -6,6 +7,7 @@ using FocLab.Logic.Workers.ChemistryTaskExperiments;
 using FocLab.Logic.Workers.ChemistryTasks;
 using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
@@ -61,7 +63,6 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
             return View(experiment);
         }
 
-        #region Создание
         /// <summary>
         /// Создание эксперимента к заданию
         /// </summary>
@@ -69,17 +70,19 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         /// <returns></returns>
         public async Task<ActionResult> Create(string id)
         {
-            var task = await ChemistryTasksWorker.GetChemistryTaskByIdAsync(id);
+            var tasks = await ChemistryTasksWorker.GetAllTasksAsync();
 
-            if (task == null)
+            var selectData = tasks.Select(x => new SelectListItem
             {
-                return RedirectToAction("Index");
-            }
+                Selected = x.Id == id,
+                Text = x.Title,
+                Value = x.Id
+            }).ToList();
 
-            return View(task);
+            ViewData["selectData"] = selectData;
+
+            return View();
         }
-
-        #endregion
 
         public ExperimentsController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
         {
