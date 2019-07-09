@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Croco.Core.Common.Models;
-using Croco.Core.Logic.Models.Exceptions;
-using Croco.Core.Logic.Models.Log;
 using Croco.Core.Logic.Workers.Log;
+using Croco.WebApplication.Models.Exceptions;
+using Croco.WebApplication.Models.Log;
+using Croco.WebApplication.Workers.Log;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Services;
 using FocLab.Model.Contexts;

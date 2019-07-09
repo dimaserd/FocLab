@@ -173,25 +173,22 @@ namespace FocLab
 
         private ICrocoEventPublisher GetEventPublisher()
         {
-            //TODO  Return on Croco.Core 1.1.8 version
-            return new TempCrocoEventPublisher();
+            var options = new CrocoEventListenerOptions
+            {
+                TaskEnqueuer = new HangfireTaskEnqueuer(),
+            };
 
-            //var options = new CrocoEventListenerOptions
-            //{
-            //    TaskEnqueuer = new HangfireTaskEnqueuer(),
-            //};
+            var evListener = new CrocoEventListener(options);
 
-            //var evListener = new CrocoEventListener(options);
+            //Подписка обработчиками на события
+            EccEventsSubscription.Subscribe(evListener);
 
-            ////Подписка обработчиками на события
-            //EccEventsSubscription.Subscribe(evListener);
+            var publisher = new CrocoEventPublisher(new CrocoEventPublisherOptions
+            {
+                EventListener = evListener
+            });
 
-            //var publisher = new CrocoEventPublisher(new CrocoEventPublisherOptions
-            //{
-            //    EventListener = evListener
-            //});
-
-            //return publisher;
+            return publisher;
         }
 
         private void SetCrocoApplication(IServiceCollection services)
@@ -204,7 +201,6 @@ namespace FocLab
 
             var appOptions = new CrocoWebApplicationOptions(new ApplicationServerVirtualPathMapper(Env))
             {
-                SettingsFactory = new TempCommonSettingsFactory(cacheManager),
                 CacheManager = cacheManager,
                 GetDbContext = () => ChemistryDbContext.Create(Configuration),
                 FileOptions = new CrocoFileOptions
