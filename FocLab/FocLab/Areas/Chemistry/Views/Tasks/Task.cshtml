@@ -1,15 +1,8 @@
-﻿@model FocLab.Logic.Models.Tasks.ChemistryTaskModel
+﻿@using FocLab.ViewModels
+@model FocLab.Logic.Models.Tasks.ChemistryTaskModel
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Задание";
-
-    var types = new[]
-    {
-        ChemistryTaskDbFileType.File1,
-        ChemistryTaskDbFileType.File2,
-        ChemistryTaskDbFileType.File3,
-        ChemistryTaskDbFileType.File4
-    };
 
     var isNotAdmin = !User.HasRight(UserRight.Admin) && !User.HasRight(UserRight.SuperAdmin);
 
@@ -76,125 +69,20 @@
 
 <hr />
 
-<h3>
-    Задание <strong>@Model.Title</strong>
-</h3>
+<div class="form-group m-form__group m--margin-top-10">
+    <div class="alert m-alert m-alert--default" role="alert">
+        <h5>
+            Задание <strong>@Model.Title</strong>
+        </h5>
+    </div>
+</div>
+
 
 <div style="height:20px">
 
 </div>
 
-<h4>
-    <strong>
-        Файлы для решения
-    </strong>
-</h4>
-
-<div class="row">
-    <div class="col-md-12">
-
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>
-                            <strong>Статус файла</strong>
-
-                        </th>
-
-                        @if (isNotAdmin)
-                        {
-                            <th>
-                                <strong>Загрузка файла</strong>
-
-                            </th>
-                        }
-
-
-                        <th>
-                            <strong>Действия</strong>
-
-                        </th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @foreach (var type in types)
-                    {
-                        var file = Model.Files.FirstOrDefault(x => x.Type == type);
-
-                        <tr>
-                            <td>
-                                @if (file == null)
-                                {
-                                    <strong>
-                                        <span class="text-danger">@type.ToDisplayName() не загружен</span>
-                                    </strong>
-                                }
-                                else
-                                {
-                                    <strong>
-                                        <span class="text-success">@type.ToDisplayName() уже загружен</span>
-                                    </strong>
-                                }
-
-
-                            </td>
-
-                            @if (isNotAdmin)
-                            {
-                                <td>
-                                    <input id="@ToInt(type)" type="file" name="@type" />
-                                </td>
-                            }
-
-
-                            <td>
-                                <div class="row">
-
-
-                                    @if (file == null && isNotAdmin)
-                                    {
-                                        <div class="col-md-12">
-                                            <button class="btn btn-success btn-block" onclick="UpdateFileByType('@ToInt(type)')">
-                                                Загрузить файл
-                                            </button>
-                                        </div>
-                                    }
-                                    else if (isNotAdmin)
-                                    {
-                                        <div class="col-md-12">
-                                            <button class="btn btn-success btn-block" onclick="UpdateFileByType('@ToInt(type)')">
-                                                Обновить файл
-                                            </button>
-                                        </div>
-                                    }
-
-
-
-                                    @if (file != null)
-                                    {
-                                        <div class="col-md-12" style="margin-top:10px">
-                                            <a class="btn btn-primary btn-block" href="/Files/GetDbFileById/@file.FileId">
-                                                Скачать файл
-                                            </a>
-                                        </div>
-                                    }
-
-                                </div>
-
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-
-
-    </div>
-
-</div>
+@await Html.PartialAsync("~/Areas/Chemistry/Views/Tasks/Partials/TaskFiles.cshtml", RenderTaskFilesViewModel.Create(Model, !isNotAdmin));
 
 
 <div class="row">
@@ -209,7 +97,6 @@
 
                         <th>
                             <strong>Получ. качество</strong>
-
                         </th>
                     </tr>
 
@@ -230,7 +117,6 @@
 
                         <th>
                             <strong>Получ. количество</strong>
-
                         </th>
                     </tr>
 
@@ -313,41 +199,43 @@
 
 </div>
 
-<div class="table-responsive">
-    <table class="table table-hover">
-        <tr>
-            
-            <th colspan="2" class="">
-                <strong>Текст выполнения</strong>
-            </th>
-        </tr>
-
-        <tr>
-            <td colspan="2">
-                @Html.TextArea("Text", Model.PerformerText, new { @class = "form-control", style = "height:150px" })
-            </td>
-        </tr>
-
-        @if (isNotAdmin && userId == Model.PerformerUser.Id || User.HasRight(UserRight.Root))
-        {
-            <tr>
-                <td colspan="2">
-                    <div class="btn btn-success btn-block btn-task-update">
-                        <strong>
-                            Обновить данные
-                        </strong>
-                    </div>
-                </td>
-            </tr>
-        }
-    </table>
-</div>
 
 <div style="height:20px">
 
 </div>
 
 @await Html.PartialAsync($"{viewsChemistry}/Partials/TaskReagents.cshtml")
+
+
+<div>
+    <div class="form-group m-form__group row">
+        <label class="col-xl-12 col-lg-12 col-form-label">
+            <strong>
+                Текст выполнения
+            </strong>
+        </label>
+        <div class="col-xl-12 col-lg-12">
+            @Html.TextArea("Text", Model.PerformerText, htmlAttributes: new { @class = "form-control m-input", style = "height:150px", rows = "3" })
+        </div>
+    </div>
+</div>
+
+<div class="m-portlet__foot m-portlet__foot--fit">
+    <div class="m-form__actions m-form__actions">
+        <div class="row">
+            <div class="col-lg-9">
+                @if (userId == Model.PerformerUser.Id)
+                {
+
+                    <button type="reset" class="btn btn-brand form-action-btn btn-task-update">Обновить</button>
+                }
+                <button type="reset" onclick="location.href='/Chemistry/Experiments/Index'" class="btn btn-secondary">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
 @section Scripts{
@@ -384,10 +272,10 @@
 
     <script>
 
-    function UpdateFileByType(fileType) {
+        function UpdateFileByType(fileType) {
 
-        TaskStaticHandlers.UpdateFileByType(fileType);
-    }
+            TaskStaticHandlers.UpdateFileByType(fileType);
+        }
 
     </script>
     <!--/Методы загрузки файлов-->
