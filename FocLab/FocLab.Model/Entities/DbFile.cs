@@ -13,5 +13,7 @@ namespace FocLab.Model.Entities
 
     public class ApplicationDbFileHistory : DbFileHistory<DbFile>
     {
+        //TODO Remove after release
+        public string FileMimeType { get; set; }
     }
 }

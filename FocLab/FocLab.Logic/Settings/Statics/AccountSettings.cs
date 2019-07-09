@@ -1,4 +1,5 @@
 ﻿using Croco.Core.Abstractions.Settings;
+using Croco.Core.Application;
 using Croco.Core.Settings;
 
 namespace FocLab.Logic.Settings.Statics
@@ -37,7 +38,7 @@ namespace FocLab.Logic.Settings.Statics
 
     public class AccountSettings
     {
-        private static AccountSettingsModel Model => new CommonSettingsFactory().GetSetting<AccountSettingsModel>();
+        private static AccountSettingsModel Model => CrocoApp.Application.SettingsFactory.GetSetting<AccountSettingsModel>();
 
 
         /// <summary>
