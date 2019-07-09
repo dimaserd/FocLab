@@ -1,5 +1,7 @@
 ﻿using Croco.Core.Abstractions.ContextWrappers;
+using Croco.Core.Application;
 using Croco.Core.Logic.Workers;
+using FocLab.Logic.Implementations;
 using FocLab.Model.Contexts;
 
 namespace FocLab.Logic.Workers
@@ -15,6 +17,8 @@ namespace FocLab.Logic.Workers
         protected ChemistryDbContext Context => ApplicationContextWrapper.DbContext;
 
         protected IUserContextWrapper<ChemistryDbContext> ApplicationContextWrapper { get; }
+
+        protected FocLabWebApplication Application => CrocoApp.Application.As<FocLabWebApplication>();
 
         /// <summary>
         /// Конструктор

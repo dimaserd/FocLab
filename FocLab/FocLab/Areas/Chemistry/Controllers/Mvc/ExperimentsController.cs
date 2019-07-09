@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Common.Models;
 using FocLab.Areas.Chemistry.Controllers.Base;
 using FocLab.Consts;
 using FocLab.Logic.Services;
@@ -18,19 +17,6 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
 
     public class ExperimentsController : BaseFocLabController
     {
-        #region Методы Апи
-
-        /// <summary>
-        /// Выполнить эксперимент
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<BaseApiResponse> Perform(PerformExperimentModel model)
-        {
-            return await ChemistryTaskExperimentsWorker.PerformExperimentAsync(model, MailSender);
-        }
-        #endregion
 
         private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker => new ChemistryTaskExperimentsWorker(ContextWrapper);
         

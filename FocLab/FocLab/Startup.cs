@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using Croco.Core.Application;
 using Croco.Core.Application.Options;
 using Croco.Core.Common.Enumerations;
+using Croco.Core.EventSource;
+using Croco.Core.EventSource.Abstractions;
 using Croco.Core.Logic.Models.Files;
 using Croco.WebApplication.Application;
+using Ecc.Logic.RegistrationModule;
 using FocLab.Extensions;
 using FocLab.Implementations;
 using FocLab.Logic.Implementations;
@@ -112,7 +115,6 @@ namespace FocLab
                 options.SlidingExpiration = true;
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
-
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
@@ -169,6 +171,26 @@ namespace FocLab
             });
         }
 
+        private ICrocoEventPublisher GetEventPublisher()
+        {
+            var options = new CrocoEventListenerOptions
+            {
+                TaskEnqueuer = new HangfireTaskEnqueuer(),
+            };
+
+            var evListener = new CrocoEventListener(options);
+
+            //Подписка обработчиками на события
+            EccEventsSubscription.Subscribe(evListener);
+
+            var publisher = new CrocoEventPublisher(new CrocoEventPublisherOptions
+            {
+                EventListener = evListener
+            });
+
+            return publisher;
+        }
+
         private void SetCrocoApplication(IServiceCollection services)
         {
             var memCache = new MemoryCache(new MemoryCacheOptions());
@@ -208,7 +230,8 @@ namespace FocLab
                             MaxWidth = 500
                         }
                     }
-                }
+                },
+                EventPublisher = GetEventPublisher()
             };
 
             var application = new FocLabWebApplication(appOptions)
@@ -219,7 +242,6 @@ namespace FocLab
             CrocoApp.Application = application;
 
             services.AddSingleton(CrocoApp.Application);
-
         }
     }
 }

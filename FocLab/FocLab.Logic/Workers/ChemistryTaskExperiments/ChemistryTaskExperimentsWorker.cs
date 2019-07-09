@@ -3,17 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions.ContextWrappers;
-using Croco.Core.Application;
 using Croco.Core.Common.Models;
 using Croco.Core.Utils;
-using FocLab.Logic.Abstractions;
-using FocLab.Logic.EntityDtos;
+using FocLab.Logic.Events;
 using FocLab.Logic.Extensions;
-using FocLab.Logic.Implementations;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.Experiments;
-using FocLab.Logic.Settings.Statics;
-using FocLab.Logic.Workers.Users;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
@@ -31,14 +26,15 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
         /// <param name="model"></param>
         /// <param name="mailSender"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> PerformExperimentAsync(PerformExperimentModel model, IUserMailSender mailSender)
+        public async Task<BaseApiResponse> PerformExperimentAsync(PerformExperimentModel model)
         {
             if (model == null)
             {
                 return new BaseApiResponse(false, "Вы подали пустую модель");
             }
 
-            var experiment = await GetRepository<ChemistryTaskExperiment>().Query().FirstOrDefaultAsync(x => x.Id == model.ExperimentId);
+            var repo = GetRepository<ChemistryTaskExperiment>();
+            var experiment = await repo.Query().FirstOrDefaultAsync(x => x.Id == model.ExperimentId);
 
             if (experiment == null)
             {
@@ -59,36 +55,25 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
             {
                 return new BaseApiResponse(false, "Эксперимент и так не является исполненным");
             }
-
-            Context.Entry(experiment).State = EntityState.Modified;
-
-            var userMeId = UserId;
-
-            var userMe = await Context.Users.FirstOrDefaultAsync(x => x.Id == userMeId);
-
+            
             if (model.Performed)
             {
                 experiment.PerformedDate = DateTime.Now;
 
-                await Context.SaveChangesAsync();
+                repo.UpdateHandled(experiment);
 
-                var domainName = ((FocLabWebApplication)CrocoApp.Application).DomainName;
+                await ContextWrapper.SaveChangesAsync();
 
-                var searcher = new UserSearcher(ApplicationContextWrapper);
-
-                var user = await searcher.GetUserByEmailAsync(ChemistryAdminSettings.AdminEmail);
-
-                await mailSender.SendMailUnSafeAsync(new SendMailMessage
+                Application.EventPublisher.Publish(new ExperimentPerformedEvent
                 {
-                    Body = $"<p>Пользователь {userMe.Email} завершил <a href='{domainName}/Chemistry/Experiments/Experiment/{experiment.Id}'>эксперимент</a>.</p>",
-                    UserId = user.Id,
-                    Subject = "Эксперимент завершен"
+                    Id = experiment.Id
                 });
 
                 return new BaseApiResponse(true, "Вы завершили эксперимент");
             }
 
             experiment.PerformedDate = null;
+            repo.UpdateHandled(experiment);
 
             return await TrySaveChangesAndReturnResultAsync("Вы отменили заверешение эксперимента");
         }

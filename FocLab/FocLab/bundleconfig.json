@@ -34,5 +34,29 @@
       "enabled": true,
       "renameLocals": true
     }
+  },
+
+  {
+    "outputFileName": "wwwroot/js/Experiments.js",
+    "inputFiles": [
+      "wwwroot/src/FocLab/Experiments/*.js"
+    ],
+
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+
+  {
+    "outputFileName": "wwwroot/js/FocLabCore.js",
+    "inputFiles": [
+      "wwwroot/src/FocLab/*.js"
+    ],
+
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
   }
 ]

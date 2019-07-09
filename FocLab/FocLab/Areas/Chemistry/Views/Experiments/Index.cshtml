@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNetCore.Html
-@model List<FocLab.Logic.Models.Experiments.ChemistryTaskExperimentModel>
+﻿@model List<FocLab.Logic.Models.Experiments.ChemistryTaskExperimentModel>
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Список экспериментов";
@@ -44,7 +43,7 @@
         <tbody>
             @foreach (var experiment in Model.Where(x => !x.PerformedDate.HasValue))
             {
-                
+
                 <tr>
                     <td>
                         <a href="/Chemistry/Experiments/Experiment/@experiment.Id">
@@ -61,25 +60,25 @@
                             <div class="col-md-12">
 
 
-                                <a class="btn btn-block btn-primary" href="#" onclick="PerformExperiment('@experiment.Id', true)">
+                                <button class="btn btn-block btn-primary exp-perform-btn" href="#" data-id="@experiment.Id">
                                     <i class="fa fa-anchor"></i>
                                     Выполнить
-                                </a>
+                                </button>
 
 
                                 @if (experiment.Deleted)
                                 {
-                                    <a class="btn btn-block btn-warning" href="#" style="margin-top:10px" onclick="CancelRemovingExperiment('@experiment.Id')">
+                                    <button class="btn btn-block btn-warning exp-cancel-remove-btn" style="margin-top:10px" data-id="@experiment.Id">
                                         <i class="fa fa-trash"></i>
                                         Отменить удаление
-                                    </a>
+                                    </button>
                                 }
                                 else
                                 {
-                                    <a class="btn btn-block btn-danger" href="#" style="margin-top:10px" onclick="RemoveExperiment('@experiment.Id')">
+                                    <button class="btn btn-block btn-danger exp-remove-btn" href="#" style="margin-top:10px" data-id="@experiment.Id">
                                         <i class="fa fa-trash"></i>
                                         Удалить
-                                    </a>
+                                    </button>
                                 }
                             </div>
                         </div>
@@ -123,7 +122,7 @@
         <tbody>
             @foreach (var experiment in Model.Where(x => x.PerformedDate.HasValue))
             {
-                
+
                 <tr>
                     <td>
                         <a href="/Chemistry/Experiments/Experiment/@experiment.Id">
@@ -144,25 +143,25 @@
                             <div class="col-md-12">
 
 
-                                <a class="btn btn-block btn-primary" href="#" onclick="PerformExperiment('@experiment.Id', true)">
+                                <button class="btn btn-block btn-primary exp-cancel-perform-btn" href="#" data-id="@experiment.Id">
                                     <i class="fa fa-anchor"></i>
-                                    Выполнить
-                                </a>
+                                    Отменить выполнение
+                                </button>
 
 
                                 @if (experiment.Deleted)
                                 {
-                                    <a class="btn btn-block btn-warning" href="#" style="margin-top:10px" onclick="CancelRemovingExperiment('@experiment.Id')">
+                                    <button class="btn btn-block btn-warning exp-cancel-remove-btn" data-id="@experiment.Id" href="#" style="margin-top:10px">
                                         <i class="fa fa-trash"></i>
                                         Отменить удаление
-                                    </a>
+                                    </button>
                                 }
                                 else
                                 {
-                                    <a class="btn btn-block btn-danger" href="#" style="margin-top:10px" onclick="RemoveExperiment('@experiment.Id')">
+                                    <button class="btn btn-block btn-danger exp-remove-btn" data-id="@experiment.Id" href="#" style="margin-top:10px">
                                         <i class="fa fa-trash"></i>
                                         Удалить
-                                    </a>
+                                    </button>
                                 }
                             </div>
                         </div>
@@ -174,61 +173,6 @@
 </div>
 
 @section Scripts{
-    <script>
-        function PerformExperiment(id, flag) {
 
-            $.ajax({
-                url: '/Chemistry/Experiments/Perform',
-                type: 'POST',
-                data: { ExperimentId: id, Performed: flag },
-                async: true,
-                cache: false,
-                dataType: 'json',
-                success: function (response) {
-                    console.log(response);
-
-                    alert(response.Message);
-
-                    location.reload();
-                }
-            });
-        }
-
-        function RemoveExperiment(id) {
-
-            $.ajax({
-                url: '/Chemistry/Chemistry/RemoveExperiment',
-                type: 'POST',
-                data: { id: id },
-                async: true,
-                cache: false,
-                dataType: 'json',
-                success: function (response) {
-                    console.log(response);
-
-                    alert(response.Message);
-
-                    location.reload();
-                }
-            });
-        }
-
-        function CancelRemovingExperiment(id) {
-            $.ajax({
-                url: '/Chemistry/Chemistry/CancelRemovingExperiment',
-                type: 'POST',
-                data: { id: id },
-                async: true,
-                cache: false,
-                dataType: 'json',
-                success: function (response) {
-                    console.log(response);
-
-                    alert(response.Message);
-
-                    location.reload();
-                }
-            });
-        }
-    </script>
+    <script src="~/js/Experiments.min.js"></script>
 }

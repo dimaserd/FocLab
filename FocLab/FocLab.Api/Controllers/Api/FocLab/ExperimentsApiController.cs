@@ -25,7 +25,6 @@ namespace FocLab.Api.Controllers.Api.FocLab
             new ChemistryTaskExperimentsWorker(ContextWrapper);
 
 
-
         /// <summary>
         /// Обновить эксперимент
         /// </summary>
@@ -37,6 +36,22 @@ namespace FocLab.Api.Controllers.Api.FocLab
             return ChemistryTaskExperimentsWorker.UpdateExperimentAsync(model);
         }
 
-        
+        [HttpPost("Perform")]
+        public Task<BaseApiResponse> Perform(PerformExperimentModel model)
+        {
+            return ChemistryTaskExperimentsWorker.PerformExperimentAsync(model);
+        }
+
+        [HttpPost("Remove")]
+        public Task<BaseApiResponse> Remove(string id)
+        {
+            return ChemistryTaskExperimentsWorker.RemoveExperimentAsync(id);
+        }
+
+        [HttpPost("CancelRemove")]
+        public Task<BaseApiResponse> CancelRemove(string id)
+        {
+            return ChemistryTaskExperimentsWorker.CancelRemovingExperimentAsync(id);
+        }
     }
 }
