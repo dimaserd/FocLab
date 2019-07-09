@@ -1,4 +1,4 @@
-﻿namespace FocLab.Logic.Models.ChemistryTasks
+﻿namespace FocLab.Logic.Models.Tasks
 {
     /// <summary>
     /// Модель для удаления химического задания

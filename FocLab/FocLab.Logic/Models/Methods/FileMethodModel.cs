@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using FocLab.Model.Entities.Chemistry;
 using Newtonsoft.Json;
 
-namespace FocLab.Logic.Models.ChemistryTasks
+namespace FocLab.Logic.Models.Methods
 {
     public class FileMethodModel
     {

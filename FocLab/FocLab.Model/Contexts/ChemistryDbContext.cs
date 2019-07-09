@@ -19,7 +19,7 @@ namespace FocLab.Model.Contexts
         public const string LocalConnection = "DefaultConnection";
 
 #if DEBUG
-        public static string ConnectionString => ServerConnection;
+        public static string ConnectionString => LocalConnection;
 
 #else
         public static string ConnectionString => ServerConnection;
@@ -27,8 +27,13 @@ namespace FocLab.Model.Contexts
 
         public static ChemistryDbContext Create(IConfiguration configuration)
         {
+            return Create(configuration.GetConnectionString(ConnectionString));
+        }
+
+        public static ChemistryDbContext Create(string connectionString)
+        {
             var optionsBuilder = new DbContextOptionsBuilder<ChemistryDbContext>();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString(ConnectionString));
+            optionsBuilder.UseSqlServer(connectionString);
 
             return new ChemistryDbContext(optionsBuilder.Options);
         }

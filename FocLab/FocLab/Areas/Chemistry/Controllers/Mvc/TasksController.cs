@@ -4,7 +4,6 @@ using FocLab.Areas.Chemistry.Controllers.Base;
 using FocLab.Consts;
 using FocLab.Helpers;
 using FocLab.Logic.Extensions;
-using FocLab.Logic.Models.ChemistryTasks;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Services;

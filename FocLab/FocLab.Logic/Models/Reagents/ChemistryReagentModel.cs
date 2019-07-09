@@ -29,7 +29,7 @@ namespace FocLab.Logic.Models.Reagents
                 {
                     Id = x.Task.Id,
                     Title = x.Task.Title,
-                    PerformerUser = new ChemistryTaskUserModelBase
+                    PerformerUser = new UserModelBase
                     {
                         Id = x.Task.PerformerUser.Id,
                         Email = x.Task.PerformerUser.Email,

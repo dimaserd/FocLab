@@ -12,6 +12,6 @@
         /// <summary>
         /// Исполнитель задания
         /// </summary>
-        public ChemistryTaskUserModelBase PerformerUser { get; set; }
+        public UserModelBase PerformerUser { get; set; }
     }
 }

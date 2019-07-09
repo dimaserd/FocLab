@@ -1,6 +1,6 @@
 ﻿namespace FocLab.Logic.Models
 {
-    public class ChemistryTaskUserModelBase
+    public class UserModelBase
     {
         /// <summary>
         /// Идентификатор пользователя

@@ -13,7 +13,6 @@ using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -176,9 +175,12 @@ namespace FocLab
 
             services.AddSingleton<IMemoryCache, MemoryCache>(s => memCache);
 
+            var cacheManager = new ApplicationCacheManager(memCache);
+
             var appOptions = new CrocoWebApplicationOptions(new ApplicationServerVirtualPathMapper(Env))
             {
-                CacheManager = new ApplicationCacheManager(memCache),
+                SettingsFactory = new TempCommonSettingsFactory(cacheManager),
+                CacheManager = cacheManager,
                 GetDbContext = () => ChemistryDbContext.Create(Configuration),
                 FileOptions = new CrocoFileOptions
                 {
@@ -204,13 +206,6 @@ namespace FocLab
                             ImageSizeName = ImageSizeType.Medium.ToString(),
                             MaxHeight = 500,
                             MaxWidth = 500
-                        },
-
-                        new ImgFileResizeSetting
-                        {
-                            ImageSizeName = 800.ToString(),
-                            MaxHeight = 800,
-                            MaxWidth = 800
                         }
                     }
                 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using FocLab.Logic.Models.Tasks;
 
-namespace FocLab.Logic.Models.ChemistryTasks
+namespace FocLab.Logic.Models.Tasks
 {
     public class EditChemistryTask
     {

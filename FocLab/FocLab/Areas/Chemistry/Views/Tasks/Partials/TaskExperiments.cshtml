@@ -1,5 +1,5 @@
 ﻿@using FocLab.Logic.Models.Tasks
-@model List<FocLab.Logic.Models.Experiments.ChemistryTaskExperimentModel>
+@model List<FocLab.Logic.Models.Experiments.ChemistryTaskExperimentSimpleModel>
 @{
     Layout = null;
 
@@ -39,6 +39,8 @@
             @foreach (var experiment in Model)
             {
                 var _class = experiment.Deleted ? "danger" : "";
+
+                var title = string.IsNullOrWhiteSpace(experiment.Title) ? "[Без названия]" : experiment.Title;
 
                 <tr class="@_class">
                     <td >

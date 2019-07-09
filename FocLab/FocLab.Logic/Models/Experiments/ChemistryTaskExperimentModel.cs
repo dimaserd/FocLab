@@ -1,4 +1,5 @@
-﻿using FocLab.Model.Entities.Chemistry;
+﻿using FocLab.Logic.Models.Tasks;
+using FocLab.Model.Entities.Chemistry;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,28 +8,16 @@ using System.Linq.Expressions;
 
 namespace FocLab.Logic.Models.Experiments
 {
-    public class ChemistryTaskExperimentModel
+
+    public class ChemistryTaskExperimentModel : ChemistryTaskExperimentSimpleModel
     {
-        /// <summary>
-        /// Идентификатор эксперимента
-        /// </summary>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Заголовок эксперимента
-        /// </summary>
-        public string Title { get; set; }
-
         #region Свойства отношений
-        /// <summary>
-        /// Идентификатор химического задания
-        /// </summary>
-        public string ChemistryTaskId { get; set; }
 
         /// <summary>
-        /// Исполнитель
+        /// Задание, к которому был создан эксперимент
         /// </summary>
-        public ChemistryTaskUserModelBase Performer { get; set; }
+        public ChemistryTaskSimpleModel Task { get; set; }
+        
         #endregion
 
         /// <summary>
@@ -41,17 +30,6 @@ namespace FocLab.Logic.Models.Experiments
         /// Текст написанный исполнителем
         /// </summary>
         public string PerformerText { get; set; }
-
-
-        /// <summary>
-        /// Дата создания
-        /// </summary>
-        public DateTime CreationDate { get; set; }
-
-        /// <summary>
-        /// Флаг удаленности
-        /// </summary>
-        public bool Deleted { get; set; }
 
         /// <summary>
         /// сериализованный объект счетчика веществ 
@@ -67,7 +45,17 @@ namespace FocLab.Logic.Models.Experiments
         internal static Expression<Func<ChemistryTaskExperiment, ChemistryTaskExperimentModel>> SelectExpression = x => new ChemistryTaskExperimentModel
         {
             Id = x.Id,
-            ChemistryTaskId = x.ChemistryTaskId,
+            Task = new ChemistryTaskSimpleModel
+            {
+                Id = x.ChemistryTask.Id,
+                Title = x.ChemistryTask.Title,
+                PerformerUser = new UserModelBase
+                {
+                    Id = x.ChemistryTask.PerformerUser.Id,
+                    Name = x.ChemistryTask.PerformerUser.Name,
+                    Email = x.ChemistryTask.PerformerUser.Email
+                }
+            },
             CreationDate = x.CreationDate,
             Deleted = x.Deleted,
             Files = x.Files.Select(t => new ChemistryTaskExperimentFileModel
@@ -76,7 +64,7 @@ namespace FocLab.Logic.Models.Experiments
                 Type = t.Type
             }).ToList(),
             PerformedDate = x.PerformedDate,
-            Performer = new ChemistryTaskUserModelBase
+            Performer = new UserModelBase
             {
                 Id = x.Performer.Id,
                 Email = x.Performer.Email,

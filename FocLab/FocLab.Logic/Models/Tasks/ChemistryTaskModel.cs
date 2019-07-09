@@ -54,12 +54,12 @@ namespace FocLab.Logic.Models.Tasks
         /// <summary>
         /// Администратор задания
         /// </summary>
-        public ChemistryTaskUserModelBase AdminUser { get; set; }
+        public UserModelBase AdminUser { get; set; }
 
         /// <summary>
         /// Исполнитель задания
         /// </summary>
-        public ChemistryTaskUserModelBase PerformerUser { get; set; }
+        public UserModelBase PerformerUser { get; set; }
 
         /// <summary>
         /// Метод для решения
@@ -74,7 +74,7 @@ namespace FocLab.Logic.Models.Tasks
         /// <summary>
         /// Эксперименты
         /// </summary>
-        public List<ChemistryTaskExperimentModel> Experiments { get; set; }
+        public List<ChemistryTaskExperimentSimpleModel> Experiments { get; set; }
 
         /// <summary>
         /// Реагенты
@@ -127,13 +127,13 @@ namespace FocLab.Logic.Models.Tasks
             }).ToList(),
             AdminQuality = a.AdminQuality,
             AdminQuantity = a.AdminQuantity,
-            AdminUser = new ChemistryTaskUserModelBase
+            AdminUser = new UserModelBase
             {
                 Email = a.AdminUser.Email,
                 Name = a.AdminUser.Name,
                 Id = a.AdminUser.Id
             },
-            PerformerUser = new ChemistryTaskUserModelBase
+            PerformerUser = new UserModelBase
             {
                 Id = a.PerformerUser.Id,
                 Name = a.PerformerUser.Name,
@@ -155,27 +155,19 @@ namespace FocLab.Logic.Models.Tasks
             PerformerText = a.PerformerText,
             SubstanceCounterJson = a.SubstanceCounterJson,
             Title = a.Title,
-            Experiments = a.Experiments.Select(x => new ChemistryTaskExperimentModel
+            Experiments = a.Experiments.Select(x => new ChemistryTaskExperimentSimpleModel
             {
                 Id = x.Id,
-                ChemistryTaskId = x.ChemistryTaskId,
+                Title = x.Title,
                 CreationDate = x.CreationDate,
                 Deleted = x.Deleted,
-                Files = x.Files.Select(t => new ChemistryTaskExperimentFileModel
+                Performer = new UserModelBase
                 {
-                    FileId = t.FileId,
-                    Type = t.Type
-                }).ToList(),
-                PerformedDate = x.PerformedDate,
-                Performer = new ChemistryTaskUserModelBase
-                {
-                    Id = x.Performer.Id,
                     Email = x.Performer.Email,
+                    Id = x.Performer.Id,
                     Name = x.Performer.Name
-                },
-                PerformerText = x.PerformerText,
-                SubstanceCounterJson = x.SubstanceCounterJson,
-                Title = x.Title
+                }
+                
             }).ToList(),
             Reagents = a.Reagents.Select(x => new ChemistryTaskReagentModel
             {

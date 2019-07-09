@@ -6,13 +6,11 @@ using Croco.Core.Abstractions.ContextWrappers;
 using Croco.Core.Common.Models;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models;
-using FocLab.Logic.Models.ChemistryTasks;
+using FocLab.Logic.Models.Methods;
 using FocLab.Logic.Models.Tasks;
-using FocLab.Logic.Models.Users;
 using FocLab.Logic.Workers.Users;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Chemistry;
-using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 

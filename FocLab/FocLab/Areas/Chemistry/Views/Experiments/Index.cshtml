@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Html
-@model List<FocLab.Model.Entities.Chemistry.ChemistryTaskExperiment>
+@model List<FocLab.Logic.Models.Experiments.ChemistryTaskExperimentModel>
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Список экспериментов";
@@ -19,11 +19,87 @@
 </div>
 
 <h2>
-    Ваши эксперименты
+    Ваши незавершенные эксперименты <span class="m-badge m-badge--success">@Model.Count(x => !x.PerformedDate.HasValue)</span>
 </h2>
 
 <div class="table-responsive">
-    <table class="table table-bordered table-striped">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    <strong>Задача</strong>
+                </th>
+
+                <th>
+                    <strong>Дата создания</strong>
+                </th>
+
+
+                <th>
+                    <strong>Действия</strong>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var experiment in Model.Where(x => !x.PerformedDate.HasValue))
+            {
+                
+                <tr>
+                    <td>
+                        <a href="/Chemistry/Experiments/Experiment/@experiment.Id">
+                            @experiment.Task.Title
+                        </a>
+                    </td>
+
+                    <td>
+                        @experiment.CreationDate
+                    </td>
+
+                    <td>
+                        <div class="row">
+                            <div class="col-md-12">
+
+
+                                <a class="btn btn-block btn-primary" href="#" onclick="PerformExperiment('@experiment.Id', true)">
+                                    <i class="fa fa-anchor"></i>
+                                    Выполнить
+                                </a>
+
+
+                                @if (experiment.Deleted)
+                                {
+                                    <a class="btn btn-block btn-warning" href="#" style="margin-top:10px" onclick="CancelRemovingExperiment('@experiment.Id')">
+                                        <i class="fa fa-trash"></i>
+                                        Отменить удаление
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-block btn-danger" href="#" style="margin-top:10px" onclick="RemoveExperiment('@experiment.Id')">
+                                        <i class="fa fa-trash"></i>
+                                        Удалить
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div style="height:40px">
+
+</div>
+
+<h2>
+    Ваши завершенные эксперименты <span class="m-badge m-badge--success">@Model.Count(x => x.PerformedDate.HasValue)</span>
+</h2>
+
+<div class="table-responsive">
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th>
@@ -35,7 +111,7 @@
                 </th>
 
                 <th>
-                    <strong>Дата завершения</strong>
+                    <strong>Дата выполнения</strong>
                 </th>
 
                 <th>
@@ -45,14 +121,13 @@
         </thead>
 
         <tbody>
-            @foreach (var experiment in Model)
+            @foreach (var experiment in Model.Where(x => x.PerformedDate.HasValue))
             {
-                var _class = experiment.Deleted ? "danger" : "";
-
-                <tr class="@_class">
+                
+                <tr>
                     <td>
                         <a href="/Chemistry/Experiments/Experiment/@experiment.Id">
-                            @experiment.ChemistryTask.Title
+                            @experiment.Task.Title
                         </a>
                     </td>
 
@@ -61,75 +136,42 @@
                     </td>
 
                     <td>
-                        @if(experiment.PerformedDate.HasValue)
-                        {
-                            @experiment.PerformedDate.Value
-                        }
-                        else
-                        {
-                            @(new HtmlString("[Не выполнен]"))
-                        }
+                        @experiment.PerformedDate.Value
                     </td>
 
                     <td>
                         <div class="row">
                             <div class="col-md-12">
 
-                                @if (!experiment.PerformedDate.HasValue)
-                                {
-                                    <a class="btn btn-block btn-primary" onclick="PerformExperiment('@experiment.Id', true)">
-                                        <i class="fa fa-anchor"></i>
-                                        Эксперимент выполнен
-                                    </a>
-                                }
-                                else
-                                {
-                                    <a class="btn btn-block btn-primary" onclick="PerformExperiment('@experiment.Id', false)">
-                                        <i class="fa fa-ban"></i>
-                                        Отменить выполнение
-                                    </a>
-                                }
+
+                                <a class="btn btn-block btn-primary" href="#" onclick="PerformExperiment('@experiment.Id', true)">
+                                    <i class="fa fa-anchor"></i>
+                                    Выполнить
+                                </a>
 
 
                                 @if (experiment.Deleted)
                                 {
-                                    <a class="btn btn-block btn-warning" style="margin-top:10px" onclick="CancelRemovingExperiment('@experiment.Id')">
+                                    <a class="btn btn-block btn-warning" href="#" style="margin-top:10px" onclick="CancelRemovingExperiment('@experiment.Id')">
                                         <i class="fa fa-trash"></i>
                                         Отменить удаление
                                     </a>
                                 }
                                 else
                                 {
-                                    <a class="btn btn-block btn-danger" style="margin-top:10px" onclick="RemoveExperiment('@experiment.Id')">
+                                    <a class="btn btn-block btn-danger" href="#" style="margin-top:10px" onclick="RemoveExperiment('@experiment.Id')">
                                         <i class="fa fa-trash"></i>
                                         Удалить
                                     </a>
                                 }
-
-
-
                             </div>
                         </div>
                     </td>
                 </tr>
             }
-
-            @if (Model.Count == 0)
-            {
-                <tr>
-                    <th colspan="4">
-                        <button class="btn btn-success btn-block">
-                            <strong>
-                                У вас нет экспериментов
-                            </strong>
-                        </button>
-                    </th>
-                </tr>
-            }
         </tbody>
     </table>
 </div>
-
 
 @section Scripts{
     <script>
@@ -138,7 +180,7 @@
             $.ajax({
                 url: '/Chemistry/Experiments/Perform',
                 type: 'POST',
-                data: { ExperimentId: id, Performed: flag  },
+                data: { ExperimentId: id, Performed: flag },
                 async: true,
                 cache: false,
                 dataType: 'json',
