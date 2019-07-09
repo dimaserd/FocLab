@@ -88,7 +88,7 @@
         SubstanceEventSetter.InitHandlers();
     }
     AddSubstance(): void {
-        var count = window['substance'].Substances.length;
+        var count = SubstanceStaticHandlers.substance.Substances.length;
         this.DrawSubstance(count);
         this.Substances.push({
             Koef: 1,

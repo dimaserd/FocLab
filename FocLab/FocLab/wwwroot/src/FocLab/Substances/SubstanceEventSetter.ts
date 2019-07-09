@@ -2,9 +2,6 @@
     static SetHandlerForClass(className: string, eventName: string, handlerFunction: EventListenerOrEventListenerObject) {
         var classNameElems = document.getElementsByClassName(className);
 
-        console.log("SubstanceStaticHandlers.SetHandlerForClass", classNameElems)
-
-
         Array.from(classNameElems).forEach(x => x.addEventListener(eventName, handlerFunction, false));
     }
 
@@ -20,8 +17,11 @@
             SubstanceStaticHandlers.WriteMassa(+$(x.target).val(), count);
         });
 
-        
-        //for (let elem in ["substance-mollar-massa", "substance-koef"]) {
+
+        SubstanceEventSetter.SetHandlerForClass("add-substance-btn", "click", x => {
+            var prefix = $(x.target).data("prefix").toString();
+            SubstanceStaticHandlers.AddSubstance(prefix);
+        });
 
             SubstanceEventSetter.SetHandlerForClass("substance-mollar-massa", "change", x => {
                 var count = +$(x.target).data("count");

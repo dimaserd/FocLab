@@ -15,7 +15,7 @@ namespace FocLab.Logic.Settings.Models
         /// <summary>
         /// Uri адрес куда производить редирект
         /// </summary>
-        public string RedirectUri {get;set;}
+        public string RedirectUri { get; set; }
         
         /// <summary>
         /// Имя стартового шаблона (Папка во ViewTemplates)

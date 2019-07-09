@@ -1,6 +1,5 @@
-﻿using Croco.Core.Abstractions.Settings;
-using Croco.Core.Application;
-using Croco.Core.Settings;
+﻿using Croco.Core.Settings;
+using FocLab.Logic.Settings.Models;
 
 namespace FocLab.Logic.Settings.Statics
 {
@@ -13,32 +12,9 @@ namespace FocLab.Logic.Settings.Statics
         ByEmail
     }
 
-    public class AccountSettingsModel : ICommonSetting<AccountSettingsModel>
-    {
-        public bool IsLoginEnabledForUsersWhoDidNotConfirmEmail { get; set; }
-
-        public bool ShouldUsersConfirmEmail { get; set; }
-
-        public bool RegistrationEnabled { get; set; }
-
-        public ConfirmLoginType ConfirmLogin { get; set; }
-
-        public AccountSettingsModel GetDefault()
-        {
-            return new AccountSettingsModel
-            {
-                IsLoginEnabledForUsersWhoDidNotConfirmEmail = true,
-                ShouldUsersConfirmEmail = false,
-                RegistrationEnabled = true,
-                ConfirmLogin = ConfirmLoginType.None
-            };
-        }
-
-    }
-
     public class AccountSettings
     {
-        private static AccountSettingsModel Model => CrocoApp.Application.SettingsFactory.GetSetting<AccountSettingsModel>();
+        private static AccountSettingsModel Model => new CommonSettingsFactory().GetSetting<AccountSettingsModel>();
 
 
         /// <summary>

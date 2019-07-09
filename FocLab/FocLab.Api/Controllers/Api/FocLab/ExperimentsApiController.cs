@@ -2,6 +2,7 @@
 using Croco.Core.Common.Models;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.EntityDtos;
+using FocLab.Logic.Models.Experiments;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryTaskExperiments;
 using FocLab.Model.Contexts;
@@ -23,15 +24,17 @@ namespace FocLab.Api.Controllers.Api.FocLab
         private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker =>
             new ChemistryTaskExperimentsWorker(ContextWrapper);
 
+
+
         /// <summary>
-        /// Получить задания на день
+        /// Обновить эксперимент
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost("UpdateTitle")]
-        public async Task<BaseApiResponse> UpdateTitle(ChemistryTaskExperimentDto model)
+        [HttpPost("Update")]
+        public Task<BaseApiResponse> Update(UpdateExperiment model)
         {
-            return await ChemistryTaskExperimentsWorker.UpdateExperimentTitleAsync(model);
+            return ChemistryTaskExperimentsWorker.UpdateExperimentAsync(model);
         }
 
         

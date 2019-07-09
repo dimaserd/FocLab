@@ -2,13 +2,17 @@
     static substance: SubstanceCounter;
     
     static RemoveSubstanceHandler(count: number) {
-        console.log("RemoveSubstanceHandler", count);
-        var substanceToDelete = SubstanceStaticHandlers.substance.Substances[count];
-        SubstanceStaticHandlers.substance.Substances = SubstanceStaticHandlers.substance.Substances.filter(x => x != substanceToDelete);
-        ;
+        console.log("RemoveSubstanceHandler BeforeRemove", SubstanceStaticHandlers.substance);
+        SubstanceStaticHandlers.substance.Substances.splice(count, 1);
+        console.log("RemoveSubstanceHandler AfterRemove", SubstanceStaticHandlers.substance);
+
         SubstanceStaticHandlers.substance.ClearTable();
         SubstanceStaticHandlers.substance.DrawTable();
-        TaskStaticHandlers.UpdateBtnClickHandler();
+        //setTimeout(function () {
+        //    console.log("RemoveSubstanceHandler", SubstanceStaticHandlers.substance);
+        //    TaskStaticHandlers.UpdateBtnClickHandler();
+        //}, 200);
+        
     }
     static EtalonChangedHandler(prefix) {
         if (prefix == "") {

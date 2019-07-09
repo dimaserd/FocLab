@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using Croco.Core.Abstractions.ContextWrappers;
 using Croco.Core.Common.Models;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Extensions;
-using FocLab.Logic.Models;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Services;
-using FocLab.Logic.Settings.Statics;
-using FocLab.Logic.Workers.Users;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
