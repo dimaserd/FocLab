@@ -16,6 +16,13 @@
         Requester.SendPostRequestWithAnimation('/Api/Chemistry/Tasks/Performer/Update', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     }
 
+    static UpdateFileByType(fileType: string) : void {
+        GenericUtil.GenericUpdateFileByType(fileType, '/Api/Chemistry/Tasks/ChangeFileForTask', {
+            TaskId: TaskStaticHandlers.TaskId,
+            FileType: fileType
+        });
+    }
+
     static RemoveTask(id: string) {
 
         var data = { Id: id, Flag: false };

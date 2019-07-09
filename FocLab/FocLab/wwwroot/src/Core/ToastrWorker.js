@@ -1,3 +1,11 @@
+var GenericBaseApiResponse = /** @class */ (function () {
+    function GenericBaseApiResponse(isSucceeded, message, resp) {
+        this.IsSucceeded = isSucceeded;
+        this.Message = message;
+        this.ResponseObject = resp;
+    }
+    return GenericBaseApiResponse;
+}());
 var BaseApiResponse = /** @class */ (function () {
     function BaseApiResponse(isSucceeded, message) {
         this.IsSucceeded = isSucceeded;

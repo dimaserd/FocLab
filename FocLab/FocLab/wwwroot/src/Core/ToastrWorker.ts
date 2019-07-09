@@ -1,5 +1,20 @@
 ﻿declare var toastr: any;
 
+class GenericBaseApiResponse<T> {
+
+
+    constructor(isSucceeded: boolean, message: string, resp: T) {
+        this.IsSucceeded = isSucceeded;
+        this.Message = message;
+        this.ResponseObject = resp;
+    }
+
+    public IsSucceeded: boolean;
+    public Message: string;
+    public ResponseObject: T;
+
+}
+
 class BaseApiResponse {
 
     

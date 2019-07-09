@@ -10,11 +10,11 @@
     }
 
     static RemoveExperiment(id: string) : void {
-        Requester.SendPostRequestWithAnimation(`/Api/Chemistry/Experiments/Remove/${id}`, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        Requester.SendPostRequestWithAnimation(`/Api/Chemistry/Experiments/Remove?id=${id}`, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     }
 
     static CancelRemoveExperiment(id: string) : void {
-        Requester.SendPostRequestWithAnimation(`/Api/Chemistry/Experiments/CancelRemove/${id}`, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        Requester.SendPostRequestWithAnimation(`/Api/Chemistry/Experiments/CancelRemove?id=${id}`, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     }
 
     static SetHandlers() {

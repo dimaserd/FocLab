@@ -217,9 +217,13 @@ new Tuple<string, string, int, int, bool>("File4", "Файл4", 4, Model.Files.A
 </div>
 
 <div class="table-responsive">
-    <table class="table table-bordered table-striped">
+    <table class="table table-hover">
         <tr>
-            <th colspan="2" class="">Текст выполнения</th>
+            <th colspan="2" class="">
+                <strong>
+                    Текст выполнения
+                </strong>
+            </th>
         </tr>
 
         <tr>
@@ -245,24 +249,14 @@ new Tuple<string, string, int, int, bool>("File4", "Файл4", 4, Model.Files.A
 
 @section Scripts{
 
-    <script>
-        class FilesLoader {
-            constructor() {
-                this.IsFileLoading = false;
-            }
 
-
-        }
-
-        var filesLoader = new FilesLoader();
-    </script>
-
+    <script src="~/js/Substance.min.js"></script>
     <script>
 
-        function UpdateBtnClickHandler() {
+        var substanceObject = @Html.GetJson(Model.SubstanceCounter);
 
+        SubstanceStaticHandlers.substance = new SubstanceCounter(substanceObject);
 
-        }
 
         function UpdateExperiment() {
 

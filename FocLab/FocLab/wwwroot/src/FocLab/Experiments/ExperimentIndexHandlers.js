@@ -9,10 +9,10 @@ var ExperimentIndexHandlers = /** @class */ (function () {
         Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Perform', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     };
     ExperimentIndexHandlers.RemoveExperiment = function (id) {
-        Requester.SendPostRequestWithAnimation("/Api/Chemistry/Experiments/Remove/" + id, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        Requester.SendPostRequestWithAnimation("/Api/Chemistry/Experiments/Remove?id=" + id, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     };
     ExperimentIndexHandlers.CancelRemoveExperiment = function (id) {
-        Requester.SendPostRequestWithAnimation("/Api/Chemistry/Experiments/CancelRemove/" + id, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        Requester.SendPostRequestWithAnimation("/Api/Chemistry/Experiments/CancelRemove?id=" + id, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     };
     ExperimentIndexHandlers.SetHandlers = function () {
         EventSetter.SetHandlerForClass("exp-perform-btn", "click", function (x) {

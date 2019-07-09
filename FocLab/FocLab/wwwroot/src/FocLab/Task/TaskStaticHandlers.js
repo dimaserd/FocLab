@@ -14,6 +14,12 @@ var TaskStaticHandlers = /** @class */ (function () {
         };
         Requester.SendPostRequestWithAnimation('/Api/Chemistry/Tasks/Performer/Update', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     };
+    TaskStaticHandlers.UpdateFileByType = function (fileType) {
+        GenericUtil.GenericUpdateFileByType(fileType, '/Api/Chemistry/Tasks/ChangeFileForTask', {
+            TaskId: TaskStaticHandlers.TaskId,
+            FileType: fileType
+        });
+    };
     TaskStaticHandlers.RemoveTask = function (id) {
         var data = { Id: id, Flag: false };
         Requester.SendPostRequestWithAnimation('/Chemistry/Chemistry/RemoveOrCancelRemoving', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);

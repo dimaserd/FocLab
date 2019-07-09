@@ -29,6 +29,8 @@
     <Content Remove="wwwroot\src\FocLab\DefaultHandlers.ts" />
     <Content Remove="wwwroot\src\FocLab\EventSetter.ts" />
     <Content Remove="wwwroot\src\FocLab\Experiments\ExperimentIndexHandlers.ts" />
+    <Content Remove="wwwroot\src\FocLab\Experiments\ExperimentPageHandlers.ts" />
+    <Content Remove="wwwroot\src\FocLab\GenericUtil.ts" />
     <Content Remove="wwwroot\src\FocLab\Models\Substance.ts" />
     <Content Remove="wwwroot\src\FocLab\Models\TaskStaticHandlers.ts" />
     <Content Remove="wwwroot\src\FocLab\Substances\SubstanceEventSetter.ts" />
@@ -96,6 +98,8 @@
     <TypeScriptCompile Include="wwwroot\src\FocLab\DefaultHandlers.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\EventSetter.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Experiments\ExperimentIndexHandlers.ts" />
+    <TypeScriptCompile Include="wwwroot\src\FocLab\Experiments\ExperimentPageHandlers.ts" />
+    <TypeScriptCompile Include="wwwroot\src\FocLab\GenericUtil.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Substances\Substance.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Substances\SubstanceEventSetter.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Task\TaskStaticHandlers.ts" />

@@ -387,30 +387,7 @@
 
     function UpdateFileByType(fileType) {
 
-        var fileInputId = fileType;
-
-        var file_data = $(`#${fileInputId}`).prop('files');
-
-        if (file_data == null || file_data.length == 0) {
-            ToastrWorker.ShowError("Файл для загрузки не выбран")
-            return;
-        }
-
-        Requester.UploadFilesToServer(fileInputId, x => {
-            if (x.IsSucceeded) {
-
-                var data = {
-                    TaskId: '@Model.Id',
-                    FileId: x.ResponseObject[0],
-                    FileType: fileType
-                };
-
-                Requester.SendPostRequestWithAnimation('/Api/Chemistry/Tasks/ChangeFileForTask', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs);
-            }
-            else {
-                ToastrWorker.ShowError(x.Message);
-            }
-        });
+        TaskStaticHandlers.UpdateFileByType(fileType);
     }
 
     </script>

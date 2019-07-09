@@ -173,22 +173,25 @@ namespace FocLab
 
         private ICrocoEventPublisher GetEventPublisher()
         {
-            var options = new CrocoEventListenerOptions
-            {
-                TaskEnqueuer = new HangfireTaskEnqueuer(),
-            };
+            //TODO  Return on Croco.Core 1.1.8 version
+            return new TempCrocoEventPublisher();
 
-            var evListener = new CrocoEventListener(options);
+            //var options = new CrocoEventListenerOptions
+            //{
+            //    TaskEnqueuer = new HangfireTaskEnqueuer(),
+            //};
 
-            //Подписка обработчиками на события
-            EccEventsSubscription.Subscribe(evListener);
+            //var evListener = new CrocoEventListener(options);
 
-            var publisher = new CrocoEventPublisher(new CrocoEventPublisherOptions
-            {
-                EventListener = evListener
-            });
+            ////Подписка обработчиками на события
+            //EccEventsSubscription.Subscribe(evListener);
 
-            return publisher;
+            //var publisher = new CrocoEventPublisher(new CrocoEventPublisherOptions
+            //{
+            //    EventListener = evListener
+            //});
+
+            //return publisher;
         }
 
         private void SetCrocoApplication(IServiceCollection services)

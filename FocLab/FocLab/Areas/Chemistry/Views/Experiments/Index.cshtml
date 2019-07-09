@@ -26,6 +26,10 @@
         <thead>
             <tr>
                 <th>
+                    <strong>Эксперимент</strong>
+                </th>
+
+                <th>
                     <strong>Задача</strong>
                 </th>
 
@@ -44,46 +48,54 @@
             @foreach (var experiment in Model.Where(x => !x.PerformedDate.HasValue))
             {
 
-                <tr>
-                    <td>
-                        <a href="/Chemistry/Experiments/Experiment/@experiment.Id">
-                            @experiment.Task.Title
-                        </a>
-                    </td>
+                var title = string.IsNullOrWhiteSpace(experiment.Title) ? "[Без названия]" : experiment.Title;
 
-                    <td>
-                        @experiment.CreationDate
-                    </td>
+            <tr>
+                <td>
+                    <a href="/Chemistry/Experiments/Experiment/@experiment.Id">
+                        @title
+                    </a>
+                </td>
 
-                    <td>
-                        <div class="row">
-                            <div class="col-md-12">
+                <td>
+                    <a href="/Chemistry/Tasks/Task/@experiment.Task.Id">
+                        @experiment.Task.Title
+                    </a>
+                </td>
+
+                <td>
+                    @experiment.CreationDate
+                </td>
+
+                <td>
+                    <div class="row">
+                        <div class="col-md-12">
 
 
-                                <button class="btn btn-block btn-primary exp-perform-btn" href="#" data-id="@experiment.Id">
-                                    <i class="fa fa-anchor"></i>
-                                    Выполнить
+                            <button class="btn btn-block btn-primary exp-perform-btn" href="#" data-id="@experiment.Id">
+                                <i class="fa fa-anchor"></i>
+                                Выполнить
+                            </button>
+
+
+                            @if (experiment.Deleted)
+                            {
+                                <button class="btn btn-block btn-warning exp-cancel-remove-btn" style="margin-top:10px" data-id="@experiment.Id">
+                                    <i class="fa fa-trash"></i>
+                                    Отменить удаление
                                 </button>
-
-
-                                @if (experiment.Deleted)
-                                {
-                                    <button class="btn btn-block btn-warning exp-cancel-remove-btn" style="margin-top:10px" data-id="@experiment.Id">
-                                        <i class="fa fa-trash"></i>
-                                        Отменить удаление
-                                    </button>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-block btn-danger exp-remove-btn" href="#" style="margin-top:10px" data-id="@experiment.Id">
-                                        <i class="fa fa-trash"></i>
-                                        Удалить
-                                    </button>
-                                }
-                            </div>
+                            }
+                            else
+                            {
+                                <button class="btn btn-block btn-danger exp-remove-btn" href="#" style="margin-top:10px" data-id="@experiment.Id">
+                                    <i class="fa fa-trash"></i>
+                                    Удалить
+                                </button>
+                            }
                         </div>
-                    </td>
-                </tr>
+                    </div>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
@@ -101,6 +113,10 @@
     <table class="table table-hover">
         <thead>
             <tr>
+                <th>
+                    <strong>Эксперимент</strong>
+                </th>
+
                 <th>
                     <strong>Задача</strong>
                 </th>
@@ -122,10 +138,17 @@
         <tbody>
             @foreach (var experiment in Model.Where(x => x.PerformedDate.HasValue))
             {
-
+                var title = string.IsNullOrWhiteSpace(experiment.Title) ? "[Без названия]" : experiment.Title;
                 <tr>
+                    
                     <td>
                         <a href="/Chemistry/Experiments/Experiment/@experiment.Id">
+                            @title
+                        </a>
+                    </td>
+
+                    <td>
+                        <a href="/Chemistry/Tasks/Task/@experiment.Task.Id">
                             @experiment.Task.Title
                         </a>
                     </td>

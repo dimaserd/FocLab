@@ -1,4 +1,10 @@
 declare var toastr: any;
+declare class GenericBaseApiResponse<T> {
+    constructor(isSucceeded: boolean, message: string, resp: T);
+    IsSucceeded: boolean;
+    Message: string;
+    ResponseObject: T;
+}
 declare class BaseApiResponse {
     constructor(isSucceeded: boolean, message: string);
     IsSucceeded: boolean;
