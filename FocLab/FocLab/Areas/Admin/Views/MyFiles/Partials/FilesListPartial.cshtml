@@ -66,19 +66,5 @@
             </div>
         </td>
     </tr>
-
-}
-
-@if (newOffSet < Model.TotalCount)
-{
-
-    <tr id="@btnId">
-        <td colspan="6">
-            <button class="btn-lg btn-primary btn-block" onclick="LoadMoreToTable('@Model.Count', '@newOffSet')">
-                Загрузить еще
-            </button>
-        </td>
-    </tr>
-
 }
 

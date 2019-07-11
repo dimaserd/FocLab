@@ -214,16 +214,10 @@
 
         FormDataHelper.FillDataByPrefix(task, "task.");
 
-        var elems = document.getElementsByName("TaskTitle");
-        if (!elems.length === 1) {
-            editableComponents.InitEditable(document.getElementById("TaskTitle"), () => updateDayTask());
-        }
-
-        elem = document.getElementsByName("TaskText");
-        if (!elems.length === 1) {
-            editableComponents.InitEditable(document.getElementById("TaskText"), () => updateDayTask(), true);
-        }
-
+        editableComponents.InitEditable(document.getElementById("TaskTitle"), () => updateDayTask());
+        
+        editableComponents.InitEditable(document.getElementById("TaskText"), () => updateDayTask(), true);
+        
         Utils.SetDatePicker("input[name='task.TaskDate']");
 
         $("input[name='task.TaskDate']").on('change', function () {
@@ -324,9 +318,6 @@
         window.open(`${window.location.origin}/Client/Details/${profileId}`, '_blank');
     }
     </script>
-
-
-
 
 <script>
     var searchModel = @Html.GetJson(searchModel);

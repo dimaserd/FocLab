@@ -130,7 +130,6 @@
         </thead>
 
         <tbody id="tableBody">
-
             @await Html.PartialAsync("~/Areas/Admin/Views/Users/Partials/UsersList.cshtml", model: Model)
         </tbody>
     </table>
@@ -139,17 +138,14 @@
 
 
 @section Scripts{
-    <link href="http://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css" rel="Stylesheet" />
-    <script src='https://cdn.rawgit.com/pguso/jquery-plugin-circliful/master/js/jquery.circliful.min.js'></script>
-    <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
-
+    
     <script>
 
         var model = @Html.GetJson(Model.List);
         const filterPrefix = "Filter.";
 
         var searchModel = @Html.GetJson(searchModel);
-        FillDataByPrefix(searchModel, filterPrefix);
+        FormDataHelper.FillDataByPrefix(searchModel, filterPrefix);
 
 
         var regDate = '';
@@ -175,23 +171,6 @@
             location.href = `/Admin/Users?q=${q}`;
         }
 
-        $(function () {
-            var availableTags = [
-            ];
-
-            for (var x in model) {
-                if (model[x].Name != null)
-                    availableTags.push(model[x].Name);
-                if (model[x].Email != null)
-                    availableTags.push(model[x].Email);
-
-            };
-            console.log("availableTags", availableTags);
-            $("input[name='Filter.q']").autocomplete({
-                source: availableTags
-            });
-        });
-
         function ApplyFilter() {
             var data = {
                 Deactivated: null,
@@ -199,7 +178,7 @@
                 q: null
             };
 
-            data = CollectDataByPrefix(data, filterPrefix);
+            data = FormDataHelper.CollectDataByPrefix(data, filterPrefix);
             var dateRange = Utils.GetDateFromDateRangePicker('RegistrationDate');
             if (dateRange !== {})
                 data.RegistrationDate = dateRange;
