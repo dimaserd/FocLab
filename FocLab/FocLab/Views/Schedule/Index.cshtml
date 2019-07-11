@@ -138,15 +138,11 @@
         </div>
     </div>
 
-
-
 </div>
 
 @await Html.PartialAsync("~/Views/Schedule/Partials/Modals.cshtml")
 
-
-@section Scripts{
-
+@section Scripts{ 
     <script>
         function formatStateSelection(state) {
 
@@ -201,7 +197,7 @@
                 UserIds: []
             };
 
-            data = CollectDataByPrefix(data, "filter.");
+            data = FormDataHelper.CollectDataByPrefix(data, "filter.");
 
             location.href = `/Schedule/Index?${Requester.GetParams(data)}`;
     }
@@ -214,9 +210,9 @@
 
         dayTasksWorker.SetCurrentTaskId(taskId);
 
-        TaskModalWorker.InitTask(task, accountWorker.User.Id);
+        TaskModalWorker.InitTask(task, AccountWorker.User.Id);
 
-        FillDataByPrefix(task, "task.");
+        FormDataHelper.FillDataByPrefix(task, "task.");
 
         var elems = document.getElementsByName("TaskTitle");
         if (!elems.length === 1) {
@@ -244,7 +240,7 @@
             TaskTitle: ""
         };
 
-        FillDataByPrefix(data, "create.");
+        FormDataHelper.FillDataByPrefix(data, "create.");
 
         Utils.SetDatePicker("input[name='create.TaskDate']", '0');
 
@@ -255,7 +251,7 @@
         var data = {
             Comment: ""
         }
-        data = CollectDataByPrefix(data, "edit.");
+        data = FormDataHelper.CollectDataByPrefix(data, "edit.");
         data.DayTaskCommentId = commentId;
 
         Requester.SendAjaxPost("/Api/DayTask/Comments/Update", data, resp => {
@@ -291,7 +287,7 @@
             TaskTitle: "",
             AssigneeUserId: ""
         };
-        data = CollectDataByPrefix(data, "task.");
+        data = FormDataHelper.CollectDataByPrefix(data, "task.");
         data.Id = document.getElementsByName('DayTaskId')[0].value;
         data.TaskDate = Utils.GetDateFromDatePicker("TaskDate");
 
@@ -308,7 +304,7 @@
                 TaskTitle: "",
                 AssigneeUserId: ""
             }
-            data = CollectDataByPrefix(data, "create.");
+            data = FormDataHelper.CollectDataByPrefix(data, "create.");
             data.TaskDate = Utils.GetDateFromDatePicker("TaskDate1");
 
             Requester.SendAjaxPost("/Api/DayTask/Create", data, resp => (
@@ -329,8 +325,6 @@
     }
     </script>
 
-    @await Html.PartialAsync("~/Views/Extensions/SummerNoteTranslation.cshtml")
-}
 
 
 
@@ -360,7 +354,7 @@
             UserIds: []
         };
 
-        data = CollectDataByPrefix(data, "filter.");
+        data = FormDataHelper.CollectDataByPrefix(data, "filter.");
         data.MonthShift = isNextMonth ? filter.MonthShift + 1 : filter.MonthShift - 1;
 
         return Requester.GetParams(data);
@@ -381,3 +375,5 @@
 
     var model = @Html.GetJson(Model);
 </script>
+
+}
