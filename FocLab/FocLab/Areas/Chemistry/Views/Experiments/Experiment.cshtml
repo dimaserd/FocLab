@@ -18,10 +18,6 @@
 
     var title = string.IsNullOrEmpty(Model.Title) ? "[Без названия]" : Model.Title;
 
-    int ToInt(ChemistryTaskDbFileType @enum)
-    {
-        return (int)@enum;
-    }
 }
 
 
@@ -38,13 +34,11 @@
     <div class="form-group m-form__group">
         <label for="@nameof(Model.Title)">
             <strong>
-                @Model.Title
+                Название
             </strong>
         </label>
-        @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+        @Html.TextBox($"Experiment.{nameof(Model.Title)}", title, new { @class = "form-control" })
     </div>
-
-
 </div>
 
 
@@ -52,6 +46,8 @@
 <div style="height:20px">
 
 </div>
+
+@await Html.PartialAsync("~/Areas/Chemistry/Views/Tasks/Partials/ReactionMainImage.cshtml", RenderReactionMainSchemaImageViewModel.Create(Model))
 
 @await Html.PartialAsync("~/Areas/Chemistry/Views/Tasks/Partials/TaskFiles.cshtml", RenderTaskFilesViewModel.Create(Model, !isNotAdmin))
 
@@ -59,60 +55,8 @@
 
 </div>
 
-<div class="table-responsive">
-    <table class="table table-bordered table-striped">
-        <tbody>
 
-            <tr>
-                <th colspan="2" class="text-center">
-                    <strong>Изображение реакции</strong>
-                </th>
-            </tr>
-
-            @if (Model.Files.Any(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage))
-            {
-                <tr>
-                    <th colspan="2">
-                        <img class="img-responsive img-fluid" src="/Files/GetDbFileById?id=@Model.Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage).FileId&type=Medium" />
-                    </th>
-                </tr>
-
-            }
-            @{
-                string btnText = Model.Files.Any(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage) ? "Перезагрузить файл реакции" : "Загрузить файл реакции";
-
-                var specType = ChemistryTaskDbFileType.ReactionSchemaImage;
-            }
-            <tr>
-                <th>
-                    @if (Model.Performer.Id == userId)
-                    {
-                        <input type="file" id="@ToInt(specType)" accept="image/*" />
-                    }
-                </th>
-
-                <th>
-                    <button class="btn btn-success" onclick="LoadOrReloadFileForExperiment('@ToInt(specType)')">
-                        @btnText
-                    </button>
-
-                    @if (Model.Files.Any(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage))
-                    {
-                        <a class="btn btn-primary" href="/Files/GetDbFileById/@Model.Files.FirstOrDefault(x => x.Type == specType).FileId">
-                            Скачать изображение реакции
-                        </a>
-                    }
-
-                </th>
-            </tr>
-
-        </tbody>
-
-    </table>
-</div>
-@*Если там налл то он почему то берет верхний элемент модели*@
 @await Html.PartialAsync($"{viewsChemistry}/Tasks/Table.cshtml", model: Model.SubstanceCounter)
-
 
 
 <div style="height:20px">
@@ -128,7 +72,7 @@
             </strong>
         </label>
         <div class="col-xl-12 col-lg-12">
-            @Html.TextAreaFor(x => x.PerformerText, htmlAttributes: new { @class = "form-control m-input", style = "height:150px", rows = "3" })
+            @Html.TextArea($"Experiment.{nameof(Model.PerformerText)}", Model.PerformerText, htmlAttributes: new { @class = "form-control m-input", style = "height:150px", rows = "3" })
         </div>
     </div>
 </div>
@@ -140,8 +84,7 @@
             <div class="col-lg-9">
                 @if (userId == Model.Performer.Id)
                 {
-
-                    <button type="reset" class="btn btn-brand form-action-btn">Обновить</button>
+                    <button type="reset" id="exp-update-btn" class="btn btn-brand form-action-btn exp-update-btn">Обновить</button>
                 }
                 <button type="reset" onclick="location.href='/Chemistry/Experiments/Index'" class="btn btn-secondary">Отмена</button>
             </div>
@@ -170,26 +113,5 @@
         }
 
 
-    </script>
-
-    <!--Скрипты связанные с редактированием названия-->
-
-    <script>
-        var props = {
-            Id: "@Model.Id"
-        };
-
-        var experimentWorker = new ExperimentWorker(props);
-    </script>
-
-    <script>
-        function UpdateTitleClickHandler() {
-
-            let data = {
-                Title: document.getElementById("experiment.Title").value
-            };
-
-            experimentWorker.UpdateTitle(data);
-        }
     </script>
 }

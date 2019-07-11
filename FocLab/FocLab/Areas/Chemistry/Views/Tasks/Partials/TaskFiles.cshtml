@@ -1,11 +1,8 @@
-﻿@model FocLab.ViewModels.RenderTaskFilesViewModel
+﻿@using FocLab.ViewModels
+@model RenderTaskFilesViewModel
 @{
     Layout = null;
 
-    int ToInt(ChemistryTaskDbFileType @enum)
-    {
-        return (int)@enum;
-    }
 }
 
 <h4>
@@ -31,7 +28,6 @@
                                 <strong>Загрузка файла</strong>
                             </th>
                         }
-
 
                         <th>
                             <strong>Действия</strong>
@@ -63,7 +59,7 @@
                             @if (!Model.IsAdmin)
                             {
                                 <td>
-                                    <input id="@ToInt(type)" type="file" name="@type" />
+                                    <input id="@RenderTaskFilesViewModel.ToInt(type)" type="file" name="@type" />
                                 </td>
                             }
 
@@ -75,7 +71,7 @@
                                     @if (file == null && !Model.IsAdmin)
                                     {
                                         <div class="col-md-12">
-                                            <button class="btn btn-success btn-block" onclick="UpdateFileByType('@ToInt(type)')">
+                                            <button class="btn btn-success btn-block" onclick="UpdateFileByType('@RenderTaskFilesViewModel.ToInt(type)')">
                                                 Загрузить файл
                                             </button>
                                         </div>
@@ -83,7 +79,7 @@
                                     else if (!Model.IsAdmin)
                                     {
                                         <div class="col-md-12">
-                                            <button class="btn btn-success btn-block" onclick="UpdateFileByType('@ToInt(type)')">
+                                            <button class="btn btn-success btn-block" onclick="UpdateFileByType('@RenderTaskFilesViewModel.ToInt(type)')">
                                                 Обновить файл
                                             </button>
                                         </div>
@@ -106,10 +102,6 @@
                 </tbody>
             </table>
         </div>
-
-
-
     </div>
-
 </div>
 

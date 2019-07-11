@@ -6,11 +6,11 @@ declare class FormDataHelper {
      * @param prefix   префикс стоящий перед свойствами объекта
      */
     static FillDataByPrefix(object: Object, prefix: string): void;
-    static CollectData(object: Object): Object;
+    static CollectData(object: object): object;
     /**
      *   Собрать данные с формы по префиксу
      * @param object  объект, свойства которого нужно собрать с формы
      * @param prefix  префикс для свойств объекта
      */
-    static CollectDataByPrefix(object: Object, prefix: string): Object;
+    static CollectDataByPrefix(object: object, prefix: string): object;
 }

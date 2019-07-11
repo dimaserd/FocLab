@@ -58,7 +58,7 @@
     }
 
     
-    static CollectData(object: Object): Object {
+    static CollectData(object: object): object {
         return FormDataHelper.CollectDataByPrefix(object, "");
     }
 
@@ -67,7 +67,7 @@
      * @param object  объект, свойства которого нужно собрать с формы
      * @param prefix  префикс для свойств объекта
      */
-    static CollectDataByPrefix(object: Object, prefix: string): Object {
+    static CollectDataByPrefix(object: object, prefix: string): object {
 
         for (let index in object) {
             if (object.hasOwnProperty(index)) {

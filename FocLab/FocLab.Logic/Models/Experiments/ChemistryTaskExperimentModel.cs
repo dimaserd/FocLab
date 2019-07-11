@@ -1,6 +1,7 @@
 ﻿using Croco.Core.Utils;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Model.Entities.Chemistry;
+using FocLab.Model.Enumerations;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,9 @@ namespace FocLab.Logic.Models.Experiments
         /// сериализованный объект счетчика веществ 
         /// </summary>
         public string SubstanceCounterJson { get; set; }
+
+        public ChemistryTaskExperimentFileModel ReactionSchemaImage => Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage);
+
 
         public Chemistry_SubstanceCounter SubstanceCounter => Tool.JsonConverter.Deserialize<Chemistry_SubstanceCounter>(SubstanceCounterJson ?? "") ?? Chemistry_SubstanceCounter.GetDefaultCounter();
 

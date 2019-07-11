@@ -2,8 +2,9 @@
     static substance: SubstanceCounter;
     
     static RemoveSubstanceHandler(count: number) {
-        console.log("RemoveSubstanceHandler BeforeRemove", SubstanceStaticHandlers.substance);
-        SubstanceStaticHandlers.substance.Substances.splice(count, 1);
+        var copy = Object.assign(SubstanceStaticHandlers.substance);
+        console.log(`RemoveSubstanceHandler{${count}) BeforeRemove`, copy);
+        SubstanceStaticHandlers.substance.Substances.splice(count);
         console.log("RemoveSubstanceHandler AfterRemove", SubstanceStaticHandlers.substance);
 
         SubstanceStaticHandlers.substance.ClearTable();

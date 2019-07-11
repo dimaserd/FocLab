@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FocLab.Logic.Models.Experiments
 {
@@ -12,6 +13,7 @@ namespace FocLab.Logic.Models.Experiments
         /// <summary>
         /// Заголовок эксперимента
         /// </summary>
+        [Display(Name = "Название")]
         public string Title { get; set; }
 
         /// <summary>

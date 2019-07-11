@@ -5,7 +5,6 @@ var SubstanceCounter = /** @class */ (function () {
         //this.setProperties();
         this.Substances = [];
         if (substanceObj != null && substanceObj != undefined) {
-            console.log("SubstanceCounter.constructor", "Попадание в условие");
             this.Etalon = substanceObj.Etalon;
             this.Substances = substanceObj.Substances;
         }
@@ -22,7 +21,7 @@ var SubstanceCounter = /** @class */ (function () {
     };
     SubstanceCounter.prototype.DrawSubstance = function (count) {
         var tr = document.createElement("tr");
-        var html = "\n                    <td>\n                        <input class=\"form-control substance-name\" name=\"" + this.prefix + ".Name[" + count + "]\" data-count=\"" + count + "\" type=\"text\" value=\"\">\n                    </td>\n\n                    <td>\n                        <input class=\"form-control substance-massa\" name=\"" + this.prefix + ".Massa[" + count + "]\" data-count=\"" + count + "\" data-prefix=\"" + this.prefix + "\" type=\"number\" value=\"\">\n                    </td>\n\n                    <td>\n                        <input class=\"form-control substance-mollar-massa\" data-count=\"" + count + "\" data-prefix=\"" + this.prefix + "\" name=\"" + this.prefix + ".MolarMassa[" + count + "]\" type=\"number\" value=\"\">\n                    </td>\n\n                    <td>\n                        <input class=\"form-control substance-koef\" data-count=\"" + count + "\" data-prefix=\"" + this.prefix + "\" name=\"" + this.prefix + ".Koef[" + count + "]\" type=\"number\" value=\"\">\n                    </td>\n\n                    <td>\n                        <button class=\"btn btn-danger substance-remove\" data-count=\"" + count + "\" data-prefix=\"" + this.prefix + "\">\n                            <i class=\"fas fa-trash\">\n\n                            </i>\n                        </button>\n                    </td>";
+        var html = "\n                    <td>\n                        <input class=\"form-control substance-name\" name=\"" + this.prefix + ".Name[" + count + "]\" data-count=\"" + count + "\" type=\"text\" value=\"\">\n                    </td>\n\n                    <td>\n                        <input class=\"form-control substance-massa\" name=\"" + this.prefix + ".Massa[" + count + "]\" data-count=\"" + count + "\" data-prefix=\"" + this.prefix + "\" type=\"number\" value=\"\">\n                    </td>\n\n                    <td>\n                        <input class=\"form-control substance-mollar-massa\" data-count=\"" + count + "\" data-prefix=\"" + this.prefix + "\" name=\"" + this.prefix + ".MolarMassa[" + count + "]\" type=\"number\" value=\"\">\n                    </td>\n\n                    <td>\n                        <input class=\"form-control substance-koef\" data-count=\"" + count + "\" data-prefix=\"" + this.prefix + "\" name=\"" + this.prefix + ".Koef[" + count + "]\" type=\"number\" value=\"\">\n                    </td>\n\n                    <td>\n                        <button class=\"btn btn-danger substance-remove\" data-count=\"" + count + "\" data-prefix=\"" + this.prefix + "\">\n                            <i class=\"fas fa-trash\" data-count=\"" + count + "\" data-prefix=\"" + this.prefix + "\">\n\n                            </i>\n                        </button>\n                    </td>";
         tr.innerHTML = html;
         document.getElementById(this.prefix + ".tbodySubstances").appendChild(tr);
     };
@@ -122,7 +121,9 @@ var SubstanceEventSetter = /** @class */ (function () {
             SubstanceStaticHandlers.ChangeMassa(count, prefix);
         });
         EventSetter.SetHandlerForClass("substance-remove", "click", function (x) {
-            var count = +$(x.target).data("count");
+            var target = x.srcElement;
+            console.log(".substance-remove clicked", x.target);
+            var count = +$(target).data("count");
             SubstanceStaticHandlers.RemoveSubstanceHandler(count);
         });
         var etalonEvHandler = function (x) {
@@ -140,8 +141,9 @@ var SubstanceStaticHandlers = /** @class */ (function () {
     function SubstanceStaticHandlers() {
     }
     SubstanceStaticHandlers.RemoveSubstanceHandler = function (count) {
-        console.log("RemoveSubstanceHandler BeforeRemove", SubstanceStaticHandlers.substance);
-        SubstanceStaticHandlers.substance.Substances.splice(count, 1);
+        var copy = Object.assign(SubstanceStaticHandlers.substance);
+        console.log("RemoveSubstanceHandler{" + count + ") BeforeRemove", copy);
+        SubstanceStaticHandlers.substance.Substances.splice(count);
         console.log("RemoveSubstanceHandler AfterRemove", SubstanceStaticHandlers.substance);
         SubstanceStaticHandlers.substance.ClearTable();
         SubstanceStaticHandlers.substance.DrawTable();

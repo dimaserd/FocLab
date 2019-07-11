@@ -35,7 +35,9 @@ var SubstanceEventSetter = /** @class */ (function () {
             SubstanceStaticHandlers.ChangeMassa(count, prefix);
         });
         EventSetter.SetHandlerForClass("substance-remove", "click", function (x) {
-            var count = +$(x.target).data("count");
+            var target = x.srcElement;
+            console.log(".substance-remove clicked", x.target);
+            var count = +$(target).data("count");
             SubstanceStaticHandlers.RemoveSubstanceHandler(count);
         });
         var etalonEvHandler = function (x) {

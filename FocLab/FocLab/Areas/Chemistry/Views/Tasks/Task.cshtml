@@ -78,6 +78,8 @@
 </div>
 
 
+@await Html.PartialAsync("~/Areas/Chemistry/Views/Tasks/Partials/ReactionMainImage.cshtml", RenderReactionMainSchemaImageViewModel.Create(Model))
+
 <div style="height:20px">
 
 </div>
@@ -137,8 +139,6 @@
 </div>
 
 @await Html.PartialAsync($"{viewsChemistry}/Partials/TaskExperiments.cshtml", model: Model.Experiments)
-
-
 
 
 

@@ -38,10 +38,13 @@
             var count = +$(x.target).data("count");
             var prefix = $(x.target).data("prefix").toString();
             SubstanceStaticHandlers.ChangeMassa(count, prefix);
-        });
+        });                                                    
 
         EventSetter.SetHandlerForClass("substance-remove", "click", x => {
-            var count = +$(x.target).data("count");
+
+            var target = x.srcElement;
+            console.log(".substance-remove clicked", x.target);
+            var count = +$(target).data("count");
             SubstanceStaticHandlers.RemoveSubstanceHandler(count);
         });
 

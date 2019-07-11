@@ -8,7 +8,7 @@
         //this.setProperties();
         this.Substances = [];
         if (substanceObj != null && substanceObj != undefined) {
-            console.log("SubstanceCounter.constructor", "Попадание в условие");
+            
             this.Etalon = substanceObj.Etalon;
             this.Substances = substanceObj.Substances;
         }
@@ -63,7 +63,7 @@
 
                     <td>
                         <button class="btn btn-danger substance-remove" data-count="${count}" data-prefix="${this.prefix}">
-                            <i class="fas fa-trash">
+                            <i class="fas fa-trash" data-count="${count}" data-prefix="${this.prefix}">
 
                             </i>
                         </button>
