@@ -1,0 +1,105 @@
+.editable-input:not([editable]) {
+    border-color: #fff;
+    color: #000;
+    background-color: #fff;
+}
+
+.editable {
+    position: relative;
+}
+
+.editable--active .editable-backdrop{
+    display: block;
+}
+
+.editable-input{
+    position: relative;
+}
+
+.btn-editable {
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2)!important;
+}
+
+.btn-editable:hover {
+    background: #ddd;
+}
+
+.btn-editable:focus,
+.btn-editable:active {
+    background: #99bbff;
+}
+
+.editable--active .editable-buttons {
+    opacity: 1;
+    visibility: visible;
+}
+
+.editable-buttons {
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    display: flex;
+    padding-top: 5px;
+}
+
+.editable-buttons .btn:not(:first-child) {
+    margin-left: 5px;
+}
+
+.editable-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+}
+
+
+.event {
+    cursor: pointer;
+}
+
+@media (max-width:575px) {
+     .display-4 {
+         font-size: 1.5rem;
+     }
+
+     .day h5 {
+         background-color: #f8f9fa;
+         padding: 3px 5px 5px;
+         margin: -8px -8px 8px -8px;
+     }
+
+     .date {
+         padding-left: 4px;
+     }
+ }
+
+@media (min-width: 576px) {
+     .day {
+         height: 14.2857vw;
+     }
+ }
+
+.avatar-circle {
+    height: 30px;
+    width: 30px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.modal-task-name {
+    font-weight: 400;
+    font-size: 22px;
+}
+
+.modal-task-description {
+    font-weight: 400;
+    font-size: 16px;
+}

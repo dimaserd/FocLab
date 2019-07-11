@@ -1,0 +1,61 @@
+﻿.editable-input:not([editable]) {
+    border-color: #fff;
+    color: #000;
+    background-color: #fff;
+}
+
+.editable {
+    position: relative;
+}
+
+.editable--active .editable-backdrop{
+    display: block;
+}
+
+.editable-input{
+    position: relative;
+}
+
+.btn-editable {
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2)!important;
+}
+
+.btn-editable:hover {
+    background: #ddd;
+}
+
+.btn-editable:focus,
+.btn-editable:active {
+    background: #99bbff;
+}
+
+.editable--active .editable-buttons {
+    opacity: 1;
+    visibility: visible;
+}
+
+.editable-buttons {
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    display: flex;
+    padding-top: 5px;
+}
+
+.editable-buttons .btn:not(:first-child) {
+    margin-left: 5px;
+}
+
+.editable-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+}
+

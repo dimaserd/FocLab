@@ -1,0 +1,142 @@
+﻿
+@{
+    Layout = null;
+}
+
+<style>
+    select2 select2-container select2-container--default {
+        width: 230px;
+    }
+
+    .label-in-modal {
+        font-weight: 600;
+        font-size: large;
+    }
+</style>
+
+<div class="modal fade show" id="dayTaskModal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 style="padding-left: 15px;" class="modal-title" id="dayTaskModalTitle">Modal title</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">X</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group m-form__group row m--margin-top-10">
+                    <div class="col-lg-7">
+
+                        <div class="form-group m-form__group mb-4">
+                            <div class="form-group m-form__group">
+                                <input id="TaskTitle" type="text" name="task.TaskTitle" class="modal-task-name form-control" value="">
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="form-group m-form__group mt-4">
+                            <div class="form-group m-form__group">
+                                <textarea id="TaskText" type="text" name="task.TaskText" class="modal-task-name form-control" value=""> </textarea>
+                            </div>
+                        </div>
+                        <div class="form-group m-form__group">
+                            <h4>Дата выполнения</h4>
+                            <div class="form-group m-form__group">
+                                <input id="TaskDate" type="text" name="task.TaskDate" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5">
+
+                        <div class="form-group m-form__group">
+                            <h6>Исполнитель</h6>
+                            <div class="form-group m-form__group">
+                                <select id="usersSelect1" class="usersSelect" name="task.AssigneeUserId"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-form__group">
+                            <h6>Автор</h6>
+                            <div class="btn d-flex align-items-center" id="Author"></div>
+                        </div>
+                    </div>
+                    <div class="form-group m-form__group col-md-10">
+                        <h4>Комментарии</h4>
+                        <div class="panel">
+                            <div class="panel-body">
+                                <input name="DayTaskId" hidden />
+                                <textarea class="form-control" name="Comment" rows="2" placeholder="Добавьте Ваш комментарий"></textarea>
+                                <div class="mt-2 clearfix">
+                                    <button class="btn btn-sm btn-primary pull-right" type="submit" onclick="addComment()">Добавить</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div id="Comments" class="panel-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade show" id="createDayTaskModal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 style="padding-left: 15px;" class="modal-title" id="dayTaskModalTitle">Создать задание</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">X</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group m-form__group row m--margin-top-10">
+                    <div class="col-lg-10 mx-auto">
+
+                        <div class="form-group m-form__group mb-4">
+                            <div class="form-group m-form__group">
+                                <label>Название</label>
+                                <input type="text" name="create.TaskTitle" class="modal-task-name form-control" value="">
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="form-group m-form__group mt-4">
+                            <div class="form-group m-form__group">
+                                <label>Описание</label>
+                                <textarea type="text" name="create.TaskText" class="modal-task-name form-control" value=""> </textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-form__group">
+                            <h6>Исполнитель</h6>
+                            <div class="form-group m-form__group">
+                                <select id="usersSelect2" class="usersSelect" name="create.AssigneeUserId"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-form__group">
+                            <label>Дата выполнения</label>
+                            <div class="form-group m-form__group">
+                                <input id="TaskDate1" type="text" name="create.TaskDate" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button id="pickpointBtn" type="button" class="btn btn-primary" onclick="createDayTask()">Создать</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+﻿@model string
+@{
+    Layout = null;
+
+    var jsMinPath = $"/app_bundles/{Model}.min.js";
+
+    var jsPath = $"/app_bundles/{Model}.js";
+
+    var cssMinPath = $"/app_bundles/{Model}.min.css"; 
+
+    var cssPath = $"/app_bundles/{Model}.css"; 
+}
+<environment names="Development">
+    <script src="@(new HtmlString(jsPath))"></script>
+    <link rel="stylesheet" href="@(new HtmlString(cssPath))" />
+</environment>
+
+<environment names="Production">
+    <script src="@(new HtmlString(jsMinPath))"></script>
+    <link rel="stylesheet" href="@(new HtmlString(cssMinPath))" />
+</environment>

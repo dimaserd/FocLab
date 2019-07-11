@@ -1,0 +1,20 @@
+﻿@model string
+@{
+    Layout = null;
+
+    var jsFiles = (List<string>)ViewData["jsFiles"]; 
+
+    var cssFiles = (List<string>)ViewData["cssFiles"]; 
+}
+
+@foreach(var jsPath in jsFiles)
+{
+    <script src="@(new HtmlString($"{jsPath}?v=1"))"></script>
+}
+
+@foreach(var cssPath in cssFiles)
+{
+    <link rel="stylesheet" href="@(new HtmlString(cssPath))" />
+}
+
+

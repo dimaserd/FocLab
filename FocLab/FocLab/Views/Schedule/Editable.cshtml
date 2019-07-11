@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewBag.Title = "Editable";
+}
+
+<h2>Editable</h2>
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+@await Html.RenderApplicationFilesAsync("Tasker")
+
+
+
+<input id="test" type="text" class="form-control" value="Test Editable">
+
+
+<script>
+</script>
+
+<script>
+    var elem = document.getElementById("test");
+
+    editableComponents.InitEditableTest(elem);
+</script>

@@ -58,5 +58,28 @@
       "enabled": true,
       "renameLocals": true
     }
-  }
+  },
+
+  {
+    "outputFileName": "wwwroot/app_bundles/Tasker.js",
+    "inputFiles": [
+      "wwwroot/Applications/Tasker/js/*.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+
+  {
+    "outputFileName": "wwwroot/app_bundles/Tasker.css",
+    "inputFiles": [
+      "wwwroot/Applications/Tasker/css/*.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+
 ]

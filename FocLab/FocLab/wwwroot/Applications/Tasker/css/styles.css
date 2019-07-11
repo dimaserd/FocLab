@@ -1,0 +1,43 @@
+﻿.event {
+    cursor: pointer;
+}
+
+@media (max-width:575px) {
+     .display-4 {
+         font-size: 1.5rem;
+     }
+
+     .day h5 {
+         background-color: #f8f9fa;
+         padding: 3px 5px 5px;
+         margin: -8px -8px 8px -8px;
+     }
+
+     .date {
+         padding-left: 4px;
+     }
+ }
+
+@media (min-width: 576px) {
+     .day {
+         height: 14.2857vw;
+     }
+ }
+
+.avatar-circle {
+    height: 30px;
+    width: 30px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.modal-task-name {
+    font-weight: 400;
+    font-size: 22px;
+}
+
+.modal-task-description {
+    font-weight: 400;
+    font-size: 16px;
+}
