@@ -71,11 +71,11 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         {
             var task = await ChemistryTasksWorker.GetChemistryTaskByIdAsync(id);
 
-            
-
             var reagents = await ChemistryReagentsWorker.GetReagentsAsync();
 
-            var reagentSelectList = reagents.Select(x => new SelectListItem
+            var reagentSelectList = reagents
+                .Where(x => !task.Reagents.Any(t => t.Reagent.Id == x.Id))
+                .Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id

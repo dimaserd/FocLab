@@ -45,5 +45,10 @@ namespace FocLab.ViewModels
                 IsAdmin = isAdmin
             };
         }
+
+        public static int ToInt(ChemistryTaskDbFileType enumValue)
+        {
+            return (int)enumValue;
+        }
     }
 }

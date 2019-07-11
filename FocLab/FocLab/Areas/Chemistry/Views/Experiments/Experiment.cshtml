@@ -1,6 +1,7 @@
 ﻿@using FocLab.Logic
 @using FocLab.Logic.Extensions
 @using FocLab.Model.Enumerations
+@using FocLab.ViewModels
 @model FocLab.Logic.Models.Experiments.ChemistryTaskExperimentModel
 @{
 
@@ -52,87 +53,7 @@
 
 </div>
 
-<div class="table-responsive">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>
-                    <strong>Статус файла</strong>
-                </th>
-                @if (Model.Performer.Id == userId)
-                {
-                    <th>
-                        <strong>Загрузка файла</strong>
-                    </th>
-                }
-                <th>
-                    <strong>Действия</strong>
-                </th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach (var type in types)
-            {
-
-                var file = Model.Files.FirstOrDefault(x => x.Type == type);
-
-                <tr>
-                    <td>
-                        @if (file == null)
-                        {
-                            <strong>
-                                <span class="text-danger">@type.ToDisplayName() не загружен</span>
-                            </strong>
-                        }
-                        else
-                        {
-                            <strong>
-                                <span class="text-success">@type.ToDisplayName() уже загружен</span>
-                            </strong>
-                        }
-                    </td>
-
-                    @if (Model.Performer.Id == userId)
-                    {
-                        <td>
-                            <input id="@ToInt(type)" type="file" name="@type" />
-                        </td>
-                    }
-
-                    <td>
-                        <div class="row">
-
-                            <div class="col-md-12">
-                                @if (file != null && Model.Performer.Id == userId)
-                                {
-
-                                    <button class="btn btn-success btn-block" data-file-type="" onclick="LoadOrReloadFileForExperiment('@ToInt(type)')">
-                                        Загрузить файл
-                                    </button>
-
-                                }
-                                else if (Model.Performer.Id == userId)
-                                {
-                                    <button class="btn btn-success btn-block" style="" onclick="LoadOrReloadFileForExperiment('@ToInt(type)')">
-                                        Обновить файл
-                                    </button>
-                                }
-
-                                @if (file != null)
-                                {
-                                    <a class="btn btn-primary btn-block" style="margin-top:10px" href="/Files/GetDbFileById/@file.FileId">
-                                        Скачать файл
-                                    </a>
-                                }
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+@await Html.PartialAsync("~/Areas/Chemistry/Views/Tasks/Partials/TaskFiles.cshtml", RenderTaskFilesViewModel.Create(Model, !isNotAdmin))
 
 <div style="height:20px">
 
@@ -207,9 +128,9 @@
             </strong>
         </label>
         <div class="col-xl-12 col-lg-12">
-            @Html.TextAreaFor(x => x.PerformerText, htmlAttributes: new { @class = "form-control m-input", style = "height:150px", rows="3" })
+            @Html.TextAreaFor(x => x.PerformerText, htmlAttributes: new { @class = "form-control m-input", style = "height:150px", rows = "3" })
         </div>
-    </div>      
+    </div>
 </div>
 
 
@@ -243,10 +164,9 @@
 
         ExperimentPageHandlers.ExperimentId = "@Model.Id";
 
-        function LoadOrReloadFileForExperiment(fileType) {
+        function UpdateFileByType(fileType) {
 
             ExperimentPageHandlers.UpdateFileByType(fileType);
-
         }
 
 
