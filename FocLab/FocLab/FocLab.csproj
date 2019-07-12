@@ -41,6 +41,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="DocTemplates\Document.docx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.4" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.7.4" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -55,6 +59,8 @@
     <Folder Include="Implementations\" />
     <Folder Include="wwwroot\src\FocLab\Models\" />
     <Folder Include="wwwroot\src\Garbage\" />
+    <Folder Include="Новая папка1\" />
+    <Folder Include="Новая папка\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -88,6 +94,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Doc\Doc.Logic\Doc.Logic.csproj" />
     <ProjectReference Include="..\Ecc\Ecc.Logic\Ecc.Logic.csproj" />
     <ProjectReference Include="..\FocLab.Api\FocLab.Api.csproj" />
     <ProjectReference Include="..\FocLab.Logic\FocLab.Logic.csproj" />

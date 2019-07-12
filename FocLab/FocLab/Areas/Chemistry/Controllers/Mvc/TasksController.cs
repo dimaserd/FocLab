@@ -1,9 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Croco.Core.Application;
+using Doc.Logic.Models;
+using Doc.Logic.Workers;
 using FocLab.Areas.Chemistry.Controllers.Base;
 using FocLab.Consts;
 using FocLab.Helpers;
 using FocLab.Logic.Extensions;
+using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Services;
@@ -33,6 +38,28 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         private ChemistryMethodsWorker ChemistryMethodsWorker => new ChemistryMethodsWorker(ContextWrapper);
 
         private ChemistryTasksHtmlHelper ChemistryTasksHtmlHelper => new ChemistryTasksHtmlHelper(ChemistryMethodsWorker);
+
+        private FocLabDocumentProcessor FocLabDocumentProcessor => new FocLabDocumentProcessor(ContextWrapper);
+
+        public async Task<FileResult> Print(string id)
+        {
+            var fileName = $"Filename.docx";
+
+            var filePath = CrocoApp.Application.MapPath($"~/Docs/{fileName}");
+
+            var t = await FocLabDocumentProcessor.RanderByTaskIdAsync(new RenderChemistryTaskDocument
+            {
+                TaskId = id,
+                DocSaveFileName = filePath
+            });
+
+            if(!t.IsSucceeded)
+            {
+                throw new ApplicationException(t.Message);
+            }
+
+            return File(filePath, FocLabWebApplication.GetMimeMapping(fileName));
+        }
 
         /// <summary>
         /// 
