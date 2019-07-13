@@ -13,8 +13,6 @@ namespace Doc.Logic.Implementations
 {
     public class DocOpenFormatWordEngine : IWordProccessorEngine
     {
-        
-
         public void Create(DocXDocumentObjectModel model)
         {
             if(File.Exists(model.DocumentSaveFileName))
@@ -22,26 +20,29 @@ namespace Doc.Logic.Implementations
                 File.Delete(model.DocumentSaveFileName);
             }
 
-            var templateTempFile = $"{Path.GetDirectoryName(model.DocumentTemplateFileName)}/{Guid.NewGuid()}.docx";
-
-            File.Copy(model.DocumentTemplateFileName, templateTempFile);
-
-            using (WordprocessingDocument doc =
-                    WordprocessingDocument.Open(templateTempFile, true))
+            using(var memStream = new MemoryStream())
             {
-                ProcessTextReplacing(doc, model);
+                var bytes = File.ReadAllBytes(model.DocumentTemplateFileName);
 
-                foreach(var tableModel in model.Tables)
+                memStream.Write(bytes, 0, bytes.Length);
+
+                memStream.Seek(0, SeekOrigin.Begin);
+
+                using (WordprocessingDocument doc =
+                    WordprocessingDocument.Open(memStream, true))
                 {
-                    AddTable(doc, tableModel);
+                    ProcessTextReplacing(doc, model);
+
+                    foreach (var tableModel in model.Tables)
+                    {
+                        AddTable(doc, tableModel);
+                    }
+
+                    var t = doc.SaveAs(model.DocumentSaveFileName);
+
+                    t.Dispose();
                 }
-
-                var t = doc.SaveAs(model.DocumentSaveFileName);
-
-                t.Dispose();
             }
-
-            File.Delete(templateTempFile);
         }
 
 
