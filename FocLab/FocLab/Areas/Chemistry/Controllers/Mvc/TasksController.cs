@@ -45,7 +45,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         {
             var fileName = $"Filename.docx";
 
-            var filePath = CrocoApp.Application.MapPath($"~/Docs/{fileName}");
+            var filePath = CrocoApp.Application.MapPath($"~/wwwroot/Docs/{fileName}");
 
             var t = await FocLabDocumentProcessor.RanderByTaskIdAsync(new RenderChemistryTaskDocument
             {
@@ -58,7 +58,9 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
                 throw new ApplicationException(t.Message);
             }
 
-            return File(filePath, FocLabWebApplication.GetMimeMapping(fileName));
+            var mime = FocLabWebApplication.GetMimeMapping(fileName);
+
+            return PhysicalFile(filePath, mime, fileName);
         }
 
         /// <summary>

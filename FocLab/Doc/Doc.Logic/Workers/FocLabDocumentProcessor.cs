@@ -31,7 +31,7 @@ namespace Doc.Logic.Workers
 
         private string GetDocTemplateFilePath()
         {
-            return CrocoApp.Application.MapPath("~/DocTemplates/Document.docx").Replace("/", "\\");
+            return CrocoApp.Application.MapPath("~/wwwroot/DocTemplates/Document.docx").Replace("/", "\\");
         }
 
         /// <summary>

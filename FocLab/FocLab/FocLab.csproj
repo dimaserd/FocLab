@@ -49,10 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="DocTemplates\Document.docx" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.4" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.7.4" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -70,6 +66,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\Docs\Filename.docx" />
+    <None Include="wwwroot\Docs\Test.docx" />
+    <None Include="wwwroot\DocTemplates\Document.docx" />
     <None Include="wwwroot\src\Core\AccountWorker.d.ts" />
     <None Include="wwwroot\src\Core\AccountWorker.js" />
     <None Include="wwwroot\src\Core\AccountWorker.ts" />
