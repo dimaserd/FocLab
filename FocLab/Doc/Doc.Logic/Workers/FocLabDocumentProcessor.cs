@@ -100,13 +100,13 @@ namespace Doc.Logic.Workers
             {
                 Replaces = new Dictionary<string, string>
                 {
-                    { "{Title}", model.Title },
-                    { "{PerformerQuality}", model.PerformerQuality },
-                    { "{PerformerQuantity}", model.PerformerQuantity },
-                    { "{AdminQuality}", model.AdminQuality },
-                    { "{AdminQuantity}", model.AdminQuantity },
-                    { "{PerformerName}", model.PerformerUser.Name },
-                    { "{PerformerText}", model.PerformerText },
+                    ["{Title}"] = model.Title,
+                    ["{PerformerQuality}"] = model.PerformerQuality,
+                    ["{PerformerQuantity}"] = model.PerformerQuantity,
+                    ["{AdminQuality}"] = model.AdminQuality,
+                    ["{AdminQuantity}"] = model.AdminQuantity,
+                    ["{PerformerName}"] = model.PerformerUser.Name,
+                    ["{PerformerText}"] = model.PerformerText
                 },
 
                 Tables = new List<DocumentTable>

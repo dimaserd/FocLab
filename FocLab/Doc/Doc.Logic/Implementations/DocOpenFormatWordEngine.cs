@@ -82,9 +82,6 @@ namespace Doc.Logic.Implementations
             }
         }
 
-
-        
-
         public static void OpenAndAddTextToWordDocument(string filepath, string txt)
         {
             // Open a WordprocessingDocument for editing using the filepath.
