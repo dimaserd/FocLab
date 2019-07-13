@@ -71,7 +71,7 @@ namespace Doc.Logic.Implementations
 
         public static TableRow AppendHeader(DocumentTable model)
         {
-            return CreateTableRowWithSomeStyles(model.Header, 28, true, JustificationValues.Center);
+            return CreateTableRowWithSomeStyles(model.Header, 24, true, JustificationValues.Center);
         }
 
         public static TableRow CreateTableRowWithSomeStyles(List<string> values, int fontSize, bool isBold, JustificationValues justification = JustificationValues.Left)
