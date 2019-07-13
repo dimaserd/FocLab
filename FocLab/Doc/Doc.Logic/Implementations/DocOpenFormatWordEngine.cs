@@ -1,5 +1,4 @@
-﻿using Croco.Core.Application;
-using Doc.Logic.Abstractions;
+﻿using Doc.Logic.Abstractions;
 using Doc.Logic.Entities;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -55,7 +54,8 @@ namespace Doc.Logic.Implementations
 
             if(elem == null)
             {
-                return;
+                throw new ApplicationException($"Не найден элемент с внутренним текстом '{tableModel.PlacingText}', " +
+                    $"вместо которого нужно вставить таблицу.");
             }
 
             Table table = DocTableCreator.GetTable(tableModel);
