@@ -4,7 +4,10 @@ namespace Doc.Logic.Entities
 {
     public class DocXDocumentObjectModel
     {
-        public string DocumentFileName { get; set; }
+        /// <summary>
+        /// Шаблон документа для преобразования
+        /// </summary>
+        public string DocumentTemplateFileName { get; set; }
 
         public string DocumentSaveFileName { get; set; }
 

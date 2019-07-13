@@ -8,24 +8,28 @@
   <ItemGroup>
     <Compile Remove="Areas\Chemistry\Data\**" />
     <Compile Remove="Areas\Chemistry\Models\**" />
+    <Compile Remove="wwwroot\Docs\**" />
     <Compile Remove="wwwroot\FileCopies\**" />
     <Compile Remove="wwwroot\FileCopyInfos\**" />
     <Compile Remove="Новая папка1\**" />
     <Compile Remove="Новая папка\**" />
     <Content Remove="Areas\Chemistry\Data\**" />
     <Content Remove="Areas\Chemistry\Models\**" />
+    <Content Remove="wwwroot\Docs\**" />
     <Content Remove="wwwroot\FileCopies\**" />
     <Content Remove="wwwroot\FileCopyInfos\**" />
     <Content Remove="Новая папка1\**" />
     <Content Remove="Новая папка\**" />
     <EmbeddedResource Remove="Areas\Chemistry\Data\**" />
     <EmbeddedResource Remove="Areas\Chemistry\Models\**" />
+    <EmbeddedResource Remove="wwwroot\Docs\**" />
     <EmbeddedResource Remove="wwwroot\FileCopies\**" />
     <EmbeddedResource Remove="wwwroot\FileCopyInfos\**" />
     <EmbeddedResource Remove="Новая папка1\**" />
     <EmbeddedResource Remove="Новая папка\**" />
     <None Remove="Areas\Chemistry\Data\**" />
     <None Remove="Areas\Chemistry\Models\**" />
+    <None Remove="wwwroot\Docs\**" />
     <None Remove="wwwroot\FileCopies\**" />
     <None Remove="wwwroot\FileCopyInfos\**" />
     <None Remove="Новая папка1\**" />
@@ -66,8 +70,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\Docs\Filename.docx" />
-    <None Include="wwwroot\Docs\Test.docx" />
     <None Include="wwwroot\DocTemplates\Document.docx" />
     <None Include="wwwroot\src\Core\AccountWorker.d.ts" />
     <None Include="wwwroot\src\Core\AccountWorker.js" />

@@ -9,7 +9,7 @@ namespace Doc.Logic.Implementations
     {
         public void Create(DocXDocumentObjectModel model)
         {
-            var document = DocX.Load(model.DocumentFileName);
+            var document = DocX.Load(model.DocumentTemplateFileName);
 
             foreach (var key in model.Replaces.Keys)
             {

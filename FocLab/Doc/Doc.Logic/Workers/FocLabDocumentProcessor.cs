@@ -133,7 +133,7 @@ namespace Doc.Logic.Workers
                     }
                 },
 
-                DocumentFileName = docTemplateFileName,
+                DocumentTemplateFileName = docTemplateFileName,
 
                 ToReplaceImages = file != null ? new Dictionary<string, string>
                 {
