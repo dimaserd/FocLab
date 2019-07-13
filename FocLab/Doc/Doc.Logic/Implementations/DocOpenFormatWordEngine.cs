@@ -4,6 +4,7 @@ using Doc.Logic.Entities;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,22 +22,45 @@ namespace Doc.Logic.Implementations
                 File.Delete(model.DocumentSaveFileName);
             }
 
+            var templateTempFile = $"{Path.GetDirectoryName(model.DocumentTemplateFileName)}/{Guid.NewGuid()}.docx";
+
+            File.Copy(model.DocumentTemplateFileName, templateTempFile);
+
             using (WordprocessingDocument doc =
-                    WordprocessingDocument.Open(model.DocumentTemplateFileName, true))
+                    WordprocessingDocument.Open(templateTempFile, true))
             {
                 ProcessTextReplacing(doc, model);
 
-                var tableModel = model.Tables.First();
-
-                Table table = DocTableCreator.GetTable(tableModel);
-
-                // Append the table to the document.
-                doc.MainDocumentPart.Document.Body.Append(table);
+                foreach(var tableModel in model.Tables)
+                {
+                    AddTable(doc, tableModel);
+                }
 
                 var t = doc.SaveAs(model.DocumentSaveFileName);
 
                 t.Dispose();
             }
+
+            File.Delete(templateTempFile);
+        }
+
+
+        private static void AddTable(WordprocessingDocument doc, DocumentTable tableModel)
+        {
+            var elem = doc.MainDocumentPart
+                    .Document.Body
+                    .ChildElements
+                    .FirstOrDefault(x => x.InnerText == tableModel.PlacingText);
+
+            if(elem == null)
+            {
+                return;
+            }
+
+            Table table = DocTableCreator.GetTable(tableModel);
+
+            elem.RemoveAllChildren();
+            elem.Append(table);
         }
 
         private static void ProcessTextReplacing(WordprocessingDocument doc, DocXDocumentObjectModel model)

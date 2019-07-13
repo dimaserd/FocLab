@@ -49,7 +49,11 @@ namespace Doc.Logic.Implementations
                         Val = new EnumValue<BorderValues>(BorderValues.Dashed),
                         Size = 4
                     }
-                )
+                ),
+                new TableWidth
+                {
+                    Type = new EnumValue<TableWidthUnitValues>(TableWidthUnitValues.Auto)
+                }
             );
 
             // Append the TableProperties object to the empty table.
