@@ -42,6 +42,10 @@ namespace Doc.Logic.Implementations
                         DocImageInserter.InsertAPicture(doc, image);
                     }
 
+                    var dir = Path.GetDirectoryName(model.DocumentSaveFileName);
+
+                    Directory.CreateDirectory(dir);
+
                     var t = doc.SaveAs(model.DocumentSaveFileName);
 
                     t.Dispose();
