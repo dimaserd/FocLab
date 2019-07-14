@@ -7,6 +7,9 @@ namespace Doc.Logic.Implementations
 {
     public static class DocTableCreator
     {
+
+        const int WidthForTable = 9026;
+
         public static Table GetTable(DocumentTable model)
         {
             // Use the file name and path passed in as an argument 
@@ -15,44 +18,73 @@ namespace Doc.Logic.Implementations
             // Create an empty table.
             Table table = new Table();
 
+            var borderType = new EnumValue<BorderValues>(BorderValues.Single);
+
+            var color = "bdd6ee";
+
             // Create a TableProperties object and specify its border information.
             TableProperties tblProp = new TableProperties(
                 
                 new TableBorders(
                     new TopBorder()
                     {
-                        Val = new EnumValue<BorderValues>(BorderValues.Dashed),
-                        Size = 4
+                        Val = borderType,
+                        Size = 4,
+                        Color = new StringValue
+                        {
+                            Value = color
+                        }
                     },
                     new BottomBorder
                     {
-                        Val = new EnumValue<BorderValues>(BorderValues.Dashed),
-                        Size = 4
+                        Val = borderType,
+                        Size = 4,
+                        Color = new StringValue
+                        {
+                            Value = color
+                        }
                     },
                     new LeftBorder
                     {
-                        Val = new EnumValue<BorderValues>(BorderValues.Dashed),
-                        Size = 4
+                        Val = borderType,
+                        Size = 4,
+                        Color = new StringValue
+                        {
+                            Value = color
+                        }
                     },
                     new RightBorder
                     {
-                        Val = new EnumValue<BorderValues>(BorderValues.Dashed),
-                        Size = 4
+                        Val = borderType,
+                        Size = 4,
+                        Color = new StringValue
+                        {
+                            Value = color
+                        }
                     },
                     new InsideHorizontalBorder
                     {
-                        Val = new EnumValue<BorderValues>(BorderValues.Dashed),
-                        Size = 4
+                        Val = borderType,
+                        Size = 4,
+                        Color = new StringValue
+                        {
+                            Value = color
+                        }
                     },
                     new InsideVerticalBorder
                     {
-                        Val = new EnumValue<BorderValues>(BorderValues.Dashed),
-                        Size = 4
+                        Val = borderType,
+                        Size = 4,
+                        Color = new StringValue
+                        {
+                            Value = color
+                        }
                     }
                 ),
                 new TableWidth
                 {
-                    Type = new EnumValue<TableWidthUnitValues>(TableWidthUnitValues.Auto)
+                    Type = new EnumValue<TableWidthUnitValues>(TableWidthUnitValues.Auto),
+                    
                 }
             );
 
@@ -63,7 +95,7 @@ namespace Doc.Logic.Implementations
 
             foreach (var tr in model.Data)
             {
-                table.Append(CreateTableRowWithSomeStyles(tr, 24, false));
+                table.Append(CreateTableRowWithSomeStyles(tr, 14, false));
             }
 
             return table;
@@ -71,12 +103,15 @@ namespace Doc.Logic.Implementations
 
         public static TableRow AppendHeader(DocumentTable model)
         {
-            return CreateTableRowWithSomeStyles(model.Header, 24, true, JustificationValues.Center);
+            return CreateTableRowWithSomeStyles(model.Header, 14, true, JustificationValues.Center);
         }
 
         public static TableRow CreateTableRowWithSomeStyles(List<string> values, int fontSize, bool isBold, JustificationValues justification = JustificationValues.Left)
         {
+
             TableRow tr = new TableRow();
+
+            var count = values.Count;
 
             foreach (var val in values)
             {
@@ -85,8 +120,25 @@ namespace Doc.Logic.Implementations
                 
                 var props = new TableCellProperties(new TableCellWidth()
                 {
-                    Type = TableWidthUnitValues.Auto
-                });
+                    Width = new StringValue
+                    {
+                        Value = $"{WidthForTable / count}"
+                    },
+                    Type = TableWidthUnitValues.Dxa
+                },
+                new TableCellMargin
+                (
+                    new TableCellLeftMargin
+                    {
+                        Width = 108,
+                        Type = new EnumValue<TableWidthValues>(TableWidthValues.Dxa)
+                    },
+                    new TableCellRightMargin
+                    {
+                        Width = 108,
+                        Type = new EnumValue<TableWidthValues>(TableWidthValues.Dxa)
+                    }
+                ));
                 
                 tc.Append(props);
 
@@ -120,7 +172,7 @@ namespace Doc.Logic.Implementations
             {
                 FontSize = new FontSize()
                 {
-                    Val = fontSize.ToString()
+                    Val = (fontSize * 2).ToString()
                 }
             };
 

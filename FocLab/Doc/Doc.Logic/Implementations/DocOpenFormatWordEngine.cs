@@ -37,6 +37,11 @@ namespace Doc.Logic.Implementations
                         AddTable(doc, tableModel);
                     }
 
+                    foreach(var image in model.ToReplaceImages)
+                    {
+                        DocImageInserter.InsertAPicture(doc, image);
+                    }
+
                     var t = doc.SaveAs(model.DocumentSaveFileName);
 
                     t.Dispose();
@@ -44,7 +49,7 @@ namespace Doc.Logic.Implementations
             }
         }
 
-
+        
         private static void AddTable(WordprocessingDocument doc, DocumentTable tableModel)
         {
             var elem = doc.MainDocumentPart
@@ -82,24 +87,6 @@ namespace Doc.Logic.Implementations
             }
         }
 
-        public static void OpenAndAddTextToWordDocument(string filepath, string txt)
-        {
-            // Open a WordprocessingDocument for editing using the filepath.
-            WordprocessingDocument wordprocessingDocument =
-                WordprocessingDocument.Open(filepath, true);
-
-            // Assign a reference to the existing document body.
-            Body body = wordprocessingDocument.MainDocumentPart.Document.Body;
-
-            // Add new text.
-            Paragraph para = body.AppendChild(new Paragraph());
-            Run run = para.AppendChild(new Run());
-            run.AppendChild(new Text(txt));
-
-            // Close the handle explicitly.
-            wordprocessingDocument.Close();
-        }
-
         private static List<Text> FindTextsInElement(OpenXmlElement elem)
         {
             var res = new List<Text>();
@@ -117,6 +104,5 @@ namespace Doc.Logic.Implementations
 
             return res;
         }
-        
     }
 }

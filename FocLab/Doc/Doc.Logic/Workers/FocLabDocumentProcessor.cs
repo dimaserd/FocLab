@@ -1,7 +1,7 @@
 ﻿using Croco.Core.Abstractions.ContextWrappers;
 using Croco.Core.Application;
+using Croco.Core.Common.Enumerations;
 using Croco.Core.Common.Models;
-using Croco.Core.Logic.Workers.Files;
 using Croco.Core.Utils;
 using Doc.Logic.Entities;
 using Doc.Logic.Implementations;
@@ -12,7 +12,6 @@ using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Chemistry;
 using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -94,7 +93,9 @@ namespace Doc.Logic.Workers
 
             var file = model.Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage);
 
-            var imgPath = file != null ? CrocoApp.Application.MapPath($"~/FileCopies/Images/Original/{file.FileId}.{FileCopyWorker.DefaultImgExtension}") : "";
+            var imgPath = file != null ? 
+                CrocoApp.Application.FileCopyWorker.GetResizedImageLocalPath(file.FileId, ImageSizeType.Original)
+                : "";
 
             var docModel = new DocXDocumentObjectModel
             {
@@ -135,10 +136,14 @@ namespace Doc.Logic.Workers
 
                 DocumentTemplateFileName = docTemplateFileName,
 
-                ToReplaceImages = file != null ? new Dictionary<string, string>
+                ToReplaceImages = file != null ? new List<DocxImageReplace>
                 {
-                    { "{PicturePlace}", imgPath }
-                } : new Dictionary<string, string>(),
+                    new DocxImageReplace
+                    {
+                        TextToReplace = "{PicturePlace}",
+                        ImageFilePath = imgPath,
+                    }
+                } : new List<DocxImageReplace>(),
 
                 DocumentSaveFileName = docSaveFileName,
             };
@@ -151,6 +156,7 @@ namespace Doc.Logic.Workers
             var proccessor = new WordDocumentProcessor(new WordDocumentProcessorOptions {
                 Engine = new DocOpenFormatWordEngine()
             });
+
             return proccessor.RenderDocument(docModel);
         }
     }
