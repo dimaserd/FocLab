@@ -10,15 +10,10 @@ using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
 
 namespace Doc.Logic.Implementations
 {
-    public class EmuRectangle
-    {
-        public long Height { get; set; }
-
-        public long Width { get; set; }
-    }
-
     public static class DocImageInserter
     {
+        static readonly long ImageNormalizedMaxWidth= (long)(990000L * 3.44);
+
         private static Paragraph FindParagraphToMakeReplace(WordprocessingDocument document, string textToFind)
         {
             var body = document.MainDocumentPart.Document.Body;
@@ -93,13 +88,11 @@ namespace Doc.Logic.Implementations
 
         private static EmuRectangle NormalizeToWidth(EmuRectangle rect)
         {
-            var xEmu = (long)(990000L * 3.43);
-
-            var k = (double)xEmu / rect.Width; //сколько раз старая ширина или высота содержиться в новой
+            var k = (double)ImageNormalizedMaxWidth / rect.Width; //сколько раз старая ширина или высота содержиться в новой
 
             return new EmuRectangle
             {
-                Width = xEmu,
+                Width = ImageNormalizedMaxWidth,
                 Height = (long)(k * rect.Height)
             };
         }
@@ -181,11 +174,5 @@ namespace Doc.Logic.Implementations
 
             element.AppendChild(new Run(imgElement));
         }
-
-        private static void AddImageToBody(WordprocessingDocument wordDoc, EmuRectangle rect, string relationshipId)
-        {
-            AddImageToElement(wordDoc.MainDocumentPart.Document.Body, rect, relationshipId);
-        }
-
     }
 }
