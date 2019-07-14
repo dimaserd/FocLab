@@ -18,8 +18,14 @@ namespace Doc.Logic.Implementations
             {
                 File.Delete(model.DocumentSaveFileName);
             }
+            else
+            {
+                var dir = Path.GetDirectoryName(model.DocumentSaveFileName);
 
-            using(var memStream = new MemoryStream())
+                Directory.CreateDirectory(dir);
+            }
+
+            using (var memStream = new MemoryStream())
             {
                 var bytes = File.ReadAllBytes(model.DocumentTemplateFileName);
 
@@ -41,10 +47,6 @@ namespace Doc.Logic.Implementations
                     {
                         DocImageInserter.InsertAPicture(doc, image);
                     }
-
-                    var dir = Path.GetDirectoryName(model.DocumentSaveFileName);
-
-                    Directory.CreateDirectory(dir);
 
                     var t = doc.SaveAs(model.DocumentSaveFileName);
 
