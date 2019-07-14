@@ -1,4 +1,4 @@
-﻿export class ColorAvatarInitor {
+﻿class ColorAvatarInitor {
 
     private static _avatarsStorage: { 'id': string, 'color': string }[] = [];
 
@@ -17,7 +17,7 @@
         "#6c757d"
     ];
 
-    public static InitColorForAvatar = function (task: any): string {
+    public static InitColorForAvatar = function (task: DayTaskModel): string {
         /*Проверяю есть ли аватар у клиента*/
         if (task.AssigneeUser.AvatarFileId === null) {
             let idFound: boolean = false;

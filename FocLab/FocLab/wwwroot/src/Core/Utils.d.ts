@@ -32,6 +32,6 @@ declare class Utils {
     static SetDatePicker: (selector: string, startDate?: string) => void;
     static SetDateRangePicker: (selector: string) => void;
     static GetDateFromDateRangePicker: (inputId: string) => object;
-    static GetDateFromDatePicker: (inputId: string) => object;
+    static GetDateFromDatePicker: (inputId: string) => string;
     static FillSelect: (select: HTMLElement, array: string[], htmlFunc: Function, valueFunc: Function) => void;
 }

@@ -1,7 +1,4 @@
-﻿import { ColorAvatarInitor } from "ColorAvatarInitor"
-declare var $: any;
-
-class TaskModalWorker {
+﻿class TaskModalWorker {
 
     public static InitTask = function (task: any, accountId: string) {
 

@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />
+    <Content Remove="wwwroot\src\Core\EditableComponents.ts" />
     <Content Remove="wwwroot\src\FocLab\DefaultHandlers.ts" />
     <Content Remove="wwwroot\src\FocLab\EventSetter.ts" />
     <Content Remove="wwwroot\src\FocLab\Experiments\CreateExperimentHandlers.ts" />
@@ -50,6 +51,12 @@
     <Content Remove="wwwroot\src\FocLab\TaskDrawer.ts" />
     <Content Remove="wwwroot\src\FocLab\TaskReagentWorker.ts" />
     <Content Remove="wwwroot\src\System\Funcs\Action.ts" />
+    <Content Remove="wwwroot\src\Tms\AdminDayTaskCreator.ts" />
+    <Content Remove="wwwroot\src\Tms\DayTaskDrawer.ts" />
+    <Content Remove="wwwroot\src\Tms\DayTaskEditor.ts" />
+    <Content Remove="wwwroot\src\Tms\DayTasksWorker.ts" />
+    <Content Remove="wwwroot\src\Tms\Models.ts" />
+    <Content Remove="wwwroot\src\Tms\ScheduleStaticHandlers.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -65,6 +72,7 @@
 
   <ItemGroup>
     <Folder Include="Implementations\" />
+    <Folder Include="wwwroot\Applications\Tasker\js\" />
     <Folder Include="wwwroot\src\FocLab\Models\" />
     <Folder Include="wwwroot\src\Garbage\" />
   </ItemGroup>
@@ -111,6 +119,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />
+    <TypeScriptCompile Include="wwwroot\src\Core\EditableComponents.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\DefaultHandlers.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\EventSetter.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Experiments\CreateExperimentHandlers.ts" />
@@ -123,6 +132,12 @@
     <TypeScriptCompile Include="wwwroot\src\FocLab\Task\TaskDrawer.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Task\TaskReagentWorker.ts" />
     <TypeScriptCompile Include="wwwroot\src\System\Funcs\Action.ts" />
+    <TypeScriptCompile Include="wwwroot\src\Tms\AdminDayTaskCreator.ts" />
+    <TypeScriptCompile Include="wwwroot\src\Tms\DayTaskDrawer.ts" />
+    <TypeScriptCompile Include="wwwroot\src\Tms\DayTaskEditor.ts" />
+    <TypeScriptCompile Include="wwwroot\src\Tms\DayTasksWorker.ts" />
+    <TypeScriptCompile Include="wwwroot\src\Tms\Models.ts" />
+    <TypeScriptCompile Include="wwwroot\src\Tms\ScheduleStaticHandlers.ts" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

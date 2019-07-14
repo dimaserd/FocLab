@@ -90,12 +90,12 @@ class Utils {
         }
     };
 
-    public static GetDateFromDatePicker = function (inputId: string): object {
+    public static GetDateFromDatePicker = function (inputId: string): string {
         let inputDate: any = document.getElementById(inputId);
 
         if (inputDate === []) {
             alert(`Элемент с идентификатором ${inputId} не найден на странице проверьте код`);
-            return;
+            return null;
         }
         var date = inputDate.value.replace(/ /g, "");
         if (date != "") {
@@ -106,7 +106,7 @@ class Utils {
 
             return (date);
         } else {
-            return;
+            return null;
         }
     }
 
