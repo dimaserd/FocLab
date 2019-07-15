@@ -113,7 +113,7 @@ class EditableComponents {
         //Получаю инпут
         const input = document.querySelectorAll(`[data-editable-input="${elementId}"]`)[0] as HTMLInputElement;
 
-        const record = EditableComponents.Editables.find(x => x.ElementId === elementId);
+        const record = EditableComponents.Editables.filter(x => x.ElementId === elementId)[0];
 
         const newValue = input.value;
 

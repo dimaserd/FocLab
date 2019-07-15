@@ -143,57 +143,15 @@
 @await Html.PartialAsync("~/Views/Schedule/Partials/Modals.cshtml")
 
 @section Scripts{ 
-    <script>
-        function formatStateSelection(state) {
-
-            if (!state.id) {
-                return state.text;
-            }
-
-            var img = "";
-
-            if (state.avatarId) {
-                const baseUrl = `/FileCopies/Images/Icon/${state.avatarId}.jpg`;
-                img = `<img src="${baseUrl}" class="img-max-50" />`;
-            }
-
-
-            const $state = $(
-                `<span>${img} ${state.text}<span>&nbsp;</span></span>`
-            );
-            return $state;
-        };
-
-        function formatStateResult(state) {
-            if (!state.id) {
-                return state.text;
-            }
-
-            var img = "";
-
-            if (state.avatarId) {
-                const baseUrl = `/FileCopies/Images/Icon/${state.avatarId}.jpg`;
-                img = `<img src="${baseUrl}" class="img-max-50" />`;
-            }
-
-
-            const $state = $(
-                `<span>${img} ${state.text}<span>&nbsp;</span></span>`
-            );
-            return $state;
-        };
-    </script>
+    <script src="~/js/Tms.min.js"></script>
 
     <script>
 
         var filter = @Html.GetJson(searchModel);
 
-        var scheduleWorker = new ScheduleWorker(filter);
+        ScheduleWorker.Constructor(filter);
     </script>
 
-    <script>
-        
-    </script>
 
 <script>
     var searchModel = @Html.GetJson(searchModel);
@@ -208,7 +166,7 @@
     };
 
 
-    var dayTasksWorker = new DayTasksWorker(props);
+    DayTasksWorker.Constructor(props);
 
     props = { AssigneeUserId: null };
 
@@ -234,10 +192,10 @@
 
     document.addEventListener("DOMContentLoaded", function () {
 
-        dayTasksWorker.GetTasks();
+        DayTasksWorker.GetTasks();
 
-        $("#usersSelect").select2().on("change", () => { ShowUserSchedule(); });
-        $("#usersSelect1").select2().on("change", () => { updateDayTask(); });
+        //$("#usersSelect").select2().on("change", () => { ScheduleStaticHandlers.ShowUserSchedule(); });
+        //$("#usersSelect1").select2().on("change", () => { ScheduleStaticHandlers.updateDayTask(); });
     });
 
     var model = @Html.GetJson(Model);

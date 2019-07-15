@@ -57,6 +57,7 @@
     <Content Remove="wwwroot\src\Tms\DayTasksWorker.ts" />
     <Content Remove="wwwroot\src\Tms\Models.ts" />
     <Content Remove="wwwroot\src\Tms\ScheduleStaticHandlers.ts" />
+    <Content Remove="wwwroot\src\Tms\ScheduleWorker.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -138,6 +139,7 @@
     <TypeScriptCompile Include="wwwroot\src\Tms\DayTasksWorker.ts" />
     <TypeScriptCompile Include="wwwroot\src\Tms\Models.ts" />
     <TypeScriptCompile Include="wwwroot\src\Tms\ScheduleStaticHandlers.ts" />
+    <TypeScriptCompile Include="wwwroot\src\Tms\ScheduleWorker.ts" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

@@ -1,6 +1,13 @@
 var ScheduleStaticHandlers = /** @class */ (function () {
     function ScheduleStaticHandlers() {
     }
+    ScheduleStaticHandlers.SetHandlers = function () {
+        EventSetter.SetHandlerForClass("tms-btn-create-task", "click", function () { return ScheduleStaticHandlers.ShowCreateTaskModal(); });
+        EventSetter.SetHandlerForClass("tms-show-task-modal", "click", function (x) {
+            var taskId = $(x.target).data("task-id");
+            ScheduleStaticHandlers.ShowDayTaskModal(taskId);
+        });
+    };
     ScheduleStaticHandlers.ShowUserSchedule = function () {
         var data = {
             UserIds: []
@@ -20,6 +27,16 @@ var ScheduleStaticHandlers = /** @class */ (function () {
             ScheduleStaticHandlers.updateDayTask();
         });
         ModalWorker.ShowModal("dayTaskModal");
+    };
+    ScheduleStaticHandlers.ShowCreateTaskModal = function () {
+        var data = {
+            TaskDate: "",
+            TaskText: "",
+            TaskTitle: ""
+        };
+        FormDataHelper.FillDataByPrefix(data, "create.");
+        Utils.SetDatePicker("input[name='create.TaskDate']", '0');
+        ModalWorker.ShowModal("createDayTaskModal");
     };
     ScheduleStaticHandlers.updateComment = function (commentId) {
         var data = {
@@ -98,18 +115,9 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         $("#createDayTaskModal").modal("hide");
         DayTasksWorker.GetTasks();
     };
-    ScheduleStaticHandlers.ShowCreateTaskModal = function () {
-        var data = {
-            TaskDate: "",
-            TaskText: "",
-            TaskTitle: ""
-        };
-        FormDataHelper.FillDataByPrefix(data, "create.");
-        Utils.SetDatePicker("input[name='create.TaskDate']", '0');
-        ModalWorker.ShowModal("createDayTaskModal");
-    };
     ScheduleStaticHandlers.redirectToProfile = function (profileId) {
         window.open(window.location.origin + "/Client/Details/" + profileId, '_blank');
     };
     return ScheduleStaticHandlers;
 }());
+ScheduleStaticHandlers.SetHandlers();

@@ -82,4 +82,14 @@
     }
   },
 
+  {
+    "outputFileName": "wwwroot/js/Tms.js",
+    "inputFiles": [
+      "wwwroot/src/Tms/*.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  }
 ]

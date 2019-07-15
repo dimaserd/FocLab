@@ -9,7 +9,7 @@
 
 class DayTasksWorker {
 
-    static Tasks: Array<DayTaskModel>;
+    static Tasks: DayTaskModel[];
     static IsAdmin: boolean;
     static User: any;
     static SearchModel: any;
@@ -40,7 +40,7 @@ class DayTasksWorker {
 
         var taskId = this.OpenTaskId;
 
-        const task = this.Tasks.find(x => x.Id === taskId);
+        const task = DayTasksWorker.Tasks.filter(x => x.Id === taskId)[0];
 
         if (task != null) {
             //открываю модал по заданию полученному из ссылки
@@ -51,26 +51,26 @@ class DayTasksWorker {
     static SetCurrentTaskId(taskId: string) {
         this.CurrentTaskId = taskId;
 
-        this.CurrentTask = this.Tasks.find(x => x.Id === taskId);
+        this.CurrentTask = DayTasksWorker.Tasks.find(x => x.Id === taskId);
     }
 
     static SendNotificationToAdmin() {
 
         ModalWorker.ShowModal("loadingModal");
 
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: this.CurrentTaskId }, x => alert(x), null);
+        Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: DayTasksWorker.CurrentTaskId }, x => alert(x), null);
     }
 
     static GetTasks(): void {
 
         Requester.SendAjaxPost("/Api/DayTask/GetTasks", this.SearchModel, x => {
             this.Tasks = x as Array<DayTaskModel>;
-            this.Drawer.DrawTasks(this.Tasks, true);
+            this.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
             this.OpenTaskById();
         }, null, false);
     }
 
     static GetTaskById(taskId: string): DayTaskModel {
-        return this.Tasks.find(x => x.Id === taskId);
+        return DayTasksWorker.Tasks.find(x => x.Id === taskId);
     }
 }

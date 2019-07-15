@@ -158,7 +158,7 @@ var EditableComponents = /** @class */ (function () {
     EditableComponents.CheckValueChanged = function (elementId) {
         //Получаю инпут
         var input = document.querySelectorAll("[data-editable-input=\"" + elementId + "\"]")[0];
-        var record = EditableComponents.Editables.find(function (x) { return x.ElementId === elementId; });
+        var record = EditableComponents.Editables.filter(function (x) { return x.ElementId === elementId; })[0];
         var newValue = input.value;
         //значит значение изменилось
         if (record.Value !== newValue) {

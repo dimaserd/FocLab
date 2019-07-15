@@ -7,7 +7,7 @@ interface DayTasksWorkerProps {
     MyUserId: string;
 }
 declare class DayTasksWorker {
-    static Tasks: Array<DayTaskModel>;
+    static Tasks: DayTaskModel[];
     static IsAdmin: boolean;
     static User: any;
     static SearchModel: any;

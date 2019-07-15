@@ -23,9 +23,10 @@ interface CreateDayTask {
     TaskDate: string;
 }
 declare class ScheduleStaticHandlers {
+    static SetHandlers(): void;
     static ShowUserSchedule(): void;
     static ShowDayTaskModal(taskId: string): void;
-    static ShowCreateTaskModal: () => void;
+    static ShowCreateTaskModal(): void;
     static updateComment(commentId: string): void;
     static addComment(): void;
     static updateDayTask(): void;

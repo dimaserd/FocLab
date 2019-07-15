@@ -14,7 +14,7 @@ var DayTasksWorker = /** @class */ (function () {
     };
     DayTasksWorker.OpenTaskById = function () {
         var taskId = this.OpenTaskId;
-        var task = this.Tasks.find(function (x) { return x.Id === taskId; });
+        var task = DayTasksWorker.Tasks.filter(function (x) { return x.Id === taskId; })[0];
         if (task != null) {
             //открываю модал по заданию полученному из ссылки
             ScheduleStaticHandlers.ShowDayTaskModal(task.Id);
@@ -22,22 +22,22 @@ var DayTasksWorker = /** @class */ (function () {
     };
     DayTasksWorker.SetCurrentTaskId = function (taskId) {
         this.CurrentTaskId = taskId;
-        this.CurrentTask = this.Tasks.find(function (x) { return x.Id === taskId; });
+        this.CurrentTask = DayTasksWorker.Tasks.find(function (x) { return x.Id === taskId; });
     };
     DayTasksWorker.SendNotificationToAdmin = function () {
         ModalWorker.ShowModal("loadingModal");
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: this.CurrentTaskId }, function (x) { return alert(x); }, null);
+        Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: DayTasksWorker.CurrentTaskId }, function (x) { return alert(x); }, null);
     };
     DayTasksWorker.GetTasks = function () {
         var _this = this;
         Requester.SendAjaxPost("/Api/DayTask/GetTasks", this.SearchModel, function (x) {
             _this.Tasks = x;
-            _this.Drawer.DrawTasks(_this.Tasks, true);
+            _this.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
             _this.OpenTaskById();
         }, null, false);
     };
     DayTasksWorker.GetTaskById = function (taskId) {
-        return this.Tasks.find(function (x) { return x.Id === taskId; });
+        return DayTasksWorker.Tasks.find(function (x) { return x.Id === taskId; });
     };
     return DayTasksWorker;
 }());

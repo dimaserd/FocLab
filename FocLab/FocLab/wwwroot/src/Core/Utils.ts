@@ -1,4 +1,5 @@
 ﻿interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
+    select2(arg0: { placeholder: string; language: { "noResults": () => string; }; data: any; templateSelection: any; templateResult: any; escapeMarkup: (markup: any) => any; });
     daterangepicker(arg0: { autoUpdateInput: boolean; locale: { cancelLabel: string; applyLabel: string; daysOfWeek: string[]; monthNames: string[]; firstDay: number; }; });
 }
 interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {

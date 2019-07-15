@@ -28,6 +28,16 @@ interface CreateDayTask {
 }
 
 class ScheduleStaticHandlers {
+
+    static SetHandlers(): void {
+        EventSetter.SetHandlerForClass("tms-btn-create-task", "click", () => ScheduleStaticHandlers.ShowCreateTaskModal());
+        EventSetter.SetHandlerForClass("tms-show-task-modal", "click", x =>
+        {
+            var taskId = $(x.target).data("task-id") as string;
+            ScheduleStaticHandlers.ShowDayTaskModal(taskId);
+        })
+    }
+
     static ShowUserSchedule() {
         var data = {
             UserIds: []
@@ -62,7 +72,7 @@ class ScheduleStaticHandlers {
         ModalWorker.ShowModal("dayTaskModal");
     }
 
-    static ShowCreateTaskModal = () => {
+    static ShowCreateTaskModal() {
         var data = {
             TaskDate: "",
             TaskText: "",
@@ -179,3 +189,5 @@ class ScheduleStaticHandlers {
         window.open(`${window.location.origin}/Client/Details/${profileId}`, '_blank');
     }
 }
+
+ScheduleStaticHandlers.SetHandlers();
