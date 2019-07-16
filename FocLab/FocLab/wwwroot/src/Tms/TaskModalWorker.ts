@@ -1,8 +1,8 @@
 ﻿class TaskModalWorker {
 
-    public static InitTask = function (task: any, accountId: string) {
+    public static InitTask = function (task: DayTaskModel, accountId: string) {
 
-        task.TaskDate = task.TaskDate.split('T')[0].split('-').reverse().join('/');
+        task.TaskDate = new Date(task.TaskDate.toString().split('T')[0].split('-').reverse().join('/'));
 
         TaskModalWorker.ClearContent();
 
@@ -10,8 +10,8 @@
 
         let avatar: string = ColorAvatarInitor.InitColorForAvatar(task);
 
-        document.getElementById("Author").innerHTML = `<a class="media-left" onClick="redirectToProfile('${task.Author.Id}')">${avatar}</a>
-                <a onClick="redirectToProfile('${task.Author.Id}')" class="text-semibold media-heading box-inline ml-1 mb-1">
+        document.getElementById("Author").innerHTML = `<a class="media-left tms-profile-link" href="#" data-task-author-id="${task.Author.Id}">${avatar}</a>
+                <a  href="#" data-task-author-id="${task.Author.Id}" class="tms-profile-link text-semibold media-heading box-inline ml-1 mb-1">
                     ${task.Author.Name} ${task.Author.Email}
                 </a>`;
 
@@ -25,7 +25,7 @@
         });
     }
 
-    public static DrawComments = function (divId: string, userId: string, task: any) {
+    public static DrawComments = function (divId: string, userId: string, task: DayTaskModel) {
         TaskModalWorker.ClearContent();
 
         let avatar: string = ColorAvatarInitor.InitColorForAvatar(task);
@@ -37,10 +37,10 @@
             <div class="media-body">
                 <div class="form-group m-form__group row m--margin-top-10 d-flex justify-content-between align-items-center">
                         <div class="btn">
-                            <a class="btn-link btn cursor-pointer" onClick="redirectToProfile('${task.Author.Id}')">
+                            <a href="#" class="btn-link btn cursor-pointer tms-profile-link" data-task-author-id="${task.Author.Id}">
                                 ${avatar}
                             </a>
-                            <a onClick="redirectToProfile('${task.Author.Id}')" class="text-semibold">
+                            <a href="#" data-task-author-id="${task.Author.Id}" class="text-semibold tms-profile-link">
                                 ${task.Comments[comment].Author.Name}
                             </a>
                         </div>`;

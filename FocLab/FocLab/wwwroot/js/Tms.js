@@ -183,11 +183,30 @@ var ScheduleStaticHandlers = /** @class */ (function () {
     function ScheduleStaticHandlers() {
     }
     ScheduleStaticHandlers.SetHandlers = function () {
+        EventSetter.SetHandlerForClass("tms-next-month-btn", "click", function () { return ScheduleStaticHandlers.ApplyFilter(true); });
+        EventSetter.SetHandlerForClass("tms-prev-month-btn", "click", function () { return ScheduleStaticHandlers.ApplyFilter(false); });
+        EventSetter.SetHandlerForClass("tms-add-comment-btn", "click", function () { return ScheduleStaticHandlers.addComment(); });
+        EventSetter.SetHandlerForClass("tms-profile-link", "click", function (x) {
+            var authorId = x.target.getAttribute("data-task-author-id");
+            ScheduleStaticHandlers.redirectToProfile(authorId);
+        });
+        EventSetter.SetHandlerForClass("tms-create-task-btn", "click", function () { return ScheduleStaticHandlers.createDayTask(); });
         EventSetter.SetHandlerForClass("tms-btn-create-task", "click", function () { return ScheduleStaticHandlers.ShowCreateTaskModal(); });
         EventSetter.SetHandlerForClass("tms-show-task-modal", "click", function (x) {
             var taskId = $(x.target).data("task-id");
             ScheduleStaticHandlers.ShowDayTaskModal(taskId);
         });
+    };
+    ScheduleStaticHandlers.GetQueryParams = function (isNextMonth) {
+        var data = {
+            UserIds: []
+        };
+        var dataFilter = FormDataHelper.CollectDataByPrefix(data, "filter.");
+        dataFilter.MonthShift = isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1;
+        return Requester.GetParams(data);
+    };
+    ScheduleStaticHandlers.ApplyFilter = function (isNextMonth) {
+        location.href = "/Schedule/Index?" + ScheduleStaticHandlers.GetQueryParams(isNextMonth);
     };
     ScheduleStaticHandlers.ShowUserSchedule = function () {
         var data = {
@@ -373,11 +392,11 @@ var TaskModalWorker = /** @class */ (function () {
     function TaskModalWorker() {
     }
     TaskModalWorker.InitTask = function (task, accountId) {
-        task.TaskDate = task.TaskDate.split('T')[0].split('-').reverse().join('/');
+        task.TaskDate = new Date(task.TaskDate.toString().split('T')[0].split('-').reverse().join('/'));
         TaskModalWorker.ClearContent();
         document.getElementById("dayTaskModalTitle").innerHTML = task.TaskTitle;
         var avatar = ColorAvatarInitor.InitColorForAvatar(task);
-        document.getElementById("Author").innerHTML = "<a class=\"media-left\" onClick=\"redirectToProfile('" + task.Author.Id + "')\">" + avatar + "</a>\n                <a onClick=\"redirectToProfile('" + task.Author.Id + "')\" class=\"text-semibold media-heading box-inline ml-1 mb-1\">\n                    " + task.Author.Name + " " + task.Author.Email + "\n                </a>";
+        document.getElementById("Author").innerHTML = "<a class=\"media-left tms-profile-link\" href=\"#\" data-task-author-id=\"" + task.Author.Id + "\">" + avatar + "</a>\n                <a  href=\"#\" data-task-author-id=\"" + task.Author.Id + "\" class=\"tms-profile-link text-semibold media-heading box-inline ml-1 mb-1\">\n                    " + task.Author.Name + " " + task.Author.Email + "\n                </a>";
         document.getElementsByName('DayTaskId')[0].value = task.Id;
         $("#usersSelect1").val(task.AssigneeUser.Id).trigger('change.select2');
         TaskModalWorker.DrawComments("Comments", accountId, task);
@@ -390,7 +409,7 @@ var TaskModalWorker = /** @class */ (function () {
         var avatar = ColorAvatarInitor.InitColorForAvatar(task);
         var html = "";
         for (var comment in task.Comments) {
-            html += "\n          <div class=\"media-block\">\n            <div class=\"media-body\">\n                <div class=\"form-group m-form__group row m--margin-top-10 d-flex justify-content-between align-items-center\">\n                        <div class=\"btn\">\n                            <a class=\"btn-link btn cursor-pointer\" onClick=\"redirectToProfile('" + task.Author.Id + "')\">\n                                " + avatar + "\n                            </a>\n                            <a onClick=\"redirectToProfile('" + task.Author.Id + "')\" class=\"text-semibold\">\n                                " + task.Comments[comment].Author.Name + "\n                            </a>\n                        </div>";
+            html += "\n          <div class=\"media-block\">\n            <div class=\"media-body\">\n                <div class=\"form-group m-form__group row m--margin-top-10 d-flex justify-content-between align-items-center\">\n                        <div class=\"btn\">\n                            <a href=\"#\" class=\"btn-link btn cursor-pointer tms-profile-link\" data-task-author-id=\"" + task.Author.Id + "\">\n                                " + avatar + "\n                            </a>\n                            <a href=\"#\" data-task-author-id=\"" + task.Author.Id + "\" class=\"text-semibold tms-profile-link\">\n                                " + task.Comments[comment].Author.Name + "\n                            </a>\n                        </div>";
             if (task.Comments[comment].Author.Id == userId) {
                 html += "<div class=\"btn\">\n                                    <button style='height:30px; width:30px' data-editable-name=\"btnEditComment\" data-id=\"" + task.Comments[comment].Id + "\"\n                                    class=\"float-right bg-white border-0\" onclick=\"TaskModalWorker.MakeCommentFieldEditable('" + task.Comments[comment].Id + "')\">\n                                        <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i>\n                                    </button>\n                            </div>\n                        </div>";
             }

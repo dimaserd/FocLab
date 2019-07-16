@@ -22,8 +22,16 @@ interface CreateDayTask {
     AssigneeUserId: string;
     TaskDate: string;
 }
+interface UserScheduleSearchModel {
+    MonthShift: number;
+    UserIds: Array<string>;
+    ShowTasksWithNoAssignee: boolean;
+}
 declare class ScheduleStaticHandlers {
+    static Filter: UserScheduleSearchModel;
     static SetHandlers(): void;
+    static GetQueryParams(isNextMonth: boolean): string;
+    static ApplyFilter(isNextMonth: any): void;
     static ShowUserSchedule(): void;
     static ShowDayTaskModal(taskId: string): void;
     static ShowCreateTaskModal(): void;
@@ -32,5 +40,5 @@ declare class ScheduleStaticHandlers {
     static updateDayTask(): void;
     static createDayTask(): void;
     static hideCreateModal(): void;
-    static redirectToProfile: (profileId: string) => void;
+    static redirectToProfile(profileId: string): void;
 }

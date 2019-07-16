@@ -64,14 +64,14 @@
                             <div class="btn d-flex align-items-center" id="Author"></div>
                         </div>
                     </div>
-                    <div class="form-group m-form__group col-md-10">
+                    <div class="form-group m-form__group col-md-12">
                         <h4>Комментарии</h4>
                         <div class="panel">
                             <div class="panel-body">
                                 <input name="DayTaskId" hidden />
                                 <textarea class="form-control" name="Comment" rows="2" placeholder="Добавьте Ваш комментарий"></textarea>
                                 <div class="mt-2 clearfix">
-                                    <button class="btn btn-sm btn-primary pull-right" type="submit" onclick="addComment()">Добавить</button>
+                                    <button class="btn btn-sm btn-primary pull-right tms-add-comment-btn" type="submit">Добавить</button>
                                 </div>
                             </div>
                         </div>
@@ -135,7 +135,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button id="pickpointBtn" type="button" class="btn btn-primary" onclick="createDayTask()">Создать</button>
+                <button type="button" class="btn btn-primary tms-create-task-btn">Создать</button>
             </div>
         </div>
     </div>

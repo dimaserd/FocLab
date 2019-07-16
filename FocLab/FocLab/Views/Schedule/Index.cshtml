@@ -35,13 +35,13 @@
         <hr />
         
         <h4 class="display-4 mb-4 text-center">
-            <span class="btn btn-success float-left" onclick="ApplyFilter(false)">
+            <span class="btn btn-success float-left tms-prev-month-btn">
                 <i class="fas fa-angle-left"></i>
             </span>
 
             @Model.TodayDate.ToString("MMMM") @Model.TodayDate.Year
 
-            <span class="btn btn-success float-right" onclick="ApplyFilter(true)">
+            <span class="btn btn-success float-right tms-next-month-btn">
                 <i class="fas fa-angle-right"></i>
             </span>
 
@@ -167,6 +167,7 @@
 
 
     DayTasksWorker.Constructor(props);
+    ScheduleStaticHandlers.Filter = searchModel;
 
     props = { AssigneeUserId: null };
 
@@ -174,21 +175,7 @@
 
     var dayTaskEditor = new DayTaskEditor();
 
-    function GetQueryParams(isNextMonth) {
-        var data = {
-            UserIds: []
-        };
-
-        data = FormDataHelper.CollectDataByPrefix(data, "filter.");
-        data.MonthShift = isNextMonth ? filter.MonthShift + 1 : filter.MonthShift - 1;
-
-        return Requester.GetParams(data);
-    }
-
-    function ApplyFilter(isNextMonth) {
-
-        location.href = `/Schedule/Index?${GetQueryParams(isNextMonth)}`;
-    }
+    
 
     document.addEventListener("DOMContentLoaded", function () {
 

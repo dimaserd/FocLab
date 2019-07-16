@@ -2,11 +2,30 @@ var ScheduleStaticHandlers = /** @class */ (function () {
     function ScheduleStaticHandlers() {
     }
     ScheduleStaticHandlers.SetHandlers = function () {
+        EventSetter.SetHandlerForClass("tms-next-month-btn", "click", function () { return ScheduleStaticHandlers.ApplyFilter(true); });
+        EventSetter.SetHandlerForClass("tms-prev-month-btn", "click", function () { return ScheduleStaticHandlers.ApplyFilter(false); });
+        EventSetter.SetHandlerForClass("tms-add-comment-btn", "click", function () { return ScheduleStaticHandlers.addComment(); });
+        EventSetter.SetHandlerForClass("tms-profile-link", "click", function (x) {
+            var authorId = x.target.getAttribute("data-task-author-id");
+            ScheduleStaticHandlers.redirectToProfile(authorId);
+        });
+        EventSetter.SetHandlerForClass("tms-create-task-btn", "click", function () { return ScheduleStaticHandlers.createDayTask(); });
         EventSetter.SetHandlerForClass("tms-btn-create-task", "click", function () { return ScheduleStaticHandlers.ShowCreateTaskModal(); });
         EventSetter.SetHandlerForClass("tms-show-task-modal", "click", function (x) {
             var taskId = $(x.target).data("task-id");
             ScheduleStaticHandlers.ShowDayTaskModal(taskId);
         });
+    };
+    ScheduleStaticHandlers.GetQueryParams = function (isNextMonth) {
+        var data = {
+            UserIds: []
+        };
+        var dataFilter = FormDataHelper.CollectDataByPrefix(data, "filter.");
+        dataFilter.MonthShift = isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1;
+        return Requester.GetParams(data);
+    };
+    ScheduleStaticHandlers.ApplyFilter = function (isNextMonth) {
+        location.href = "/Schedule/Index?" + ScheduleStaticHandlers.GetQueryParams(isNextMonth);
     };
     ScheduleStaticHandlers.ShowUserSchedule = function () {
         var data = {

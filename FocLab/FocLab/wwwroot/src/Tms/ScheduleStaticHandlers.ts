@@ -27,15 +27,53 @@ interface CreateDayTask {
     TaskDate: string;
 }
 
+interface UserScheduleSearchModel {
+
+    MonthShift: number;
+
+    UserIds: Array<string>;
+
+    ShowTasksWithNoAssignee: boolean;
+}
+
 class ScheduleStaticHandlers {
 
+    static Filter: UserScheduleSearchModel;
+
     static SetHandlers(): void {
+        EventSetter.SetHandlerForClass("tms-next-month-btn", "click", () => ScheduleStaticHandlers.ApplyFilter(true));
+        EventSetter.SetHandlerForClass("tms-prev-month-btn", "click", () => ScheduleStaticHandlers.ApplyFilter(false));
+        EventSetter.SetHandlerForClass("tms-add-comment-btn", "click", () => ScheduleStaticHandlers.addComment());
+        EventSetter.SetHandlerForClass("tms-profile-link", "click", x => {
+            var authorId = (x.target as Element).getAttribute("data-task-author-id");
+
+            ScheduleStaticHandlers.redirectToProfile(authorId);
+        });
+
+        EventSetter.SetHandlerForClass("tms-create-task-btn", "click", () => ScheduleStaticHandlers.createDayTask());
         EventSetter.SetHandlerForClass("tms-btn-create-task", "click", () => ScheduleStaticHandlers.ShowCreateTaskModal());
         EventSetter.SetHandlerForClass("tms-show-task-modal", "click", x =>
         {
             var taskId = $(x.target).data("task-id") as string;
             ScheduleStaticHandlers.ShowDayTaskModal(taskId);
         })
+    }
+
+
+    static GetQueryParams(isNextMonth: boolean) : string {
+        var data = {
+            UserIds: []
+        };
+
+        var dataFilter = FormDataHelper.CollectDataByPrefix(data, "filter.") as UserScheduleSearchModel;
+        dataFilter.MonthShift = isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1;
+
+        return Requester.GetParams(data);
+    }
+
+    static ApplyFilter(isNextMonth) {
+
+        location.href = `/Schedule/Index?${ScheduleStaticHandlers.GetQueryParams(isNextMonth)}`;
     }
 
     static ShowUserSchedule() {
@@ -185,7 +223,7 @@ class ScheduleStaticHandlers {
         DayTasksWorker.GetTasks();
     }
 
-    static redirectToProfile = (profileId : string) => {
+    static redirectToProfile(profileId : string) {
         window.open(`${window.location.origin}/Client/Details/${profileId}`, '_blank');
     }
 }
