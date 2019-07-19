@@ -151,37 +151,21 @@
 @section Scripts{ 
     <script src="~/js/Tms.min.js"></script>
 
-    <script>
-
-        var filter = @Html.GetJson(searchModel);
-
-        ScheduleWorker.Constructor(filter);
-    </script>
-
-
 <script>
-    var searchModel = @Html.GetJson(searchModel);
 
+    var filter = @Html.GetJson(searchModel);
+
+    ScheduleWorker.Constructor(filter);
+    
     var props = {
         Tasks: null,
-        IsAdmin: @isAdmin.ToString().ToLower(),
         User: null,
-        SearchModel: searchModel,
-        OpenTaskId: searchModel.DayTaskId,
-        MyUserId: "@User.Identity.GetUserId()"
+        SearchModel: filter
     };
 
 
     DayTasksWorker.Constructor(props);
-    ScheduleStaticHandlers.Filter = searchModel;
-
-    props = { AssigneeUserId: null };
-
-    var adminDayTaskCreator = new AdminDayTaskCreator(props);
-
-    var dayTaskEditor = new DayTaskEditor();
-
-    
+    ScheduleStaticHandlers.Filter = filter;
 
     document.addEventListener("DOMContentLoaded", function () {
 
@@ -191,7 +175,6 @@
         //$("#usersSelect1").select2().on("change", () => { ScheduleStaticHandlers.updateDayTask(); });
     });
 
-    var model = @Html.GetJson(Model);
 </script>
 
 }

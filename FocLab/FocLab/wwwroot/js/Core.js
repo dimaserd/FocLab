@@ -418,14 +418,12 @@ var Requester = /** @class */ (function () {
             contentType: false,
             processData: false,
             success: function (response) {
-                console.log(response);
                 Requester.DeleteCompletedRequest(link);
                 if (onSuccessFunc) {
                     onSuccessFunc(response);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR, textStatus, errorThrown);
                 //Логгирую ошибку
                 Logger.LogException(textStatus, link);
                 Requester.DeleteCompletedRequest(link);
@@ -510,7 +508,6 @@ var Requester = /** @class */ (function () {
         }
         Requester.GoingRequests.push(link);
         $.ajax(params);
-        console.log("POST \u0437\u0430\u043F\u0440\u043E\u0441 " + link, data);
     };
     Requester.GoingRequests = new Array();
     Requester.DeleteCompletedRequest = function (link) {

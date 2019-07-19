@@ -26,14 +26,10 @@ class DayTaskDrawer {
     AddTaskToDate(task: DayTaskModel) {
         const dateTrailed = moment(task.TaskDate).format("DD.MM.YYYY");
 
-        console.log(dateTrailed);
-
         const elem = document.querySelector(`[data-date='${dateTrailed}']`);
 
 
         $(elem).children(".no-tasks-text").hide();
-
-        console.log(elem, task);
 
         const toAdd = document.createElement("div");
 

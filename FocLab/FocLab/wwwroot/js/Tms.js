@@ -194,7 +194,10 @@ var ScheduleStaticHandlers = /** @class */ (function () {
             var authorId = x.target.getAttribute("data-task-author-id");
             ScheduleStaticHandlers.redirectToProfile(authorId);
         });
-        EventSetter.SetHandlerForClass("tms-update-task-btn", "click", function () { return ScheduleStaticHandlers.updateDayTask(); });
+        EventSetter.SetHandlerForClass("tms-update-task-btn", "click", function () {
+            ScheduleStaticHandlers.updateDayTask();
+            ModalWorker.HideModals();
+        });
         EventSetter.SetHandlerForClass("tms-create-task-btn", "click", function () { return ScheduleStaticHandlers.createDayTask(); });
         EventSetter.SetHandlerForClass("tms-btn-create-task", "click", function () { return ScheduleStaticHandlers.ShowCreateTaskModal(); });
         EventSetter.SetHandlerForClass("tms-show-task-modal", "click", function (x) {

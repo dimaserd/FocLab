@@ -55,8 +55,7 @@ class ScheduleWorker {
 
         Requester.SendAjaxPost("/Api/User/Get", { Count: null, OffSet: 0 },
             x => {
-                console.log("/Api/User/Get", x);
-
+                
                 ScheduleWorker.Users = x.List;
 
                 $(".usersSelect").select2({

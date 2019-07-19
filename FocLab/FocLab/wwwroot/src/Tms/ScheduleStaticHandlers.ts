@@ -56,7 +56,10 @@ class ScheduleStaticHandlers {
             ScheduleStaticHandlers.redirectToProfile(authorId);
         });
 
-        EventSetter.SetHandlerForClass("tms-update-task-btn", "click", () => ScheduleStaticHandlers.updateDayTask());
+        EventSetter.SetHandlerForClass("tms-update-task-btn", "click", () => {
+            ScheduleStaticHandlers.updateDayTask();
+            ModalWorker.HideModals();
+        });
         EventSetter.SetHandlerForClass("tms-create-task-btn", "click", () => ScheduleStaticHandlers.createDayTask());
         EventSetter.SetHandlerForClass("tms-btn-create-task", "click", () => ScheduleStaticHandlers.ShowCreateTaskModal());
         EventSetter.SetHandlerForClass("tms-show-task-modal", "click", x =>
@@ -145,7 +148,6 @@ class ScheduleStaticHandlers {
         Requester.SendAjaxPost("/Api/DayTask/Comments/Add", data, resp => {
             if (resp.IsSucceeded) {
                 TaskModalWorker.DrawComments("Comments", AccountWorker.User.Id, resp.ResponseObject);
-                console.log(resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
         }, null, false);

@@ -100,7 +100,6 @@ class Requester {
             contentType: false,
             processData: false,
             success: response => {
-                console.log(response);
                 Requester.DeleteCompletedRequest(link);
                 if (onSuccessFunc) {
                     onSuccessFunc(response);
@@ -108,8 +107,7 @@ class Requester {
             },
             error: (jqXHR, textStatus, errorThrown) => {
 
-                console.log(jqXHR, textStatus, errorThrown);
-
+                
                 //Логгирую ошибку
                 Logger.LogException(textStatus, link);
 
@@ -245,9 +243,7 @@ class Requester {
 
         Requester.GoingRequests.push(link);
 
-        $.ajax(params);    
-
-        console.log(`POST запрос ${link}`, data);
+        $.ajax(params);
     }
 
 }
