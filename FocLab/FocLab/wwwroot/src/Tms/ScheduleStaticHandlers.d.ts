@@ -31,7 +31,7 @@ declare class ScheduleStaticHandlers {
     static Filter: UserScheduleSearchModel;
     static SetHandlers(): void;
     static GetQueryParams(isNextMonth: boolean): string;
-    static ApplyFilter(isNextMonth: any): void;
+    static ApplyFilter(isNextMonth: boolean): void;
     static ShowUserSchedule(): void;
     static ShowDayTaskModal(taskId: string): void;
     static ShowCreateTaskModal(): void;

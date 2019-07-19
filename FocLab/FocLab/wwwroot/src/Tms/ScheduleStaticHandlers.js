@@ -5,10 +5,15 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         EventSetter.SetHandlerForClass("tms-next-month-btn", "click", function () { return ScheduleStaticHandlers.ApplyFilter(true); });
         EventSetter.SetHandlerForClass("tms-prev-month-btn", "click", function () { return ScheduleStaticHandlers.ApplyFilter(false); });
         EventSetter.SetHandlerForClass("tms-add-comment-btn", "click", function () { return ScheduleStaticHandlers.addComment(); });
+        EventSetter.SetHandlerForClass("tms-update-comment-btn", "click", function (x) {
+            var commentId = x.target.getAttribute("data-comment-id");
+            ScheduleStaticHandlers.updateComment(commentId);
+        });
         EventSetter.SetHandlerForClass("tms-profile-link", "click", function (x) {
             var authorId = x.target.getAttribute("data-task-author-id");
             ScheduleStaticHandlers.redirectToProfile(authorId);
         });
+        EventSetter.SetHandlerForClass("tms-update-task-btn", "click", function () { return ScheduleStaticHandlers.updateDayTask(); });
         EventSetter.SetHandlerForClass("tms-create-task-btn", "click", function () { return ScheduleStaticHandlers.createDayTask(); });
         EventSetter.SetHandlerForClass("tms-btn-create-task", "click", function () { return ScheduleStaticHandlers.ShowCreateTaskModal(); });
         EventSetter.SetHandlerForClass("tms-show-task-modal", "click", function (x) {
@@ -35,17 +40,9 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         location.href = "/Schedule/Index?" + Requester.GetParams(t);
     };
     ScheduleStaticHandlers.ShowDayTaskModal = function (taskId) {
-        var task = DayTasksWorker.GetTaskById(taskId);
         DayTasksWorker.SetCurrentTaskId(taskId);
-        TaskModalWorker.InitTask(task, AccountWorker.User.Id);
-        FormDataHelper.FillDataByPrefix(task, "task.");
-        EditableComponents.InitEditable(document.getElementById("TaskTitle"), function () { return ScheduleStaticHandlers.updateDayTask(); });
-        EditableComponents.InitEditable(document.getElementById("TaskText"), function () { return ScheduleStaticHandlers.updateDayTask(); }, true);
-        Utils.SetDatePicker("input[name='task.TaskDate']");
-        $("input[name='task.TaskDate']").on('change', function () {
-            ScheduleStaticHandlers.updateDayTask();
-        });
-        ModalWorker.ShowModal("dayTaskModal");
+        var task = DayTasksWorker.GetTaskById(taskId);
+        TaskModalWorker.ShowDayTaskModal(task);
     };
     ScheduleStaticHandlers.ShowCreateTaskModal = function () {
         var data = {
@@ -89,7 +86,6 @@ var ScheduleStaticHandlers = /** @class */ (function () {
     };
     ScheduleStaticHandlers.updateDayTask = function () {
         var data = {
-            //EstimationSeconds: 0,
             TaskText: "",
             TaskTitle: "",
             AssigneeUserId: ""

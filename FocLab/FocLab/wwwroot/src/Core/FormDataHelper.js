@@ -70,7 +70,6 @@ var FormDataHelper = /** @class */ (function () {
                         .map(function (option) { return option.value; });
                     continue;
                 }
-                console.log(name_2, element, element.type);
                 if (element.type === "radio") {
                     var value = document.querySelector("input[name=\"" + name_2 + "\"]:checked") != null;
                     if (value)

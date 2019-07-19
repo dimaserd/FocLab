@@ -30,20 +30,20 @@
                     <div class="col-lg-7">
 
                         <div class="form-group m-form__group mb-4">
+                            <h6>Название</h6>
                             <div class="form-group m-form__group">
-                                <input id="TaskTitle" type="text" name="task.TaskTitle" class="modal-task-name form-control" value="">
+                                <input id="TaskTitle" type="text" name="task.TaskTitle" class="form-control" value="">
                             </div>
                         </div>
 
-                        <hr />
-
                         <div class="form-group m-form__group mt-4">
+                            <h6>Описание</h6>
                             <div class="form-group m-form__group">
-                                <textarea id="TaskText" type="text" name="task.TaskText" class="modal-task-name form-control" value=""> </textarea>
+                                <textarea id="TaskText" type="text" name="task.TaskText" class="form-control" value=""> </textarea>
                             </div>
                         </div>
                         <div class="form-group m-form__group">
-                            <h4>Дата выполнения</h4>
+                            <h6>Дата выполнения</h6>
                             <div class="form-group m-form__group">
                                 <input id="TaskDate" type="text" name="task.TaskDate" class="form-control" value="">
                             </div>
@@ -55,33 +55,46 @@
                         <div class="form-group m-form__group">
                             <h6>Исполнитель</h6>
                             <div class="form-group m-form__group">
-                                <select id="usersSelect1" class="usersSelect" name="task.AssigneeUserId"></select>
+                                <select id="usersSelect1" class="usersSelect" style="width:100%" name="task.AssigneeUserId"></select>
                             </div>
                         </div>
 
                         <div class="form-group m-form__group">
                             <h6>Автор</h6>
-                            <div class="btn d-flex align-items-center" id="Author"></div>
+                            <div class="d-flex align-items-center" id="Author"></div>
                         </div>
                     </div>
                     <div class="form-group m-form__group col-md-12">
-                        <h4>Комментарии</h4>
-                        <div class="panel">
-                            <div class="panel-body">
-                                <input name="DayTaskId" hidden />
-                                <textarea class="form-control" name="Comment" rows="2" placeholder="Добавьте Ваш комментарий"></textarea>
-                                <div class="mt-2 clearfix">
-                                    <button class="btn btn-sm btn-primary pull-right tms-add-comment-btn" type="submit">Добавить</button>
+                        <a data-toggle="collapse" href="#CommentsBody" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <h4>Блок комментариев</h4>
+                        </a>
+                        
+                        
+                        <div id="CommentsBody" class="collapse">
+
+                            <h4>Комментарии</h4>
+
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <input name="DayTaskId" hidden />
+                                    <textarea class="form-control" name="Comment" rows="2" placeholder="Добавьте Ваш комментарий"></textarea>
+                                    <div class="mt-2 clearfix">
+                                        <button class="btn btn-sm btn-primary pull-right tms-add-comment-btn" type="submit">Добавить</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel">
+                                <div id="Comments" class="panel-body">
+
                                 </div>
                             </div>
                         </div>
-                        <div class="panel">
-                            <div id="Comments" class="panel-body">
 
-                            </div>
-                        </div>
                     </div>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary tms-update-task-btn">Обновить</button>
             </div>
         </div>
     </div>
@@ -104,37 +117,34 @@
                         <div class="form-group m-form__group mb-4">
                             <div class="form-group m-form__group">
                                 <label>Название</label>
-                                <input type="text" name="create.TaskTitle" class="modal-task-name form-control" value="">
+                                <input type="text" name="create.TaskTitle" class="form-control" value="">
                             </div>
                         </div>
-
-                        <hr />
 
                         <div class="form-group m-form__group mt-4">
                             <div class="form-group m-form__group">
                                 <label>Описание</label>
-                                <textarea type="text" name="create.TaskText" class="modal-task-name form-control" value=""> </textarea>
+                                <textarea type="text" name="create.TaskText" class="form-control" value=""> </textarea>
                             </div>
                         </div>
 
                         <div class="form-group m-form__group">
                             <h6>Исполнитель</h6>
                             <div class="form-group m-form__group">
-                                <select id="usersSelect2" class="usersSelect" name="create.AssigneeUserId"></select>
+                                <select id="usersSelect2" class="usersSelect" style="width:100%" name="create.AssigneeUserId"></select>
                             </div>
                         </div>
 
                         <div class="form-group m-form__group">
                             <label>Дата выполнения</label>
                             <div class="form-group m-form__group">
-                                <input id="TaskDate1" type="text" name="create.TaskDate" class="form-control" value="">
+                                <input id="TaskDate1" type="text" name="create.TaskDate"  class="form-control" value="">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                 <button type="button" class="btn btn-primary tms-create-task-btn">Создать</button>
             </div>
         </div>

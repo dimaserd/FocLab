@@ -90,8 +90,6 @@
                     continue;
                 }
 
-                console.log(name, element, element.type);
-
                 if (element.type === "radio") {
                     var value = document.querySelector(`input[name="${name}"]:checked`) != null
                     if (value)

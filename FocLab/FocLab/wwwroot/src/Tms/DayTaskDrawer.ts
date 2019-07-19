@@ -31,7 +31,7 @@ class DayTaskDrawer {
         const elem = document.querySelector(`[data-date='${dateTrailed}']`);
 
 
-        $(elem).children(".no-tasks-text").remove();
+        $(elem).children(".no-tasks-text").hide();
 
         console.log(elem, task);
 

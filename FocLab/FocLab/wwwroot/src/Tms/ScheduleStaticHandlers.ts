@@ -44,12 +44,19 @@ class ScheduleStaticHandlers {
         EventSetter.SetHandlerForClass("tms-next-month-btn", "click", () => ScheduleStaticHandlers.ApplyFilter(true));
         EventSetter.SetHandlerForClass("tms-prev-month-btn", "click", () => ScheduleStaticHandlers.ApplyFilter(false));
         EventSetter.SetHandlerForClass("tms-add-comment-btn", "click", () => ScheduleStaticHandlers.addComment());
+        EventSetter.SetHandlerForClass("tms-update-comment-btn", "click", x => {
+            var commentId = (x.target as Element).getAttribute("data-comment-id");
+
+            ScheduleStaticHandlers.updateComment(commentId);
+        })
+
         EventSetter.SetHandlerForClass("tms-profile-link", "click", x => {
             var authorId = (x.target as Element).getAttribute("data-task-author-id");
 
             ScheduleStaticHandlers.redirectToProfile(authorId);
         });
 
+        EventSetter.SetHandlerForClass("tms-update-task-btn", "click", () => ScheduleStaticHandlers.updateDayTask());
         EventSetter.SetHandlerForClass("tms-create-task-btn", "click", () => ScheduleStaticHandlers.createDayTask());
         EventSetter.SetHandlerForClass("tms-btn-create-task", "click", () => ScheduleStaticHandlers.ShowCreateTaskModal());
         EventSetter.SetHandlerForClass("tms-show-task-modal", "click", x =>
@@ -71,7 +78,7 @@ class ScheduleStaticHandlers {
         return Requester.GetParams(data);
     }
 
-    static ApplyFilter(isNextMonth) {
+    static ApplyFilter(isNextMonth: boolean) {
 
         location.href = `/Schedule/Index?${ScheduleStaticHandlers.GetQueryParams(isNextMonth)}`;
     }
@@ -89,25 +96,10 @@ class ScheduleStaticHandlers {
 
     static ShowDayTaskModal(taskId: string) {
 
+        DayTasksWorker.SetCurrentTaskId(taskId);
         let task = DayTasksWorker.GetTaskById(taskId);
 
-        DayTasksWorker.SetCurrentTaskId(taskId);
-
-        TaskModalWorker.InitTask(task, AccountWorker.User.Id);
-
-        FormDataHelper.FillDataByPrefix(task, "task.");
-
-        EditableComponents.InitEditable(document.getElementById("TaskTitle") as HTMLInputElement, () => ScheduleStaticHandlers.updateDayTask());
-
-        EditableComponents.InitEditable(document.getElementById("TaskText") as HTMLInputElement, () => ScheduleStaticHandlers.updateDayTask(), true);
-
-        Utils.SetDatePicker("input[name='task.TaskDate']");
-
-        $("input[name='task.TaskDate']").on('change', function () {
-            ScheduleStaticHandlers.updateDayTask();
-        });
-
-        ModalWorker.ShowModal("dayTaskModal");
+        TaskModalWorker.ShowDayTaskModal(task);
     }
 
     static ShowCreateTaskModal() {
@@ -149,6 +141,7 @@ class ScheduleStaticHandlers {
             Comment: ""
         }
         data = FormDataHelper.CollectData(data) as AddComment;
+
         Requester.SendAjaxPost("/Api/DayTask/Comments/Add", data, resp => {
             if (resp.IsSucceeded) {
                 TaskModalWorker.DrawComments("Comments", AccountWorker.User.Id, resp.ResponseObject);
@@ -161,7 +154,6 @@ class ScheduleStaticHandlers {
     static updateDayTask() : void {
 
         var data = {
-            //EstimationSeconds: 0,
             TaskText: "",
             TaskTitle: "",
             AssigneeUserId: ""
@@ -189,6 +181,7 @@ class ScheduleStaticHandlers {
     }
 
     static createDayTask(): void {
+
         var data = {
             TaskText: "",
             TaskTitle: "",

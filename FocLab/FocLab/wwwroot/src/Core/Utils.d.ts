@@ -1,5 +1,8 @@
 interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
     select2(arg0: {
+        width: string;
+    }): any;
+    select2(arg0: {
         placeholder: string;
         language: {
             "noResults": () => string;

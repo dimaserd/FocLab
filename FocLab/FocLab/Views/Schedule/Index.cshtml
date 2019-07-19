@@ -1,6 +1,8 @@
 ﻿@using Tms.Logic.Models.Tasker
 @model CalendarMonthViewModel
 @{
+    ViewBag.Title = "Задания";
+
     var searchModel = (UserScheduleSearchModel)ViewData["searchModel"];
 
     var culture = new System.Globalization.CultureInfo("ru-RU");
@@ -63,14 +65,17 @@
 
             var dayOfWeek = dateP.DayOfWeek;
 
-            <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted">
-                <h5 class="row align-items-center">
-                    <span class="date col-1">@dateP.Day</span>
-                    <small class="col d-sm-none text-center text-muted">@DayOfWeekToString(dateP.DayOfWeek)</small>
-                    <span class="col-1"></span>
-                </h5>
-                <p class="d-sm-none">Нет задач</p>
+        <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted">
+            <h5 class="row align-items-center">
+                <span class="date col-1">@dateP.Day</span>
+                <small class="col d-sm-none text-center text-muted">@DayOfWeekToString(dateP.DayOfWeek)</small>
+                <span class="col-1"></span>
+            </h5>
+
+            <div>
+                <p class="no-tasks-text d-sm-none">Нет задач</p>
             </div>
+        </div>
 
             if (dayOfWeek == DayOfWeek.Sunday)
             {
@@ -88,16 +93,17 @@
 
             var dayOfWeek = dateP.DayOfWeek;
 
-
-
-            <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate" data-date="@dateP.ToString("dd.MM.yyyy")" data-full-date="@dateP">
+            <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate">
                 <h5 class="row align-items-center">
                     <span class="date col-1">@dateP.Day</span>
                     <small class="col d-sm-none text-center text-muted">@DayOfWeekToString(dateP.DayOfWeek)</small>
                     <span class="col-1"></span>
                 </h5>
 
-                <p class="no-tasks-text d-sm-none">Нет задач</p>
+                <div data-date="@dateP.ToString("dd.MM.yyyy")" data-full-date="@dateP">
+                    <p class="no-tasks-text d-sm-none">Нет задач</p>
+                </div>
+                
             </div>
 
             if (dayOfWeek == DayOfWeek.Sunday)
