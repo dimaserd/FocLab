@@ -14,24 +14,31 @@
             Список заданий
         </a> |
 
-        <a href="/Chemistry/Chemistry/Methods" class="btn btn-primary">
+        <a href="/Chemistry/Methods/Index" class="btn btn-primary">
             Список методов решений
         </a>
     </div>
 </div>
 
-<h2>
-    @ViewBag.Title
-</h2>
+<div style="height:20px">
 
-<div class="row">
-    <div class="col-md-12">
+</div>
+
+<div class="form-group m-form__group m--margin-top-10">
+    <div class="alert m-alert m-alert--default" role="alert">
+        @ViewBag.Title
+    </div>
+</div>
+
+
+
+
+
         @Html.HiddenFor(x => x.Id)
 
-        <div class="form-group">
+        <div class="form-group m-form__group">
             @Html.LabelFor(x => x.MethodFileId)
-            @Html.DropDownListFor(x => x.MethodFileId, fileMethodsSelectList, new { @class = "form-control" })
-
+            @Html.DropDownList("MethodFileId", fileMethodsSelectList, new { id = "FileMethodsSelect", @class = "form-control" })
         </div>
 
         <div class="form-group">
@@ -44,10 +51,10 @@
             @Html.TextBoxFor(x => x.DeadLineDate, new { @class = "form-control" })
         </div>
 
-        <div class="form-group">
+        <div class="form-group m-form__group">
             @Html.LabelFor(x => x.PerformerUserId)
 
-            @Html.DropDownListFor(x => x.PerformerUserId, usersSelectList, new { @class = "form-control" })
+            @Html.DropDownListFor(x => x.PerformerUserId, usersSelectList, new { id = "PerformerSelect", @class = "form-control" })
         </div>
 
         <div class="form-group">
@@ -60,15 +67,48 @@
             @Html.TextBoxFor(x => x.AdminQuantity, new { @class = "form-control" })
         </div>
 
-        <button class="btn btn-success btn-block" onclick="EditTask()">Редактировать</button>
-    </div>
-</div>
+        <div class="m-portlet__foot m-portlet__foot--fit">
+            <div class="m-form__actions m-form__actions">
+                <div class="row">
+                    <div class="col-lg-9">
+                        <button type="reset" class="btn btn-brand form-action-btn" onclick="EditTask()">Редактировать</button>
+                        <button type="reset" onclick="location.href='/Chemistry/Methods/Index'" class="btn btn-secondary">Отмена</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 @section Scripts{
     <script>
 
-        Utils.SetDatePicker("DeadLineDate", new Date());
+        $("#FileMethodsSelect").select2({
+            placeholder: "Выберите метод решения",
+
+            "language": {
+                "noResults": function() {
+                    return "Метод решения не найден.";
+                }
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }
+        });
+
+        $("#PerformerSelect").select2({
+            placeholder: "Выберите исполнителя",
+
+            "language": {
+                "noResults": function() {
+                    return "Исполнитель не найден.";
+                }
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }
+        });
+
+        Utils.SetDatePicker("input[name='DeadLineDate']", new Date());
 
         function EditTask() {
             var data = {

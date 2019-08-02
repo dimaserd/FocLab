@@ -1,5 +1,5 @@
 ﻿@using FocLab.Logic
-@model FocLab.Logic.EntityDtos.ChemistryReagentDto
+@model FocLab.Logic.Models.Reagents.ChemistryReagentModel
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Создание реагента";
@@ -37,6 +37,10 @@
             </tr>
         </tbody>
     </table>
+</div>
+
+<div style="height:50px">
+
 </div>
 
 <h2>
@@ -80,7 +84,7 @@
             {
             <tr>
                 <td>
-                    <a href="/Chemistry/Chemistry/Task/@task.TaskId">
+                    <a href="/Chemistry/Tasks/Task/@task.Task.Id">
                         @task.Task.Title
                     </a>
 
@@ -117,19 +121,9 @@
                 Name: document.getElementsByName("Name")[0].value
             };
 
-            $.ajax({
-                type: "POST",
-                data: data,
-                url: "/Chemistry/Reagent/EditReagent",
-
-                cache: false,
-                success: function (data) {
-                    console.log(data);
-                    alert(data.Message);
-
-                    if (data.IsSucceeded) {
-                        location.href = '/Chemistry/Reagent/Index';
-                    }
+            Requester.SendPostRequestWithAnimation("/Api/Chemistry/Reagents/CreateOrUpdate", data, x => {
+                if (x.IsSucceeded) {
+                    setTimeout(() => location.href = '/Chemistry/Reagents/Index', 1500);
                 }
             });
         }

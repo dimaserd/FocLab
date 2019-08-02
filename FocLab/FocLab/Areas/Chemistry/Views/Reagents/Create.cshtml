@@ -41,19 +41,9 @@
         function CreateReagentHandler() {
             const data = { Name: document.getElementsByName("Name")[0].value };
 
-            $.ajax({
-                type: "POST",
-                data: data,
-                url: "/Chemistry/Reagent/CreateReagent",
-                
-                cache: false,
-                success: function (data) {
-                    console.log(data);
-                    alert(data.Message);
-
-                    if (data.IsSucceeded) {
-                        location.href = '/Chemistry/Reagent/Index';
-                    }
+            Requester.SendPostRequestWithAnimation("/Api/Chemistry/Reagents/CreateOrUpdate", data, x => {
+                if (x.IsSucceeded) {
+                    setTimeout(() => location.href = '/Chemistry/Reagents/Index', 1500);
                 }
             });
         }
