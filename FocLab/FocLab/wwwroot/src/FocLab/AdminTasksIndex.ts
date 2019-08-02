@@ -132,7 +132,7 @@ class TasksFilter {
 
             var tasks = days == null || days == "" ? this.Tasks : this.ApplyDaysFilter(this.Tasks, days);
 
-            var q = document.getElementsByName("SearchTasks.Q")[0].value;
+            var q = (document.getElementsByName("SearchTasks.Q")[0] as HTMLInputElement).value;
 
             console.log(`ApplyFilterBeforeText q = ${q}`, tasks);
 
@@ -146,14 +146,14 @@ class TasksFilter {
         }
 
         
-        ApplyDaysFilter(tasks, n) {
+    ApplyDaysFilter(tasks: Array<ChemistryTaskModel>, n) {
 
             console.log("ApplyDaysFilter", tasks, n);
 
             var dateNow = Date.now();
 
-            var result = tasks.filter(function (x) {
-                var date = Date.parse(x.MetaEntityDTOResponse.CreationDate);
+        var result = tasks.filter(function (x) {
+            var date = Date.parse(x.CreationDate.toDateString());
 
                 var timeDiff = Math.abs(dateNow - date);
 
@@ -165,7 +165,7 @@ class TasksFilter {
             return result;
         }
 
-        ApplyTextFilter(tasks, q) {
+    ApplyTextFilter(tasks: Array<ChemistryTaskModel>, q): Array<ChemistryTaskModel> {
             if (q == null || q === "") {
                 return tasks;
             }
@@ -181,7 +181,7 @@ class TasksFilter {
             return result;
         }
 
-        ShowAndHideTasks(tasks) {
+    ShowAndHideTasks(tasks: Array<ChemistryTaskModel>) {
 
             var tBody = document.getElementById("performed-tbody");
 
@@ -203,9 +203,8 @@ class TasksFilter {
                 tBody.appendChild(IndexPageTaskDrawer.GetTaskElementForNotPerformedTr(notPerformed[i]));
             }
         }
-    }
 
-        SortTasks(tasks) {
+    SortTasks(tasks: Array<ChemistryTaskModel>) {
 
             var sort = (document.getElementsByName("sort")[0] as HTMLInputElement).value;
 
@@ -223,13 +222,13 @@ class TasksFilter {
         }
 
 
-        SortByPerformedDate(tasks) {
+    SortByPerformedDate(tasks: Array<ChemistryTaskModel>) {
 
             var result = tasks.sort(function (a, b) {
 
-                var aDate = Date.parse(a.PerformedDate);
+                var aDate = Date.parse(a.PerformedDate.toDateString());
 
-                var bDate = Date.parse(b.PerformedDate);
+                var bDate = Date.parse(b.PerformedDate.toDateString());
 
                 if (aDate > bDate) {
                     return 1;
@@ -244,7 +243,7 @@ class TasksFilter {
             return result;
         }
 
-        SortByPerformerName(tasks) {
+    SortByPerformerName(tasks: Array<ChemistryTaskModel>): Array<ChemistryTaskModel> {
 
             var result = tasks.sort(function (a, b) {
 
