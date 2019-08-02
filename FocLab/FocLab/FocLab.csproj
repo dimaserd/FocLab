@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -39,14 +39,14 @@
   <ItemGroup>
     <Content Remove="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />
     <Content Remove="wwwroot\src\Core\EditableComponents.ts" />
+    <Content Remove="wwwroot\src\FocLab\AdminTasksIndex.ts" />
     <Content Remove="wwwroot\src\FocLab\DefaultHandlers.ts" />
     <Content Remove="wwwroot\src\FocLab\EventSetter.ts" />
     <Content Remove="wwwroot\src\FocLab\Experiments\CreateExperimentHandlers.ts" />
     <Content Remove="wwwroot\src\FocLab\Experiments\ExperimentIndexHandlers.ts" />
     <Content Remove="wwwroot\src\FocLab\Experiments\ExperimentPageHandlers.ts" />
     <Content Remove="wwwroot\src\FocLab\GenericUtil.ts" />
-    <Content Remove="wwwroot\src\FocLab\Models\Substance.ts" />
-    <Content Remove="wwwroot\src\FocLab\Models\TaskStaticHandlers.ts" />
+    <Content Remove="wwwroot\src\FocLab\Models\Models.ts" />
     <Content Remove="wwwroot\src\FocLab\Substances\SubstanceEventSetter.ts" />
     <Content Remove="wwwroot\src\FocLab\TaskDrawer.ts" />
     <Content Remove="wwwroot\src\FocLab\TaskReagentWorker.ts" />
@@ -74,7 +74,6 @@
   <ItemGroup>
     <Folder Include="Implementations\" />
     <Folder Include="wwwroot\Applications\Tasker\js\" />
-    <Folder Include="wwwroot\src\FocLab\Models\" />
     <Folder Include="wwwroot\src\Garbage\" />
   </ItemGroup>
 
@@ -121,12 +120,14 @@
   <ItemGroup>
     <TypeScriptCompile Include="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />
     <TypeScriptCompile Include="wwwroot\src\Core\EditableComponents.ts" />
+    <TypeScriptCompile Include="wwwroot\src\FocLab\AdminTasksIndex.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\DefaultHandlers.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\EventSetter.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Experiments\CreateExperimentHandlers.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Experiments\ExperimentIndexHandlers.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Experiments\ExperimentPageHandlers.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\GenericUtil.ts" />
+    <TypeScriptCompile Include="wwwroot\src\FocLab\Models\Models.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Substances\Substance.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Substances\SubstanceEventSetter.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Task\TaskStaticHandlers.ts" />

@@ -116,6 +116,11 @@ namespace FocLab.Logic.Models.Tasks
         /// </summary>
         public bool Deleted { get; set; }
 
+        public string GetDetailsPageLink()
+        {
+            return $"/Chemistry/Tasks/Task/{Id}";
+        }
+
         [JsonIgnore]
         internal static Expression<Func<ChemistryTask, ChemistryTaskModel>> SelectExpression = a => new ChemistryTaskModel
         {
