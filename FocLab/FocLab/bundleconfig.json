@@ -37,6 +37,18 @@
   },
 
   {
+    "outputFileName": "wwwroot/js/TaskSearch.js",
+    "inputFiles": [
+      "wwwroot/src/FocLab/TaskSearch/*.js"
+    ],
+
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+
+  {
     "outputFileName": "wwwroot/js/Experiments.js",
     "inputFiles": [
       "wwwroot/src/FocLab/Experiments/*.js"

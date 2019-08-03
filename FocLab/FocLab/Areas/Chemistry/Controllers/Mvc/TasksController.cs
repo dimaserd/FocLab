@@ -76,6 +76,13 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
 
             var usersSelectList = usersList.List.Select(x => new SelectListItem { Value = x.Id, Text = $"{x.Name} {x.Email}" }).ToList();
 
+            usersSelectList.Add(new SelectListItem
+            {
+                Selected = true,
+                Text = "Показывать всех",
+                Value = "ShowAll"
+            });
+
             ViewData["usersSelectList"] = usersSelectList;
 
             ViewData["User"] = user;

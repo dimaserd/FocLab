@@ -95,10 +95,8 @@ var DayTaskDrawer = /** @class */ (function () {
     };
     DayTaskDrawer.prototype.AddTaskToDate = function (task) {
         var dateTrailed = moment(task.TaskDate).format("DD.MM.YYYY");
-        console.log(dateTrailed);
         var elem = document.querySelector("[data-date='" + dateTrailed + "']");
         $(elem).children(".no-tasks-text").hide();
-        console.log(elem, task);
         var toAdd = document.createElement("div");
         toAdd.innerHTML = "<a class=\"event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small bg-primary text-white tms-show-task-modal\" data-task-id=\"" + task.Id + "\" title=\"" + task.TaskTitle + "\">\n                                        " + task.TaskTitle + "\n                                        <span class=\"float-right\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"" + task.AssigneeUser.Email + "\">\n                                            " + ColorAvatarInitor.InitColorForAvatar(task) + "\n                                        </span>\n                                   </a>";
         elem.appendChild(toAdd);
@@ -263,7 +261,6 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         Requester.SendAjaxPost("/Api/DayTask/Comments/Add", data, function (resp) {
             if (resp.IsSucceeded) {
                 TaskModalWorker.DrawComments("Comments", AccountWorker.User.Id, resp.ResponseObject);
-                console.log(resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
         }, null, false);
@@ -357,7 +354,6 @@ var ScheduleWorker = /** @class */ (function () {
     ScheduleWorker.SetUsersSelect = function () {
         var _this = this;
         Requester.SendAjaxPost("/Api/User/Get", { Count: null, OffSet: 0 }, function (x) {
-            console.log("/Api/User/Get", x);
             ScheduleWorker.Users = x.List;
             $(".usersSelect").select2({
                 placeholder: "Выберите пользователя",

@@ -15,22 +15,41 @@
     {
         new SelectListItem
         {
-        Text = "Не сортировать",
-        Value = "0"
+            Text = "Не сортировать",
+            Value = "0"
         },
 
         new SelectListItem
         {
-        Text = "По дате выполнения",
-        Value = "1",
+            Text = "По дате выполнения",
+            Value = "1",
         },
 
         new SelectListItem
         {
-        Text = "По имени исполнителя",
-        Value = "2",
-        },
+            Text = "По имени исполнителя",
+            Value = "2",
+        }
+    };
 
+    var statusSelect = new List<SelectListItem>
+    {
+        new SelectListItem
+        {
+            Selected = true,
+            Text = "Все",
+            Value = ""
+        },
+        new SelectListItem
+        {
+            Text = "Выполненные",
+            Value = true.ToString()
+        },
+        new SelectListItem
+        {
+            Text = "Не выполненные",
+            Value = false.ToString()
+        }
     };
 
     var usersSelectList = ViewData["usersSelectList"] as List<SelectListItem>;
@@ -47,13 +66,11 @@
 
 
 <div class="row">
-    <div class="col-md-12"> 
+    <div class="col-md-12">
         <a href="/Chemistry/Tasks/CreateTask" class="btn btn-primary btn-margin">
             <i class="fa fa-plus-circle"></i>
             Создать задание
         </a>
-
-        
     </div>
 </div>
 
@@ -61,60 +78,74 @@
 
 </div>
 
-<div class="table-responsive">
-    <table class="table table-bordered">
-
-        <tr>
-            <th>
-                Искать по названию
-            </th>
-
-            <th>
-                @Html.DropDownList("SearchTasks.Q", tasksSelectList, new { id = "SearchTasks", @class = "form-control" })
-            </th>
-        </tr>
-
-
-        <tr>
-            <th>
-                Сортировать по
-            </th>
-
-            <th>
-                @Html.DropDownList("sort", sortSelect, new { @class = "form-control selectpicker" })
-            </th>
-        </tr>
-
-        <tr>
-            <th colspan="2">
-                <button onclick="tasksFilter.ApplyFilter()" class="btn btn-success btn-block">
-                    <i class="fa fa-search"></i>
-                    <strong>
-                        Поиск
-                    </strong>
-                </button>
-            </th>
-        </tr>
-    </table>
+<div class="form-group m-form__group m--margin-top-10">
+    <div class="alert m-alert m-alert--default" role="alert">
+        Список задач назначенных исполнителям
+    </div>
 </div>
 
-@{
-    var text = !isEmailSet ? "Список заданий которые выполнили исполнители" : $"Список заданий которые выполнил исполнитель {user.Email}";
-}
+<div class="form-group m-form__group">
+    @Html.Label("Искать по названию")
+    @Html.DropDownList("SearchTasks.Q", tasksSelectList, new { id = "SearchTasks", @class = "form-control", style = "width:100%" })
+
+</div>
+
+<div class="form-group m-form__group">
+    @Html.Label("Показывать исполнителя")
+    @Html.DropDownList("SearchTasks.User", usersSelectList, new { id = "Users", @class = "form-control", style = "width:100%" })
+</div>
+
+<div class="form-group m-form__group">
+    @Html.Label("Статус выполнения")
+    @Html.DropDownList("SearchTasks.TaskStatus", statusSelect, new { @class = "form-control selectpicker" })
+</div>
+
+<div class="form-group m-form__group">
+    @Html.Label("Сортировать по")
+    @Html.DropDownList("SearchTasks.Sort", sortSelect, new { @class = "form-control selectpicker" })
+</div>
+
+
+<div class="m-portlet__foot m-portlet__foot--fit">
+    <div class="m-form__actions m-form__actions">
+        <div class="row">
+            <div class="col-lg-9">
+                <button type="reset" class="btn btn-brand form-action-btn">
+                    <i class="fas fa-search"></i>
+                    Искать
+                </button>
+                <button type="reset" class="btn btn-secondary form-action-btn-clear">
+                    Очистить фильтр
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div style="height:30px">
+
+</div>
+
+
+<div class="form-group m-form__group m--margin-top-10">
+    <div class="alert m-alert m-alert--default" role="alert">
+        <h4>
+            Выполненные задания 
+            <span class="m-menu__link-badge">
+                <span class="m-badge m-badge--success">@tasks.Count(x => x.IsPerformed)</span>
+            </span>
+        </h4>
+    </div>
+</div>
+
+
 <div class="row">
-
     <div class="col-md-12">
-        <h2 class="text-center">
-            @text <span class="m-menu__link-badge">
-                      <span class="m-badge m-badge--success">@tasks.Count(x => x.IsPerformed)</span>
-                  </span> 
-        </h2>
-
         <h2>
             <span class="pull-right btn" onclick="$('#performedBody').fadeToggle()">[Показать/Скрыть]</span>
         </h2>
     </div>
-
 </div>
 
 
@@ -158,77 +189,31 @@
         </thead>
 
         <tbody id="performed-tbody">
-            @foreach (var task in tasks.Where(x => x.IsPerformed))
-            {
-                var _class = task.IsPerformedInTime ? "success" : "danger";
-
-                <tr id="@task.Id" class="@_class performed-chemistry-task">
-
-                    <td>
-                        <a href="@task.GetDetailsPageLink()">
-                            @task.Title
-                        </a>
-                    </td>
-
-                    <td>
-                        <a href="/Chemistry/Tasks/Index?id=@task.PerformerUser.Id">
-                            @task.PerformerUser.Name @task.PerformerUser.Email
-                        </a>
-                    </td>
-
-                    <td>
-                        @task.DeadLineDate
-                    </td>
-
-                    <td>
-                        @task.PerformedDate.Value
-                    </td>
-
-                    <td>
-                        @task.AdminQuantity
-                    </td>
-
-                    <td>
-                        @task.PerformerQuantity
-                    </td>
-
-                    <td>
-                        @task.AdminQuality
-                    </td>
-
-                    <td>
-                        @task.PerformerQuality
-                    </td>
-
-                </tr>
-            }
-
-            @if (tasks.Count(x => x.IsPerformed) == 0)
-            {
-                <tr>
-                    <td colspan="8">
-                        <span class="h4 text-center">
-                            Пока выполненных заданий нет
-                        </span>
-                    </td>
-                </tr>
-            }
         </tbody>
     </table>
 </div>
 
-@{
-    var otherText = !isEmailSet ? "Список заданий которые не выполнили исполнители" : $"Список заданий которые не выполнил исполнитель {user.Email}";
-}
+
+<div style="height:30px">
+
+</div>
+
+<div class="form-group m-form__group m--margin-top-10">
+    <div class="alert m-alert m-alert--default" role="alert">
+        <h4>
+            Невыполненные задания
+            <span class="m-menu__link-badge">
+                <span class="m-badge m-badge--success">@tasks.Count(x => !x.IsPerformed)</span>
+            </span>
+        </h4>
+    </div>
+</div>
+
+
 
 <div class="row">
     <div class="col-md-12">
-        <h2 class="text-center">
-            @otherText <span class="m-menu__link-badge">
-                           <span class="m-badge m-badge--success">@tasks.Count(x => !x.IsPerformed)</span>
-                        </span>  
-        </h2>
-
+        
         <h2>
             <span class="pull-right btn" onclick="$('#notPerformedBody').fadeToggle()">[Показать/Скрыть]</span>
         </h2>
@@ -269,129 +254,65 @@
         </thead>
 
         <tbody id="not-performed-body">
-            @foreach (var task in tasks.Where(x => !x.IsPerformed))
-            {
-                var _class = task.DeadLineDate > dateNow ? "success" : "danger";
-
-                <tr class="@_class">
-
-                    <td>
-                        @if (!string.IsNullOrEmpty(task.Title))
-                        {
-                            <a href="@task.GetDetailsPageLink()">
-                                @task.Title
-                            </a>
-                        }
-                        else
-                        {
-                            <a href="@task.GetDetailsPageLink()">
-                                [Название не указано]
-                            </a>
-                        }
-
-                    </td>
-
-                    <td>
-                        @if (task.PerformerUser != null)
-                        {
-                            <a href="/Chemistry/Tasks/Index?id=@task.PerformerUser.Id">
-                                @task.PerformerUser.Name @task.PerformerUser.Email
-                            </a>
-                        }
-                        else
-                        {
-                            <a>[Исполнитель не указан]</a>
-                        }
-
-                    </td>
-
-                    <td>
-                        @task.DeadLineDate
-                    </td>
-
-                    <td>
-                        @if (task.ChemistryMethodFile != null)
-                        {
-
-                            <a href="@task.ChemistryMethodFile.GetLinkToFile()" class="btn btn-primary">
-                                @task.ChemistryMethodFile.Name
-                            </a>
-                        }
-                        else
-                        {
-                            @Html.Raw("[Метод не указан]")
-                        }
-                    </td>
-
-                    <td>
-                        @task.AdminQuality
-                    </td>
-
-                    <td>
-                        @task.AdminQuantity
-                    </td>
-
-                </tr>
-            }
-
-            @if (tasks.Count(x => !x.IsPerformed) == 0)
-            {
-                <tr>
-                    <td colspan="6">
-                        <span class="h4 text-center">
-                            Пока не выполненных заданий нет
-                        </span>
-                    </td>
-                </tr>
-            }
         </tbody>
     </table>
 </div>
 
+<script src="~/js/moment-with-locales.min.js"></script>
+
+<script src="~/js/TaskSearch.min.js"></script>
+
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    var tasks = @Html.GetJson(tasks);
 
-        $("#User").select2({
-            placeholder: "Выберите пользователя",
+    var tasksFilter = new TasksFilter();
 
-            "language": {
-                "noResults": function() {
-                    return "Пользователь не найден.";
-                }
-            },
-            escapeMarkup: function(markup) {
-                return markup;
-            }
-        });
+    tasksFilter.SetTasks(tasks);
+    tasksFilter.ApplyFilter();
+</script>
+
+<script>
+
+    function TasksSelect2() {
 
         $("#SearchTasks").select2({
             placeholder: "Введите название",
 
             "language": {
-                "noResults": function() {
+                "noResults": function () {
                     return "Задание не найдено.";
                 }
             },
-            escapeMarkup: function(markup) {
+            escapeMarkup: function (markup) {
                 return markup;
             }
         });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        $(".form-action-btn").on("click", () => {
+            tasksFilter.ApplyFilter();
+        });
+
+        $(".form-action-btn-clear").on("click", () => {
+            tasksFilter.ClearFilter();
+            TasksSelect2();
+        });
+
+        $("#User").select2({
+            placeholder: "Выберите пользователя",
+
+            "language": {
+                "noResults": function () {
+                    return "Пользователь не найден.";
+                }
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            }
+        });
+
+        TasksSelect2();
     })
-    
-    var taskDrawer = new TaskDrawer();
-</script>
-
-<script>
-        
-</script>
-
-<script>
-    var tasks = @Html.GetJson(tasks);
-
-    console.log(tasks);
-
-    var tasksFilter = new TasksFilter();
-
-    tasksFilter.SetTasks(tasks);
-
 </script>

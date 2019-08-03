@@ -112,7 +112,7 @@ class Utils {
         }
     }
 
-    public static FillSelect = function (select: HTMLElement, array: Array<string>, htmlFunc: Function, valueFunc: Function): void {
+    public static FillSelect = function (select: HTMLElement, array: Array<object>, htmlFunc: Function, valueFunc: Function): void {
 
         for (let i = 0; i < array.length; i++) {
             const opt = document.createElement("option");
