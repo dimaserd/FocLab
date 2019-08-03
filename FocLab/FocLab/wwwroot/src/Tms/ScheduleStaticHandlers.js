@@ -82,7 +82,6 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         Requester.SendAjaxPost("/Api/DayTask/Comments/Add", data, function (resp) {
             if (resp.IsSucceeded) {
                 TaskModalWorker.DrawComments("Comments", AccountWorker.User.Id, resp.ResponseObject);
-                console.log(resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
         }, null, false);

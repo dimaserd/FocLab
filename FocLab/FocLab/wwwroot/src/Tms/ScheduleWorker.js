@@ -34,7 +34,6 @@ var ScheduleWorker = /** @class */ (function () {
     ScheduleWorker.SetUsersSelect = function () {
         var _this = this;
         Requester.SendAjaxPost("/Api/User/Get", { Count: null, OffSet: 0 }, function (x) {
-            console.log("/Api/User/Get", x);
             ScheduleWorker.Users = x.List;
             $(".usersSelect").select2({
                 placeholder: "Выберите пользователя",
