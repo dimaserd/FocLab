@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Croco.Core.Abstractions.Cache;
+using Croco.Core.Cache.Abstractions;
 using Croco.Core.Application;
-using Croco.Core.Utils;
+using Croco.Core.Common.Utils;
 
 namespace FocLab.Logic.Extensions
 {

@@ -1,4 +1,4 @@
-﻿using Croco.Core.Utils;
+﻿using Croco.Core.Common.Utils;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Model.Entities.Chemistry;
 using FocLab.Model.Enumerations;

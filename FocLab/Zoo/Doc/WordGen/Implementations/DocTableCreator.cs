@@ -1,9 +1,9 @@
-﻿using Doc.Logic.Entities;
-using DocumentFormat.OpenXml;
+﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Collections.Generic;
+using Zoo.Doc.WordGen.Models;
 
-namespace Doc.Logic.Implementations
+namespace Zoo.Doc.WordGen.Implementations
 {
     public static class DocTableCreator
     {
@@ -24,7 +24,7 @@ namespace Doc.Logic.Implementations
 
             // Create a TableProperties object and specify its border information.
             TableProperties tblProp = new TableProperties(
-                
+
                 new TableBorders(
                     new TopBorder()
                     {
@@ -84,7 +84,7 @@ namespace Doc.Logic.Implementations
                 new TableWidth
                 {
                     Type = new EnumValue<TableWidthUnitValues>(TableWidthUnitValues.Auto),
-                    
+
                 }
             );
 
@@ -117,7 +117,7 @@ namespace Doc.Logic.Implementations
             {
                 // Create a cell.
                 TableCell tc = new TableCell();
-                
+
                 var props = new TableCellProperties(new TableCellWidth()
                 {
                     Width = new StringValue
@@ -139,7 +139,7 @@ namespace Doc.Logic.Implementations
                         Type = new EnumValue<TableWidthValues>(TableWidthValues.Dxa)
                     }
                 ));
-                
+
                 tc.Append(props);
 
                 var run = GetRun(fontSize, isBold);

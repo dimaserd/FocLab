@@ -1,10 +1,9 @@
-﻿using Croco.Core.Abstractions.ContextWrappers;
-using Croco.Core.Application;
+﻿using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
 using Croco.Core.Common.Models;
-using Croco.Core.Utils;
+using Croco.Core.Common.Utils;
+using Croco.Core.Data.Abstractions.ContextWrappers;
 using Doc.Logic.Entities;
-using Doc.Logic.Implementations;
 using Doc.Logic.Models;
 using FocLab.Logic.Models;
 using FocLab.Logic.Workers;
@@ -15,6 +14,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Zoo.Doc.WordGen.Implementations;
+using Zoo.Doc.WordGen.Models;
+using Zoo.Doc.WordGen.Workers;
 
 namespace Doc.Logic.Workers
 {

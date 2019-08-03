@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Croco.Core.Abstractions.ContextWrappers;
+using Croco.Core.Data.Abstractions.ContextWrappers;
 using Croco.Core.Common.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
@@ -110,9 +110,9 @@ namespace FocLab.Logic.Workers.Account
             }
             catch (Exception ex)
             {
-                var logger = db.GetLogger();
+                var logger = Application.GetLogger();
 
-                await logger.LogExceptionAsync(ex);
+                logger.LogException(ex);
 
                 return new BaseApiResponse<LoginResultModel>(false, ex.Message);
             }

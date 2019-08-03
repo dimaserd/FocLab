@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\FocLab.Logic\FocLab.Logic.csproj" />
     <ProjectReference Include="..\..\FocLab.Model\FocLab.Model.csproj" />
+    <ProjectReference Include="..\..\Zoo\Zoo.csproj" />
   </ItemGroup>
 
 </Project>

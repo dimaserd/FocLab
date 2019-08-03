@@ -33,9 +33,9 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [HttpPost(nameof(Update))]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public async Task<BaseApiResponse> Update([FromForm]EditClient model)
+        public Task<BaseApiResponse> Update([FromForm]EditClient model)
         {
-            return await ClientWorker.EditUserAsync(model);
+            return ClientWorker.EditUserAsync(model);
         }
 
         /// <summary>
@@ -44,9 +44,9 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [HttpPost(nameof(UpdateClientPhoto))]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public async Task<BaseApiResponse> UpdateClientPhoto(int fileId)
+        public Task<BaseApiResponse> UpdateClientPhoto(int fileId)
         {
-            return await ClientWorker.UpdateClientPhotoAsync(fileId);
+            return ClientWorker.UpdateClientPhotoAsync(fileId);
         }
 
         /// <summary>
@@ -54,9 +54,9 @@ namespace FocLab.Api.Controllers.Api.Users
         /// </summary>
         [HttpGet(nameof(Get))]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public async Task<BaseApiResponse<ClientModel>> Get()
+        public Task<BaseApiResponse<ClientModel>> Get()
         {
-            return await ClientWorker.GetUserAsync();
+            return ClientWorker.GetUserAsync();
         }
     }
 }

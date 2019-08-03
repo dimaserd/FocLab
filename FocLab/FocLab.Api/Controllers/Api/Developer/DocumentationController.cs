@@ -35,21 +35,14 @@ namespace FocLab.Api.Controllers.Api.Developer
                 return null;
             }
 
-            var res = ClassModelDescriptor.GetDocumentationForClass(typeName);
-
-            if (res != null)
-            {
-                return res;
-            }
-
-            var types = ClassModelDescriptor.SearchClassTypes(typeName);
+            var types = CrocoTypeDescriptor.SearchClassTypes(typeName);
 
             if (types.Count == 0)
             {
                 return null;
             }
 
-            return ClassModelDescriptor.GetDocumentationForClass(types.First());
+            return CrocoTypeDescriptor.GetDocumentationForClass(types.First());
         }
 
         /// <summary>
@@ -60,7 +53,7 @@ namespace FocLab.Api.Controllers.Api.Developer
         [ProducesDefaultResponseType(typeof(string))]
         public string GetJson(string typeName)
         {
-            return ClassModelDescriptor.GetJsonExample(typeName);
+            return CrocoTypeDescriptor.GetJsonExample(typeName);
         }
 
         /// <summary>
@@ -72,8 +65,7 @@ namespace FocLab.Api.Controllers.Api.Developer
         [ProducesDefaultResponseType(typeof(List<string>))]
         public List<string> SearchTypes(string typeName)
         {
-            return ClassModelDescriptor.SearchClassTypes(typeName);
+            return CrocoTypeDescriptor.SearchClassTypes(typeName);
         }
-
     }
 }

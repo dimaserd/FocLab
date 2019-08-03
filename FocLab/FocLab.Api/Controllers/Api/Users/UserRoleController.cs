@@ -29,9 +29,9 @@ namespace FocLab.Api.Controllers.Api.Users
         /// </summary>
         [HttpPost(nameof(Add))]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public async Task<BaseApiResponse> Add([FromForm]UserIdAndRole model)
+        public Task<BaseApiResponse> Add([FromForm]UserIdAndRole model)
         {
-            return await UserRoleWorker.AddUserToRoleAsync(model, UserManager);
+            return UserRoleWorker.AddUserToRoleAsync(model, UserManager);
         }
 
         /// <summary>
@@ -39,9 +39,9 @@ namespace FocLab.Api.Controllers.Api.Users
         /// </summary>
         [HttpPost(nameof(Remove))]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public async Task<BaseApiResponse> Remove([FromForm]UserIdAndRole model)
+        public Task<BaseApiResponse> Remove([FromForm]UserIdAndRole model)
         {
-            return await UserRoleWorker.RemoveRoleFromUserAsync(model, UserManager);
+            return UserRoleWorker.RemoveRoleFromUserAsync(model, UserManager);
         }
     }
 }

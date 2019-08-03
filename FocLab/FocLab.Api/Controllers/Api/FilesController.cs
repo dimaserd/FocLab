@@ -76,9 +76,9 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(DbFileIntIdModelNoData[]))]
         [HttpPost("Local/GetThatAreNotOnMachine")]
-        public async Task<DbFileIntIdModelNoData[]> GetNotCopiedFileIds()
+        public Task<DbFileIntIdModelNoData[]> GetNotCopiedFileIds()
         {
-            return await FileWorker.GetFilesThatAreNotOnLocalMachineAsync();
+            return FileWorker.GetFilesThatAreNotOnLocalMachineAsync();
         }
 
         /// <summary>
@@ -87,9 +87,9 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         [HttpPost("Local/CopySomeFiles")]
-        public async Task<BaseApiResponse> CopyFilesThatAreNotOnMachine(int count)
+        public Task<BaseApiResponse> CopyFilesThatAreNotOnMachine(int count)
         {
-            return await FileWorker.BaseManager.MakeLocalCopies(count);
+            return FileWorker.BaseManager.MakeLocalCopies(count);
         }
     }
 }

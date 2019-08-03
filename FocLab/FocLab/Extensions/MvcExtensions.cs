@@ -16,7 +16,7 @@ namespace FocLab.Extensions
                 throw new ApplicationException($"Тип {type.FullName} не является перечислением");
             }
 
-            var descr = ClassModelDescriptor.GetDocumentationForClass(type);
+            var descr = CrocoTypeDescriptor.GetDocumentationForClass(type);
 
             return descr.EnumValues.Select(x => new SelectListItem
             {

@@ -38,9 +38,9 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [HttpPost("Login/ByEmail")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse<LoginResultModel>))]
-        public async Task<BaseApiResponse<LoginResultModel>> Login([FromForm]LoginModel model)
+        public Task<BaseApiResponse<LoginResultModel>> Login([FromForm]LoginModel model)
         {
-            return await AccountLoginWorker.LoginAsync(model, SignInManager);
+            return AccountLoginWorker.LoginAsync(model, SignInManager);
         }
 
         /// <summary>
@@ -50,9 +50,9 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [HttpPost("Login/ByPhone")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse<LoginResultModel>))]
-        public async Task<BaseApiResponse<LoginResultModel>> LoginByPhone([FromForm]LoginByPhoneNumberModel model)
+        public Task<BaseApiResponse<LoginResultModel>> LoginByPhone([FromForm]LoginByPhoneNumberModel model)
         {
-            return await AccountLoginWorker.LoginByPhoneNumberAsync(model, SignInManager);
+            return AccountLoginWorker.LoginByPhoneNumberAsync(model, SignInManager);
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [HttpPost("Login/AsUser")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public async Task<BaseApiResponse> LoginAsUser([FromForm]UserIdModel model)
+        public Task<BaseApiResponse> LoginAsUser([FromForm]UserIdModel model)
         {
-            return await AccountLoginWorker.LoginAsUserAsync(model, SignInManager);
+            return AccountLoginWorker.LoginAsUserAsync(model, SignInManager);
         }
         
         #endregion
@@ -77,9 +77,9 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [HttpPost("Change/Password")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public async Task<BaseApiResponse> ChangePassword([FromForm]ChangeUserPasswordModel model)
+        public Task<BaseApiResponse> ChangePassword([FromForm]ChangeUserPasswordModel model)
         {
-            return await AccountManager.ChangePasswordAsync(model, UserManager, SignInManager);
+            return AccountManager.ChangePasswordAsync(model, UserManager, SignInManager);
         }
         #endregion
 

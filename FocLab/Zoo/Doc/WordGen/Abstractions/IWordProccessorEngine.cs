@@ -1,6 +1,6 @@
 ﻿using Doc.Logic.Entities;
 
-namespace Doc.Logic.Abstractions
+namespace Zoo.Doc.WordGen.Abstractions
 {
     public interface IWordProccessorEngine
     {

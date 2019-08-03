@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Croco.Core.Application;
 using Croco.Core.Common.Models;
-using Croco.Core.ContextWrappers;
+using Croco.Core.Data.Models.ContextWrappers;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;

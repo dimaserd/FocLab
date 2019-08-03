@@ -2,14 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
-using Croco.Core.Abstractions.ContextWrappers;
+using Croco.Core.Data.Abstractions.ContextWrappers;
 using Croco.Core.Application;
 using Croco.Core.Common.Models;
-using Croco.Core.ContextWrappers;
 using Croco.Core.Logic.Models.Files;
 using Croco.Core.Logic.Workers;
-using Croco.Core.Principal;
-using Croco.Core.Search;
 using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Settings.Statics;
@@ -17,6 +14,9 @@ using FocLab.Model.Contexts;
 using FocLab.Model.Entities;
 using FocLab.Model.Enumerations;
 using Hangfire;
+using Croco.Core.Search.Models;
+using Croco.Core.Data.Models.Principal;
+using Croco.Core.Data.Models.ContextWrappers;
 
 namespace FocLab.Logic.Workers
 {

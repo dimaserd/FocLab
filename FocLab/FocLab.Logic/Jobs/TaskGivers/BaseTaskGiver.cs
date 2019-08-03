@@ -1,9 +1,8 @@
-﻿using System;
-using Croco.Core.Abstractions.ContextWrappers;
+﻿using Croco.Core.Data.Abstractions.ContextWrappers;
 using Croco.Core.Application;
-using Croco.Core.ContextWrappers;
-using Croco.Core.Principal;
 using FocLab.Model.Contexts;
+using Croco.Core.Data.Models.Principal;
+using Croco.Core.Data.Models.ContextWrappers;
 
 namespace CrocoShop.Logic.Jobs.TaskGivers
 {

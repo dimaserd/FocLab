@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Abstractions.ContextWrappers;
+using Croco.Core.Data.Abstractions.ContextWrappers;
 using Croco.Core.Common.Models;
 using Croco.Core.Model.Entities.Store;
 using FocLab.Logic.EntityDtos.Users.Default;
@@ -205,9 +205,9 @@ namespace FocLab.Logic.Workers.Users
 
             if (userToEditEntity == null)
             {
-                var logger = Context.GetLogger();
+                var logger = Application.GetLogger();
 
-                await logger.LogExceptionAsync(new Exception("Ужасная ошибка"));
+                logger.LogException(new Exception("Ужасная ошибка"));
 
                 return new BaseApiResponse(false, "Ужасная ошибка");
             }

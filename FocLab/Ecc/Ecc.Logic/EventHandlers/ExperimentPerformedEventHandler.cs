@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.EventSource;
+using Croco.Core.EventSourcing.Implementations;
 using FocLab.Logic.Events;
 
 namespace Ecc.Logic.EventHandlers

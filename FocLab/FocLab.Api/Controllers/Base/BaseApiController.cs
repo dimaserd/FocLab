@@ -1,5 +1,5 @@
 ﻿using System;
-using Croco.Core.ContextWrappers;
+using Croco.Core.Data.Models.ContextWrappers;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;

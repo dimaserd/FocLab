@@ -1,4 +1,4 @@
-﻿using Croco.Core.EventSource.Abstractions;
+﻿using Croco.Core.EventSourcing.Abstractions;
 using Ecc.Logic.EventHandlers;
 using FocLab.Logic.Events;
 
@@ -9,7 +9,7 @@ namespace Ecc.Logic.RegistrationModule
         public static void Subscribe(ICrocoEventListener evListener)
         {
             //Подписка обработчиками событий на события
-            //evListener.AddEventHandler<ExperimentPerformedEvent, ExperimentPerformedEventHandler>();
+            evListener.AddEventHandler<ExperimentPerformedEvent, ExperimentPerformedEventHandler>();
         }
     }
 }

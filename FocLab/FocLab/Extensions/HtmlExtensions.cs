@@ -1,6 +1,6 @@
 ﻿using Croco.Core.Application;
-using Croco.Core.Search;
-using Croco.Core.Utils;
+using Croco.Core.Common.Utils;
+using Croco.Core.Search.Models;
 using FocLab.Logic.Extensions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;

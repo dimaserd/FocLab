@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Abstractions.ContextWrappers;
+using Croco.Core.Data.Abstractions.ContextWrappers;
 using Croco.Core.Common.Models;
 using Croco.Core.Extensions.Enumerations;
 using FocLab.Logic.Models.Users;

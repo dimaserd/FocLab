@@ -4,21 +4,22 @@ using Doc.Logic.Entities;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Zoo.Doc.WordGen.Models;
 using A = DocumentFormat.OpenXml.Drawing;
 using DW = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
 
-namespace Doc.Logic.Implementations
+namespace Zoo.Doc.WordGen.Implementations
 {
     public static class DocImageInserter
     {
-        static readonly long ImageNormalizedMaxWidth= (long)(990000L * 3.44);
+        static readonly long ImageNormalizedMaxWidth = (long)(990000L * 3.44);
 
         private static Paragraph FindParagraphToMakeReplace(WordprocessingDocument document, string textToFind)
         {
             var body = document.MainDocumentPart.Document.Body;
 
-            foreach(var child in body.ChildElements)
+            foreach (var child in body.ChildElements)
             {
                 var asP = child as Paragraph;
 
@@ -35,7 +36,7 @@ namespace Doc.Logic.Implementations
                             return asP;
                         }
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
                         continue;
                     }
@@ -49,7 +50,7 @@ namespace Doc.Logic.Implementations
         {
             var para = FindParagraphToMakeReplace(document, imgToReplace.TextToReplace);
 
-            if(para == null)
+            if (para == null)
             {
                 return;
             }
@@ -71,7 +72,7 @@ namespace Doc.Logic.Implementations
             int iHeight = 0;
             using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(imgFileName))
             {
-                
+
                 iWidth = bmp.Width;
                 iHeight = bmp.Height;
             }

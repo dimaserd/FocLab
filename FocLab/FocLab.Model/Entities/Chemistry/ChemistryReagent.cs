@@ -1,4 +1,4 @@
-﻿using Croco.Core.Model.Interfaces.Auditable;
+﻿using Croco.Core.Model.Abstractions.Auditable;
 using Croco.Core.Model.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;

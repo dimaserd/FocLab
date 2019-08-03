@@ -1,4 +1,5 @@
 ﻿using Croco.Core.Search;
+using Croco.Core.Search.Models;
 
 namespace FocLab.Extensions
 {

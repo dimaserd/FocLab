@@ -1,4 +1,4 @@
-﻿using Croco.Core.Abstractions.ContextWrappers;
+﻿using Croco.Core.Data.Abstractions.ContextWrappers;
 using Croco.Core.Application;
 using Croco.Core.Logic.Workers;
 using FocLab.Logic.Implementations;

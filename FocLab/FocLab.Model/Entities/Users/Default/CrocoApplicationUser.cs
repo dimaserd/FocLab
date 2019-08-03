@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Croco.Core.Model.Entities.Users;
+using Croco.Core.Model.Abstractions.Entity;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 

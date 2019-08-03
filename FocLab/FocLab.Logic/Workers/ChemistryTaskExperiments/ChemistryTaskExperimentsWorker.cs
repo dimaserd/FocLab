@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Abstractions.ContextWrappers;
+using Croco.Core.Data.Abstractions.ContextWrappers;
 using Croco.Core.Common.Models;
-using Croco.Core.Utils;
+using Croco.Core.Common.Utils;
 using FocLab.Logic.Events;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models;

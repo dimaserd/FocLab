@@ -1,5 +1,5 @@
-﻿using Croco.Core.Abstractions.ContextWrappers;
-using Croco.Core.Common.Models;
+﻿using Croco.Core.Common.Models;
+using Croco.Core.Data.Abstractions.ContextWrappers;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities;
 using Microsoft.EntityFrameworkCore;

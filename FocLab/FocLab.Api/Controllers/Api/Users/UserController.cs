@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Croco.Core.Common.Models;
 using Croco.Core.Search;
+using Croco.Core.Search.Models;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Models;
@@ -39,9 +40,9 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(GetListResult<ApplicationUserBaseModel>))]
         [HttpPost("Get")]
-        public async Task<GetListResult<ApplicationUserBaseModel>> GetUsers([FromForm]UserSearch model)
+        public Task<GetListResult<ApplicationUserBaseModel>> GetUsers([FromForm]UserSearch model)
         {
-            return await UserSearcher.GetUsersAsync(model);
+            return UserSearcher.GetUsersAsync(model);
         }
 
         /// <summary>
@@ -50,9 +51,9 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(ApplicationUserDto))]
         [HttpPost("Search/ByPhone")]
-        public async Task<ApplicationUserDto> SearchByPhone([FromQuery]string phone)
+        public Task<ApplicationUserDto> SearchByPhone([FromQuery]string phone)
         {
-            return await UserSearcher.GetUserByPhoneNumberAsync(phone);
+            return UserSearcher.GetUserByPhoneNumberAsync(phone);
         }
 
         /// <summary>
@@ -62,9 +63,9 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(ApplicationUserDto))]
         [HttpPost("Search/ByEmail")]
-        public async Task<ApplicationUserDto> SearchByEmail([FromQuery]string email)
+        public Task<ApplicationUserDto> SearchByEmail([FromQuery]string email)
         {
-            return await UserSearcher.GetUserByEmailAsync(email);
+            return UserSearcher.GetUserByEmailAsync(email);
         }
 
         /// <summary>
@@ -74,9 +75,9 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         [HttpPost("ActivateOrDeActivateUser")]
-        public async Task<BaseApiResponse> ActivateOrDeActivateUser([FromForm]UserActivation model)
+        public Task<BaseApiResponse> ActivateOrDeActivateUser([FromForm]UserActivation model)
         {
-            return await UserWorker.ActivateOrDeActivateUserAsync(model);
+            return UserWorker.ActivateOrDeActivateUserAsync(model);
         }
 
         /// <summary>
@@ -86,9 +87,9 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         [HttpPost("Remove")]
-        public async Task<BaseApiResponse> Remove([FromForm]UserIdModel model)
+        public Task<BaseApiResponse> Remove([FromForm]UserIdModel model)
         {
-            return await UserWorker.RemoveUserAsync(model);
+            return UserWorker.RemoveUserAsync(model);
         }
 
         /// <summary>
@@ -96,11 +97,11 @@ namespace FocLab.Api.Controllers.Api.Users
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [ProducesDefaultResponseType(typeof(BaseApiResponse))]
+        [ProducesDefaultResponseType(typeof(BaseApiResponse<ApplicationUserDto>))]
         [HttpPost("Create")]
-        public async Task<BaseApiResponse> Create([FromForm]CreateUserModel model)
+        public Task<BaseApiResponse<ApplicationUserDto>> Create([FromForm]CreateUserModel model)
         {
-            return await AccountRegistrationWorker.RegisterUserByAdminAsync(model, UserManager, model.Rights);
+            return AccountRegistrationWorker.RegisterUserByAdminAsync(model, UserManager, model.Rights);
         }
 
 
@@ -112,9 +113,9 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         [HttpPost("ChangePassword")]
-        public async Task<BaseApiResponse> ChangePassword([FromForm]ResetPasswordByAdminModel model)
+        public Task<BaseApiResponse> ChangePassword([FromForm]ResetPasswordByAdminModel model)
         {
-            return await UserWorker.ChangePasswordAsync(model, UserManager);
+            return UserWorker.ChangePasswordAsync(model, UserManager);
         }
 
         /// <summary>
@@ -124,9 +125,9 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         [HttpPost("Edit")]
-        public async Task<BaseApiResponse> Edit([FromForm]EditApplicationUser model)
+        public Task<BaseApiResponse> Edit([FromForm]EditApplicationUser model)
         {
-            return await UserWorker.EditUserAsync(model);
+            return UserWorker.EditUserAsync(model);
         }
     }
 }

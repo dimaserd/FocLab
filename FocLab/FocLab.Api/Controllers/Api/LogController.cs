@@ -33,9 +33,9 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         [HttpPost("Exceptions")]
-        public async Task<BaseApiResponse> LogExceptions([FromForm]List<LogUserInterfaceException> model)
+        public Task<BaseApiResponse> LogExceptions([FromForm]List<LogUserInterfaceException> model)
         {
-            return await ExceptionWorker.LogUserInterfaceExceptionsAsync(model);
+            return ExceptionWorker.LogUserInterfaceExceptionsAsync(model);
         }
 
         /// <summary>
@@ -45,9 +45,9 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         [HttpPost("Exception")]
-        public async Task<BaseApiResponse> LogException([FromForm]LogUserInterfaceException model)
+        public Task<BaseApiResponse> LogException([FromForm]LogUserInterfaceException model)
         {
-            return await ExceptionWorker.LogUserInterfaceExceptionAsync(model);
+            return ExceptionWorker.LogUserInterfaceExceptionAsync(model);
         }
 
         /// <summary>
@@ -57,11 +57,11 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         [HttpPost("Action")]
-        public async Task<BaseApiResponse> LogAction([FromForm]LoggedUserInterfaceActionModel model)
+        public Task<BaseApiResponse> LogAction([FromForm]LoggedUserInterfaceActionModel model)
         {
             var worker = new ActionLogWorker(ContextWrapper);
 
-            return await worker.LogActionAsync(model);
+            return worker.LogActionAsync(model);
         }
 
     }

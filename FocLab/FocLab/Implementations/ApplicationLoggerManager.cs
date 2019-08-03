@@ -9,11 +9,11 @@ namespace FocLab.Implementations
     {
         public Task LogExceptionAsync(Exception ex)
         {
-            using (var db = CrocoApp.Application.GetDbContext())
-            {
-                var logger = new Croco.Core.Loggers.ExceptionLogger(db, () => DateTime.Now);
-                return logger.LogExceptionAsync(ex);
-            }
+            var logger = CrocoApp.Application.GetLogger();
+            logger.LogException(ex);
+
+            return Task.CompletedTask;
+            
         }
     }
 }

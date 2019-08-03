@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Croco.Core.Model.Interfaces.Auditable;
+using Croco.Core.Model.Abstractions.Auditable;
 using Croco.Core.Model.Models;
 using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;

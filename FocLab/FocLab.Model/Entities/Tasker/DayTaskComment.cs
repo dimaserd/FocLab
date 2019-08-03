@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Croco.Core.Model.Entities.Users;
-using Croco.Core.Model.Interfaces.Auditable;
+using Croco.Core.Model.Abstractions.Auditable;
+using Croco.Core.Model.Abstractions.Entity;
 using Croco.Core.Model.Models;
 using FocLab.Model.Entities.Users.Default;
 using Newtonsoft.Json;

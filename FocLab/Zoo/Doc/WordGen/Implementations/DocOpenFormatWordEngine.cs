@@ -1,5 +1,4 @@
-﻿using Doc.Logic.Abstractions;
-using Doc.Logic.Entities;
+﻿using Doc.Logic.Entities;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -7,14 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Zoo.Doc.WordGen.Abstractions;
+using Zoo.Doc.WordGen.Models;
 
-namespace Doc.Logic.Implementations
+namespace Zoo.Doc.WordGen.Implementations
 {
     public class DocOpenFormatWordEngine : IWordProccessorEngine
     {
         public void Create(DocXDocumentObjectModel model)
         {
-            if(File.Exists(model.DocumentSaveFileName))
+            if (File.Exists(model.DocumentSaveFileName))
             {
                 File.Delete(model.DocumentSaveFileName);
             }
@@ -43,7 +44,7 @@ namespace Doc.Logic.Implementations
                         AddTable(doc, tableModel);
                     }
 
-                    foreach(var image in model.ToReplaceImages)
+                    foreach (var image in model.ToReplaceImages)
                     {
                         DocImageInserter.InsertAPicture(doc, image);
                     }
@@ -55,7 +56,7 @@ namespace Doc.Logic.Implementations
             }
         }
 
-        
+
         private static void AddTable(WordprocessingDocument doc, DocumentTable tableModel)
         {
             var elem = doc.MainDocumentPart
@@ -63,7 +64,7 @@ namespace Doc.Logic.Implementations
                     .ChildElements
                     .FirstOrDefault(x => x.InnerText == tableModel.PlacingText);
 
-            if(elem == null)
+            if (elem == null)
             {
                 throw new ApplicationException($"Не найден элемент с внутренним текстом '{tableModel.PlacingText}', " +
                     $"вместо которого нужно вставить таблицу.");
@@ -103,7 +104,7 @@ namespace Doc.Logic.Implementations
                 return res;
             }
 
-            foreach(var child in elem.ChildElements)
+            foreach (var child in elem.ChildElements)
             {
                 res.AddRange(FindTextsInElement(child));
             }

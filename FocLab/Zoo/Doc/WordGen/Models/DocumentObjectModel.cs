@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Zoo.Doc.WordGen.Models;
 
 namespace Doc.Logic.Entities
 {

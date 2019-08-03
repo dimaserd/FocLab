@@ -1,9 +1,9 @@
 ﻿using Croco.Core.Common.Models;
-using Doc.Logic.Abstractions;
 using Doc.Logic.Entities;
 using System;
+using Zoo.Doc.WordGen.Abstractions;
 
-namespace Doc.Logic.Workers
+namespace Zoo.Doc.WordGen.Workers
 {
     public class WordDocumentProcessorOptions
     {
@@ -25,8 +25,8 @@ namespace Doc.Logic.Workers
             {
                 Engine.Create(model);
                 return new BaseApiResponse(true, "Документ создан");
-            }  
-            catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return new BaseApiResponse(ex);
             }

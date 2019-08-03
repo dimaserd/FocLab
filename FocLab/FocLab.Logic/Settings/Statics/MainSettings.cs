@@ -1,5 +1,4 @@
 ﻿using Croco.Core.Application;
-using Croco.Core.Settings;
 using FocLab.Logic.Settings.Models;
 
 namespace FocLab.Logic.Settings.Statics
@@ -9,6 +8,5 @@ namespace FocLab.Logic.Settings.Statics
         private static SettingsModel Model => CrocoApp.Application.SettingsFactory.GetSetting<SettingsModel>();
 
         public static string ApplicationName => Model.ApplicationName;
-
     }
 }

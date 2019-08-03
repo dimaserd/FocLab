@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Croco.Core.Abstractions.ContextWrappers;
+using Croco.Core.Data.Abstractions.ContextWrappers;
 using Croco.Core.Extensions.Enumerations;
-using Croco.Core.Extensions.Queryable;
-using Croco.Core.Search;
+using Croco.Core.Search.Extensions;
+using Croco.Core.Search.Models;
+using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Users;
-using FocLab.Logic.Settings;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
-using ApplicationUserDto = FocLab.Logic.EntityDtos.Users.Default.ApplicationUserDto;
 
 namespace FocLab.Logic.Workers.Users
 {

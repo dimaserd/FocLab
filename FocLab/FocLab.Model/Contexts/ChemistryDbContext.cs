@@ -107,11 +107,6 @@ namespace FocLab.Model.Contexts
             base.OnModelCreating(builder);
         }
 
-        public ExceptionLogger GetLogger()
-        {
-            return new ExceptionLogger(this, () => DateTime.Now);
-        }
-
         public ChemistryDbContext(DbContextOptions options) : base(options)
         {
         }

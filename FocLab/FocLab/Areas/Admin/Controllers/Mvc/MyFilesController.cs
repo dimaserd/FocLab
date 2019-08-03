@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Croco.Core.Search;
+using Croco.Core.Search.Models;
 using FocLab.Controllers.Base;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers;
