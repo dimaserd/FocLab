@@ -1,40 +1,55 @@
 ﻿@using FocLab.Logic
-@model List<FocLab.Logic.EntityDtos.ChemistryReagentDto>
+@model List<FocLab.Logic.Models.Reagents.ChemistryReagentNameAndIdModel>
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Список реагентов";
 }
 
+<div class="row">
+    <div class="col-12">
+        <a href="/Chemistry/Reagent/Create" class="btn btn-success">
+            Создать реагент
+        </a>
+    </div>
+</div>
+
+<div style="height:20px">
+
+</div>
+
+<div class="form-group m-form__group m--margin-top-10">
+    <div class="alert m-alert m-alert--default" role="alert">
+        Созданные в системе реагенты <span class="m-badge m-badge--success">@Model.Count</span>
+    </div>
+</div>
+
+
 <div class="table-responsive">
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-hover">
         <thead>
             <tr>
                 <th>
-                    Название
+                    <strong>
+                        Название
+                    </strong>
                 </th>
             </tr>
         </thead>
 
         <tbody>
-            @foreach(var reagent in Model)
+            @foreach (var reagent in Model)
             {
                 <tr>
                     <td>
-                        <a href="/Chemistry/Reagent/Details/@reagent.Id">
+                        <a href="/Chemistry/Reagents/Details/@reagent.Id">
                             @reagent.Name
                         </a>
-                        
+
                     </td>
                 </tr>
             }
 
-            <tr>
-                <td>
-                    <a href="/Chemistry/Reagent/Create" class="btn btn-success btn-block">
-                        Создать реагент
-                    </a>
-                </td>
-            </tr>
+
         </tbody>
     </table>
 </div>

@@ -6,7 +6,7 @@
 
     Layout = ChemistrySettings.LayoutPath;
 
-    var sexes = ViewData["sexes"] as List<SelectListItem>;
+    var sexes = ViewData["sexes"] as IEnumerable<SelectListItem>;
 
     var roles = ViewData["UserRoles"] as IEnumerable<KeyValuePair<UserRight, bool>>;
 
@@ -72,7 +72,7 @@
 
     <div class="form-group m-form__group">
         @Html.LabelFor(x => x.Sex)
-        @Html.DropDownListFor(x => x.Sex, sexes, new { @class = "form-control m-input m-bootstrap-select m_selectpicker" })
+        @Html.DropDownList("Sex", sexes, new { @class = "form-control m-input m-bootstrap-select m_selectpicker" })
     </div>
     <div class="form-group m-form__group">
         @foreach (var item in roles)

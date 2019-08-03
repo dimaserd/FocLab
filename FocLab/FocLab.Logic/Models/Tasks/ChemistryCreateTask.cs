@@ -34,7 +34,7 @@ namespace FocLab.Logic.Models.Tasks
         /// <summary>
         /// Колличество
         /// </summary>
-        [Display(Name = "Колличество")]
+        [Display(Name = "Количество")]
         public string Quantity { get; set; }
 
         /// <summary>

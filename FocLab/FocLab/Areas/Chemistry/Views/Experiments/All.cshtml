@@ -1,64 +1,70 @@
 ﻿@using FocLab.Logic
 @using Microsoft.AspNetCore.Html
-@model List<IGrouping<FocLab.Logic.EntityDtos.ChemistryTaskDto, FocLab.Logic.EntityDtos.ChemistryTaskExperimentDto>>
+@model List<FocLab.Logic.Models.Experiments.ChemistryTaskExperimentModel>
 @{
+    var grouped = Model.GroupBy(x => x.Task.Id).ToList();
+
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Все эксперименты";
 }
 
 <h2>
-    <strong>
-        Все эскперименты по заданиям
-    </strong>
-    <span class="badge">
-        @(Model.Sum(x => x.Count()))
+    Все эскперименты по заданиям
+    <span class="m-badge m-badge--success">
+        @(grouped.Sum(x => x.Count()))
     </span>
 </h2>
 
 <div class="table-responsive">
-    <table class="table table-striped table-bordered">
+    <table class="table table-bordered table-hover">
         <thead>
             <tr>
                 <th>
-                    Задание
+                    <strong>
+                        Задание
+                    </strong>
                 </th>
 
                 <th>
-                    Эксперименты
+                    <strong>
+                        Эксперименты
+                    </strong>
                 </th>
             </tr>
         </thead>
 
         <tbody>
-            @foreach (var group in Model)
+            @foreach (var group in grouped)
             {
                 <tr>
                     <td>
-                        <a href="/Chemistry/Chemistry/Task/@group.First().ChemistryTask.Id">
-                            @group.First().ChemistryTask.Title
+                        <a href="/Chemistry/Tasks/Task/@group.First().Task.Id">
+                            @group.First().Task.Title
                         </a>
                         
                     </td>
 
                     <td>
-                        <table class="table table-bordered table-striped">
+                        <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>
-                                        Название эксперимента
+                                        <strong>
+                                            Название эксперимента
+                                        </strong>
                                     </th>
 
                                     <th>
-                                        Пользователь
+                                        <strong>
+                                            Пользователь
+                                        </strong>
                                     </th>
 
                                     <th>
-                                        Дата выполнения
+                                        <strong>
+                                            Дата выполнения
+                                        </strong>
                                     </th>
-
-
-
-
                                 </tr>
                             </thead>
 
