@@ -2,8 +2,10 @@
 
 namespace Tms.Logic.Models.Tasker
 {
-    public class CreateDayTask
+    public class CreateOrUpdateDayTask
     {
+        public string Id { get; set; }
+
         public DateTime TaskDate { get; set; }
 
         /// <summary>
@@ -17,6 +19,21 @@ namespace Tms.Logic.Models.Tasker
         public string TaskTitle { get; set; }
 
         public string AssigneeUserId { get; set; }
+
+        /// <summary>
+        /// Цель Html (Summernote)
+        /// </summary>
+        public string TaskTarget { get; set; }
+
+        /// <summary>
+        /// Отчет Html (Summernote)
+        /// </summary>
+        public string TaskReview { get; set; }
+
+        /// <summary>
+        /// Комментарий Html (Summernote)
+        /// </summary>
+        public string TaskComment { get; set; }
     }
 
 }

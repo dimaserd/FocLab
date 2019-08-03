@@ -56,9 +56,9 @@ namespace FocLab.Api.Controllers.Api.Tasker
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(List<DayTaskModel>))]
         [HttpPost(nameof(GetTasks))]
-        public async Task<List<DayTaskModel>> GetTasks([FromForm]UserScheduleSearchModel model)
+        public Task<List<DayTaskModel>> GetTasks([FromForm]UserScheduleSearchModel model)
         {
-            return await DayTaskWorker.GetDayTasksAsync(model);
+            return DayTaskWorker.GetDayTasksAsync(model);
         }
 
         /// <summary>
@@ -67,22 +67,11 @@ namespace FocLab.Api.Controllers.Api.Tasker
         /// <param name="model"></param>
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        [HttpPost(nameof(Create))]
-        public async Task<BaseApiResponse> Create([FromForm]CreateDayTask model)
+        [HttpPost("CreateOrUpdate")]
+        public Task<BaseApiResponse> CreateOrUpdate([FromForm]CreateOrUpdateDayTask model)
         {
-            return await DayTaskWorker.CreateDayTaskAsync(model);
+            return DayTaskWorker.CreateOrUpdateDayTaskAsync(model);
         }
 
-        /// <summary>
-        /// Редактирование задания
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        [HttpPost(nameof(Update))]
-        public async Task<BaseApiResponse> Update([FromForm]UpdateDayTask model)
-        {
-            return await DayTaskWorker.UpdateDayTaskAsync(model);
-        }
     }
 }

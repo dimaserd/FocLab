@@ -89,24 +89,34 @@ namespace Tms.Logic.Workers.Tasker
                 .ToListAsync();
         }
 
+        public Task<BaseApiResponse> CreateOrUpdateDayTaskAsync(CreateOrUpdateDayTask model)
+        {
+            if (string.IsNullOrEmpty(model.Id))
+            {
+                return CreateDayTaskAsync(model);
+            }
+
+            return UpdateDayTaskAsync(model);
+        }
+
         /// <summary>
         /// Создание задания
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> CreateDayTaskAsync(CreateDayTask model)
+        private async Task<BaseApiResponse> CreateDayTaskAsync(CreateOrUpdateDayTask model)
         {
             if (model.TaskDate < GetAllowedDate())
             {
                 return new BaseApiResponse(false, "Вы не можете создавать задания на прошедшую дату");
             }
 
-            if (string.IsNullOrEmpty(model.TaskTitle) || string.IsNullOrWhiteSpace(model.TaskTitle.Trim()))
+            if (string.IsNullOrWhiteSpace(model.TaskTitle))
             {
                 return new BaseApiResponse(false, "Пустое название задания");
             }
 
-            if (string.IsNullOrEmpty(model.TaskText) || string.IsNullOrWhiteSpace(model.TaskText.Trim()))
+            if (string.IsNullOrWhiteSpace(model.TaskText))
             {
                 return new BaseApiResponse(false, "Пустое описание задания");
             }
@@ -120,12 +130,14 @@ namespace Tms.Logic.Workers.Tasker
 
             repo.CreateHandled(new ApplicationDayTask
             {
-                Id = Guid.NewGuid().ToString(),
                 AuthorId = UserId,
                 AssigneeUserId = model.AssigneeUserId,
                 TaskDate = model.TaskDate,
                 TaskText = model.TaskText,
-                TaskTitle = model.TaskTitle
+                TaskTitle = model.TaskTitle,
+                TaskComment = model.TaskComment,
+                TaskReview = model.TaskReview,
+                TaskTarget = model.TaskTarget
             });
 
             return await TrySaveChangesAndReturnResultAsync("Задание создано");
@@ -136,16 +148,16 @@ namespace Tms.Logic.Workers.Tasker
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> UpdateDayTaskAsync(UpdateDayTask model)
+        private async Task<BaseApiResponse> UpdateDayTaskAsync(CreateOrUpdateDayTask model)
         {
             var userId = UserId;
 
-            if (string.IsNullOrWhiteSpace(model.TaskTitle.Trim()))
+            if (string.IsNullOrWhiteSpace(model.TaskTitle))
             {
                 return new BaseApiResponse(false, "Пустое название задания");
             }
 
-            if (string.IsNullOrWhiteSpace(model.TaskText.Trim()))
+            if (string.IsNullOrWhiteSpace(model.TaskText))
             {
                 return new BaseApiResponse(false, "Пустое описание задания");
             }
@@ -167,8 +179,10 @@ namespace Tms.Logic.Workers.Tasker
             dayTask.TaskTitle = model.TaskTitle;
             dayTask.TaskText = model.TaskText;
             dayTask.AssigneeUserId = model.AssigneeUserId;
-            dayTask.EstimationSeconds = model.EstimationSeconds;
             dayTask.TaskDate = model.TaskDate;
+            dayTask.TaskComment = model.TaskComment;
+            dayTask.TaskReview = model.TaskReview;
+            dayTask.TaskTarget = model.TaskTarget;
 
             repo.UpdateHandled(dayTask);
 
@@ -216,7 +230,9 @@ namespace Tms.Logic.Workers.Tasker
             {
                 await ContextWrapper.SaveChangesAsync();
 
-                return new BaseApiResponse<DayTaskModel>(true, TaskerResource.CommentAdded, await repo.Query().Select(DayTaskModel.SelectExpression).FirstOrDefaultAsync(x => x.Id == model.DayTaskId));
+                var task = await repo.Query().Select(DayTaskModel.SelectExpression).FirstOrDefaultAsync(x => x.Id == model.DayTaskId);
+
+                return new BaseApiResponse<DayTaskModel>(true, TaskerResource.CommentAdded, task);
             });
         }
 
@@ -252,7 +268,11 @@ namespace Tms.Logic.Workers.Tasker
                 await ContextWrapper.SaveChangesAsync();
                 var repo = GetRepository<ApplicationDayTask>();
 
-                return new BaseApiResponse<DayTaskModel>(true, TaskerResource.CommentUpdated, await repo.Query().Select(DayTaskModel.SelectExpression).FirstOrDefaultAsync(x => x.Id == comment.DayTaskId));
+                var task = await repo.Query()
+                    .Select(DayTaskModel.SelectExpression)
+                    .FirstOrDefaultAsync(x => x.Id == comment.DayTaskId);
+
+                return new BaseApiResponse<DayTaskModel>(true, TaskerResource.CommentUpdated, task);
             });
 
         }
