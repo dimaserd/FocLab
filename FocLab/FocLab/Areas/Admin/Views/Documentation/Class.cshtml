@@ -117,19 +117,19 @@
             {
                 <tr>
                     <td>
-                        @prop.Name
+                        @prop.PropertyName
                     </td>
                     
                     @if (prop.IsEnumerable)
                     {
                         <td>
-                            <a href="/Admin/Documentation/Class?typeName=@prop.EnumeratedType.FullTypeName">@prop.DisplayName</a>
+                            <a href="/Admin/Documentation/Class?typeName=@prop.EnumeratedType.FullTypeName">@prop.TypeDisplayName</a>
                         </td>
                     }
                     else
                     {
                         <td>
-                            <a href="/Admin/Documentation/Class?typeName=@prop.FullTypeName">@prop.DisplayName</a>
+                            <a href="/Admin/Documentation/Class?typeName=@prop.FullTypeName">@prop.TypeDisplayName</a>
                         </td>
                     }
 
