@@ -13,7 +13,7 @@ interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
 
 class Utils {
 
-    public static SetDatePicker = function (selector: string, startDate: string = null): void {
+    public static SetDatePicker(selector: string, startDate: string = null): void {
         $.fn.datepicker['dates']['ru'] = {
             days: ['понедельник', 'воскресенье', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
             daysShort: ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
@@ -34,7 +34,7 @@ class Utils {
 
     }
 
-    public static SetDateRangePicker = function (selector: string): void {
+    public static SetDateRangePicker(selector: string): void {
 
         $(selector).daterangepicker({
             autoUpdateInput: false,
@@ -60,7 +60,7 @@ class Utils {
 
     };
 
-    public static GetDateFromDateRangePicker = function (inputId: string): object {
+    public static GetDateFromDateRangePicker(inputId: string): object {
         let inputDate: any = document.getElementById(inputId);
 
         if (inputDate === null) {
@@ -92,7 +92,7 @@ class Utils {
         }
     };
 
-    public static GetDateFromDatePicker = function (inputId: string): string {
+    public static GetDateFromDatePicker(inputId: string): string {
         let inputDate: any = document.getElementById(inputId);
 
         if (inputDate === []) {
@@ -101,18 +101,18 @@ class Utils {
         }
         var date = inputDate.value.replace(/ /g, "");
         if (date != "") {
-            console.log("Not ''");
             var tempStr = date.split('/');
             tempStr.reverse();
             date = tempStr.join('-');
 
             return (date);
-        } else {
+        }
+        else {
             return null;
         }
     }
 
-    public static FillSelect = function (select: HTMLElement, array: Array<object>, htmlFunc: Function, valueFunc: Function): void {
+    public static FillSelect(select: HTMLElement, array: Array<object>, htmlFunc: Function, valueFunc: Function): void {
 
         for (let i = 0; i < array.length; i++) {
             const opt = document.createElement("option");

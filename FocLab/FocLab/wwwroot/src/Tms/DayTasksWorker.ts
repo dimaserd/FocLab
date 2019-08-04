@@ -40,7 +40,7 @@ class DayTasksWorker {
 
         var taskId = this.OpenTaskId;
 
-        const task = DayTasksWorker.Tasks.filter(x => x.Id === taskId)[0];
+        const task = DayTasksWorker.Tasks.find(x => x.Id === taskId);
 
         if (task != null) {
             //открываю модал по заданию полученному из ссылки

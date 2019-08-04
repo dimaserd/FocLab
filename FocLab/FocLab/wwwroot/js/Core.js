@@ -671,6 +671,7 @@ var Utils = /** @class */ (function () {
             $(this).val("");
         });
     };
+    ;
     Utils.GetDateFromDateRangePicker = function (inputId) {
         var inputDate = document.getElementById(inputId);
         if (inputDate === null) {
@@ -701,6 +702,7 @@ var Utils = /** @class */ (function () {
             return null;
         }
     };
+    ;
     Utils.GetDateFromDatePicker = function (inputId) {
         var inputDate = document.getElementById(inputId);
         if (inputDate === []) {
@@ -709,7 +711,6 @@ var Utils = /** @class */ (function () {
         }
         var date = inputDate.value.replace(/ /g, "");
         if (date != "") {
-            console.log("Not ''");
             var tempStr = date.split('/');
             tempStr.reverse();
             date = tempStr.join('-');

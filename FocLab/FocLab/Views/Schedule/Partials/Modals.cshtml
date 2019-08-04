@@ -26,33 +26,54 @@
             </div>
             <div class="modal-body">
 
-                <div class="form-group m-form__group row m--margin-top-10">
-                    <div class="col-lg-7">
+                <div class="row m--margin-top-10">
 
-                        <div class="form-group m-form__group mb-4">
+                    <div class="col-12">
+                        <div class="form-group m-form__group" data-name="task.TaskTitle">
                             <h6>Название</h6>
                             <div class="form-group m-form__group">
                                 <input id="TaskTitle" type="text" name="task.TaskTitle" class="form-control" value="">
                             </div>
                         </div>
 
-                        <div class="form-group m-form__group mt-4">
+                        <div class="form-group m-form__group" data-name="task.TaskText">
                             <h6>Описание</h6>
                             <div class="form-group m-form__group">
                                 <textarea id="TaskText" type="text" name="task.TaskText" class="form-control" value=""> </textarea>
                             </div>
                         </div>
-                        <div class="form-group m-form__group">
+
+                        <div class="form-group m-form__group" data-name="task.TaskTarget">
+                            <h6>Цель</h6>
+                            <div class="form-group m-form__group">
+                                <textarea id="TaskText" type="text" name="task.TaskTarget" class="form-control" value=""> </textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group m-form__group" data-name="task.TaskReview">
+                            <h6>Отчёт</h6>
+                            <div class="form-group m-form__group">
+                                <textarea id="TaskText" type="text" name="task.TaskReview" class="form-control" value=""> </textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group m-form__group" data-name="task.TaskComment">
+                            <h6>Комментарий</h6>
+                            <div class="form-group m-form__group">
+                                <textarea id="TaskText" type="text" name="task.TaskComment" class="form-control" value=""> </textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-form__group" data-name="task.TaskDate">
                             <h6>Дата выполнения</h6>
                             <div class="form-group m-form__group">
                                 <input id="TaskDate" type="text" name="task.TaskDate" class="form-control" value="">
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-5">
-
-                        <div class="form-group m-form__group">
+                        <div class="form-group m-form__group" data-name="task.AssigneeUserId">
                             <h6>Исполнитель</h6>
                             <div class="form-group m-form__group">
                                 <select id="usersSelect1" class="usersSelect" style="width:100%" name="task.AssigneeUserId"></select>
@@ -64,12 +85,14 @@
                             <div class="d-flex align-items-center" id="Author"></div>
                         </div>
                     </div>
+
+                    
                     <div class="form-group m-form__group col-md-12" style="display:none">
                         <a data-toggle="collapse" href="#CommentsBody" role="button" aria-expanded="false" aria-controls="collapseExample">
                             <h4>Блок комментариев</h4>
                         </a>
-                        
-                        
+
+
                         <div id="CommentsBody" class="collapse">
 
                             <h4>Комментарии</h4>
@@ -138,7 +161,7 @@
                         <div class="form-group m-form__group">
                             <label>Дата выполнения</label>
                             <div class="form-group m-form__group">
-                                <input id="TaskDate1" type="text" name="create.TaskDate"  class="form-control" value="">
+                                <input id="TaskDate1" type="text" name="create.TaskDate" class="form-control" value="">
                             </div>
                         </div>
                     </div>

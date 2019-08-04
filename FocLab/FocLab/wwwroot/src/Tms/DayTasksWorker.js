@@ -14,7 +14,7 @@ var DayTasksWorker = /** @class */ (function () {
     };
     DayTasksWorker.OpenTaskById = function () {
         var taskId = this.OpenTaskId;
-        var task = DayTasksWorker.Tasks.filter(function (x) { return x.Id === taskId; })[0];
+        var task = DayTasksWorker.Tasks.find(function (x) { return x.Id === taskId; });
         if (task != null) {
             //открываю модал по заданию полученному из ссылки
             ScheduleStaticHandlers.ShowDayTaskModal(task.Id);

@@ -15,14 +15,14 @@ var AdminDayTaskCreator = /** @class */ (function () {
     };
     AdminDayTaskCreator.prototype.CreateDayTask = function (data) {
         data = this.ProccessData(data);
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/Create", data, function (x) {
+        Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
         }, null);
     };
     AdminDayTaskCreator.prototype.EditDayTask = function (data) {
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/Update", data, function (x) {
+        Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }

@@ -3,7 +3,7 @@ var DayTaskEditor = /** @class */ (function () {
     }
     DayTaskEditor.UpdateHtmlProperties = function (data) {
         ModalWorker.ShowModal("loadingModal");
-        Requester.SendPostRequestWithAnimation('/Api/DayTask/Update', data, function (x) {
+        Requester.SendPostRequestWithAnimation('/Api/DayTask/CreateOrUpdate', data, function (x) {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }

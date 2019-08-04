@@ -15,14 +15,14 @@ var AdminDayTaskCreator = /** @class */ (function () {
     };
     AdminDayTaskCreator.prototype.CreateDayTask = function (data) {
         data = this.ProccessData(data);
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/Create", data, function (x) {
+        Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
         }, null);
     };
     AdminDayTaskCreator.prototype.EditDayTask = function (data) {
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/Update", data, function (x) {
+        Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
@@ -123,7 +123,7 @@ var DayTaskEditor = /** @class */ (function () {
     }
     DayTaskEditor.UpdateHtmlProperties = function (data) {
         ModalWorker.ShowModal("loadingModal");
-        Requester.SendPostRequestWithAnimation('/Api/DayTask/Update', data, function (x) {
+        Requester.SendPostRequestWithAnimation('/Api/DayTask/CreateOrUpdate', data, function (x) {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
@@ -148,7 +148,7 @@ var DayTasksWorker = /** @class */ (function () {
     };
     DayTasksWorker.OpenTaskById = function () {
         var taskId = this.OpenTaskId;
-        var task = DayTasksWorker.Tasks.filter(function (x) { return x.Id === taskId; })[0];
+        var task = DayTasksWorker.Tasks.find(function (x) { return x.Id === taskId; });
         if (task != null) {
             //открываю модал по заданию полученному из ссылки
             ScheduleStaticHandlers.ShowDayTaskModal(task.Id);
@@ -279,7 +279,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
             TaskTitle: data.TaskTitle,
             AssigneeUserId: data.AssigneeUserId
         };
-        Requester.SendAjaxPost("/Api/DayTask/Update", m, function (resp) {
+        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", m, function (resp) {
             if (resp.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
@@ -298,7 +298,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
             AssigneeUserId: data.AssigneeUserId,
             TaskDate: Utils.GetDateFromDatePicker("TaskDate1")
         };
-        Requester.SendAjaxPost("/Api/DayTask/Create", m, function (resp) {
+        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", m, function (resp) {
             if (resp.IsSucceeded) {
                 ScheduleStaticHandlers.hideCreateModal();
             }
@@ -412,7 +412,7 @@ var TaskModalWorker = /** @class */ (function () {
         for (var comment in task.Comments) {
             html += "\n          <div class=\"media-block\">\n            <div class=\"media-body\">\n                <div class=\"form-group m-form__group row m--margin-top-10 d-flex justify-content-between align-items-center\">\n                        <div>\n                            <a href=\"#\" class=\"btn-link btn cursor-pointer tms-profile-link\" data-task-author-id=\"" + task.Author.Id + "\">\n                                " + avatar + "\n                            </a>\n                            <a href=\"#\" data-task-author-id=\"" + task.Author.Id + "\" class=\"text-semibold tms-profile-link\">\n                                " + task.Comments[comment].Author.Name + "\n                            </a>\n                        </div>";
             if (task.Comments[comment].Author.Id == userId) {
-                html += "<div>\n                                    <button style='height:30px; width:30px' data-editable-name=\"btnEditComment\" data-id=\"" + task.Comments[comment].Id + "\"\n                                    class=\"float-right bg-white border-0\" onclick=\"TaskModalWorker.MakeCommentFieldEditable('" + task.Comments[comment].Id + "')\">\n                                        <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i>\n                                    </button>\n                            </div>\n                        </div>";
+                html += "<div>\n                            <button style='height:30px; width:30px' data-editable-name=\"btnEditComment\" data-id=\"" + task.Comments[comment].Id + "\" class=\"float-right bg-white border-0\" onclick=\"TaskModalWorker.MakeCommentFieldEditable('" + task.Comments[comment].Id + "')\">\n                                <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i>\n                            </button>\n                        </div>\n                        </div>";
             }
             else {
                 html += "</div>";

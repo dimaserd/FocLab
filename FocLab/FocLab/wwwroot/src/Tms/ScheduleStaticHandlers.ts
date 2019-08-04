@@ -174,7 +174,7 @@ class ScheduleStaticHandlers {
             AssigneeUserId: data.AssigneeUserId
         };
 
-        Requester.SendAjaxPost("/Api/DayTask/Update", m, resp => {
+        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", m, resp => {
             if (resp.IsSucceeded) {
                 DayTasksWorker.GetTasks()
             }
@@ -203,7 +203,7 @@ class ScheduleStaticHandlers {
             TaskDate: Utils.GetDateFromDatePicker("TaskDate1")
         };
 
-        Requester.SendAjaxPost("/Api/DayTask/Create", m, resp => {
+        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", m, resp => {
             if (resp.IsSucceeded) {
                 ScheduleStaticHandlers.hideCreateModal();
             }

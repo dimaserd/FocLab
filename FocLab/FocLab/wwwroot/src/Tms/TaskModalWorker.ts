@@ -57,11 +57,10 @@
 
             if (task.Comments[comment].Author.Id == userId) {
                 html += `<div>
-                                    <button style='height:30px; width:30px' data-editable-name="btnEditComment" data-id="${task.Comments[comment].Id}"
-                                    class="float-right bg-white border-0" onclick="TaskModalWorker.MakeCommentFieldEditable('${task.Comments[comment].Id}')">
-                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                    </button>
-                            </div>
+                            <button style='height:30px; width:30px' data-editable-name="btnEditComment" data-id="${task.Comments[comment].Id}" class="float-right bg-white border-0" onclick="TaskModalWorker.MakeCommentFieldEditable('${task.Comments[comment].Id}')">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </button>
+                        </div>
                         </div>`;
             } else {
                 html += `</div>`;
@@ -78,7 +77,7 @@
         document.getElementById(divId).innerHTML = html;
     }
 
-    public static ClearContent = ():void => {
+    public static ClearContent = (): void => {
         (<HTMLInputElement>document.getElementsByName("Comment")[0]).value = "";
         document.getElementById("dayTaskModalTitle").innerHTML = "";
 
