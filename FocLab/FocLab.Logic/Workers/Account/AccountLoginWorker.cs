@@ -77,8 +77,7 @@ namespace FocLab.Logic.Workers.Account
                 return new BaseApiResponse<LoginResultModel>(false, "Ваш Email не подтверждён", new LoginResultModel { Result = LoginResult.EmailNotConfirmed });
             }
 
-            var db = Context;
-
+            
             try
             {
                 var userWorker = new UserWorker(ApplicationContextWrapper);

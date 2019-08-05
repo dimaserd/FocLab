@@ -2,12 +2,12 @@ var TaskModalWorker = /** @class */ (function () {
     function TaskModalWorker() {
     }
     TaskModalWorker.ShowDayTaskModal = function (task) {
-        TaskModalWorker.InitTask(task, AccountWorker.User.Id);
+        TaskModalWorker.InitTask(task);
         FormDataHelper.FillDataByPrefix(task, "task.");
         Utils.SetDatePicker("input[name='task.TaskDate']");
         ModalWorker.ShowModal("dayTaskModal");
     };
-    TaskModalWorker.InitTask = function (task, accountId) {
+    TaskModalWorker.InitTask = function (task) {
         task.TaskDate = moment(new Date(task.TaskDate)).format("DD/MM/YYYY");
         TaskModalWorker.ClearContent();
         document.getElementById("dayTaskModalTitle").innerHTML = task.TaskTitle;
@@ -15,13 +15,14 @@ var TaskModalWorker = /** @class */ (function () {
         document.getElementById("Author").innerHTML = "<a class=\"media-left tms-profile-link\" href=\"#\" data-task-author-id=\"" + task.Author.Id + "\">" + avatar + "</a>\n                <a  href=\"#\" data-task-author-id=\"" + task.Author.Id + "\" class=\"tms-profile-link text-semibold media-heading box-inline ml-1 mb-1\">\n                    " + task.Author.Name + " " + task.Author.Email + "\n                </a>";
         document.getElementsByName('DayTaskId')[0].value = task.Id;
         $("#usersSelect1").val(task.AssigneeUser.Id).trigger('change.select2');
-        TaskModalWorker.DrawComments("Comments", accountId, task);
+        TaskModalWorker.DrawComments("Comments", task);
         $("#usersSelect1").select2({
             width: '100%'
         });
     };
-    TaskModalWorker.DrawComments = function (divId, userId, task) {
+    TaskModalWorker.DrawComments = function (divId, task) {
         TaskModalWorker.ClearContent();
+        var userId = AccountWorker.User.Id;
         var avatar = ColorAvatarInitor.InitColorForAvatar(task);
         var html = "<div>";
         for (var comment in task.Comments) {

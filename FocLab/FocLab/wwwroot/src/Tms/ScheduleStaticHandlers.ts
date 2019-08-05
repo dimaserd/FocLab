@@ -12,12 +12,15 @@ interface ShowUserSchedule {
     UserIds: Array<string>;
 }
 
-interface UpdateDayTask {
+interface CreateOrUpdateDayTask {
+    Id: string;
     TaskText: string;
     TaskTitle: string;
     AssigneeUserId: string;
-    Id: string;
     TaskDate: string;
+    TaskTarget: string;
+    TaskReview: string;
+    TaskComment: string;
 }
 
 interface CreateDayTask {
@@ -34,6 +37,13 @@ interface UserScheduleSearchModel {
     UserIds: Array<string>;
 
     ShowTasksWithNoAssignee: boolean;
+}
+
+class ScheduleConsts {
+    /**
+     * Префикс для собирания модели фильтра
+     */
+    static FilterPrefix: string = "filter.";
 }
 
 class ScheduleStaticHandlers {
@@ -75,7 +85,7 @@ class ScheduleStaticHandlers {
             UserIds: []
         };
 
-        var dataFilter = FormDataHelper.CollectDataByPrefix(data, "filter.") as UserScheduleSearchModel;
+        var dataFilter = FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix) as UserScheduleSearchModel;
         dataFilter.MonthShift = isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1;
 
         return Requester.GetParams(data);
@@ -91,7 +101,7 @@ class ScheduleStaticHandlers {
             UserIds: []
         };
 
-        var t = FormDataHelper.CollectDataByPrefix(data, "filter.") as ShowUserSchedule;
+        var t = FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix) as ShowUserSchedule;
 
         location.href = `/Schedule/Index?${Requester.GetParams(t)}`;
     }
@@ -105,7 +115,7 @@ class ScheduleStaticHandlers {
         TaskModalWorker.ShowDayTaskModal(task);
     }
 
-    static ShowCreateTaskModal() {
+    static ShowCreateTaskModal() :void {
         var data = {
             TaskDate: "",
             TaskText: "",
@@ -119,7 +129,7 @@ class ScheduleStaticHandlers {
         ModalWorker.ShowModal("createDayTaskModal");
     }
 
-    static updateComment(commentId : string) {
+    static updateComment(commentId : string) : void {
         var data = {
             Comment: ""
         }
@@ -132,7 +142,7 @@ class ScheduleStaticHandlers {
 
         Requester.SendAjaxPost("/Api/DayTask/Comments/Update", m, resp => {
             if (resp.IsSucceeded) {
-                TaskModalWorker.DrawComments("Comments", AccountWorker.User.Id, resp.ResponseObject);
+                TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
         }, null, false);
@@ -147,7 +157,7 @@ class ScheduleStaticHandlers {
 
         Requester.SendAjaxPost("/Api/DayTask/Comments/Add", data, resp => {
             if (resp.IsSucceeded) {
-                TaskModalWorker.DrawComments("Comments", AccountWorker.User.Id, resp.ResponseObject);
+                TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
         }, null, false);
@@ -155,26 +165,20 @@ class ScheduleStaticHandlers {
 
     static updateDayTask() : void {
 
-        var data = {
+        var data: CreateOrUpdateDayTask = {
             TaskText: "",
             TaskTitle: "",
-            AssigneeUserId: ""
+            AssigneeUserId: "",
+            Id: "",
+            TaskComment: "",
+            TaskDate: "",
+            TaskReview: "",
+            TaskTarget: ""
         };
-        data = FormDataHelper.CollectDataByPrefix(data, "task.") as {
-            TaskText: string,
-            TaskTitle: string,
-            AssigneeUserId: string
-        };
+        data = FormDataHelper.CollectDataByPrefix(data, "task.") as CreateOrUpdateDayTask;
+        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate");
 
-        var m: UpdateDayTask = {
-            Id: (document.getElementsByName('DayTaskId')[0] as HTMLInputElement).value,
-            TaskDate: Utils.GetDateFromDatePicker("TaskDate"),
-            TaskText: data.TaskText,
-            TaskTitle: data.TaskTitle,
-            AssigneeUserId: data.AssigneeUserId
-        };
-
-        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", m, resp => {
+        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, resp => {
             if (resp.IsSucceeded) {
                 DayTasksWorker.GetTasks()
             }
@@ -184,32 +188,26 @@ class ScheduleStaticHandlers {
 
     static createDayTask(): void {
 
-        var data = {
+        var data: CreateOrUpdateDayTask = {
+            Id: "",
             TaskText: "",
             TaskTitle: "",
-            AssigneeUserId: ""
+            AssigneeUserId: "",
+            TaskComment: "",
+            TaskDate: "",
+            TaskReview: "",
+            TaskTarget: ""
         };
 
-        data = FormDataHelper.CollectDataByPrefix(data, "create.") as {
-            TaskText: string,
-            TaskTitle: string,
-            AssigneeUserId: string
-        };
+        data = FormDataHelper.CollectDataByPrefix(data, "create.") as CreateOrUpdateDayTask;
+        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate1");
+        
 
-        var m: CreateDayTask = {
-            TaskText: data.TaskText,
-            TaskTitle: data.TaskTitle,
-            AssigneeUserId: data.AssigneeUserId,
-            TaskDate: Utils.GetDateFromDatePicker("TaskDate1")
-        };
-
-        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", m, resp => {
+        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, resp => {
+            ToastrWorker.HandleBaseApiResponse(resp);
             if (resp.IsSucceeded) {
                 ScheduleStaticHandlers.hideCreateModal();
             }
-            else {
-                ToastrWorker.HandleBaseApiResponse(resp);
-            } 
         }, null, false);
     }
 

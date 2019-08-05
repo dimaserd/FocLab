@@ -9,12 +9,15 @@ interface AddComment {
 interface ShowUserSchedule {
     UserIds: Array<string>;
 }
-interface UpdateDayTask {
+interface CreateOrUpdateDayTask {
+    Id: string;
     TaskText: string;
     TaskTitle: string;
     AssigneeUserId: string;
-    Id: string;
     TaskDate: string;
+    TaskTarget: string;
+    TaskReview: string;
+    TaskComment: string;
 }
 interface CreateDayTask {
     TaskText: string;
@@ -26,6 +29,12 @@ interface UserScheduleSearchModel {
     MonthShift: number;
     UserIds: Array<string>;
     ShowTasksWithNoAssignee: boolean;
+}
+declare class ScheduleConsts {
+    /**
+     * Префикс для собирания модели фильтра
+     */
+    static FilterPrefix: string;
 }
 declare class ScheduleStaticHandlers {
     static Filter: UserScheduleSearchModel;

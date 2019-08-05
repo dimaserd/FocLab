@@ -1,7 +1,7 @@
 ﻿class TaskModalWorker {
 
     public static ShowDayTaskModal(task: DayTaskModel) {
-        TaskModalWorker.InitTask(task, AccountWorker.User.Id);
+        TaskModalWorker.InitTask(task);
 
         FormDataHelper.FillDataByPrefix(task, "task.");
 
@@ -10,7 +10,7 @@
         ModalWorker.ShowModal("dayTaskModal");
     }
 
-    public static InitTask = function (task: DayTaskModel, accountId: string) {
+    public static InitTask(task: DayTaskModel) {
 
         task.TaskDate = moment(new Date(task.TaskDate)).format("DD/MM/YYYY");
 
@@ -29,14 +29,16 @@
 
         $("#usersSelect1").val(task.AssigneeUser.Id).trigger('change.select2');
 
-        TaskModalWorker.DrawComments("Comments", accountId, task);
+        TaskModalWorker.DrawComments("Comments", task);
         $("#usersSelect1").select2({
             width: '100%'
         });
     }
 
-    public static DrawComments = function (divId: string, userId: string, task: DayTaskModel) {
+    public static DrawComments(divId: string, task: DayTaskModel) {
         TaskModalWorker.ClearContent();
+
+        let userId: string = AccountWorker.User.Id;
 
         let avatar: string = ColorAvatarInitor.InitColorForAvatar(task);
 
@@ -77,7 +79,7 @@
         document.getElementById(divId).innerHTML = html;
     }
 
-    public static ClearContent = (): void => {
+    public static ClearContent(): void {
         (<HTMLInputElement>document.getElementsByName("Comment")[0]).value = "";
         document.getElementById("dayTaskModalTitle").innerHTML = "";
 
@@ -89,7 +91,7 @@
     }
 
 
-    public static MakeCommentFieldEditable = (commentId: string): void => {
+    public static MakeCommentFieldEditable(commentId: string): void {
         const text = document.getElementById(commentId).innerHTML;
         
         $("[data-editable-name='btnEditComment']").attr('hidden', 'hidden');
@@ -106,7 +108,7 @@
             document.querySelector(`[data-id="${commentId}"]`).setAttribute('hidden', 'hidden');
     }
 
-    public static ResetCommentChanges = (commentId: string, text: string): void => {
+    public static ResetCommentChanges(commentId: string, text: string): void {
         document.getElementById(`${commentId}`).innerHTML = `${text}`;
         $("[data-editable-name='btnEditComment']").removeAttr('hidden');
     }

@@ -1,5 +1,8 @@
+interface UserWithId {
+    Id: string;
+}
 declare class AccountWorker {
-    static User: any;
+    static User: UserWithId;
     static CheckUser: () => void;
     static IsAuthenticated: () => boolean;
 }

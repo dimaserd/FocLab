@@ -1,3 +1,12 @@
+var ScheduleConsts = /** @class */ (function () {
+    function ScheduleConsts() {
+    }
+    /**
+     * Префикс для собирания модели фильтра
+     */
+    ScheduleConsts.FilterPrefix = "filter.";
+    return ScheduleConsts;
+}());
 var ScheduleStaticHandlers = /** @class */ (function () {
     function ScheduleStaticHandlers() {
     }
@@ -28,7 +37,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         var data = {
             UserIds: []
         };
-        var dataFilter = FormDataHelper.CollectDataByPrefix(data, "filter.");
+        var dataFilter = FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
         dataFilter.MonthShift = isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1;
         return Requester.GetParams(data);
     };
@@ -39,7 +48,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         var data = {
             UserIds: []
         };
-        var t = FormDataHelper.CollectDataByPrefix(data, "filter.");
+        var t = FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
         location.href = "/Schedule/Index?" + Requester.GetParams(t);
     };
     ScheduleStaticHandlers.ShowDayTaskModal = function (taskId) {
@@ -68,7 +77,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         };
         Requester.SendAjaxPost("/Api/DayTask/Comments/Update", m, function (resp) {
             if (resp.IsSucceeded) {
-                TaskModalWorker.DrawComments("Comments", AccountWorker.User.Id, resp.ResponseObject);
+                TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
         }, null, false);
@@ -81,7 +90,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         data = FormDataHelper.CollectData(data);
         Requester.SendAjaxPost("/Api/DayTask/Comments/Add", data, function (resp) {
             if (resp.IsSucceeded) {
-                TaskModalWorker.DrawComments("Comments", AccountWorker.User.Id, resp.ResponseObject);
+                TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
         }, null, false);
@@ -90,17 +99,16 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         var data = {
             TaskText: "",
             TaskTitle: "",
-            AssigneeUserId: ""
+            AssigneeUserId: "",
+            Id: "",
+            TaskComment: "",
+            TaskDate: "",
+            TaskReview: "",
+            TaskTarget: ""
         };
         data = FormDataHelper.CollectDataByPrefix(data, "task.");
-        var m = {
-            Id: document.getElementsByName('DayTaskId')[0].value,
-            TaskDate: Utils.GetDateFromDatePicker("TaskDate"),
-            TaskText: data.TaskText,
-            TaskTitle: data.TaskTitle,
-            AssigneeUserId: data.AssigneeUserId
-        };
-        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", m, function (resp) {
+        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate");
+        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, function (resp) {
             if (resp.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
@@ -108,23 +116,21 @@ var ScheduleStaticHandlers = /** @class */ (function () {
     };
     ScheduleStaticHandlers.createDayTask = function () {
         var data = {
+            Id: "",
             TaskText: "",
             TaskTitle: "",
-            AssigneeUserId: ""
+            AssigneeUserId: "",
+            TaskComment: "",
+            TaskDate: "",
+            TaskReview: "",
+            TaskTarget: ""
         };
         data = FormDataHelper.CollectDataByPrefix(data, "create.");
-        var m = {
-            TaskText: data.TaskText,
-            TaskTitle: data.TaskTitle,
-            AssigneeUserId: data.AssigneeUserId,
-            TaskDate: Utils.GetDateFromDatePicker("TaskDate1")
-        };
-        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", m, function (resp) {
+        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate1");
+        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, function (resp) {
+            ToastrWorker.HandleBaseApiResponse(resp);
             if (resp.IsSucceeded) {
                 ScheduleStaticHandlers.hideCreateModal();
-            }
-            else {
-                ToastrWorker.HandleBaseApiResponse(resp);
             }
         }, null, false);
     };

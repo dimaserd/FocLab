@@ -1,6 +1,10 @@
-﻿class AccountWorker {
+﻿interface UserWithId {
+    Id: string;
+}
+
+class AccountWorker {
     
-    static User : any = null;
+    static User: UserWithId = null;
     
     static CheckUser = function () : void {
 

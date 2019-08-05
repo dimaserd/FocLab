@@ -17,6 +17,7 @@
 }
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+<link rel="stylesheet" href="~/Plugins/NanoScroller.css" />
 
 @await Html.RenderApplicationFilesAsync("Tasker")
 
@@ -65,17 +66,17 @@
 
             var dayOfWeek = dateP.DayOfWeek;
 
-        <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted">
-            <h5 class="row align-items-center">
-                <span class="date col-1">@dateP.Day</span>
-                <small class="col d-sm-none text-center text-muted">@DayOfWeekToString(dateP.DayOfWeek)</small>
-                <span class="col-1"></span>
-            </h5>
+            <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted">
+                <h5 class="row align-items-center">
+                    <span class="date col-1">@dateP.Day</span>
+                    <small class="col d-sm-none text-center text-muted">@DayOfWeekToString(dateP.DayOfWeek)</small>
+                    <span class="col-1"></span>
+                </h5>
 
-            <div>
-                <p class="no-tasks-text d-sm-none">Нет задач</p>
+                <div>
+                    <p class="no-tasks-text d-sm-none">Нет задач</p>
+                </div>
             </div>
-        </div>
 
             if (dayOfWeek == DayOfWeek.Sunday)
             {
@@ -100,7 +101,7 @@
                     <span class="col-1"></span>
                 </h5>
 
-                <div data-date="@dateP.ToString("dd.MM.yyyy")" data-full-date="@dateP">
+                <div class="m-scrollable m-scrollable--track m-scroller" data-scrollable="true" data-date="@dateP.ToString("dd.MM.yyyy")" data-full-date="@dateP">
                     <p class="no-tasks-text d-sm-none">Нет задач</p>
                 </div>
                 
@@ -148,10 +149,14 @@
 
 @await Html.PartialAsync("~/Views/Schedule/Partials/Modals.cshtml")
 
+
+
 @section Scripts{ 
+    <script src="~/Plugins/NanoScroller.js"></script>
     <script src="~/js/Tms.min.js"></script>
 
 <script>
+    
 
     var filter = @Html.GetJson(searchModel);
 

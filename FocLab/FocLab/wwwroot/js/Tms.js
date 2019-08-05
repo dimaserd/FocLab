@@ -177,6 +177,15 @@ var DayTasksWorker = /** @class */ (function () {
 }());
 
 
+var ScheduleConsts = /** @class */ (function () {
+    function ScheduleConsts() {
+    }
+    /**
+     * Префикс для собирания модели фильтра
+     */
+    ScheduleConsts.FilterPrefix = "filter.";
+    return ScheduleConsts;
+}());
 var ScheduleStaticHandlers = /** @class */ (function () {
     function ScheduleStaticHandlers() {
     }
@@ -207,7 +216,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         var data = {
             UserIds: []
         };
-        var dataFilter = FormDataHelper.CollectDataByPrefix(data, "filter.");
+        var dataFilter = FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
         dataFilter.MonthShift = isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1;
         return Requester.GetParams(data);
     };
@@ -218,7 +227,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         var data = {
             UserIds: []
         };
-        var t = FormDataHelper.CollectDataByPrefix(data, "filter.");
+        var t = FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
         location.href = "/Schedule/Index?" + Requester.GetParams(t);
     };
     ScheduleStaticHandlers.ShowDayTaskModal = function (taskId) {
@@ -247,7 +256,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         };
         Requester.SendAjaxPost("/Api/DayTask/Comments/Update", m, function (resp) {
             if (resp.IsSucceeded) {
-                TaskModalWorker.DrawComments("Comments", AccountWorker.User.Id, resp.ResponseObject);
+                TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
         }, null, false);
@@ -260,7 +269,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         data = FormDataHelper.CollectData(data);
         Requester.SendAjaxPost("/Api/DayTask/Comments/Add", data, function (resp) {
             if (resp.IsSucceeded) {
-                TaskModalWorker.DrawComments("Comments", AccountWorker.User.Id, resp.ResponseObject);
+                TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
         }, null, false);
@@ -269,17 +278,16 @@ var ScheduleStaticHandlers = /** @class */ (function () {
         var data = {
             TaskText: "",
             TaskTitle: "",
-            AssigneeUserId: ""
+            AssigneeUserId: "",
+            Id: "",
+            TaskComment: "",
+            TaskDate: "",
+            TaskReview: "",
+            TaskTarget: ""
         };
         data = FormDataHelper.CollectDataByPrefix(data, "task.");
-        var m = {
-            Id: document.getElementsByName('DayTaskId')[0].value,
-            TaskDate: Utils.GetDateFromDatePicker("TaskDate"),
-            TaskText: data.TaskText,
-            TaskTitle: data.TaskTitle,
-            AssigneeUserId: data.AssigneeUserId
-        };
-        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", m, function (resp) {
+        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate");
+        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, function (resp) {
             if (resp.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
@@ -287,23 +295,21 @@ var ScheduleStaticHandlers = /** @class */ (function () {
     };
     ScheduleStaticHandlers.createDayTask = function () {
         var data = {
+            Id: "",
             TaskText: "",
             TaskTitle: "",
-            AssigneeUserId: ""
+            AssigneeUserId: "",
+            TaskComment: "",
+            TaskDate: "",
+            TaskReview: "",
+            TaskTarget: ""
         };
         data = FormDataHelper.CollectDataByPrefix(data, "create.");
-        var m = {
-            TaskText: data.TaskText,
-            TaskTitle: data.TaskTitle,
-            AssigneeUserId: data.AssigneeUserId,
-            TaskDate: Utils.GetDateFromDatePicker("TaskDate1")
-        };
-        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", m, function (resp) {
+        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate1");
+        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, function (resp) {
+            ToastrWorker.HandleBaseApiResponse(resp);
             if (resp.IsSucceeded) {
                 ScheduleStaticHandlers.hideCreateModal();
-            }
-            else {
-                ToastrWorker.HandleBaseApiResponse(resp);
             }
         }, null, false);
     };
@@ -387,12 +393,12 @@ var TaskModalWorker = /** @class */ (function () {
     function TaskModalWorker() {
     }
     TaskModalWorker.ShowDayTaskModal = function (task) {
-        TaskModalWorker.InitTask(task, AccountWorker.User.Id);
+        TaskModalWorker.InitTask(task);
         FormDataHelper.FillDataByPrefix(task, "task.");
         Utils.SetDatePicker("input[name='task.TaskDate']");
         ModalWorker.ShowModal("dayTaskModal");
     };
-    TaskModalWorker.InitTask = function (task, accountId) {
+    TaskModalWorker.InitTask = function (task) {
         task.TaskDate = moment(new Date(task.TaskDate)).format("DD/MM/YYYY");
         TaskModalWorker.ClearContent();
         document.getElementById("dayTaskModalTitle").innerHTML = task.TaskTitle;
@@ -400,13 +406,14 @@ var TaskModalWorker = /** @class */ (function () {
         document.getElementById("Author").innerHTML = "<a class=\"media-left tms-profile-link\" href=\"#\" data-task-author-id=\"" + task.Author.Id + "\">" + avatar + "</a>\n                <a  href=\"#\" data-task-author-id=\"" + task.Author.Id + "\" class=\"tms-profile-link text-semibold media-heading box-inline ml-1 mb-1\">\n                    " + task.Author.Name + " " + task.Author.Email + "\n                </a>";
         document.getElementsByName('DayTaskId')[0].value = task.Id;
         $("#usersSelect1").val(task.AssigneeUser.Id).trigger('change.select2');
-        TaskModalWorker.DrawComments("Comments", accountId, task);
+        TaskModalWorker.DrawComments("Comments", task);
         $("#usersSelect1").select2({
             width: '100%'
         });
     };
-    TaskModalWorker.DrawComments = function (divId, userId, task) {
+    TaskModalWorker.DrawComments = function (divId, task) {
         TaskModalWorker.ClearContent();
+        var userId = AccountWorker.User.Id;
         var avatar = ColorAvatarInitor.InitColorForAvatar(task);
         var html = "<div>";
         for (var comment in task.Comments) {
