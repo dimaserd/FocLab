@@ -45,7 +45,7 @@
                     @if (user.DeActivated)
                     {
 
-                        <a onclick="ActivateOrDeactivateUser('@user.Id', 'false')" style="margin-top:10px" class="btn btn-success btn-block">
+                        <a onclick="ActivateOrDeactivateUser('@user.Id', 'false')" href="#" style="margin-top:10px" class="btn btn-success btn-block">
                             <i class="fas fa-plug"></i>
                             Активировать
                         </a>
@@ -54,14 +54,14 @@
                     else
                     {
 
-                        <a onclick="ActivateOrDeactivateUser('@user.Id', 'true')" style="margin-top:10px" class="btn btn-danger btn-block">
+                        <a onclick="ActivateOrDeactivateUser('@user.Id', 'true')" href="#" style="margin-top:10px" class="btn btn-danger btn-block">
                             <i class="fas fa-unlink"></i>
                             Деактивировать
                         </a>
 
                     }
 
-                    <a onclick="$('#anotherActions_@user.Id').fadeToggle()" style="margin-top:10px" class="btn btn-primary btn-block">
+                    <a onclick="$('#anotherActions_@user.Id').fadeToggle()" style="margin-top:10px" class="btn btn-primary btn-block" href="#">
                         Другие действия
                     </a>
 
@@ -74,7 +74,7 @@
 
                         @if (User.HasRight(UserRight.Root) && RightsSettings.UserRemovingEnabled)
                         {
-                            <a onclick="RemoveUser('@user.Id')" style="margin-top:10px" class="btn btn-danger btn-block">
+                            <a onclick="RemoveUser('@user.Id')" style="margin-top:10px" href="#" class="btn btn-danger btn-block">
                                 <i class="fas fa-trash-alt"></i>
                                 Удалить
                             </a>
@@ -90,14 +90,10 @@
 
                         }
 
-                        <a href="/Admin/Users/ShowBalances/@user.Id" style="margin-top:10px" class="btn btn-primary btn-block">
-                            <i class="fa fa-eye"></i>
-                            Балансы
-                        </a>
 
                         @if(User.HasRight(UserRight.Root))
                         {
-                            <a style="margin-top:10px" class="btn btn-success btn-block" onclick="LoginAsUser('@user.Id')">
+                            <a style="margin-top:10px" href="#" class="btn btn-success btn-block" onclick="LoginAsUser('@user.Id')">
                                 Войти в систему как @user.Email
                             </a>
                         }

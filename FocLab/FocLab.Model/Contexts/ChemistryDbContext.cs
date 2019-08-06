@@ -1,6 +1,4 @@
-﻿using System;
-using Croco.Core.Data.Implementations.DbAudit.Models;
-using Croco.Core.Loggers;
+﻿using Croco.Core.Data.Implementations.DbAudit.Models;
 using Croco.Core.Model.Entities.Store;
 using FocLab.Model.Entities;
 using FocLab.Model.Entities.Chemistry;
@@ -20,7 +18,7 @@ namespace FocLab.Model.Contexts
         public const string LocalConnection = "DefaultConnection";
 
 #if DEBUG
-        public static string ConnectionString => LocalConnection;
+        public static string ConnectionString => ServerConnection;
 
 #else
         public static string ConnectionString => ServerConnection;

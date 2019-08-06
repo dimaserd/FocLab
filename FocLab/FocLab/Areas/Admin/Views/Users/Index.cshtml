@@ -13,6 +13,9 @@
 
     var shownOnPage = Model.TotalCount < Model.List.Count ? Model.TotalCount : Model.List.Count;
 
+    const string searchUsersPrefix = "SearchUsers";
+
+    
 }
 
 <style>
@@ -21,7 +24,7 @@
         font-weight: bold;
     }
 
-    
+
 
     .margin5px {
         margin: 5px 5px 5px 5px;
@@ -31,14 +34,7 @@
         width: 140px !important
     }
 </style>
-<div class="row">
-    <div class="col-12">
-        <h2>
-            Всего пользователей <span class="m-badge m-badge--success">@Model.TotalCount</span>
-            <span class="pull-right">Показано на странице <span class="m-badge m-badge--success">@shownOnPage</span> </span>
-        </h2>
-    </div>
-</div>
+
 
 <div class="row mb-3">
     <div class="col-md-12">
@@ -48,38 +44,14 @@
         </a>
     </div>
 </div>
-<div class="row mb-3">
-    <div class="col-md-10 ml-1">
-        <label class="m-checkbox">
-            <input type="checkbox" name="Filter.Deactivated" class="filter-apply"> Показывать деактивированных пользователей
-            <span></span>
-        </label>
+
+<div class="form-group m-form__group m--margin-top-10">
+    <div class="alert m-alert m-alert--default" role="alert">
+        <span class="h5">
+            Всего пользователей <span class="m-badge m-badge--success">@Model.TotalCount</span> <span class="pull-right">Показано на странице <span class="m-badge m-badge--success">@shownOnPage</span> </span>
+        </span>
+        
     </div>
-
-    <div class="col-6">
-
-    </div>
-</div>
-
-<div class="col-md-10 pl-1 mb-3">
-    <label for="Sex" class="control-label">Фильтровать по полу</label>
-    <select class="form-control selectpicker" data-val="true" title="" id="Sex" name="Filter.Sex">
-        <option selected>Любой</option>
-        <option value="false">Женский</option>
-        <option value="true">Мужской</option>
-    </select>
-</div>
-
-<div class="col-md-10 pl-1 mb-3">
-    <label for="RegistrationDate" class="control-label">Фильтровать по дате регистрации</label>
-    <input type="text" class="form-control" id="RegistrationDate" name="Filter.RegistrationDate" value="" />
-</div>
-<div class="col-md-10 pl-1 mb-3">
-    <label class="control-label">Пользователь</label>
-    @Html.TextBox("Filter.q", q, new { @class = "form-control" })
-</div>
-<div class="col-md-10 pl-1 mb-3">
-    <button type="button" class=" btn btn-success m-btn m-btn--custom" onclick="ApplyFilter()">Применить фильтр</button>
 </div>
 
 @await Html.RenderPaginationAsync(Model, linkFormat)
@@ -126,7 +98,7 @@
 
 
 @section Scripts{
-    
+
     <script>
 
         var model = @Html.GetJson(Model.List);
@@ -173,7 +145,7 @@
 
             if (data.Sex === "")
                 delete data.Sex;
-            
+
             if (data.RegistrationDate === "")
                 delete data.RegistrationDate;
             location.href = `/Admin/Users/Index?${Requester.GetParams(data)}`;
