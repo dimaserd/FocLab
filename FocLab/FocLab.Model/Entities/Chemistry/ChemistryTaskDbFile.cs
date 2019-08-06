@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Croco.Core.Model.Abstractions.Auditable;
 using Croco.Core.Model.Models;
 using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +9,7 @@ namespace FocLab.Model.Entities.Chemistry
     /// <summary>
     /// Файл для химического задания
     /// </summary>
-    public class ChemistryTaskDbFile : AuditableEntityBase, IAuditableComposedId
+    public class ChemistryTaskDbFile : AuditableEntityBase
     {
         /// <summary>
         /// Идентификатор задания

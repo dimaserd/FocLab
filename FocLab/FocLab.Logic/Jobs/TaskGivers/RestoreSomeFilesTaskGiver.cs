@@ -1,5 +1,4 @@
-﻿using CrocoShop.Logic.Jobs.TaskGivers;
-using FocLab.Logic.Workers;
+﻿using FocLab.Logic.Workers;
 using System.Threading.Tasks;
 
 namespace FocLab.Logic.Jobs.TaskGivers

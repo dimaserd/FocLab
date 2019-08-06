@@ -15,8 +15,9 @@ using FocLab.Model.Entities;
 using FocLab.Model.Enumerations;
 using Hangfire;
 using Croco.Core.Search.Models;
-using Croco.Core.Data.Models.Principal;
 using Croco.Core.Data.Models.ContextWrappers;
+using Zoo;
+using Croco.Core.Data.Models.Principal;
 
 namespace FocLab.Logic.Workers
 {
@@ -97,9 +98,7 @@ namespace FocLab.Logic.Workers
 
         public static Task GetJobToMakeLocalCopies(int filesCount)
         {
-            var systemPrincipal = new SystemPrincipal();
-
-            var wrapper = new UserContextWrapper<ChemistryDbContext>(systemPrincipal, CrocoApp.Application.GetChemistryDbContext(), SystemPrincipal.GetSystemId);
+            var wrapper = new UserContextWrapper<ChemistryDbContext>(new SystemCrocoPrincipal(new SystemPrincipal()), CrocoApp.Application.GetChemistryDbContext());
 
             return new ApplicationFileManager(wrapper).MakeLocalCopies(filesCount);
         }

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Croco.Core.Model.Abstractions.Auditable;
 using Croco.Core.Model.Abstractions.Entity;
 using Croco.Core.Model.Models;
 using FocLab.Model.Entities.Users.Default;
@@ -17,7 +16,7 @@ namespace FocLab.Model.Entities.Tasker
     /// </summary>
     /// <typeparam name="TDayTask"></typeparam>
     /// <typeparam name="TUser"></typeparam>
-    public class DayTaskComment<TDayTask, TUser> : AuditableEntityBase, IAuditableStringId where TDayTask : class where TUser : class, ICrocoUser
+    public class DayTaskComment<TDayTask, TUser> : AuditableEntityBase where TDayTask : class where TUser : class, ICrocoUser
     {
         /// <summary>
         /// Идентификатор

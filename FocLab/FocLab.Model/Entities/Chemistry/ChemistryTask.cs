@@ -1,5 +1,4 @@
-﻿using Croco.Core.Model.Abstractions.Auditable;
-using Croco.Core.Model.Models;
+﻿using Croco.Core.Model.Models;
 using FocLab.Model.Entities.Users.Default;
 using Newtonsoft.Json;
 using System;
@@ -11,7 +10,7 @@ namespace FocLab.Model.Entities.Chemistry
     /// <summary>
     /// Химическое задание
     /// </summary>
-    public class ChemistryTask : AuditableEntityBase, IAuditableStringId
+    public class ChemistryTask : AuditableEntityBase
     {
         public string Id { get; set; } 
 

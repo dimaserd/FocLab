@@ -1,5 +1,4 @@
-﻿using Croco.Core.Model.Abstractions.Auditable;
-using Croco.Core.Model.Models;
+﻿using Croco.Core.Model.Models;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +8,7 @@ namespace FocLab.Model.Entities.Chemistry
     /// <summary>
     /// Метод решения (Является файлом)
     /// </summary>
-    public class ChemistryMethodFile : AuditableEntityBase, IAuditableStringId
+    public class ChemistryMethodFile : AuditableEntityBase
     {
         /// <summary>
         /// Идентификатор

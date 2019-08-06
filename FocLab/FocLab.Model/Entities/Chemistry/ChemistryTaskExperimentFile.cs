@@ -1,5 +1,4 @@
-﻿using Croco.Core.Model.Abstractions.Auditable;
-using Croco.Core.Model.Models;
+﻿using Croco.Core.Model.Models;
 using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -10,7 +9,7 @@ namespace FocLab.Model.Entities.Chemistry
     /// <summary>
     /// Дто-модель
     /// </summary>
-    public class ChemistryTaskExperimentFile : AuditableEntityBase, IAuditableComposedId
+    public class ChemistryTaskExperimentFile : AuditableEntityBase
     {
         /// <summary>
         /// Идентификатор эксперимента

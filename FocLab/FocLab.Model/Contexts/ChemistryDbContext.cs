@@ -1,4 +1,5 @@
 ﻿using System;
+using Croco.Core.Data.Implementations.DbAudit.Models;
 using Croco.Core.Loggers;
 using Croco.Core.Model.Entities.Store;
 using FocLab.Model.Entities;
@@ -44,7 +45,7 @@ namespace FocLab.Model.Contexts
 
         public DbSet<LoggedApplicationAction> ApplicationActions { get; set; }
 
-        public DbSet<Snapshot> Snapshots { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
         #endregion
 
         public DbSet<DbFile> DbFiles { get; set; }

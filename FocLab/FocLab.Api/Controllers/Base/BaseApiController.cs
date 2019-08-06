@@ -1,4 +1,5 @@
 ﻿using System;
+using Croco.Core.Data.Abstractions;
 using Croco.Core.Data.Models.ContextWrappers;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
@@ -8,6 +9,7 @@ using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Zoo;
 
 namespace FocLab.Api.Controllers.Base
 {
@@ -39,6 +41,9 @@ namespace FocLab.Api.Controllers.Base
 
         #region Свойства
 
+        protected ICrocoPrincipal CrocoPrincipal => new MyCrocoPrincipal(User, x => x.Identity.GetUserId());
+
+
         /// <summary>
         /// Менеджер авторизации
         /// </summary>
@@ -55,7 +60,7 @@ namespace FocLab.Api.Controllers.Base
         /// <summary>
         /// Обёртка для контекста
         /// </summary>
-        public UserContextWrapper<ChemistryDbContext> ContextWrapper => _contextWrapper ?? (_contextWrapper = new UserContextWrapper<ChemistryDbContext>(User, Context, x => x.Identity.GetUserId()));
+        public UserContextWrapper<ChemistryDbContext> ContextWrapper => _contextWrapper ?? (_contextWrapper = new UserContextWrapper<ChemistryDbContext>(CrocoPrincipal, Context));
 
         /// <summary>
         /// Менеджер авторизации

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Croco.Core.Model.Abstractions.Auditable;
 using Croco.Core.Model.Abstractions.Entity;
 using Croco.Core.Model.Models;
 using FocLab.Model.Entities.Users.Default;
@@ -17,7 +16,7 @@ namespace FocLab.Model.Entities.Tasker
 
     }
 
-    public class DayTask<TUser, TDayTaskComment> : AuditableEntityBase, IAuditableStringId where TUser : class, ICrocoUser where TDayTaskComment : class
+    public class DayTask<TUser, TDayTaskComment> : AuditableEntityBase where TUser : class, ICrocoUser where TDayTaskComment : class
     {
         /// <summary>
         /// Идентификатор

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Croco.Core.Application;
 using Croco.Core.Common.Models;
+using Croco.Core.Data.Abstractions;
 using Croco.Core.Data.Models.ContextWrappers;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
@@ -13,6 +14,7 @@ using FocLab.Model.Entities.Users.Default;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Zoo;
 
 namespace FocLab.Controllers.Base
 {
@@ -53,7 +55,7 @@ namespace FocLab.Controllers.Base
         #endregion
 
         #region Свойства
-
+        
         /// <summary>
         /// Класс предоставляющий методы для поиска пользователей
         /// </summary>
@@ -99,10 +101,12 @@ namespace FocLab.Controllers.Base
         }
 
 
+        protected ICrocoPrincipal CrocoPrincipal => new MyCrocoPrincipal(User, x => x.Identity.GetUserId());
+
         /// <summary>
         /// Обёртка для контекста
         /// </summary>
-        public UserContextWrapper<ChemistryDbContext> ContextWrapper => _contextWrapper ?? (_contextWrapper = new UserContextWrapper<ChemistryDbContext>(User, Context, x => x.Identity.GetUserId()));
+        public UserContextWrapper<ChemistryDbContext> ContextWrapper => _contextWrapper ?? (_contextWrapper = new UserContextWrapper<ChemistryDbContext>(CrocoPrincipal, Context));
 
         private ApplicationUser _currentUser;
 

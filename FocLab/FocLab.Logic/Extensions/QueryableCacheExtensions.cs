@@ -32,7 +32,7 @@ namespace FocLab.Logic.Extensions
             {
                 Key = key,
                 Value = cacheValue,
-                AbsoluteExpiration = Tool.DateTimeNow().AddHours(1)
+                AbsoluteExpiration = CrocoApp.Application.DateTimeProvider.Now.AddHours(1)
             });
 
             return cacheValue;
