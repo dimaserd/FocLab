@@ -4,7 +4,7 @@ using FocLab.Logic.Events;
 
 namespace Ecc.Logic.EventHandlers
 {
-    public class ExperimentPerformedEventHandler : AbstractEventHandler<ExperimentPerformedEvent>
+    public class ExperimentPerformedEventHandler : CrocoEventHandler<ExperimentPerformedEvent>
     {
         public override Task HandleEvent(ExperimentPerformedEvent model)
         {

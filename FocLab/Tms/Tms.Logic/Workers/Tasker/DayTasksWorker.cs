@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Data.Abstractions.ContextWrappers;
+using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Resources;
@@ -228,7 +228,7 @@ namespace Tms.Logic.Workers.Tasker
 
             return await TryExecuteCodeAndReturnSuccessfulResultAsync(async () =>
             {
-                await ContextWrapper.SaveChangesAsync();
+                await SaveChangesAsync();
 
                 var task = await repo.Query().Select(DayTaskModel.SelectExpression).FirstOrDefaultAsync(x => x.Id == model.DayTaskId);
 
@@ -265,7 +265,7 @@ namespace Tms.Logic.Workers.Tasker
 
             return await TryExecuteCodeAndReturnSuccessfulResultAsync(async () =>
             {
-                await ContextWrapper.SaveChangesAsync();
+                await SaveChangesAsync();
                 var repo = GetRepository<ApplicationDayTask>();
 
                 var task = await repo.Query()
@@ -281,7 +281,7 @@ namespace Tms.Logic.Workers.Tasker
         /// Конструктор
         /// </summary>
         /// <param name="contextWrapper"></param>
-        public DayTasksWorker(IUserContextWrapper<ChemistryDbContext> contextWrapper) : base(contextWrapper)
+        public DayTasksWorker(ICrocoAmbientContext contextWrapper) : base(contextWrapper)
         {
         }
     }

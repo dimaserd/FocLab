@@ -1,4 +1,5 @@
-﻿using FocLab.Logic.Workers;
+﻿using Croco.Core.Implementations.AmbientContext;
+using FocLab.Logic.Workers;
 using System.Threading.Tasks;
 
 namespace FocLab.Logic.Jobs.TaskGivers
@@ -14,12 +15,11 @@ namespace FocLab.Logic.Jobs.TaskGivers
 
         public async Task GetTask()
         {
-            using (var contextWrapper = GetSystemPrincipalContextWrapper())
-            {
-                var fileWorker = new DbFileWorker(contextWrapper);
+            var ambientContext = new SystemCrocoAmbientContext();
 
-                await fileWorker.BaseManager.MakeLocalCopies(_countSetting);
-            }
+            var fileWorker = new DbFileWorker(ambientContext);
+
+            await fileWorker.BaseManager.MakeLocalCopies(_countSetting);
         }
     }
 }

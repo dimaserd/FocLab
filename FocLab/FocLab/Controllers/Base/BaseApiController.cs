@@ -50,8 +50,6 @@ namespace FocLab.Controllers.Base
         private RoleManager<ApplicationRole> _roleManager;
 
         private ChemistryDbContext _context;
-
-        private UserContextWrapper<ChemistryDbContext> _contextWrapper;
         #endregion
 
         #region Свойства
@@ -103,11 +101,7 @@ namespace FocLab.Controllers.Base
 
         protected ICrocoPrincipal CrocoPrincipal => new MyCrocoPrincipal(User, x => x.Identity.GetUserId());
 
-        /// <summary>
-        /// Обёртка для контекста
-        /// </summary>
-        public UserContextWrapper<ChemistryDbContext> ContextWrapper => _contextWrapper ?? (_contextWrapper = new UserContextWrapper<ChemistryDbContext>(CrocoPrincipal, Context));
-
+        
         private ApplicationUser _currentUser;
 
         protected async Task<ApplicationUser> GetCurrentUserAsync()

@@ -1,13 +1,12 @@
-﻿using Croco.Core.Application;
+﻿using Croco.Core.Abstractions;
+using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
 using Croco.Core.Common.Models;
 using Croco.Core.Common.Utils;
-using Croco.Core.Data.Abstractions.ContextWrappers;
 using Doc.Logic.Entities;
 using Doc.Logic.Models;
 using FocLab.Logic.Models;
 using FocLab.Logic.Workers;
-using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Chemistry;
 using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +25,7 @@ namespace Doc.Logic.Workers
     /// </summary>
     public class FocLabDocumentProcessor : BaseChemistryWorker
     {
-        public FocLabDocumentProcessor(IUserContextWrapper<ChemistryDbContext> contextWrapper) : base(contextWrapper)
+        public FocLabDocumentProcessor(ICrocoAmbientContext context) : base(context)
         {
         }
 
