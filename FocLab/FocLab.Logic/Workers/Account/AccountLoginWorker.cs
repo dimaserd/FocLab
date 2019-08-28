@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Croco.Core.Data.Abstractions.ContextWrappers;
+using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
@@ -170,7 +170,7 @@ namespace FocLab.Logic.Workers.Account
             return new BaseApiResponse(true, "Вы успешно разлогинены в системе");
         }
 
-        public AccountLoginWorker(IUserContextWrapper<ChemistryDbContext> contextWrapper) : base(contextWrapper)
+        public AccountLoginWorker(ICrocoAmbientContext) : base(contextWrapper)
         {
         }
     }

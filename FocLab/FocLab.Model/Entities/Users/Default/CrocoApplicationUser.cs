@@ -9,7 +9,6 @@ namespace FocLab.Model.Entities.Users.Default
 {
     public class WebApplicationUser : IdentityUser, ICrocoUser
     {
-
         /// <inheritdoc />
         /// <summary>
         /// Имя
@@ -30,8 +29,9 @@ namespace FocLab.Model.Entities.Users.Default
 
 
         #region Свойства для аудита
-        [ConcurrencyCheck]
-        public string CurrentSnapshotId { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
         public string CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime? LastModifiedOn { get; set; }

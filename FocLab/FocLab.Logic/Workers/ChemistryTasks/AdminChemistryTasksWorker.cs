@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Data.Abstractions.ContextWrappers;
+using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models;
@@ -185,7 +185,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// Конструктор
         /// </summary>
         /// <param name="contextWrapper"></param>
-        public AdminChemistryTasksWorker(IUserContextWrapper<ChemistryDbContext> contextWrapper) : base(contextWrapper)
+        public AdminChemistryTasksWorker(ICrocoAmbientContext) : base(contextWrapper)
         {
         }
     }

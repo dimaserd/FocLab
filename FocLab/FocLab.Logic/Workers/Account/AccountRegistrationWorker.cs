@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Data.Abstractions.ContextWrappers;
+using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Extensions;
@@ -136,7 +136,7 @@ namespace FocLab.Logic.Workers.Account
             return new BaseApiResponse(true, "");
         }
 
-        public AccountRegistrationWorker(IUserContextWrapper<ChemistryDbContext> contextWrapper) : base(contextWrapper)
+        public AccountRegistrationWorker(ICrocoAmbientContext) : base(contextWrapper)
         {
         }
     }

@@ -63,10 +63,7 @@ namespace FocLab.Logic.EntityDtos
         /// </summary>
         public string MethodFileId { get; set; }
 
-        /// <summary>
-        /// Метод решения
-        /// </summary>
-        public ChemistryMethodFileDto ChemistryMethodFile { get; set; }
+        
 
         /// <summary>
         /// Файлы

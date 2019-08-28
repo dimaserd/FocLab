@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Croco.Core.Data.Abstractions.ContextWrappers;
+using Croco.Core.Abstractions;
 using Croco.Core.Extensions.Enumerations;
 using Croco.Core.Search.Extensions;
 using Croco.Core.Search.Models;
@@ -54,7 +54,6 @@ namespace FocLab.Logic.Workers.Users
             return GetUserByPredicateExpression(x => x.Id == userId);
         }
 
-
         public Task<ApplicationUserDto> GetUserByEmailAsync(string email)
         {
             return GetUserByPredicateExpression(x => x.Email == email);
@@ -92,19 +91,15 @@ namespace FocLab.Logic.Workers.Users
 
         #region Метод получения списка пользователей
 
-        public async Task<GetListResult<ApplicationUserBaseModel>> GetUsersAsync(UserSearch model)
+        public Task<GetListResult<ApplicationUserBaseModel>> GetUsersAsync(UserSearch model)
         {
-            var result = new GetListResult<ApplicationUserBaseModel>();
-
             var userRepo = GetRepository<ApplicationUser>();
 
             var query = userRepo.Query().Where(x => x.Email != RightsSettings.RootEmail)
                 .BuildQuery(model.GetCriterias())
                 .OrderByDescending(x => x.CreatedOn);
 
-            await result.GetResultAsync(model, query, ApplicationUserBaseModel.SelectExpression);
-            
-            return result;
+            return GetListResult<ApplicationUserBaseModel>.GetAsync(model, query, ApplicationUserBaseModel.SelectExpression);
         }
 
         public async Task<GetListResult<ApplicationUserDto>> SearchUsersAsync(UserSearch model)
@@ -130,7 +125,7 @@ namespace FocLab.Logic.Workers.Users
 
         #endregion
 
-        public UserSearcher(IUserContextWrapper<ChemistryDbContext> contextWrapper) : base(contextWrapper)
+        public UserSearcher(ICrocoAmbientContext context) : base(context)
         {
         }
     }

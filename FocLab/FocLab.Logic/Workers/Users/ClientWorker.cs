@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Data.Abstractions.ContextWrappers;
+using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Users;
@@ -152,7 +152,7 @@ namespace FocLab.Logic.Workers.Users
             });
         }
 
-        public ClientWorker(IUserContextWrapper<ChemistryDbContext> contextWrapper, Func<ApplicationUser, Task> refreshUserDataFunc) : base(contextWrapper)
+        public ClientWorker(ICrocoAmbientContext, Func<ApplicationUser, Task> refreshUserDataFunc) : base(contextWrapper)
         {
             _refreshUserDataFunc = refreshUserDataFunc;
         }

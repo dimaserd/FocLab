@@ -1,4 +1,4 @@
-﻿using Croco.Core.Data.Abstractions.ContextWrappers;
+﻿using Croco.Core.Abstractions;
 using Croco.Core.Application;
 using Croco.Core.Logic.Workers;
 using FocLab.Logic.Implementations;
@@ -24,7 +24,7 @@ namespace FocLab.Logic.Workers
         /// Конструктор
         /// </summary>
         /// <param name="contextWrapper"></param>
-        public BaseChemistryWorker(IUserContextWrapper<ChemistryDbContext> contextWrapper) : base(contextWrapper)
+        public BaseChemistryWorker(ICrocoAmbientContext) : base(contextWrapper)
         {
             ApplicationContextWrapper = contextWrapper;
         }

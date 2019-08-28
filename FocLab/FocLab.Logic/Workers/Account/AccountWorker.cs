@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Data.Abstractions.ContextWrappers;
+using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.EntityDtos.Users.Default;
@@ -140,7 +140,7 @@ namespace FocLab.Logic.Workers.Account
         #endregion
 
 
-        public AccountManager(IUserContextWrapper<ChemistryDbContext> contextWrapper) : base(contextWrapper)
+        public AccountManager(ICrocoAmbientContext) : base(contextWrapper)
         {
         }
     }

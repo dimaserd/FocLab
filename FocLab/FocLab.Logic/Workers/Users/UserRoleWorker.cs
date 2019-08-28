@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Data.Abstractions.ContextWrappers;
+using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
 using Croco.Core.Extensions.Enumerations;
 using FocLab.Logic.Models.Users;
@@ -160,7 +160,7 @@ namespace FocLab.Logic.Workers.Users
             return new BaseApiResponse(true, $"Право {userIdAndRole.Role.ToDisplayName()} удалено у пользователя {user.Name}"); ;
         }
 
-        public UserRoleWorker(IUserContextWrapper<ChemistryDbContext> contextWrapper) : base(contextWrapper)
+        public UserRoleWorker(ICrocoAmbientContext) : base(contextWrapper)
         {
         }
     }

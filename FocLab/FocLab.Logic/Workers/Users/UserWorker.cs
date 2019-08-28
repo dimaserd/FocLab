@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Data.Abstractions.ContextWrappers;
+using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
 using Croco.Core.Model.Entities.Store;
 using FocLab.Logic.EntityDtos.Users.Default;
@@ -283,7 +283,7 @@ namespace FocLab.Logic.Workers.Users
             return await TrySaveChangesAndReturnResultAsync("Пользователь активирован");
         }
 
-        public UserWorker(IUserContextWrapper<ChemistryDbContext> contextWrapper) : base(contextWrapper)
+        public UserWorker(ICrocoAmbientContext) : base(contextWrapper)
         {
         }
     }
