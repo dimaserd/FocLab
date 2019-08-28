@@ -9,7 +9,6 @@ using FocLab.Logic.Events;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.Experiments;
-using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
 
@@ -334,7 +333,7 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
         /// Конструктор
         /// </summary>
         /// <param name="contextWrapper"></param>
-        public ChemistryTaskExperimentsWorker(ICrocoAmbientContext) : base(contextWrapper)
+        public ChemistryTaskExperimentsWorker(ICrocoAmbientContext context) : base(context)
         {
         }
     }

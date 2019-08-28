@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Common.Models;
 using Croco.Core.Abstractions;
 using Croco.Core.Data.Abstractions.Repository;
 using FocLab.Logic.Models.Reagents;
-using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
 
@@ -220,7 +218,7 @@ namespace FocLab.Logic.Workers.ChemistryReagents
         /// Конструктор
         /// </summary>
         /// <param name="contextWrapper"></param>
-        public ChemistryReagentsWorker(ICrocoAmbientContext) : base(contextWrapper)
+        public ChemistryReagentsWorker(ICrocoAmbientContext context) : base(context)
         {
         }
     }

@@ -6,7 +6,6 @@ using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Methods;
-using FocLab.Model.Contexts;
 using FocLab.Model.Entities;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
@@ -117,7 +116,7 @@ namespace FocLab.Logic.Workers.ChemistryMethods
         /// Конструктор
         /// </summary>
         /// <param name="contextWrapper"></param>
-        public ChemistryMethodsWorker(ICrocoAmbientContext) : base(contextWrapper)
+        public ChemistryMethodsWorker(ICrocoAmbientContext context) : base(context)
         {
         }
     }

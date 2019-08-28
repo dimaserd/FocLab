@@ -1,8 +1,10 @@
 ﻿using Croco.Core.Abstractions;
+using Croco.Core.Abstractions.Settings;
 using Croco.Core.Application;
 using Croco.Core.Logic.Workers;
 using FocLab.Logic.Implementations;
 using FocLab.Model.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers
 {
@@ -11,22 +13,24 @@ namespace FocLab.Logic.Workers
     /// </summary>
     public class BaseChemistryWorker : BaseCrocoWorker
     {
-        /// <summary>
-        /// Контекст приложения химия
-        /// </summary>
-        protected ChemistryDbContext Context => ApplicationContextWrapper.DbContext;
+        public DbContext DbContext => GetDbContext();
 
-        protected IUserContextWrapper<ChemistryDbContext> ApplicationContextWrapper { get; }
 
-        protected FocLabWebApplication Application => CrocoApp.Application.As<FocLabWebApplication>();
+        public ChemistryDbContext Context => DbContext as ChemistryDbContext;
+
+        protected FocLabWebApplication Application => CrocoApp.Application as FocLabWebApplication;
+
+        protected T GetSetting<T>() where T : class, ICommonSetting<T>, new()
+        {
+            return CrocoApp.Application.SettingsFactory.GetSetting<T>();
+        }
 
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="contextWrapper"></param>
-        public BaseChemistryWorker(ICrocoAmbientContext) : base(contextWrapper)
+        public BaseChemistryWorker(ICrocoAmbientContext context) : base(context)
         {
-            ApplicationContextWrapper = contextWrapper;
         }
     }
 }

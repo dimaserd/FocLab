@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Croco.Core.Common.Models;
 using FocLab.Api.Controllers.Base;
-using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.Experiments;
 using FocLab.Logic.Services;

@@ -7,7 +7,6 @@ using Croco.Core.Extensions.Enumerations;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
 using FocLab.Logic.Services;
-using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
@@ -160,7 +159,7 @@ namespace FocLab.Logic.Workers.Users
             return new BaseApiResponse(true, $"Право {userIdAndRole.Role.ToDisplayName()} удалено у пользователя {user.Name}"); ;
         }
 
-        public UserRoleWorker(ICrocoAmbientContext) : base(contextWrapper)
+        public UserRoleWorker(ICrocoAmbientContext context) : base(context)
         {
         }
     }

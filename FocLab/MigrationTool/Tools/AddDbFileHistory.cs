@@ -1,6 +1,5 @@
-﻿using Croco.Core.Common.Models;
-using Croco.Core.Data.Abstractions.ContextWrappers;
-using FocLab.Model.Contexts;
+﻿using Croco.Core.Abstractions;
+using Croco.Core.Common.Models;
 using FocLab.Model.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,12 +10,12 @@ namespace MigrationTool.Tools
 {
     public class AddDbFileHistory
     {
-        public AddDbFileHistory(IUserContextWrapper<ChemistryDbContext> context)
+        public AddDbFileHistory(ICrocoAmbientContext context)
         {
             Context = context;
         }
 
-        public IUserContextWrapper<ChemistryDbContext> Context { get; }
+        public ICrocoAmbientContext Context { get; }
 
         public async Task<BaseApiResponse> Execute()
         {
@@ -29,12 +28,14 @@ namespace MigrationTool.Tools
 
         public Task<int> GetCountLeftAsync()
         {
-            return Context.DbContext.DbFiles.Where(x => !x.History.Any()).CountAsync();
+            return Context.RepositoryFactory
+                .GetRepository<DbFile>().Query()
+                .Where(x => !x.History.Any()).CountAsync();
         }
 
         public async Task<int> ExecuteBatch(int count)
         {
-            var filesWithNoHistory = Context.DbContext.DbFiles.Where(x => !x.History.Any())
+            var filesWithNoHistory = Context.RepositoryFactory.GetRepository<DbFile>().Query().Where(x => !x.History.Any())
                 .OrderBy(x => x.Id)
                 .Take(count);
             
@@ -47,10 +48,10 @@ namespace MigrationTool.Tools
                 ParentId = x.Id
             }).ToList();
 
-            var repo = Context.GetRepository<ApplicationDbFileHistory>();
+            var repo = Context.RepositoryFactory.GetRepository<ApplicationDbFileHistory>();
 
             repo.CreateHandled(histories);
-            await Context.SaveChangesAsync();
+            await Context.RepositoryFactory.SaveChangesAsync();
 
             return histories.Count;
         }

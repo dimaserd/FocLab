@@ -9,7 +9,6 @@ using FocLab.Logic.Models;
 using FocLab.Logic.Models.Methods;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Workers.Users;
-using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -87,7 +86,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 return new BaseApiResponse(false, "У вас недостаточно прав для редактирования задания");
             }
 
-            var searcher = new UserSearcher(ApplicationContextWrapper);
+            var searcher = new UserSearcher(AmbientContext);
 
             //нахожу исполнителя
             var user = await searcher.GetUserByIdAsync(model.PerformerUserId);
@@ -185,7 +184,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// Конструктор
         /// </summary>
         /// <param name="contextWrapper"></param>
-        public AdminChemistryTasksWorker(ICrocoAmbientContext) : base(contextWrapper)
+        public AdminChemistryTasksWorker(ICrocoAmbientContext context) : base(context)
         {
         }
     }

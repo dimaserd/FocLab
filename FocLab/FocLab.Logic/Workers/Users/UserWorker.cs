@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
-using Croco.Core.Model.Entities.Store;
-using FocLab.Logic.EntityDtos.Users.Default;
+using Croco.WebApplication.Entities;
 using FocLab.Logic.Extensions;
-using FocLab.Logic.Models;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
 using FocLab.Logic.Services;
-using FocLab.Logic.Settings;
 using FocLab.Logic.Settings.Statics;
-using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
 using Microsoft.AspNetCore.Identity;
@@ -35,11 +30,11 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(false, "Пользователь не найден");
             }
 
-            var searcher = new UserSearcher(ApplicationContextWrapper);
+            var searcher = new UserSearcher(AmbientContext);
 
             var userDto = await searcher.GetUserByIdAsync(user.Id);
 
-            var result = UserRightsWorker.HasRightToEditUser(userDto, ContextWrapper.User);
+            var result = UserRightsWorker.HasRightToEditUser(userDto, User);
 
             if (!result.IsSucceeded)
             {
@@ -80,7 +75,7 @@ namespace FocLab.Logic.Workers.Users
 
         public async Task<BaseApiResponse> CheckUserNameAndPasswordAsync(string userId, string userName, string pass)
         {
-            var userRepo = ContextWrapper.GetRepository<ApplicationUser>();
+            var userRepo = GetRepository<ApplicationUser>();
 
             var user = await userRepo.Query()
                 .FirstOrDefaultAsync(x => x.Id == userId);
@@ -109,7 +104,7 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(false, "Вы не имеете прав для удаления пользователя");
             }
 
-            var searcher = new UserSearcher(ApplicationContextWrapper);
+            var searcher = new UserSearcher(AmbientContext);
 
             var userToRemove = await searcher.GetUserByIdAsync(model.Id);
 
@@ -159,9 +154,9 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(false, ValidationMessages.YouAreNotAnAdministrator);
             }
 
-            var userRepo = ContextWrapper.GetRepository<ApplicationUser>();
+            var userRepo = GetRepository<ApplicationUser>();
 
-            var searcher = new UserSearcher(ApplicationContextWrapper);
+            var searcher = new UserSearcher(AmbientContext);
 
             var userDto = await searcher.GetUserByIdAsync(model.Id);
             
@@ -205,9 +200,7 @@ namespace FocLab.Logic.Workers.Users
 
             if (userToEditEntity == null)
             {
-                var logger = Application.GetLogger();
-
-                logger.LogException(new Exception("Ужасная ошибка"));
+                Logger.LogException(new Exception("Ужасная ошибка"));
 
                 return new BaseApiResponse(false, "Ужасная ошибка");
             }
@@ -230,7 +223,7 @@ namespace FocLab.Logic.Workers.Users
         
         public async Task<BaseApiResponse> ActivateOrDeActivateUserAsync(UserActivation model)
         {
-            var searcher = new UserSearcher(ApplicationContextWrapper);
+            var searcher = new UserSearcher(AmbientContext);
 
             var userDto = await searcher.GetUserByIdAsync(model.Id);
 
@@ -239,7 +232,7 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(false, "Пользователь не найден по указанному идентификатору");
             }
             
-            var result = UserRightsWorker.HasRightToEditUser(userDto, ContextWrapper.User);
+            var result = UserRightsWorker.HasRightToEditUser(userDto, User);
             
             if(!result.IsSucceeded)
             {
@@ -283,7 +276,7 @@ namespace FocLab.Logic.Workers.Users
             return await TrySaveChangesAndReturnResultAsync("Пользователь активирован");
         }
 
-        public UserWorker(ICrocoAmbientContext) : base(contextWrapper)
+        public UserWorker(ICrocoAmbientContext context) : base(context)
         {
         }
     }

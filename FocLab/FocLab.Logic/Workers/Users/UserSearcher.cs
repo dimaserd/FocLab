@@ -8,10 +8,8 @@ using Croco.Core.Extensions.Enumerations;
 using Croco.Core.Search.Extensions;
 using Croco.Core.Search.Models;
 using FocLab.Logic.EntityDtos.Users.Default;
-using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Settings.Statics;
-using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
@@ -102,11 +100,8 @@ namespace FocLab.Logic.Workers.Users
             return GetListResult<ApplicationUserBaseModel>.GetAsync(model, query, ApplicationUserBaseModel.SelectExpression);
         }
 
-        public async Task<GetListResult<ApplicationUserDto>> SearchUsersAsync(UserSearch model)
+        public Task<GetListResult<ApplicationUserDto>> SearchUsersAsync(UserSearch model)
         {
-            
-            var rightsList = await GetRightsAndRolesTupleAsync();
-
             var userRepo = GetRepository<ApplicationUser>();
 
             var initQuery = userRepo.Query()
@@ -114,13 +109,7 @@ namespace FocLab.Logic.Workers.Users
             
             initQuery = initQuery.BuildQuery(model.GetCriterias());
 
-            var result = new GetListResult<ApplicationUserDto>();
-            
-            await result.GetResultAsync(model, initQuery.OrderByDescending(x => x.CreatedOn), ApplicationUserDto.SelectExpression);
-
-            result.List.ForEach(x => x.Rights = ApplicationUserExtensions.ToUserRights(rightsList, x.Roles));
-            
-            return result;
+            return GetListResult<ApplicationUserDto>.GetAsync(model, initQuery.OrderByDescending(x => x.CreatedOn), ApplicationUserDto.SelectExpression);
         }
 
         #endregion

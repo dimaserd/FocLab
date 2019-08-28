@@ -8,7 +8,6 @@ using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Services;
 using FocLab.Logic.Settings.Statics;
-using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
 using Microsoft.AspNetCore.Identity;
@@ -140,7 +139,7 @@ namespace FocLab.Logic.Workers.Account
         #endregion
 
 
-        public AccountManager(ICrocoAmbientContext) : base(contextWrapper)
+        public AccountManager(ICrocoAmbientContext context) : base(context)
         {
         }
     }

@@ -6,9 +6,7 @@ using Croco.Core.Common.Models;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
-using FocLab.Logic.Settings;
 using FocLab.Logic.Settings.Statics;
-using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,7 +34,7 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(false, ValidationMessages.UserNotFound);
             }
 
-            var fileManager = new ApplicationFileManager(ApplicationContextWrapper);
+            var fileManager = new ApplicationFileManager(AmbientContext.RepositoryFactory);
 
             var file = await fileManager.GetFilesQueryable().FirstOrDefaultAsync(x => x.Id == fileId);
 
@@ -54,7 +52,7 @@ namespace FocLab.Logic.Workers.Users
 
             return await TryExecuteCodeAndReturnSuccessfulResultAsync(async () =>
             {
-                await ContextWrapper.SaveChangesAsync();
+                await RepositoryFactory.SaveChangesAsync();
                 await _refreshUserDataFunc(userToEditEntity);
 
                 return new BaseApiResponse(true, ClientResource.ClientAvatarUpdated);
@@ -79,7 +77,7 @@ namespace FocLab.Logic.Workers.Users
             
             var id = UserId;
 
-            var userRepo = ContextWrapper.GetRepository<ApplicationUser>();
+            var userRepo = GetRepository<ApplicationUser>();
 
             if (await userRepo.Query().AnyAsync(x => x.Id != id && x.PhoneNumber == model.PhoneNumber))
             {
@@ -110,7 +108,7 @@ namespace FocLab.Logic.Workers.Users
 
             return await TryExecuteCodeAndReturnSuccessfulResultAsync(async () =>
             {
-                await ContextWrapper.SaveChangesAsync();
+                await SaveChangesAsync();
 
                 await _refreshUserDataFunc(userToEditEntity);
 
@@ -152,7 +150,7 @@ namespace FocLab.Logic.Workers.Users
             });
         }
 
-        public ClientWorker(ICrocoAmbientContext, Func<ApplicationUser, Task> refreshUserDataFunc) : base(contextWrapper)
+        public ClientWorker(ICrocoAmbientContext context, Func<ApplicationUser, Task> refreshUserDataFunc) : base(context)
         {
             _refreshUserDataFunc = refreshUserDataFunc;
         }

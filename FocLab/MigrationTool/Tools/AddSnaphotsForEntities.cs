@@ -1,5 +1,5 @@
-﻿using Croco.Core.Common.Models;
-using Croco.Core.Data.Abstractions.ContextWrappers;
+﻿using Croco.Core.Abstractions;
+using Croco.Core.Common.Models;
 using Croco.Core.Logic.Workers;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ namespace MigrationTool.Tools
 {
     public class AddSnaphotsForEntities : BaseCrocoWorker
     {
-        public AddSnaphotsForEntities(IUserRequestWithRepositoryFactory context) : base(context)
+        public AddSnaphotsForEntities(ICrocoAmbientContext context) : base(context)
         {
         }
 

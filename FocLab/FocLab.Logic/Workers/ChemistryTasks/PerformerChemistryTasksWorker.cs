@@ -8,7 +8,6 @@ using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Logic.Workers.Users;
-using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
 
@@ -114,7 +113,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 
                 var domainName = ((FocLabWebApplication)CrocoApp.Application).DomainName;
 
-                var searcher = new UserSearcher(ApplicationContextWrapper);
+                var searcher = new UserSearcher(AmbientContext);
 
                 var user = await searcher.GetUserByEmailAsync(ChemistryAdminSettings.AdminEmail);
 
@@ -143,7 +142,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// Конструктор
         /// </summary>
         /// <param name="contextWrapper"></param>
-        public PerformerChemistryTasksWorker(ICrocoAmbientContext) : base(contextWrapper)
+        public PerformerChemistryTasksWorker(ICrocoAmbientContext context) : base(context)
         {
         }
     }

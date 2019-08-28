@@ -5,13 +5,11 @@ using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
-using FocLab.Logic.Models;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Services;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Logic.Workers.Users;
-using FocLab.Model.Contexts;
 using FocLab.Model.Enumerations;
 
 namespace FocLab.Logic.Workers.Account
@@ -29,7 +27,7 @@ namespace FocLab.Logic.Workers.Account
                 return new BaseApiResponse<LoginResultModel>(validation);
             }
 
-            var searcher = new UserSearcher(ApplicationContextWrapper);
+            var searcher = new UserSearcher(AmbientContext);
 
             var user = await searcher.GetUserByPhoneNumberAsync(model.PhoneNumber);
 
@@ -50,7 +48,7 @@ namespace FocLab.Logic.Workers.Account
                 return new BaseApiResponse<LoginResultModel>(validation);
             }
 
-            if (ContextWrapper.IsAuthenticated)
+            if (IsAuthenticated)
             {
                 return new BaseApiResponse<LoginResultModel>(false, "Вы уже авторизованы в системе", new LoginResultModel { Result = LoginResult.AlreadyAuthenticated });
             }
@@ -80,7 +78,7 @@ namespace FocLab.Logic.Workers.Account
             
             try
             {
-                var userWorker = new UserWorker(ApplicationContextWrapper);
+                var userWorker = new UserWorker(AmbientContext);
 
                 //проверяю пароль
                 var passCheckResult = await userWorker.CheckUserNameAndPasswordAsync(user.Id, user.UserName, model.Password);
@@ -109,9 +107,7 @@ namespace FocLab.Logic.Workers.Account
             }
             catch (Exception ex)
             {
-                var logger = Application.GetLogger();
-
-                logger.LogException(ex);
+                Logger.LogException(ex);
 
                 return new BaseApiResponse<LoginResultModel>(false, ex.Message);
             }
@@ -170,7 +166,7 @@ namespace FocLab.Logic.Workers.Account
             return new BaseApiResponse(true, "Вы успешно разлогинены в системе");
         }
 
-        public AccountLoginWorker(ICrocoAmbientContext) : base(contextWrapper)
+        public AccountLoginWorker(ICrocoAmbientContext context) : base(context)
         {
         }
     }

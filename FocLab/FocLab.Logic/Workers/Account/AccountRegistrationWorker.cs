@@ -8,7 +8,6 @@ using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Services;
-using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
@@ -136,7 +135,7 @@ namespace FocLab.Logic.Workers.Account
             return new BaseApiResponse(true, "");
         }
 
-        public AccountRegistrationWorker(ICrocoAmbientContext) : base(contextWrapper)
+        public AccountRegistrationWorker(ICrocoAmbientContext context) : base(context)
         {
         }
     }

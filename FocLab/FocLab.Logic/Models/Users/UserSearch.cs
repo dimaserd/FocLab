@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using Croco.Core.Search.Extensions;
 using Croco.Core.Search.Models;
+using Croco.Core.Search.Models.Ranges;
 using FocLab.Model.Entities.Users.Default;
 
 namespace FocLab.Logic.Models.Users
@@ -38,21 +40,12 @@ namespace FocLab.Logic.Models.Users
                 yield return new SearchQueryCriteria<ApplicationUser>(x => x.DeActivated == Deactivated.Value);
             }
 
-            if (RegistrationDate?.Min != null)
-            {
-                yield return new SearchQueryCriteria<ApplicationUser>(x => x.CreatedOn >= RegistrationDate.Min.Value);
-            }
-
-            if (RegistrationDate?.Max != null)
-            {
-                yield return new SearchQueryCriteria<ApplicationUser>(x => x.CreatedOn <= RegistrationDate.Max.Value);
-            }
+            yield return RegistrationDate.GetSearchCriteriaFromDateRange<ApplicationUser>(x => x.CreatedOn);
 
             if (SearchSex)
             {
                 yield return new SearchQueryCriteria<ApplicationUser>(x => x.Sex == Sex);
             }
-
         }
     }
 }

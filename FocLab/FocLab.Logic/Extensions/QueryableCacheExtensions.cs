@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Croco.Core.Cache.Abstractions;
 using Croco.Core.Application;
-using Croco.Core.Common.Utils;
 
 namespace FocLab.Logic.Extensions
 {

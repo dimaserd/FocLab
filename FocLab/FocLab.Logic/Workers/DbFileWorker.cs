@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
-using Croco.Core.Abstractions;
 using Croco.Core.Application;
 using Croco.Core.Common.Models;
 using Croco.Core.Logic.Models.Files;
@@ -15,35 +14,26 @@ using FocLab.Model.Entities;
 using FocLab.Model.Enumerations;
 using Hangfire;
 using Croco.Core.Search.Models;
-using Croco.Core.Data.Models.ContextWrappers;
 using Zoo;
 using Croco.Core.Data.Models.Principal;
+using Croco.Core.Implementations.AmbientContext;
 
 namespace FocLab.Logic.Workers
 {
     public class DbFileWorker : BaseCrocoWorker
     {
-        public ApplicationFileManager BaseManager => new ApplicationFileManager(ContextWrapper);
+        public ApplicationFileManager BaseManager => new ApplicationFileManager(AmbientContext.RepositoryFactory);
 
-        public DbFileWorker(IUserRequestWithRepositoryFactory contextWrapper) : base(contextWrapper)
+        public DbFileWorker(ICrocoAmbientContext context) : base(context)
         {
 
         }
 
-        public async Task<GetListResult<DbFileDto>> GetFiles(GetListSearchModel model)
+        public Task<GetListResult<DbFileDto>> GetFiles(GetListSearchModel model)
         {
-            if (!User.IsAdmin())
-            {
-                return null;
-            }
-
             var initQuery = GetRepository<DbFile>().Query().OrderByDescending(x => x.CreatedOn);
 
-            var result = new GetListResult<DbFileDto>();
-
-            await result.GetResultAsync(model, initQuery, DbFileDto.SelectExpression);
-
-            return result;
+            return GetListResult<DbFileDto>.GetAsync(model, initQuery, DbFileDto.SelectExpression);
         }
 
         public async Task<BaseApiResponse<DbFileIntIdModelNoData>> UploadUserFileAsync(IFileData model)
@@ -98,9 +88,9 @@ namespace FocLab.Logic.Workers
 
         public static Task GetJobToMakeLocalCopies(int filesCount)
         {
-            var wrapper = new UserContextWrapper<ChemistryDbContext>(new SystemCrocoPrincipal(new SystemPrincipal()), CrocoApp.Application.GetChemistryDbContext());
+            var wrapper = new SystemCrocoAmbientContext();
 
-            return new ApplicationFileManager(wrapper).MakeLocalCopies(filesCount);
+            return new ApplicationFileManager(wrapper.RepositoryFactory).MakeLocalCopies(filesCount);
         }
 
         public Task<BaseApiResponse<int[]>> UploadFilesAsImagesAsync(IEnumerable<IFileData> httpFiles)
