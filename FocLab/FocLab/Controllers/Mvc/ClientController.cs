@@ -17,7 +17,7 @@ namespace FocLab.Controllers.Mvc
         {
         }
 
-        private ClientWorker Worker => new ClientWorker(ContextWrapper, x => SignInManager.SignInAsync(x, true));
+        private ClientWorker Worker => new ClientWorker(AmbientContext, x => SignInManager.SignInAsync(x, true));
 
         /// <summary>
         /// 

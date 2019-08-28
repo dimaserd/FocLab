@@ -10,6 +10,7 @@ using FocLab.Logic.Models.Account;
 using FocLab.Logic.Services;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers.Account
@@ -25,7 +26,7 @@ namespace FocLab.Logic.Workers.Account
         /// <param name="userManager"></param>
         /// <param name="userRights"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse<ApplicationUserDto>> RegisterUserByAdminAsync(RegisterModel model, ApplicationUserManager userManager, List<UserRight> userRights)
+        public async Task<BaseApiResponse<ApplicationUserDto>> RegisterUserByAdminAsync(RegisterModel model, UserManager<ApplicationUser> userManager, List<UserRight> userRights)
         {
             var validation = ValidateModel(model);
             
@@ -44,7 +45,7 @@ namespace FocLab.Logic.Workers.Account
                 return new BaseApiResponse<ApplicationUserDto>(false, "Вы не можете регистрировать пользователей так, как вы не являетесь администратором");
             }
 
-            var result = await RegisterHelpMethodAsync(model, userManager, userRights);
+            var result = await RegisterHelpMethodAsync(model, userManager as ApplicationUserManager, userRights);
 
             if (!result.IsSucceeded)
             {

@@ -23,7 +23,7 @@ namespace FocLab.Api.Controllers.Api.Tasker
         {
         }
 
-        private DayTasksWorker DayTaskWorker => new DayTasksWorker(ContextWrapper);
+        private DayTasksWorker DayTaskWorker => new DayTasksWorker(AmbientContext);
 
         /// <summary>
         /// Добавить коментарий к заданию

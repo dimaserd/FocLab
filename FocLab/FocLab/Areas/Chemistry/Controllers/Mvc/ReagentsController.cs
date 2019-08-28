@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FocLab.Areas.Chemistry.Controllers.Base;
 using FocLab.Consts;
-using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryReagents;
 using FocLab.Model.Contexts;
@@ -16,7 +15,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     [Area(AreaConsts.Chemistry)]
     public class ReagentsController : BaseFocLabController
     {
-        private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(ContextWrapper);
+        private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(AmbientContext);
 
         /// <summary>
         /// Список реагентов

@@ -24,7 +24,7 @@ namespace FocLab.Api.Controllers.Api
         {
         }
 
-        private ExceptionWorker ExceptionWorker => new ExceptionWorker(ContextWrapper);
+        private ExceptionWorker ExceptionWorker => new ExceptionWorker(AmbientContext);
 
         /// <summary>
         /// Залогировать исключения
@@ -59,7 +59,7 @@ namespace FocLab.Api.Controllers.Api
         [HttpPost("Action")]
         public Task<BaseApiResponse> LogAction([FromForm]LoggedUserInterfaceActionModel model)
         {
-            var worker = new ActionLogWorker(ContextWrapper);
+            var worker = new ActionLogWorker(AmbientContext);
 
             return worker.LogActionAsync(model);
         }

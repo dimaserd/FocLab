@@ -10,7 +10,9 @@ using FocLab.Logic.Models.Users;
 using FocLab.Logic.Services;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Logic.Workers.Users;
+using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
+using Microsoft.AspNetCore.Identity;
 
 namespace FocLab.Logic.Workers.Account
 {
@@ -18,7 +20,7 @@ namespace FocLab.Logic.Workers.Account
     {
         #region Методы логинирования
 
-        public async Task<BaseApiResponse<LoginResultModel>> LoginByPhoneNumberAsync(LoginByPhoneNumberModel model, ApplicationSignInManager signInManager)
+        public async Task<BaseApiResponse<LoginResultModel>> LoginByPhoneNumberAsync(LoginByPhoneNumberModel model, SignInManager<ApplicationUser> signInManager)
         {
             var validation = ValidateModel(model);
 
@@ -39,7 +41,7 @@ namespace FocLab.Logic.Workers.Account
             return await LoginAsync(new LoginModel(model, user.Email), signInManager);
         }
 
-        public async Task<BaseApiResponse<LoginResultModel>> LoginAsync(LoginModel model, ApplicationSignInManager signInManager)
+        public async Task<BaseApiResponse<LoginResultModel>> LoginAsync(LoginModel model, SignInManager<ApplicationUser> signInManager)
         {
             var validation = ValidateModel(model);
 
@@ -121,7 +123,7 @@ namespace FocLab.Logic.Workers.Account
             return new BaseApiResponse<LoginResultModel>(false, "Неудачная попытка входа", new LoginResultModel { Result = LoginResult.UnSuccessfulAttempt, TokenId = null });
         }
 
-        public async Task<BaseApiResponse> LoginAsUserAsync(UserIdModel model, ApplicationSignInManager signInManager)
+        public async Task<BaseApiResponse> LoginAsUserAsync(UserIdModel model, SignInManager<ApplicationUser> signInManager)
         {
             var validation = ValidateModel(model);
 

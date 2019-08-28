@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Search;
 using Croco.Core.Search.Models;
 using FocLab.Controllers.Base;
 using FocLab.Logic.Services;
@@ -23,7 +22,7 @@ namespace FocLab.Areas.Admin.Controllers.Mvc
         {
         }
 
-        private DbFileWorker DbFileWorker => new DbFileWorker(ContextWrapper);
+        private DbFileWorker DbFileWorker => new DbFileWorker(AmbientContext);
 
 
 

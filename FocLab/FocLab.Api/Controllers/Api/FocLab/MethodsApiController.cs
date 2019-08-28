@@ -17,7 +17,7 @@ namespace FocLab.Api.Controllers.Api.FocLab
         {
         }
 
-        private ChemistryMethodsWorker ChemistryMethodsWorker => new ChemistryMethodsWorker(ContextWrapper);
+        private ChemistryMethodsWorker ChemistryMethodsWorker => new ChemistryMethodsWorker(AmbientContext);
 
         /// <summary>
         /// Создать задание

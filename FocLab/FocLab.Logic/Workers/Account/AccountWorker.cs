@@ -16,8 +16,7 @@ namespace FocLab.Logic.Workers.Account
 {
     public class AccountManager : BaseChemistryWorker
     {
-        
-        private  async Task<BaseApiResponse> CreateRolesAsync(RoleManager<ApplicationRole> roleManager)
+        private async Task<BaseApiResponse> CreateRolesAsync(RoleManager<ApplicationRole> roleManager)
         {
             var roles = Enum.GetValues(typeof(UserRight)).Cast<UserRight>().Select(x => x.ToString()).ToArray();
 
@@ -52,7 +51,7 @@ namespace FocLab.Logic.Workers.Account
             return new BaseApiResponse(true, "Пользователь root создан");
         }
 
-        private async Task<ApplicationUser> CreateOrUpdateRoot(ApplicationUserManager userManager)
+        private async Task<ApplicationUser> CreateOrUpdateRoot(UserManager<ApplicationUser> userManager)
         {
             var maybeRoot = await userManager.FindByEmailAsync(RightsSettings.RootEmail);
 
@@ -88,7 +87,7 @@ namespace FocLab.Logic.Workers.Account
             return maybeRoot;
         }
 
-        public BaseApiResponse<ApplicationUserDto> CheckUserChanges(IApplicationAuthenticationManager authenticationManager, ApplicationSignInManager signInManager)
+        public BaseApiResponse<ApplicationUserDto> CheckUserChanges(IApplicationAuthenticationManager authenticationManager, SignInManager<ApplicationUser> signInManager)
         {
             if(!IsAuthenticated)
             {
@@ -100,7 +99,7 @@ namespace FocLab.Logic.Workers.Account
 
         #region Методы изменения
 
-        public async Task<BaseApiResponse> ChangePasswordAsync(ChangeUserPasswordModel model, ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public async Task<BaseApiResponse> ChangePasswordAsync(ChangeUserPasswordModel model, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             if(model == null)
             {
@@ -135,9 +134,7 @@ namespace FocLab.Logic.Workers.Account
 
             return new BaseApiResponse(true, "Ваш пароль изменен");
         }
-
         #endregion
-
 
         public AccountManager(ICrocoAmbientContext context) : base(context)
         {

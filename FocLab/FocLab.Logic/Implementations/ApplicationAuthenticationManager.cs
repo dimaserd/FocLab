@@ -1,14 +1,16 @@
 ﻿using System.Threading.Tasks;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Services;
+using FocLab.Model.Entities.Users.Default;
+using Microsoft.AspNetCore.Identity;
 
 namespace FocLab.Logic.Implementations
 {
     public class ApplicationAuthenticationManager : IApplicationAuthenticationManager
     {
-        private readonly ApplicationSignInManager _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public ApplicationAuthenticationManager(ApplicationSignInManager signInManager)
+        public ApplicationAuthenticationManager(SignInManager<ApplicationUser> signInManager)
         {
             _signInManager = signInManager;
         }

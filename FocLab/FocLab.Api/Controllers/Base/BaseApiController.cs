@@ -1,15 +1,11 @@
-﻿using System;
-using Croco.Core.Data.Abstractions;
-using Croco.Core.Data.Models.ContextWrappers;
-using FocLab.Logic.Abstractions;
+﻿using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Services;
 using FocLab.Model.Contexts;
+using FocLab.Model.Entities.Users.Default;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Zoo;
 
 namespace FocLab.Api.Controllers.Base
 {
@@ -17,15 +13,11 @@ namespace FocLab.Api.Controllers.Base
     /// <summary>
     /// Базовый абстрактный контроллер в котором собраны общие методы и свойства
     /// </summary>
-    public class BaseApiController : Controller
+    public class BaseApiController : CrocoGenericController<ChemistryDbContext, ApplicationUser>
     {
         /// <inheritdoc />
-        public BaseApiController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor)
+        public BaseApiController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, x => x.GetUserId(), httpContextAccessor)
         {
-            Context = context;
-            SignInManager = signInManager;
-            UserManager = userManager;
-            HttpContextAccessor = httpContextAccessor;
         }
 
         #region Поля
@@ -35,14 +27,9 @@ namespace FocLab.Api.Controllers.Base
         /// Менеджер ролей
         /// </summary>
         public RoleManager<IdentityRole> RoleManager = null;
-        
-        private UserContextWrapper<ChemistryDbContext> _contextWrapper;
         #endregion
 
         #region Свойства
-
-        protected ICrocoPrincipal CrocoPrincipal => new MyCrocoPrincipal(User, x => x.Identity.GetUserId());
-
 
         /// <summary>
         /// Менеджер авторизации
@@ -50,78 +37,10 @@ namespace FocLab.Api.Controllers.Base
         protected IApplicationAuthenticationManager AuthenticationManager => new ApplicationAuthenticationManager(SignInManager);
 
         /// <summary>
-        /// Контекст для работы с бд
-        /// </summary>
-        public ChemistryDbContext Context 
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Обёртка для контекста
-        /// </summary>
-        public UserContextWrapper<ChemistryDbContext> ContextWrapper => _contextWrapper ?? (_contextWrapper = new UserContextWrapper<ChemistryDbContext>(CrocoPrincipal, Context));
-
-        /// <summary>
-        /// Менеджер авторизации
-        /// </summary>
-        public ApplicationSignInManager SignInManager
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Менеджер для работы с пользователями
-        /// </summary>
-        public ApplicationUserManager UserManager
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Контекст доступа к запросу
-        /// </summary>
-        public IHttpContextAccessor HttpContextAccessor { get; }
-
-
-        /// <summary>
         /// Идентификатор текущего залогиненного пользователя
         /// </summary>
         protected string UserId => User.Identity.GetUserId();
 
         #endregion
-        
-        /// <inheritdoc />
-        /// <summary>
-        /// Удаление объекта из памяти
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                var toDisposes = new IDisposable[]
-                {
-                    UserManager, Context
-                };
-
-                for (var i = 0; i < toDisposes.Length; i++)
-                {
-                    if (toDisposes[i] == null)
-                    {
-                        continue;
-                    }
-
-                    toDisposes[i].Dispose();
-                    toDisposes[i] = null;
-                }
-            }
-
-            base.Dispose(disposing);
-        }
-    }
-
-    
+    } 
 }

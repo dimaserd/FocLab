@@ -21,7 +21,7 @@ namespace FocLab.Logic.Workers.Users
     {
         
         #region Изменение пароля
-        public async Task<BaseApiResponse> ChangePasswordAsync(ResetPasswordByAdminModel model, ApplicationUserManager userManager)
+        public async Task<BaseApiResponse> ChangePasswordAsync(ResetPasswordByAdminModel model, UserManager<ApplicationUser> userManager)
         {
             var user = await userManager.FindByNameAsync(model.Email);
 
@@ -50,7 +50,7 @@ namespace FocLab.Logic.Workers.Users
         /// <param name="model"></param>
         /// <param name="userManager"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> ChangePasswordBaseAsync(ResetPasswordByAdminModel model, ApplicationUserManager userManager)
+        public async Task<BaseApiResponse> ChangePasswordBaseAsync(ResetPasswordByAdminModel model, UserManager<ApplicationUser> userManager)
         {
             var user = await userManager.FindByNameAsync(model.Email);
 

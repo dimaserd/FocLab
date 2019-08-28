@@ -31,15 +31,15 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         {
         }
 
-        private ChemistryTasksWorker ChemistryTasksWorker => new ChemistryTasksWorker(ContextWrapper);
+        private ChemistryTasksWorker ChemistryTasksWorker => new ChemistryTasksWorker(AmbientContext);
 
-        private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(ContextWrapper);
+        private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(AmbientContext);
 
-        private ChemistryMethodsWorker ChemistryMethodsWorker => new ChemistryMethodsWorker(ContextWrapper);
+        private ChemistryMethodsWorker ChemistryMethodsWorker => new ChemistryMethodsWorker(AmbientContext);
 
         private ChemistryTasksHtmlHelper ChemistryTasksHtmlHelper => new ChemistryTasksHtmlHelper(ChemistryMethodsWorker);
 
-        private FocLabDocumentProcessor FocLabDocumentProcessor => new FocLabDocumentProcessor(ContextWrapper);
+        private FocLabDocumentProcessor FocLabDocumentProcessor => new FocLabDocumentProcessor(AmbientContext);
 
         public async Task<FileResult> Print(string id)
         {
@@ -157,7 +157,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
             ViewData["model"] = task;
             ViewData["fileMethodsSelectList"] = await ChemistryTasksHtmlHelper.GetMethodsSelectListAsync();
 
-            ViewData["usersSelectList"] = await ChemistryTasksHtmlHelper.GetUsersSelectListAsync(ContextWrapper);
+            ViewData["usersSelectList"] = await ChemistryTasksHtmlHelper.GetUsersSelectListAsync(AmbientContext);
 
             return View(model);
         }
@@ -176,7 +176,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
             };
 
             ViewData["fileMethodsSelectList"] = await ChemistryTasksHtmlHelper.GetMethodsSelectListAsync();
-            ViewData["usersSelectList"] = await ChemistryTasksHtmlHelper.GetUsersSelectListAsync(ContextWrapper);
+            ViewData["usersSelectList"] = await ChemistryTasksHtmlHelper.GetUsersSelectListAsync(AmbientContext);
 
             return View(model);
         }

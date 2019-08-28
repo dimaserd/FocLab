@@ -27,7 +27,7 @@ namespace FocLab.Api.Controllers.Api
         {
         }
 
-        private DbFileWorker FileWorker => new DbFileWorker(ContextWrapper);
+        private DbFileWorker FileWorker => new DbFileWorker(AmbientContext);
 
 
         /// <summary>

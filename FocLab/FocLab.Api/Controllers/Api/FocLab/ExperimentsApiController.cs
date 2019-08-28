@@ -22,7 +22,7 @@ namespace FocLab.Api.Controllers.Api.FocLab
         }
 
         private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker =>
-            new ChemistryTaskExperimentsWorker(ContextWrapper);
+            new ChemistryTaskExperimentsWorker(AmbientContext);
 
 
         /// <summary>

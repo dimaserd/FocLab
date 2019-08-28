@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Croco.Core.Application;
+using Croco.Core.Implementations.AmbientContext;
 using FocLab.Abstractions;
 
 namespace FocLab.Implementations
@@ -9,11 +9,10 @@ namespace FocLab.Implementations
     {
         public Task LogExceptionAsync(Exception ex)
         {
-            var logger = CrocoApp.Application.GetLogger();
-            logger.LogException(ex);
+            var context = new SystemCrocoAmbientContext();
 
+            context.Logger.LogException(ex);
             return Task.CompletedTask;
-            
         }
     }
 }

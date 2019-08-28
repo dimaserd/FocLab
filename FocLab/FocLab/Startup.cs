@@ -36,11 +36,12 @@ namespace FocLab
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
-            Env = env;
+            Croco = new StartupCroco(configuration, env);
         }
 
+        public StartupCroco Croco { get; }
+
         public IConfiguration Configuration { get; }
-        public IHostingEnvironment Env { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -60,7 +61,7 @@ namespace FocLab
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            SetCrocoApplication(services);
+            Croco.SetCrocoApplication(services);
 
             services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString(ChemistryDbContext.ConnectionString)));
 
@@ -169,78 +170,6 @@ namespace FocLab
 
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
-        }
-
-        private ICrocoEventPublisher GetEventPublisher()
-        {
-            var options = new CrocoEventListenerOptions
-            {
-                TaskEnqueuer = new HangfireTaskEnqueuer(),
-            };
-
-            var evListener = new CrocoEventListener(options);
-
-            //Подписка обработчиками на события
-            EccEventsSubscription.Subscribe(evListener);
-
-            var publisher = new CrocoEventPublisher(new CrocoEventPublisherOptions
-            {
-                EventListener = evListener
-            });
-
-            return publisher;
-        }
-
-        private void SetCrocoApplication(IServiceCollection services)
-        {
-            var memCache = new MemoryCache(new MemoryCacheOptions());
-
-            services.AddSingleton<IMemoryCache, MemoryCache>(s => memCache);
-
-            var cacheManager = new ApplicationCacheManager(memCache);
-
-            var appOptions = new CrocoWebApplicationOptions(new ApplicationServerVirtualPathMapper(Env))
-            {
-                CacheManager = cacheManager,
-                GetDbContext = () => ChemistryDbContext.Create(Configuration),
-                FileOptions = new CrocoFileOptions
-                {
-                    SourceDirectory = Env.WebRootPath,
-                    ImgFileResizeSettings = new List<ImgFileResizeSetting>
-                    {
-                        new ImgFileResizeSetting
-                        {
-                            ImageSizeName = ImageSizeType.Icon.ToString(),
-                            MaxHeight = 50,
-                            MaxWidth = 50
-                        },
-
-                        new ImgFileResizeSetting
-                        {
-                            ImageSizeName = ImageSizeType.Small.ToString(),
-                            MaxHeight = 200,
-                            MaxWidth = 200
-                        },
-
-                        new ImgFileResizeSetting
-                        {
-                            ImageSizeName = ImageSizeType.Medium.ToString(),
-                            MaxHeight = 500,
-                            MaxWidth = 500
-                        }
-                    }
-                },
-                EventPublisher = GetEventPublisher()
-            };
-
-            var application = new FocLabWebApplication(appOptions)
-            {
-                IsDevelopment = Env.IsDevelopment()
-            };
-
-            CrocoApp.Application = application;
-
-            services.AddSingleton(CrocoApp.Application);
         }
     }
 }

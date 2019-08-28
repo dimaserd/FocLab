@@ -22,7 +22,7 @@ namespace FocLab.Api.Controllers.Api.Users
         {
         }
 
-        private UserRoleWorker UserRoleWorker => new UserRoleWorker(ContextWrapper);
+        private UserRoleWorker UserRoleWorker => new UserRoleWorker(AmbientContext);
 
         /// <summary>
         /// Добавление роли

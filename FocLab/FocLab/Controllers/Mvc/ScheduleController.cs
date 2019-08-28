@@ -3,12 +3,14 @@ using FocLab.Logic.Services;
 using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Tms.Logic.Models.Tasker;
+using FocLab.Logic.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace FocLab.Controllers.Mvc
 {
     public class ScheduleController : BaseController
     {
-        public ScheduleController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
+        public ScheduleController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager, IHttpContextAccessor contextAccessor) : base(context, userManager, signInManager)
         {
         }
 

@@ -23,8 +23,7 @@ namespace FocLab.Api.Controllers.Api.Users
         }
 
 
-
-        private ClientWorker ClientWorker => new ClientWorker(ContextWrapper, x => SignInManager.SignInAsync(x, true));
+        private ClientWorker ClientWorker => new ClientWorker(AmbientContext, x => SignInManager.SignInAsync(x, true));
 
         /// <summary>
         /// Редактирование пользователя

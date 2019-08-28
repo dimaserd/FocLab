@@ -16,7 +16,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         {
         }
 
-        private ChemistryMethodsWorker ChemistryMethodsWorker => new ChemistryMethodsWorker(ContextWrapper);
+        private ChemistryMethodsWorker ChemistryMethodsWorker => new ChemistryMethodsWorker(AmbientContext);
 
 
         /// <summary>

@@ -9,6 +9,7 @@ using FocLab.Logic.Resources;
 using FocLab.Logic.Services;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers.Users
@@ -33,7 +34,7 @@ namespace FocLab.Logic.Workers.Users
             return int.MaxValue;
         }
 
-        public async Task<BaseApiResponse> AddUserToRoleAsync(UserIdAndRole userIdAndRole, ApplicationUserManager userManager)
+        public async Task<BaseApiResponse> AddUserToRoleAsync(UserIdAndRole userIdAndRole, UserManager<ApplicationUser> userManager)
         {
             if (!IsAuthenticated)
             {
@@ -99,7 +100,7 @@ namespace FocLab.Logic.Workers.Users
         }
 
 
-        public async Task<BaseApiResponse> RemoveRoleFromUserAsync(UserIdAndRole userIdAndRole, ApplicationUserManager userManager)
+        public async Task<BaseApiResponse> RemoveRoleFromUserAsync(UserIdAndRole userIdAndRole, UserManager<ApplicationUser> userManager)
         {
             if (!IsAuthenticated)
             {

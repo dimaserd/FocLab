@@ -20,9 +20,9 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     public class ExperimentsController : BaseFocLabController
     {
 
-        private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker => new ChemistryTaskExperimentsWorker(ContextWrapper);
+        private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker => new ChemistryTaskExperimentsWorker(AmbientContext);
         
-        private ChemistryTasksWorker ChemistryTasksWorker => new ChemistryTasksWorker(ContextWrapper);
+        private ChemistryTasksWorker ChemistryTasksWorker => new ChemistryTasksWorker(AmbientContext);
 
         /// <summary>
         /// Получить эксперименты

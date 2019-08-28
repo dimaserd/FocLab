@@ -17,7 +17,7 @@ namespace FocLab.Api.Controllers.Api.FocLab
         {
         }
 
-        private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(ContextWrapper);
+        private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(AmbientContext);
 
         [HttpPost("CreateOrUpdate")]
         public Task<BaseApiResponse> CreateOrUpdateReagent(ChemistryReagentNameAndIdModel model)

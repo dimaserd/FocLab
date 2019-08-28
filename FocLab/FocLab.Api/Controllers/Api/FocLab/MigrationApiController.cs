@@ -16,9 +16,9 @@ namespace FocLab.Api.Controllers.Api.FocLab
         {
         }
 
-        public AddSnaphotsForEntities AddSnaphotsForEntities => new AddSnaphotsForEntities(ContextWrapper);
+        public AddSnaphotsForEntities AddSnaphotsForEntities => new AddSnaphotsForEntities(AmbientContext);
 
-        public AddDbFileHistory AddDbFileHistory => new AddDbFileHistory(ContextWrapper);
+        public AddDbFileHistory AddDbFileHistory => new AddDbFileHistory(AmbientContext);
 
         [HttpPost("MakeSnapshots")]
         public Task<BaseApiResponse> MakeSnapshots()

@@ -28,11 +28,11 @@ namespace FocLab.Api.Controllers.Api.Users
         {
         }
 
-        private UserSearcher UserSearcher => new UserSearcher(ContextWrapper);
+        private UserSearcher UserSearcher => new UserSearcher(AmbientContext);
 
-        private UserWorker UserWorker => new UserWorker(ContextWrapper);
+        private UserWorker UserWorker => new UserWorker(AmbientContext);
 
-        private AccountRegistrationWorker AccountRegistrationWorker => new AccountRegistrationWorker(ContextWrapper);
+        private AccountRegistrationWorker AccountRegistrationWorker => new AccountRegistrationWorker(AmbientContext);
 
         /// <summary>
         /// Получает список всех пользователей

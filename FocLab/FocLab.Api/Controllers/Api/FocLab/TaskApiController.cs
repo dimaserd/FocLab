@@ -24,11 +24,11 @@ namespace FocLab.Api.Controllers.Api.FocLab
         {
         }
 
-        private AdminChemistryTasksWorker AdminChemistryTasksWorker => new AdminChemistryTasksWorker(ContextWrapper);
+        private AdminChemistryTasksWorker AdminChemistryTasksWorker => new AdminChemistryTasksWorker(AmbientContext);
 
-        private PerformerChemistryTasksWorker PerformerChemistryTasksWorker => new PerformerChemistryTasksWorker(ContextWrapper);
+        private PerformerChemistryTasksWorker PerformerChemistryTasksWorker => new PerformerChemistryTasksWorker(AmbientContext);
 
-        private ChemistryTasksWorker ChemistryTasksWorker => new ChemistryTasksWorker(ContextWrapper);
+        private ChemistryTasksWorker ChemistryTasksWorker => new ChemistryTasksWorker(AmbientContext);
 
 
         private readonly IUserMailSender MailSender = new FocLabEmailSender();

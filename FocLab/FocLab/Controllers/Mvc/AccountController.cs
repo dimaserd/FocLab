@@ -2,7 +2,6 @@
 using Croco.Core.Common.Models;
 using FocLab.Controllers.Base;
 using FocLab.Logic.EntityDtos.Users.Default;
-using FocLab.Logic.Models;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers.Account;
@@ -21,7 +20,7 @@ namespace FocLab.Controllers.Mvc
     public class AccountController : BaseController
     {
         
-        private AccountLoginWorker AccountLoginWorker => new AccountLoginWorker(ContextWrapper);
+        private AccountLoginWorker AccountLoginWorker => new AccountLoginWorker(AmbientContext);
 
         #region Dev Methods
 
@@ -32,9 +31,9 @@ namespace FocLab.Controllers.Mvc
         [AllowAnonymous]
         public async Task<string> Dev()
         {
-            var manager = new AccountManager(ContextWrapper);
+            var manager = new AccountManager(AmbientContext);
 
-            var result = await manager.InitAsync(RoleManager, UserManager);
+            var result = await manager.InitAsync(RoleManager, UserManager as ApplicationUserManager);
 
             return result.Message;
         }
@@ -62,7 +61,7 @@ namespace FocLab.Controllers.Mvc
                 return Json(new BaseApiResponse(false, "Произошла ошибка"));
             }
 
-            var userWorker = new UserWorker(ContextWrapper);
+            var userWorker = new UserWorker(AmbientContext);
 
             var t = await userWorker.ChangePasswordBaseAsync(new ResetPasswordByAdminModel
             {
