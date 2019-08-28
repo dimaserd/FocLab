@@ -72,9 +72,6 @@ namespace FocLab
                 options.UseSqlServer(
                     Configuration.GetConnectionString(ChemistryDbContext.ConnectionString)));
 
-            // register it
-            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
-
             services.AddIdentity<ApplicationUser, ApplicationRole>(opts =>
             {
                 opts.Password.RequiredLength = 5;
