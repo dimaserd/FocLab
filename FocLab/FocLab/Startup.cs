@@ -1,16 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using Croco.Core.Application;
-using Croco.Core.Application.Options;
-using Croco.Core.Common.Enumerations;
-using Croco.Core.EventSourcing.Abstractions;
-using Croco.Core.EventSourcing.Implementations;
-using Croco.Core.Logic.Models.Files;
-using Croco.WebApplication.Application;
-using Ecc.Logic.RegistrationModule;
 using FocLab.Extensions;
 using FocLab.Implementations;
-using FocLab.Logic.Implementations;
 using FocLab.Logic.Services;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
@@ -19,12 +9,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
@@ -68,9 +56,7 @@ namespace FocLab
             services.AddTransient<ApplicationUserManager>();
             services.AddTransient<ApplicationSignInManager>();
 
-            services.AddDbContext<ChemistryDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString(ChemistryDbContext.ConnectionString)));
+            services.AddDbContext<ChemistryDbContext>(options => ChemistryDbContext.Create(Configuration));
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(opts =>
             {
@@ -100,11 +86,7 @@ namespace FocLab
                 c.EnableAnnotations();
             });
 
-            services.AddSignalR().AddJsonProtocol(options => {
-                options.PayloadSerializerSettings.ContractResolver =
-                new DefaultContractResolver();
-                options.PayloadSerializerSettings.Converters.Add(new StringEnumConverter());
-            }); ;
+            services.AddSignalR().AddJsonProtocol(options => ConfigureJsonSerializer(options.PayloadSerializerSettings));
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -116,11 +98,7 @@ namespace FocLab
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(options =>
-                {
-                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                });
+                .AddJsonOptions(options => ConfigureJsonSerializer(options.SerializerSettings));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -167,6 +145,12 @@ namespace FocLab
 
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private void ConfigureJsonSerializer(JsonSerializerSettings settings)
+        {
+            settings.ContractResolver = new DefaultContractResolver();
+            settings.Converters.Add(new StringEnumConverter());
         }
     }
 }
