@@ -7,7 +7,6 @@ using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Models.Users;
-using FocLab.Logic.Services;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Logic.Workers.Users;
 using FocLab.Model.Entities.Users.Default;
