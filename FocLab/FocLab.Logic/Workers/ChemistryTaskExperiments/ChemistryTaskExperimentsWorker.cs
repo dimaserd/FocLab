@@ -57,13 +57,13 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
             
             if (model.Performed)
             {
-                experiment.PerformedDate = DateTime.Now;
+                experiment.PerformedDate = Application.DateTimeProvider.Now;
 
                 repo.UpdateHandled(experiment);
 
                 await SaveChangesAsync();
 
-                await Application.EventSourcer.Publisher.PublishMessageAsync(AmbientContext, new ExperimentPerformedEvent
+                await Application.EventSourcer.Publisher.PublishAsync(AmbientContext, new ExperimentPerformedEvent
                 {
                     Id = experiment.Id
                 });
