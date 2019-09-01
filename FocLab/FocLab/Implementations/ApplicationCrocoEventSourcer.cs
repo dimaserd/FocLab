@@ -7,14 +7,14 @@ namespace FocLab.Implementations
 {
     public class ApplicationCrocoEventSourcer : ICrocoEventSourcer
     {
-        public ApplicationCrocoEventSourcer(ICrocoEventPublisher eventPublisher)
+        public ApplicationCrocoEventSourcer(ICrocoMessagePublisher eventPublisher)
         {
-            EventPublisher = eventPublisher;
+            Publisher = eventPublisher;
         }
 
-        public ICrocoEventPublisher EventPublisher { get; }
+        public ICrocoMessagePublisher Publisher { get; }
 
-        public Task UpdateEventHandlerStateAsync(ICrocoAmbientContext ambientContext, EventHandleState state)
+        public Task UpdateEventHandlerStateAsync(ICrocoAmbientContext ambientContext, CrocoMessageState state)
         {
             ambientContext.Logger.LogInfo($"Обработчик события завершил работу. Статус {state}");
             return Task.CompletedTask;

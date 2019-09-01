@@ -4,9 +4,9 @@ using FocLab.Logic.Events;
 
 namespace Ecc.Logic.EventHandlers
 {
-    public class ExperimentPerformedEventHandler : CrocoEventHandler<ExperimentPerformedEvent>
+    public class ExperimentPerformedEventHandler : CrocoMessageHandler<ExperimentPerformedEvent>
     {
-        public override Task HandleEvent(ExperimentPerformedEvent model)
+        public override Task HandleMessage(ExperimentPerformedEvent model)
         {
             //await mailSender.SendMailUnSafeAsync(new SendMailMessage
             //{

@@ -10,8 +10,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -56,7 +59,10 @@ namespace FocLab
             services.AddTransient<ApplicationUserManager>();
             services.AddTransient<ApplicationSignInManager>();
 
-            services.AddDbContext<ChemistryDbContext>(options => ChemistryDbContext.Create(Configuration));
+            services.AddDbContext<ChemistryDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString(ChemistryDbContext.ConnectionString)));
+
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(opts =>
             {
@@ -99,6 +105,9 @@ namespace FocLab
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(options => ConfigureJsonSerializer(options.SerializerSettings));
+
+            services.AddHttpContextAccessor();
+            services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

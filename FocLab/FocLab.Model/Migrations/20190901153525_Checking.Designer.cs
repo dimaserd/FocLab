@@ -4,14 +4,16 @@ using FocLab.Model.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FocLab.Model.Migrations
 {
     [DbContext(typeof(ChemistryDbContext))]
-    partial class ChemistryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190901153525_Checking")]
+    partial class Checking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

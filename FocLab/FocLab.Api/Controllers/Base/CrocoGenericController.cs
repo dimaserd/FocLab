@@ -20,8 +20,8 @@ namespace FocLab.Api.Controllers.Base
             UserManager = userManager;
             SignInManager = signInManager;
             HttpContextAccessor = httpContextAccessor;
-            RequestContext = new WebAppCrocoRequestContext(CrocoPrincipal);
             CrocoPrincipal = new WebAppCrocoPrincipal(User, getUserIdFunc);
+            RequestContext = new WebAppCrocoRequestContext(CrocoPrincipal);
             AmbientContext = new CrocoAmbientContext(Context, RequestContext);
         }
 

@@ -6,10 +6,10 @@ namespace Ecc.Logic.RegistrationModule
 {
     public static class EccEventsSubscription
     {
-        public static void Subscribe(ICrocoEventListener evListener)
+        public static void Subscribe(ICrocoMessageListener evListener)
         {
             //Подписка обработчиками событий на события
-            evListener.AddEventHandler<ExperimentPerformedEvent, ExperimentPerformedEventHandler>();
+            evListener.AddMessageHandler<ExperimentPerformedEvent, ExperimentPerformedEventHandler>();
         }
     }
 }

@@ -14,10 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FocLab
 {
@@ -34,24 +31,25 @@ namespace FocLab
 
         private ICrocoEventSourcer GetEventSourcer()
         {
-            return new ApplicationCrocoEventSourcer(GetEventPublisher());
+            return new ApplicationCrocoEventSourcer(GetMessagePublisher());
         }
 
-        private ICrocoEventPublisher GetEventPublisher()
+        private ICrocoMessagePublisher GetMessagePublisher()
         {
-            var options = new CrocoEventListenerOptions
+            var options = new CrocoMessageListenerOptions
             {
                 TaskEnqueuer = new HangfireTaskEnqueuer(),
             };
 
-            var evListener = new CrocoEventListener(options);
+            var evListener = new CrocoMessageListener(options);
 
             //Подписка обработчиками на события
             EccEventsSubscription.Subscribe(evListener);
 
-            var publisher = new CrocoEventPublisher(new CrocoEventPublisherOptions
+            var publisher = new CrocoMessagePublisher(new CrocoMessagePublisherOptions
             {
-                EventListener = evListener
+                EventListener = evListener,
+                StateHandler = new DatabaseCrocoMessageStateHandler()
             });
 
             return publisher;
