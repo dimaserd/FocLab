@@ -13,6 +13,10 @@ namespace FocLab.Api.Controllers.Base
 {
     public class CrocoGenericController<TContext, TUser> : Controller where TContext : DbContext where TUser : IdentityUser
     {
+        private readonly Func<IPrincipal, string> _getUserIdFunc;
+
+        protected IRequestContext _requestContext;
+
         /// <inheritdoc />
         public CrocoGenericController(TContext context, SignInManager<TUser> signInManager, UserManager<TUser> userManager, Func<IPrincipal, string> getUserIdFunc, IHttpContextAccessor httpContextAccessor)
         {
@@ -20,9 +24,7 @@ namespace FocLab.Api.Controllers.Base
             UserManager = userManager;
             SignInManager = signInManager;
             HttpContextAccessor = httpContextAccessor;
-            CrocoPrincipal = new WebAppCrocoPrincipal(User, getUserIdFunc);
-            RequestContext = new WebAppCrocoRequestContext(CrocoPrincipal);
-            AmbientContext = new CrocoAmbientContext(Context, RequestContext);
+            _getUserIdFunc = getUserIdFunc;
         }
 
         #region Свойства
@@ -38,17 +40,29 @@ namespace FocLab.Api.Controllers.Base
         /// <summary>
         /// Контекст текущего пользователя
         /// </summary>
-        protected ICrocoPrincipal CrocoPrincipal { get; }
-
-        /// <summary>
-        /// Обёртка для контекста окружения
-        /// </summary>
-        public ICrocoAmbientContext AmbientContext { get; }
+        protected ICrocoPrincipal CrocoPrincipal => new WebAppCrocoPrincipal(User, _getUserIdFunc);
 
         /// <summary>
         /// Контекст текущего запроса
         /// </summary>
-        protected IRequestContext RequestContext { get; }
+        protected IRequestContext RequestContext 
+        {
+            get
+            {
+                if(_requestContext == null)
+                {
+                    _requestContext = new WebAppCrocoRequestContext(CrocoPrincipal);
+                }
+
+                return _requestContext;
+            }
+        } 
+
+        /// <summary>
+        /// Обёртка для контекста окружения
+        /// </summary>
+        public ICrocoAmbientContext AmbientContext => new CrocoAmbientContext(Context, RequestContext);
+
 
         /// <summary>
         /// Менеджер авторизации

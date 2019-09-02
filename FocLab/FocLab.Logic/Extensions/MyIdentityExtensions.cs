@@ -15,7 +15,7 @@ namespace FocLab.Logic.Extensions
 
         public static bool HasRight(this IPrincipal rolePrincipal, UserRight right)
         {
-            return rolePrincipal != null && rolePrincipal.IsInRole(right.ToString());
+            return rolePrincipal.IsInRole(right.ToString());
         }
     }
 }
