@@ -13,14 +13,9 @@ namespace FocLab.Logic.Extensions
             return rolePrincipal.HasRight(UserRight.Admin) || rolePrincipal.HasRight(UserRight.SuperAdmin) || rolePrincipal.HasRight(UserRight.Root);
         }
 
-        public static bool IsAdminOrSeller(this IPrincipal rolePrincipal)
-        {
-            return rolePrincipal.HasRight(UserRight.Seller) || IsAdmin(rolePrincipal);
-        }
-
         public static bool HasRight(this IPrincipal rolePrincipal, UserRight right)
         {
-            return rolePrincipal.IsInRole(right.ToString());
+            return rolePrincipal != null && rolePrincipal.IsInRole(right.ToString());
         }
     }
 }
