@@ -1,6 +1,4 @@
-﻿using System;
-using System.Security.Principal;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
@@ -8,7 +6,6 @@ using FocLab.Logic.Implementations;
 using FocLab.Logic.Workers.Users;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
@@ -25,12 +22,10 @@ namespace FocLab.Controllers.Base
         {
         }
 
-
         /// <summary>
         /// Поле для менеджера ролей
         /// </summary>
         private RoleManager<ApplicationRole> _roleManager;
-
 
         #region Свойства
         
