@@ -9,7 +9,7 @@ namespace FocLab.Extensions
 {
     public static class MvcExtensions
     {
-        public static IEnumerable<SelectListItem> GetEnumDropdownList(Type type)
+        public static List<SelectListItem> GetEnumDropdownList(Type type)
         {
             if (!type.IsEnum)
             {
@@ -22,7 +22,7 @@ namespace FocLab.Extensions
             {
                 Text = x.DisplayName,
                 Value = x.StringRepresentation
-            });
+            }).ToList();
         }
 
         public static IEnumerable<SelectListItem> GetSexesSelectList(ApplicationUserDto applicationUser)

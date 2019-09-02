@@ -16,14 +16,14 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(true, "Root может делать все что угодно");
             }
 
-            if (userDto.Rights.Any(x => x == UserRight.Root))
+            if (userDto.HasRight(UserRight.Root))
             {
                 return new BaseApiResponse(false, "Вы не можете редактировать пользователя Root");
             }
 
             var isSuperAdmin = userPrincipal.HasRight(UserRight.SuperAdmin);
 
-            if (isSuperAdmin && userDto.Rights.Any(x => x == UserRight.SuperAdmin))
+            if (isSuperAdmin && userDto.HasRight(UserRight.SuperAdmin))
             {
                 return new BaseApiResponse(false, "Вы не можете редактировать пользователя, который является Супер-Администратором");
             }
@@ -35,7 +35,7 @@ namespace FocLab.Logic.Workers.Users
 
             var isAdmin = userPrincipal.HasRight(UserRight.Admin);
 
-            if (isAdmin && userDto.Rights.Any(x => x == UserRight.Admin))
+            if (isAdmin && userDto.HasRight(UserRight.Admin))
             {
                 return new BaseApiResponse(false, "Вы не можете редактировать пользователя, который является Администратором, для этого нужны права Супер-Администратора");
             }

@@ -4,7 +4,7 @@
 
     Layout = ChemistrySettings.LayoutPath;
 
-    var list = (MultiSelectList)ViewBag.Rights;
+    var list = ViewBag.Rights as List<SelectListItem>;
 }
 
 
@@ -70,8 +70,6 @@
 </div>
 
 
-
-
 <div style="height:40px">
 
 </div>
@@ -109,13 +107,9 @@
                 }
             }
         }
-    </script>
 
-    <script>
         var userCreator = new UserCreator();
-    </script>
-
-    <script>
+    
         function ClickHandler() {
             userCreator.CreateUser();
         }

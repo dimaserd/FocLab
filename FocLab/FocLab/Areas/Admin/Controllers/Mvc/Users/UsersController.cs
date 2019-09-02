@@ -37,7 +37,6 @@ namespace FocLab.Areas.Admin.Controllers.Mvc.Users
         [HttpGet]
         public async Task<IActionResult> Index(UserSearch model, bool isPartial = false)
         {
-            ViewData["tuplesRoleAndRight"] = await UserSearcher.GetRightsAndRolesTupleAsync();
             ViewData["searchModel"] = model;
 
             var viewModel = await UserSearcher.SearchUsersAsync(model);
@@ -99,14 +98,13 @@ namespace FocLab.Areas.Admin.Controllers.Mvc.Users
             //TODO Fix Logic
             var right = UserRoleWorker.GetHighRoleOfUser(await UserManager.GetRolesAsync(applicationUser.ToEntity()));
              
-            var roles = new Dictionary<UserRight, bool>
+            var roles = new Dictionary<string, bool>
             {
-                {UserRight.SuperAdmin, false},
-                {UserRight.Admin, false},
-                {UserRight.Seller, false}
+                {UserRight.SuperAdmin.ToString(), false},
+                {UserRight.Admin.ToString(), false},
+                {UserRight.Seller.ToString(), false}
             };
 
-            applicationUser.Rights.Intersect(roles.Keys).ToList().ForEach(x => roles[x] = true);
             ViewBag.UserRoles = roles.Skip(right);
 
             ViewData["sexes"] = MvcExtensions.GetSexesSelectList(applicationUser);

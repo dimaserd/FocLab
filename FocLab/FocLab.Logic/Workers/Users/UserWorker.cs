@@ -113,7 +113,7 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(false, "Пользователь не найден по указанному идентификатору");
             }
 
-            if(userToRemove.Rights.Any(x => x == UserRight.Root))
+            if(userToRemove.HasRight(UserRight.Root))
             {
                 return new BaseApiResponse(false, "Вы не можете удалить Root пользователя");
             }
@@ -181,17 +181,17 @@ namespace FocLab.Logic.Workers.Users
             }
             
 
-            if(!User.HasRight(UserRight.Root) && (userDto.Rights.Any(x => x == UserRight.Admin) || userDto.Rights.Any(x => x == UserRight.SuperAdmin)))
+            if(!User.HasRight(UserRight.Root) && (userDto.HasRight(UserRight.Admin) || userDto.HasRight(UserRight.SuperAdmin)))
             {
                 return new BaseApiResponse(false, ValidationMessages.YouCantEditUserBecauseHeIsAdministrator);
             }
 
-            if(!User.HasRight(UserRight.Root) && User.HasRight(UserRight.SuperAdmin) && userDto.Rights.Any(x => x == UserRight.SuperAdmin))
+            if(!User.HasRight(UserRight.Root) && User.HasRight(UserRight.SuperAdmin) && userDto.HasRight(UserRight.SuperAdmin))
             {
                 return new BaseApiResponse(false, ValidationMessages.YouCantEditUserBecauseHeIsSuperAdministrator);
             }
 
-            if (!User.HasRight(UserRight.Root) && !User.HasRight(UserRight.SuperAdmin) && User.HasRight(UserRight.Admin) && userDto.Rights.Any(x => x == UserRight.Admin))
+            if (!User.HasRight(UserRight.Root) && !User.HasRight(UserRight.SuperAdmin) && User.HasRight(UserRight.Admin) && userDto.HasRight(UserRight.Admin))
             {
                 return new BaseApiResponse(false, "Вы не имеете прав Супер-Администратора, следовательно не можете редактировать пользователя, так как он является Администратором");
             }

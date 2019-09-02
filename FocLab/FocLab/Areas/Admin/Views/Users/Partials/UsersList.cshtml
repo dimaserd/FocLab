@@ -80,14 +80,12 @@
                             </a>
                         }
 
-                        @if ((User.HasRight(UserRight.Root) || User.HasRight(UserRight.SuperAdmin)) && user.Rights.All(x => x != UserRight.SuperAdmin))
+                        @if ((User.HasRight(UserRight.Root) || User.HasRight(UserRight.SuperAdmin)) && !user.HasRight(UserRight.SuperAdmin))
                         {
-
                             <a href="/Admin/Users/ChangePassword/@user.Id" style="margin-top:10px" class="btn btn-warning btn-block">
                                 <i class="fa fa-pencil-square-o"></i>
                                 Изменить пароль
                             </a>
-
                         }
 
 

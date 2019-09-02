@@ -21,26 +21,7 @@ namespace FocLab.Logic.Workers.Users
     /// </summary>
     public class UserSearcher : BaseChemistryWorker
     {
-        public async Task<List<Tuple<ApplicationRole, string, UserRight>>> GetRightsAndRolesTupleAsync()
-        {
-            var rolesRepo = GetRepository<ApplicationRole>();
-
-            var roles = await rolesRepo.Query().ToListAsync();
-
-            var tuplesRoleAndRight = new List<Tuple<ApplicationRole, string, UserRight>>();
-
-            foreach (var role in roles)
-            {
-                var right = ((UserRight)Enum.Parse(typeof(UserRight), role.Name));
-
-                tuplesRoleAndRight.Add(new Tuple<ApplicationRole, string, UserRight>(role, right.ToDisplayName(), right));
-            }
-
-            return tuplesRoleAndRight;
-        }
-
         #region Методы получения одного пользователя
-
 
         public Task<ApplicationUserDto> GetUserByPhoneNumberAsync(string phoneNumber)
         {
@@ -57,32 +38,11 @@ namespace FocLab.Logic.Workers.Users
             return GetUserByPredicateExpression(x => x.Email == email);
         }
 
-        private async Task<ApplicationUserDto> GetUserByPredicateExpression(Expression<Func<ApplicationUserDto, bool>> predicate)
+        private Task<ApplicationUserDto> GetUserByPredicateExpression(Expression<Func<ApplicationUserDto, bool>> predicate)
         {
             var usersRepo = GetRepository<ApplicationUser>();
 
-            var user = await usersRepo.Query().Select(ApplicationUserDto.SelectExpression).FirstOrDefaultAsync(predicate);
-
-            if (user == null)
-            {
-                return null;
-            }
-
-            var rightsList = await GetRightsAndRolesTupleAsync();
-
-            user.Rights = new List<UserRight>();
-
-            foreach (var role in user.Roles)
-            {
-                var rightTuple = rightsList.FirstOrDefault(x => x.Item1.Id == role.RoleId);
-
-                if (rightTuple != null)
-                {
-                    user.Rights.Add(rightTuple.Item3);
-                }
-            }
-
-            return user;
+            return usersRepo.Query().Select(ApplicationUserDto.SelectExpression).FirstOrDefaultAsync(predicate);
         }
 
         #endregion

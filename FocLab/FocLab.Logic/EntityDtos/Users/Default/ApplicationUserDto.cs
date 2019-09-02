@@ -83,9 +83,12 @@ namespace FocLab.Logic.EntityDtos.Users.Default
 
         public string LastModifiedBy { get; set; }
 
-        public List<UserRight> Rights { get; set; }
-
         #endregion
+
+        public bool HasRight(UserRight userRight)
+        {
+            return Roles.Any(x => x.RoleName == userRight.ToString());
+        }
 
         public static Expression<Func<ApplicationUser, ApplicationUserDto>> SelectExpression = x => new ApplicationUserDto
         {

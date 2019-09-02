@@ -90,13 +90,13 @@ namespace FocLab.Logic.Extensions
 
         public static bool Compare(ApplicationUserDto user1, ApplicationUserDto user2)
         {
-            var rightsChanged = user1.Rights.Count != user2.Rights.Count;
+            var rightsChanged = user1.Roles.Count != user2.Roles.Count;
 
             if (!rightsChanged)
             {
-                for (var i = 0; i < user1.Rights.Count; i++)
+                for (var i = 0; i < user1.Roles.Count; i++)
                 {
-                    if (user1.Rights.OrderBy(x => x).ToList()[i] == user2.Rights.OrderBy(x => x).ToList()[i])
+                    if (user1.Roles.OrderBy(x => x).ToList()[i] == user2.Roles.OrderBy(x => x).ToList()[i])
                     {
                         continue;
                     }

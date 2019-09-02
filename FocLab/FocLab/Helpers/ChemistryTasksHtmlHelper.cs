@@ -38,7 +38,7 @@ namespace FocLab.Helpers
 
             var users = await searcher.SearchUsersAsync(UserSearch.GetAllUsers);
 
-            var usersSelectList = users.List.Where(x => x.Rights.All(t => t != UserRight.Admin) && x.Rights.All(t => t != UserRight.SuperAdmin))
+            var usersSelectList = users.List.Where(x => !x.HasRight(UserRight.Admin) && !x.HasRight(UserRight.SuperAdmin))
                 .Where(x => x.Id != userId)
                 .Select(x => new SelectListItem
                 {
