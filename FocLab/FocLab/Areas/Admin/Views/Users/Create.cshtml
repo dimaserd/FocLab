@@ -11,7 +11,8 @@
     var builder = new GenericUserInterfaceModelBuilder<CreateUserModel>(modelPrefix);
 
     builder
-        .MultipleDropDownListFor(x => x.Rights, list);
+        .MultipleDropDownListFor(x => x.Rights, list)
+        .ShiftToEndFor(x => x.Rights);
 }
 
 
