@@ -41,7 +41,7 @@ class TSClassGenerator {
         }
         let html = "";
 
-        html += `enum ${typeDescription.DisplayName} {\n`;
+        html += `enum ${typeDescription.PropertyName} {\n`;
 
         for (let i = 0; i < typeDescription.EnumValues.length; i++) {
 
@@ -111,18 +111,18 @@ class TSClassGenerator {
 
                 if (prop.IsEnumerable) {
 
-                    result += `${TSClassGenerator.GetDescription(prop)}\t ${prop.Name}: Array<${this.GetEnumeratedDisplayTypeName(prop.EnumeratedType)}>; \n`;
+                    result += `${TSClassGenerator.GetDescription(prop)}\t ${prop.PropertyName}: Array<${this.GetEnumeratedDisplayTypeName(prop.EnumeratedType)}>; \n`;
 
                     continue;
                 }
 
                 if (prop.IsClass || prop.IsEnumeration) {
-                    result += `${TSClassGenerator.GetDescription(prop)}\t ${prop.Name}: ${prop.TypeName}; \n`;
+                    result += `${TSClassGenerator.GetDescription(prop)}\t ${prop.PropertyName}: ${prop.TypeName}; \n`;
 
                     continue;
                 }
 
-                result += `${TSClassGenerator.GetDescription(prop)}\t ${prop.Name}: ${TSClassTypeMapper.GetPropertyType(prop)}; \n`;
+                result += `${TSClassGenerator.GetDescription(prop)}\t ${prop.PropertyName}: ${TSClassTypeMapper.GetPropertyType(prop)}; \n`;
             }
 
             result += "}";

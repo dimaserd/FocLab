@@ -56,7 +56,6 @@
     <Content Remove="wwwroot\src\FocLab\TaskDrawer.ts" />
     <Content Remove="wwwroot\src\FocLab\TaskReagentWorker.ts" />
     <Content Remove="wwwroot\src\FocLab\TaskSearch\AdminTasksIndexHandlers.ts" />
-    <Content Remove="wwwroot\src\System\Funcs\Action.ts" />
     <Content Remove="wwwroot\src\Tms\AdminDayTaskCreator.ts" />
     <Content Remove="wwwroot\src\Tms\DayTaskDrawer.ts" />
     <Content Remove="wwwroot\src\Tms\DayTaskEditor.ts" />
@@ -75,6 +74,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="4.5.5" />
+    <PackageReference Include="Zoo.GenericUserInterface" Version="0.8.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -138,7 +138,6 @@
     <TypeScriptCompile Include="wwwroot\src\FocLab\Task\TaskStaticHandlers.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Task\TaskDrawer.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Task\TaskReagentWorker.ts" />
-    <TypeScriptCompile Include="wwwroot\src\System\Funcs\Action.ts" />
     <TypeScriptCompile Include="wwwroot\src\Tms\AdminDayTaskCreator.ts" />
     <TypeScriptCompile Include="wwwroot\src\Tms\DayTaskDrawer.ts" />
     <TypeScriptCompile Include="wwwroot\src\Tms\DayTaskEditor.ts" />

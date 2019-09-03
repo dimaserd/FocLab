@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using FocLab.Logic.Models.Users
 
 @model FocLab.Logic.EntityDtos.Users.Default.ApplicationUserDto
 @{
@@ -6,12 +7,18 @@
 
     Layout = ChemistrySettings.LayoutPath;
 
-    var sexes = ViewData["sexes"] as IEnumerable<SelectListItem>;
-
-    var roles = ViewData["UserRoles"] as IEnumerable<KeyValuePair<UserRight, bool>>;
+    var sexes = ViewData["sexes"] as IEnumerable<MySelectListItem>;
 
     var birthDate = Model.BirthDate.HasValue ? Model.BirthDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "";
 
+    var modelPrefix = "update.";
+
+    var builder = new GenericUserInterfaceModelBuilder<EditApplicationUser>(modelPrefix, GenericUserInterfaceValueProvider.Create(Model));
+
+    builder
+        .HiddenFor(x => x.Id)
+        .HiddenFor(x => x.ObjectJson)
+        .DropDownListFor(nameof(EditApplicationUser.Sex), sexes.ToList());
 }
 
 
@@ -35,55 +42,11 @@
         </div>
     </div>
 
-    @Html.HiddenFor(x => x.Id)
+    @await Html.RenderGenericUserInterfaceAsync(builder.Result)
 
-    <div class="form-group m-form__group">
-        @Html.LabelFor(x => x.Email)
-        @Html.TextBoxFor(x => x.Email, new { @class = "form-control m-input" })
-    </div>
-
-    <div class="form-group m-form__group">
-        @Html.LabelFor(x => x.Name)
-        @Html.TextBoxFor(x => x.Name, new { @class = "form-control m-input" })
-    </div>
-
-    <div class="form-group m-form__group">
-        @Html.LabelFor(x => x.Surname)
-        @Html.TextBoxFor(x => x.Surname, new { @class = "form-control m-input" })
-    </div>
-
-    <div class="form-group m-form__group">
-        @Html.LabelFor(x => x.Patronymic)
-        @Html.TextBoxFor(x => x.Patronymic, new { @class = "form-control m-input" })
-    </div>
-
-    <div class="form-group m-form__group">
-
-        @Html.LabelFor(x => x.PhoneNumber)
-        @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control m-input" })
-    </div>
-
-    <div class="form-group m-form__group">
-        @Html.LabelFor(x => x.BirthDate)
-        <div class="date w-100">
-            <input id="BirthDate" name="BirthDate" class="form-control m-input" type="text" value="@birthDate">
-        </div>
-    </div>
-
-    <div class="form-group m-form__group">
-        @Html.LabelFor(x => x.Sex)
-        @Html.DropDownList("Sex", sexes, new { @class = "form-control m-input m-bootstrap-select m_selectpicker" })
-    </div>
-    <div class="form-group m-form__group">
-        @foreach (var item in roles)
-        {
-            <input class="m-checkbox" type="checkbox" name="@item.Key" id="@item.Key" @(item.Value ? "checked=\"checked\"" : "")>
-            <label for="@item.Key">@item.Key.ToDisplayName()</label> <br />
-        }
-    </div>
     <div class="m-portlet__foot m-portlet__foot--fit">
         <div class="m-form__actions">
-            <button type="reset" class="btn btn-primary" onclick="CreateValue()">Сохранить</button>
+            <button type="reset" class="btn btn-primary action-btn">Сохранить</button>
             <button onclick="location.href='/Admin/Users/Index'" class="btn btn-secondary">Отмена</button>
         </div>
     </div>
@@ -101,29 +64,16 @@
 
 @section Scripts{
     <script>
-        $.fn.datepicker.dates['ru'] = {
-            days: ['понедельник', 'воскресенье', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
-            daysShort: ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
-            daysMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-            months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-                'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-            monthsShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн',
-                'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
-            today: "Today"
-        };
+        $(".action-btn").on("click", () => {
+            const data = TryForm.GetDataForFormByModelPrefix("@modelPrefix");;
 
-        $(document).ready(function () {
-            $("#@(nameof(Model.BirthDate))").datepicker({
-                todayHighlight: true,
-                isRTL: true,
-                format: 'dd.mm.yyyy',
-                autoclose: true,
-                language: 'ru',
+            Requester.SendPostRequestWithAnimation("/Api/User/Edit", data, resp => {
+                if (resp.IsSucceeded) {
+                    setTimeout(() => { location.href = '/Admin/Users/Index' }, 1000)
+                }
             });
         });
-
     </script>
-
     <script>
         $(".m-checkbox").change(function () {
 
@@ -157,30 +107,6 @@
                     }
                 }
             });
-        }
-    </script>
-    <script>
-
-        function CreateValue() {
-
-            var data = {
-                Id: "",
-                Email: "",
-                Name: "",
-                Surname: "",
-                Patronymic: "",
-                PhoneNumber: "",
-                BirthDate:"",
-                Sex: ""
-            };
-
-            data = CollectData(data);
-
-            if (data.BirthDate !== "") {
-                data.BirthDate = Requester.ParseDate(data.BirthDate);
-            }
-
-            Requester.SendPostRequestWithAnimation("/Api/User/Edit", data);
         }
     </script>
 }

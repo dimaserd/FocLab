@@ -14,7 +14,7 @@ interface CreateOrUpdateDayTask {
     TaskText: string;
     TaskTitle: string;
     AssigneeUserId: string;
-    TaskDate: string;
+    TaskDate: Date;
     TaskTarget: string;
     TaskReview: string;
     TaskComment: string;

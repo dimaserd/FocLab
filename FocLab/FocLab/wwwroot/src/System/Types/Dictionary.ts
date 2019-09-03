@@ -21,7 +21,17 @@ class Dictionary<T> implements IDictionary<T> {
         }
     }
 
-    add(key: string, value: T) {
+    getByKey(key: string): T {
+        var index = this._keys.indexOf(key, 0);
+
+        if (index > 0) {
+            return this._values[index];
+        }
+
+        return null;
+    }
+
+    add(key: string, value: T): void {
 
         if (this.containsKey(key)) {
             throw new DOMException(`Ключ ${key} уже существует в данном словаре`);
@@ -32,7 +42,7 @@ class Dictionary<T> implements IDictionary<T> {
         this._values.push(value);
     }
 
-    remove(key: string) {
+    remove(key: string) : void {
         var index = this._keys.indexOf(key, 0);
         this._keys.splice(index, 1);
         this._values.splice(index, 1);
@@ -48,7 +58,7 @@ class Dictionary<T> implements IDictionary<T> {
         return this._values;
     }
 
-    containsKey(key: string) {
+    containsKey(key: string): boolean {
         if (typeof this[key] === "undefined") {
             return false;
         }

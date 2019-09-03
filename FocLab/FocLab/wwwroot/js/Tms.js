@@ -280,7 +280,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
             AssigneeUserId: "",
             Id: "",
             TaskComment: "",
-            TaskDate: "",
+            TaskDate: new Date(),
             TaskReview: "",
             TaskTarget: ""
         };
@@ -299,7 +299,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
             TaskTitle: "",
             AssigneeUserId: "",
             TaskComment: "",
-            TaskDate: "",
+            TaskDate: new Date(),
             TaskReview: "",
             TaskTarget: ""
         };

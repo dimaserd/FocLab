@@ -17,7 +17,7 @@ interface CreateOrUpdateDayTask {
     TaskText: string;
     TaskTitle: string;
     AssigneeUserId: string;
-    TaskDate: string;
+    TaskDate: Date;
     TaskTarget: string;
     TaskReview: string;
     TaskComment: string;
@@ -171,12 +171,12 @@ class ScheduleStaticHandlers {
             AssigneeUserId: "",
             Id: "",
             TaskComment: "",
-            TaskDate: "",
+            TaskDate: new Date(),
             TaskReview: "",
             TaskTarget: ""
         };
         data = FormDataHelper.CollectDataByPrefix(data, "task.") as CreateOrUpdateDayTask;
-        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate");
+        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate") as Date;
 
         Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, resp => {
             if (resp.IsSucceeded) {
@@ -194,13 +194,13 @@ class ScheduleStaticHandlers {
             TaskTitle: "",
             AssigneeUserId: "",
             TaskComment: "",
-            TaskDate: "",
+            TaskDate: new Date(),
             TaskReview: "",
             TaskTarget: ""
         };
 
         data = FormDataHelper.CollectDataByPrefix(data, "create.") as CreateOrUpdateDayTask;
-        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate1");
+        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate1") as Date;
         
 
         Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, resp => {

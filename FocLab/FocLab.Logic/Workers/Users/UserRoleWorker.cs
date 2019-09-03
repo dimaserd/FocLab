@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
 using Croco.Core.Extensions.Enumerations;
+using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
 using FocLab.Logic.Services;
@@ -16,19 +17,26 @@ namespace FocLab.Logic.Workers.Users
 {
     public class UserRoleWorker : BaseChemistryWorker
     {
-        public static int GetHighRoleOfUser(IList<string> roles)
+        public static int GetHighRoleOfUser(ApplicationUserDto user)
         {
-            if (roles.Contains(UserRight.Root.ToString()))
+            return GetHighRoleOfUser(user.Roles.Select(x => x.RoleName));
+        }
+
+        public static int GetHighRoleOfUser(IEnumerable<string> roles)
+        {
+            var rightsToCheck = new[]
             {
-                return (int)UserRight.Root;
-            }
-            if (roles.Contains(UserRight.SuperAdmin.ToString()))
+                UserRight.Root,
+                UserRight.SuperAdmin,
+                UserRight.Admin
+            };
+
+            foreach (var right in rightsToCheck)
             {
-                return (int)UserRight.SuperAdmin;
-            }
-            if (roles.Contains(UserRight.Admin.ToString()))
-            {
-                return (int)UserRight.Admin;
+                if(roles.Contains(right.ToString()))
+                {
+                    return (int)right;
+                }
             }
 
             return int.MaxValue;

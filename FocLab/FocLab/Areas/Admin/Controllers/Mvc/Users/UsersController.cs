@@ -95,18 +95,7 @@ namespace FocLab.Areas.Admin.Controllers.Mvc.Users
             {
                 return RedirectToAction("Index");
             }
-            //TODO Fix Logic
-            var right = UserRoleWorker.GetHighRoleOfUser(await UserManager.GetRolesAsync(applicationUser.ToEntity()));
-             
-            var roles = new Dictionary<string, bool>
-            {
-                {UserRight.SuperAdmin.ToString(), false},
-                {UserRight.Admin.ToString(), false},
-                {UserRight.Seller.ToString(), false}
-            };
-
-            ViewBag.UserRoles = roles.Skip(right);
-
+            
             ViewData["sexes"] = MvcExtensions.GetSexesSelectList(applicationUser);
 
             return View(applicationUser);

@@ -28,7 +28,7 @@ var TSClassGenerator = /** @class */ (function () {
             throw new DOMException("Данный тип не является перечислением");
         }
         var html = "";
-        html += "enum " + typeDescription.DisplayName + " {\n";
+        html += "enum " + typeDescription.PropertyName + " {\n";
         for (var i = 0; i < typeDescription.EnumValues.length; i++) {
             var enumValue = typeDescription.EnumValues[i];
             var comma = (i === typeDescription.EnumValues.length - 1) ? "" : ",";
@@ -69,14 +69,14 @@ var TSClassGenerator = /** @class */ (function () {
             for (var i = 0; i < typeDescription.Properties.length; i++) {
                 var prop = typeDescription.Properties[i];
                 if (prop.IsEnumerable) {
-                    result += TSClassGenerator.GetDescription(prop) + "\t " + prop.Name + ": Array<" + this.GetEnumeratedDisplayTypeName(prop.EnumeratedType) + ">; \n";
+                    result += TSClassGenerator.GetDescription(prop) + "\t " + prop.PropertyName + ": Array<" + this.GetEnumeratedDisplayTypeName(prop.EnumeratedType) + ">; \n";
                     continue;
                 }
                 if (prop.IsClass || prop.IsEnumeration) {
-                    result += TSClassGenerator.GetDescription(prop) + "\t " + prop.Name + ": " + prop.TypeName + "; \n";
+                    result += TSClassGenerator.GetDescription(prop) + "\t " + prop.PropertyName + ": " + prop.TypeName + "; \n";
                     continue;
                 }
-                result += TSClassGenerator.GetDescription(prop) + "\t " + prop.Name + ": " + TSClassTypeMapper.GetPropertyType(prop) + "; \n";
+                result += TSClassGenerator.GetDescription(prop) + "\t " + prop.PropertyName + ": " + TSClassTypeMapper.GetPropertyType(prop) + "; \n";
             }
             result += "}";
         }

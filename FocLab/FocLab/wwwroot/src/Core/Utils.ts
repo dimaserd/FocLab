@@ -1,6 +1,28 @@
-﻿interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
+﻿interface Select2Option {
+    id: string;
+    text: string;
+}
+
+interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
+    select2(arg0: {
+        theme: string; width: string;
+        language: any,
+        placeholder: string, dropdownAutoWidth: boolean;
+        data: Select2Option[];
+        templateResult: (state: any) => JQuery<HTMLElement>
+    });
     select2(arg0: { width: string; });
     select2(arg0: { placeholder: string; language: { "noResults": () => string; }; data: any; templateSelection: any; templateResult: any; escapeMarkup: (markup: any) => any; });
+}
+
+interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
+    sortable(arg0: { group: string; vertical: boolean; pullPlaceholder: boolean; onDrop: ($item: any, container: any, _super: any) => void; onDragStart: ($item: any, container: any, _super: any) => void; onDrag: ($item: any, position: any) => void; });
+    sortable(arg0: { handle: string });
+    sortable(arg0: string);
+    selectpicker(arg0: string);
+    //select2(arg0: { theme: string; width: string; dropdownAutoWidth: boolean; data: Select2Option[]; templateResult: any; });
+    slider(arg0: { range: boolean; min: number; max: number; values: number[]; slide(event: any, ui: any): void; stop(): void; });    //Расширение интерфейса под слайдер
+
     daterangepicker(arg0: { autoUpdateInput: boolean; locale: { cancelLabel: string; applyLabel: string; daysOfWeek: string[]; monthNames: string[]; firstDay: number; }; });
 }
 interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
@@ -8,12 +30,12 @@ interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
     daterangepicker(arg0: { autoUpdateInput: boolean; locale: { cancelLabel: string; applyLabel: string; daysOfWeek: string[]; monthNames: string[]; firstDay: number; }; });
 }
 
-/// <reference path="../../node_modules/@types/bootstrap/index.d.ts"/>
-/// <reference path="../../node_modules/@types/bootstrap-datepicker/index.d.ts"/>
+/// <reference path="../../../node_modules/@types/bootstrap/index.d.ts"/>
+/// <reference path="../../../node_modules/@types/bootstrap-datepicker/index.d.ts"/>
 
 class Utils {
 
-    public static SetDatePicker(selector: string, startDate: string = null): void {
+    public static SetDatePicker = (selector: string, startDate: string = null): void => {
         $.fn.datepicker['dates']['ru'] = {
             days: ['понедельник', 'воскресенье', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
             daysShort: ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
@@ -31,10 +53,9 @@ class Utils {
             language: "ru",
             startDate: startDate
         });
-
     }
 
-    public static SetDateRangePicker(selector: string): void {
+    public static SetDateRangePicker = (selector: string): void => {
 
         $(selector).daterangepicker({
             autoUpdateInput: false,
@@ -92,7 +113,7 @@ class Utils {
         }
     };
 
-    public static GetDateFromDatePicker(inputId: string): string {
+    public static GetDateFromDatePicker(inputId: string): object {
         let inputDate: any = document.getElementById(inputId);
 
         if (inputDate === []) {
@@ -100,19 +121,19 @@ class Utils {
             return null;
         }
         var date = inputDate.value.replace(/ /g, "");
-        if (date != "") {
-            var tempStr = date.split('/');
+        if (date !== "") {
+            console.log("Not ''");
+            const tempStr = date.split('/');
             tempStr.reverse();
             date = tempStr.join('-');
 
             return (date);
-        }
-        else {
+        } else {
             return null;
         }
     }
 
-    public static FillSelect(select: HTMLElement, array: Array<object>, htmlFunc: Function, valueFunc: Function): void {
+    public static FillSelect(select: HTMLElement, array: Array<string>, htmlFunc: Function, valueFunc: Function): void {
 
         for (let i = 0; i < array.length; i++) {
             const opt = document.createElement("option");
@@ -121,4 +142,15 @@ class Utils {
             select.append(opt);
         }
     }
+
+    public static GetImageLinkByFileId(fileId: number, sizeType: ImageSizeType): string {
+        return `/FileCopies/Images/${sizeType.toString()}/${fileId}.jpg`;
+    }
+}
+
+enum ImageSizeType {
+    Icon = <any>"Icon",
+    Medium = <any>"Medium",
+    Small = <any>"Small",
+    Original = <any>"Original"
 }

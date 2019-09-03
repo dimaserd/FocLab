@@ -12,6 +12,7 @@ declare class Dictionary<T> implements IDictionary<T> {
         key: string;
         value: T;
     }[]);
+    getByKey(key: string): T;
     add(key: string, value: T): void;
     remove(key: string): void;
     keys(): string[];

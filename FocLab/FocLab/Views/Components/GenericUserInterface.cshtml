@@ -1,0 +1,16 @@
+﻿@model Zoo.GenericUserInterface.Models.GenerateGenericUserInterfaceModel
+@{
+    Layout = null;
+
+    var formDrawKey = ViewData["formDrawKey"] as string;
+
+    var uniqueId = Guid.NewGuid().ToString();
+}
+
+<script>
+    window["@uniqueId"] = @Html.GetJson(Model);
+</script>
+
+<div class="generic-user-interface" data-id="@uniqueId" data-form-draw="@formDrawKey">
+
+</div>

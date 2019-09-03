@@ -4,6 +4,7 @@ using System.Linq;
 using Croco.Core.Logic.Workers.Documentation;
 using FocLab.Logic.EntityDtos.Users.Default;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Zoo.GenericUserInterface.Models;
 
 namespace FocLab.Extensions
 {
@@ -25,16 +26,16 @@ namespace FocLab.Extensions
             }).ToList();
         }
 
-        public static IEnumerable<SelectListItem> GetSexesSelectList(ApplicationUserDto applicationUser)
+        public static IEnumerable<MySelectListItem> GetSexesSelectList(ApplicationUserDto applicationUser)
         {
-            yield return new SelectListItem
+            yield return new MySelectListItem
             {
                 Text = "Мужской",
                 Value = true.ToString(),
                 Selected = applicationUser.Sex == true
             };
 
-            yield return new SelectListItem
+            yield return new MySelectListItem
             {
                 Text = "Женский",
                 Value = false.ToString(),
@@ -42,7 +43,7 @@ namespace FocLab.Extensions
                 Selected = applicationUser.Sex == false
             };
 
-            yield return new SelectListItem
+            yield return new MySelectListItem
             {
                 Text = "Не указано",
                 Value = "",

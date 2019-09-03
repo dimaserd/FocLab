@@ -2,7 +2,9 @@
   {
     "outputFileName": "wwwroot/js/Core.js",
     "inputFiles": [
-      "wwwroot/src/Core/*.js"
+      "wwwroot/src/System/System.js",
+      "wwwroot/src/Core/*.js",
+      "wwwroot/src/Core/FormTypeDrawer/FormTypeDrawer.js"
     ],
 
 
