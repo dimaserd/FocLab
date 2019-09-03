@@ -42,12 +42,19 @@ var FormDrawImplementation = /** @class */ (function () {
         var t = "<div class=\"form-group m-form__group\">\n                <label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n                <textarea autocomplete=\"false\" class=\"form-control m-input\" name=\"" + this.GetPropertyValueName(typeDescription) + "\" rows=\"3\" " + styles + ">" + value + "</textarea>\n            </div>";
         return t;
     };
-    FormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList) {
+    FormDrawImplementation.prototype.RenderGenericDropList = function (typeDescription, selectList, isMultiple) {
         var rawValue = ValueProviderHelper.GetRawValueFromValueProvider(typeDescription, this._model.ValueProvider);
         selectList = HtmlDrawHelper.ProceesSelectValues(typeDescription, rawValue, selectList);
         var _class = this._selectClass + " form-control m-input m-bootstrap-select m_selectpicker";
-        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription), selectList);
+        var dict = isMultiple ? new Dictionary([{ key: "multiple", value: "" }]) : null;
+        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription), selectList, dict);
         return "<div class=\"form-group m-form__group\">\n                <label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n                " + select + "   \n            </div>";
+    };
+    FormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList) {
+        return this.RenderGenericDropList(typeDescription, selectList, false);
+    };
+    FormDrawImplementation.prototype.RenderMultipleDropDownList = function (typeDescription, selectList) {
+        return this.RenderGenericDropList(typeDescription, selectList, true);
     };
     return FormDrawImplementation;
 }());

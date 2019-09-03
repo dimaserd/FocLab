@@ -29,6 +29,7 @@
         return this._formDrawer.RenderDatePicker(prop);
     }
 
+
     public TextAreaFor(propertyName: string) : string {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
 
@@ -39,6 +40,12 @@
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
 
         return this._formDrawer.RenderDropDownList(prop, selectList);
+    }
+
+    public MultipleDropDownFor(propertyName: string, selectList: SelectListItem[]): string {
+        var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
+
+        return this._formDrawer.RenderMultipleDropDownList(prop, selectList);
     }
 
     public HiddenFor(propertyName: string): string {

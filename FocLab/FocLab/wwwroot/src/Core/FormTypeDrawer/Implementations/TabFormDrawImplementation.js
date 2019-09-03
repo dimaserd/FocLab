@@ -25,12 +25,19 @@ var TabFormDrawImplementation = /** @class */ (function () {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
         return "<div class=\"form-group m-form__group row\">\n                    <label class=\"col-xl-3 col-lg-3 col-form-label\">" + typeDescription.PropertyDisplayName + "</label>\n                    <div class=\"col-xl-9 col-lg-9\">\n                        <textarea class=\"form-control m-input\" name=\"" + this.GetPropertyValueName(typeDescription.PropertyName) + "\" rows=\"3\">" + value + "</textarea>\n                    </div>\n\n                </div>";
     };
-    TabFormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList) {
+    TabFormDrawImplementation.prototype.RenderGenericDropList = function (typeDescription, selectList, isMultiple) {
         var rawValue = ValueProviderHelper.GetRawValueFromValueProvider(typeDescription, this._model.ValueProvider);
         selectList = HtmlDrawHelper.ProceesSelectValues(typeDescription, rawValue, selectList);
         var _class = this._selectClass + " form-control m-input m-bootstrap-select m_selectpicker";
-        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription.PropertyName), selectList);
+        var dict = isMultiple ? new Dictionary([{ key: "multiple", value: "" }]) : null;
+        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription.PropertyName), selectList, dict);
         return "<div class=\"form-group m-form__group row\">\n                    <label class=\"col-xl-3 col-lg-3 col-form-label\">" + typeDescription.PropertyDisplayName + ":</label>\n                    <div class=\"col-xl-9 col-lg-9\">\n                        " + select + "\n                    </div>\n                </div>";
+    };
+    TabFormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList) {
+        return this.RenderGenericDropList(typeDescription, selectList, false);
+    };
+    TabFormDrawImplementation.prototype.RenderMultipleDropDownList = function (typeDescription, selectList) {
+        return this.RenderGenericDropList(typeDescription, selectList, true);
     };
     TabFormDrawImplementation.prototype.RenderHidden = function (typeDescription) {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);

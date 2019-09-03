@@ -1,13 +1,12 @@
 ﻿@using System.Globalization
 @using FocLab.Logic.Models.Users
-
 @model FocLab.Logic.EntityDtos.Users.Default.ApplicationUserDto
 @{
     ViewData["Title"] = "Редактирование пользователя";
 
     Layout = ChemistrySettings.LayoutPath;
 
-    var sexes = ViewData["sexes"] as IEnumerable<MySelectListItem>;
+    var sexes = (ViewData["sexes"] as IEnumerable<MySelectListItem>).ToList();
 
     var birthDate = Model.BirthDate.HasValue ? Model.BirthDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "";
 
@@ -18,7 +17,7 @@
     builder
         .HiddenFor(x => x.Id)
         .HiddenFor(x => x.ObjectJson)
-        .DropDownListFor(nameof(EditApplicationUser.Sex), sexes.ToList());
+        .DropDownListFor(x => x.Sex, sexes);
 }
 
 

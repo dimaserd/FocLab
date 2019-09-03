@@ -1,4 +1,5 @@
 ﻿class TabFormDrawImplementation implements IFormDraw {
+    
 
     constructor(model: GenerateGenericUserInterfaceModel) {
         this._model = model;
@@ -8,6 +9,8 @@
     _datePickerPropNames: Array<string> = [];
 
     _selectClass = 'form-draw-select';
+
+    
 
     BeforeFormDrawing(): void {
         //TODO Init calendar or some scripts
@@ -52,8 +55,8 @@
 
                 </div>`;
     }
-    RenderDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[]): string {
 
+    RenderGenericDropList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[], isMultiple: boolean): string {
 
         let rawValue = ValueProviderHelper.GetRawValueFromValueProvider(typeDescription, this._model.ValueProvider);
 
@@ -61,7 +64,9 @@
 
         const _class = `${this._selectClass} form-control m-input m-bootstrap-select m_selectpicker`;
 
-        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription.PropertyName), selectList);
+        let dict = isMultiple ? new Dictionary<string>([{ key: "multiple", value: "" }]) : null;
+
+        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription.PropertyName), selectList, dict);
 
         return `<div class="form-group m-form__group row">
                     <label class="col-xl-3 col-lg-3 col-form-label">${typeDescription.PropertyDisplayName}:</label>
@@ -69,6 +74,17 @@
                         ${select}
                     </div>
                 </div>`;
+    }
+
+
+    RenderDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[]): string {
+
+        return this.RenderGenericDropList(typeDescription, selectList, false);
+    }
+
+    RenderMultipleDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[]): string {
+
+        return this.RenderGenericDropList(typeDescription, selectList, true);
     }
 
     RenderHidden(typeDescription: CrocoTypeDescription): string {

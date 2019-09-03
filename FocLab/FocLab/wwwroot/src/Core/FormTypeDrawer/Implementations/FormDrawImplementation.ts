@@ -1,4 +1,5 @@
 ﻿class FormDrawImplementation implements IFormDraw {
+    
 
     constructor(model: GenerateGenericUserInterfaceModel) {
         this._model = model;
@@ -69,7 +70,8 @@
         return t;
     }
 
-    RenderDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[]): string {
+    RenderGenericDropList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[], isMultiple: boolean): string {
+
 
         let rawValue = ValueProviderHelper.GetRawValueFromValueProvider(typeDescription, this._model.ValueProvider);
 
@@ -77,11 +79,21 @@
 
         const _class = `${this._selectClass} form-control m-input m-bootstrap-select m_selectpicker`;
 
-        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription), selectList);
+        let dict = isMultiple ? new Dictionary<string>([{ key: "multiple", value: "" }]) : null;
+
+        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription), selectList, dict);
 
         return `<div class="form-group m-form__group">
                 <label for="${typeDescription.PropertyName}">${typeDescription.PropertyDisplayName}</label>
                 ${select}   
             </div>`;
+    }
+
+    RenderDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[]): string {
+        return this.RenderGenericDropList(typeDescription, selectList, false);
+    }
+
+    RenderMultipleDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[]): string {
+        return this.RenderGenericDropList(typeDescription, selectList, true);
     }
 }

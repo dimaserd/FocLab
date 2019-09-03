@@ -25,6 +25,10 @@ var FormTypeDrawer = /** @class */ (function () {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
         return this._formDrawer.RenderDropDownList(prop, selectList);
     };
+    FormTypeDrawer.prototype.MultipleDropDownFor = function (propertyName, selectList) {
+        var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
+        return this._formDrawer.RenderMultipleDropDownList(prop, selectList);
+    };
     FormTypeDrawer.prototype.HiddenFor = function (propertyName) {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
         return this._formDrawer.RenderHidden(prop);

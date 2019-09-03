@@ -1,10 +1,17 @@
-﻿@model FocLab.Logic.Models.Users.CreateUserModel
+﻿@using FocLab.Logic.Models.Users
 @{
     ViewBag.Title = "Создание пользователя";
 
     Layout = ChemistrySettings.LayoutPath;
 
-    var list = ViewBag.Rights as List<SelectListItem>;
+    var list = ViewBag.Rights as List<MySelectListItem>;
+
+    var modelPrefix = "create.";
+
+    var builder = new GenericUserInterfaceModelBuilder<CreateUserModel>(modelPrefix);
+
+    builder
+        .MultipleDropDownListFor(x => x.Rights, list);
 }
 
 
@@ -28,90 +35,30 @@
 
 </div>
 
-<div class="form-group m-form__group">
-    @Html.LabelFor(x => x.Email)
-    <input type="email" class="form-control m-input" name="@nameof(Model.Email)"  aria-describedby="emailHelp" placeholder="">
-</div>
-
-<div class="form-group m-form__group">
-    @Html.LabelFor(x => x.Name)
-    <input type="text" class="form-control m-input" name="@nameof(Model.Name)" aria-describedby="emailHelp" placeholder="">
-</div>
-
-<div class="form-group m-form__group">
-    @Html.LabelFor(x => x.Surname)
-    <input type="text" class="form-control m-input" name="@nameof(Model.Surname)" aria-describedby="emailHelp" placeholder="">
-</div>
-
-<div class="form-group m-form__group">
-    @Html.LabelFor(x => x.Patronymic)
-    <input type="text" class="form-control m-input" name="@nameof(Model.Patronymic)" aria-describedby="emailHelp" placeholder="">
-</div>
-
-<div class="form-group m-form__group">
-    @Html.LabelFor(x => x.Password)
-    <input type="password" class="form-control m-input" name="@nameof(Model.Password)" aria-describedby="emailHelp" placeholder="">
-</div>
-
-<div class="form-group m-form__group">
-    @Html.LabelFor(x => x.ConfirmPassword)
-    <input type="password" class="form-control m-input" name="@nameof(Model.ConfirmPassword)" aria-describedby="emailHelp" placeholder="">
-</div>
-
-<div class="form-group m-form__group">
-    @Html.LabelFor(x => x.PhoneNumber)
-    <input type="text" class="form-control m-input" name="@nameof(Model.PhoneNumber)" aria-describedby="emailHelp" placeholder="">
-</div>
-
-
-<div class="form-group m-form__group">
-    @Html.LabelFor(x => x.Rights)
-    @Html.DropDownListFor(x => x.Rights, list, new { @multiple = "", @class = "form-control m-input m-bootstrap-select m_selectpicker" })
-</div>
-
+@await Html.RenderGenericUserInterfaceAsync(builder.Result)
 
 <div style="height:40px">
 
 </div>
 
-<button type="button" onclick="ClickHandler()" class="btn btn-success btn-block">Добавить</button>
+<div class="m-portlet__foot m-portlet__foot--fit">
+    <div class="m-form__actions">
+        <button type="reset" class="btn btn-primary action-btn">Создать</button>
+        <button onclick="location.href='/Admin/Users/Index'" class="btn btn-secondary">Отмена</button>
+    </div>
+</div>
 
 @section Scripts{
+
     <script>
-        class UserCreator {
-            constructor() {
-                this.setHandlers();
-            }
+        $(".action-btn").on("click", () => {
+            const data = TryForm.GetDataForFormByModelPrefix("@modelPrefix");;
 
-            setHandlers() {
-                this.CreateUser = function() {
-                    
-                    var data = {
-                        Email: "",
-                        Name: "",
-                        Surname: "",
-                        Patronymic: "",
-                        Password: "",
-                        ConfirmPassword: "",
-                        PhoneNumber: "",
-                        Rights: ""
-                    };
-
-                    data = FormDataHelper.CollectData(data);
-
-                    Requester.SendPostRequestWithAnimation("/Api/User/Create", data, x => {
-                            if (x.IsSucceeded) {
-                                setTimeout(function() { location.href = "/Admin/Users" }, 1000);
-                            }
-                    });
+            Requester.SendPostRequestWithAnimation("/Api/User/Create", data, resp => {
+                if (resp.IsSucceeded) {
+                    setTimeout(() => { location.href = '/Admin/Users/Index' }, 1000)
                 }
-            }
-        }
-
-        var userCreator = new UserCreator();
-    
-        function ClickHandler() {
-            userCreator.CreateUser();
-        }
+            });
+        });
     </script>
 }

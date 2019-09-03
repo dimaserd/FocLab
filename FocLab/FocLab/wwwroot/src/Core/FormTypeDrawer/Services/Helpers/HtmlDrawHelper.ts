@@ -1,7 +1,37 @@
 ﻿class HtmlDrawHelper {
-    static RenderSelect(className: string, propName: string, selectList: SelectListItem[]): string {
 
-        var select = `<select class="${className}" name="${propName}">`;
+    static RenderAttributesString(attrs: Dictionary<string>): string {
+
+        let result = "";
+
+        if (attrs == null) {
+            return result;
+        }
+
+        for (let i = 0; i < attrs._keys.length; i++) {
+
+            let key = attrs._keys[i];
+
+            let res = attrs.getByKey(key);
+
+            if (res == null || res === "") {
+                result += ` ${key}`;
+            }
+            else {
+                result += ` ${key}="${res}"`;
+            }
+        }
+
+        return result;
+    }
+
+    static RenderSelect(className: string, propName: string, selectList: SelectListItem[], attrs: Dictionary<string>): string {
+
+        let attrStr = HtmlDrawHelper.RenderAttributesString(attrs);
+
+        console.log("RenderSelect", attrStr);
+
+        var select = `<select${attrStr} class="${className}" name="${propName}">`;
 
         for (let i = 0; i < selectList.length; i++) {
             var item = selectList[i];

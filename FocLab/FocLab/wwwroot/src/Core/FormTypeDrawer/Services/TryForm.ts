@@ -25,6 +25,9 @@
                 case UserInterfaceType.DatePicker:
                     html += drawer.DatePickerFor(block.PropertyName);
                     break;
+                case UserInterfaceType.MultipleDropDownList:
+                    html += drawer.MultipleDropDownFor(block.PropertyName, block.SelectList);
+                    break;
                 default:
                     console.log("Данный блок не реализован", block);
                     throw new Error("Не реализовано");

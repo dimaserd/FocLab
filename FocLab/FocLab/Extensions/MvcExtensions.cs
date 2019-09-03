@@ -10,7 +10,7 @@ namespace FocLab.Extensions
 {
     public static class MvcExtensions
     {
-        public static List<SelectListItem> GetEnumDropdownList(Type type)
+        public static List<MySelectListItem> GetEnumDropdownList(Type type)
         {
             if (!type.IsEnum)
             {
@@ -19,7 +19,7 @@ namespace FocLab.Extensions
 
             var descr = CrocoTypeDescriptor.GetDocumentationForClass(type);
 
-            return descr.EnumValues.Select(x => new SelectListItem
+            return descr.EnumValues.Select(x => new MySelectListItem
             {
                 Text = x.DisplayName,
                 Value = x.StringRepresentation

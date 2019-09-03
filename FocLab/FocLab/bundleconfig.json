@@ -7,7 +7,23 @@
       "wwwroot/src/Core/FormTypeDrawer/FormTypeDrawer.js"
     ],
 
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
 
+  {
+    "outputFileName": "wwwroot/src/Core/FormTypeDrawer/FormTypeDrawer.js",
+    "inputFiles": [
+      "wwwroot/src/Core/FormTypeDrawer/Abstractions/*.js",
+      "wwwroot/src/Core/FormTypeDrawer/Enumerations/*.js",
+      "wwwroot/src/Core/FormTypeDrawer/Implementations/*.js",
+      "wwwroot/src/Core/FormTypeDrawer/Models/*.js",
+      "wwwroot/src/Core/FormTypeDrawer/Services/Factories/*.js",
+      "wwwroot/src/Core/FormTypeDrawer/Services/Helpers/*.js",
+      "wwwroot/src/Core/FormTypeDrawer/Services/*.js"
+    ],
     "minify": {
       "enabled": true,
       "renameLocals": true

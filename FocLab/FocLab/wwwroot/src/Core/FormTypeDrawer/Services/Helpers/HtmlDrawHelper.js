@@ -1,8 +1,27 @@
 var HtmlDrawHelper = /** @class */ (function () {
     function HtmlDrawHelper() {
     }
-    HtmlDrawHelper.RenderSelect = function (className, propName, selectList) {
-        var select = "<select class=\"" + className + "\" name=\"" + propName + "\">";
+    HtmlDrawHelper.RenderAttributesString = function (attrs) {
+        var result = "";
+        if (attrs == null) {
+            return result;
+        }
+        for (var i = 0; i < attrs._keys.length; i++) {
+            var key = attrs._keys[i];
+            var res = attrs.getByKey(key);
+            if (res == null || res === "") {
+                result += " " + key;
+            }
+            else {
+                result += " " + key + "=\"" + res + "\"";
+            }
+        }
+        return result;
+    };
+    HtmlDrawHelper.RenderSelect = function (className, propName, selectList, attrs) {
+        var attrStr = HtmlDrawHelper.RenderAttributesString(attrs);
+        console.log("RenderSelect", attrStr);
+        var select = "<select" + attrStr + " class=\"" + className + "\" name=\"" + propName + "\">";
         for (var i = 0; i < selectList.length; i++) {
             var item = selectList[i];
             var selected = item.Selected ? " selected=\"selected\"" : '';

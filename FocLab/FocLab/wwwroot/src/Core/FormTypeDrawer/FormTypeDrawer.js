@@ -14,6 +14,7 @@ var UserInterfaceType;
     UserInterfaceType[UserInterfaceType["DropDownList"] = "DropDownList"] = "DropDownList";
     UserInterfaceType[UserInterfaceType["Hidden"] = "Hidden"] = "Hidden";
     UserInterfaceType[UserInterfaceType["DatePicker"] = "DatePicker"] = "DatePicker";
+    UserInterfaceType[UserInterfaceType["MultipleDropDownList"] = "MultipleDropDownList"] = "MultipleDropDownList";
 })(UserInterfaceType || (UserInterfaceType = {}));
 
 var FormDrawImplementation = /** @class */ (function () {
@@ -60,12 +61,19 @@ var FormDrawImplementation = /** @class */ (function () {
         var t = "<div class=\"form-group m-form__group\">\n                <label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n                <textarea autocomplete=\"false\" class=\"form-control m-input\" name=\"" + this.GetPropertyValueName(typeDescription) + "\" rows=\"3\" " + styles + ">" + value + "</textarea>\n            </div>";
         return t;
     };
-    FormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList) {
+    FormDrawImplementation.prototype.RenderGenericDropList = function (typeDescription, selectList, isMultiple) {
         var rawValue = ValueProviderHelper.GetRawValueFromValueProvider(typeDescription, this._model.ValueProvider);
         selectList = HtmlDrawHelper.ProceesSelectValues(typeDescription, rawValue, selectList);
         var _class = this._selectClass + " form-control m-input m-bootstrap-select m_selectpicker";
-        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription), selectList);
+        var dict = isMultiple ? new Dictionary([{ key: "multiple", value: "" }]) : null;
+        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription), selectList, dict);
         return "<div class=\"form-group m-form__group\">\n                <label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n                " + select + "   \n            </div>";
+    };
+    FormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList) {
+        return this.RenderGenericDropList(typeDescription, selectList, false);
+    };
+    FormDrawImplementation.prototype.RenderMultipleDropDownList = function (typeDescription, selectList) {
+        return this.RenderGenericDropList(typeDescription, selectList, true);
     };
     return FormDrawImplementation;
 }());
@@ -97,12 +105,19 @@ var TabFormDrawImplementation = /** @class */ (function () {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
         return "<div class=\"form-group m-form__group row\">\n                    <label class=\"col-xl-3 col-lg-3 col-form-label\">" + typeDescription.PropertyDisplayName + "</label>\n                    <div class=\"col-xl-9 col-lg-9\">\n                        <textarea class=\"form-control m-input\" name=\"" + this.GetPropertyValueName(typeDescription.PropertyName) + "\" rows=\"3\">" + value + "</textarea>\n                    </div>\n\n                </div>";
     };
-    TabFormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList) {
+    TabFormDrawImplementation.prototype.RenderGenericDropList = function (typeDescription, selectList, isMultiple) {
         var rawValue = ValueProviderHelper.GetRawValueFromValueProvider(typeDescription, this._model.ValueProvider);
         selectList = HtmlDrawHelper.ProceesSelectValues(typeDescription, rawValue, selectList);
         var _class = this._selectClass + " form-control m-input m-bootstrap-select m_selectpicker";
-        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription.PropertyName), selectList);
+        var dict = isMultiple ? new Dictionary([{ key: "multiple", value: "" }]) : null;
+        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription.PropertyName), selectList, dict);
         return "<div class=\"form-group m-form__group row\">\n                    <label class=\"col-xl-3 col-lg-3 col-form-label\">" + typeDescription.PropertyDisplayName + ":</label>\n                    <div class=\"col-xl-9 col-lg-9\">\n                        " + select + "\n                    </div>\n                </div>";
+    };
+    TabFormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList) {
+        return this.RenderGenericDropList(typeDescription, selectList, false);
+    };
+    TabFormDrawImplementation.prototype.RenderMultipleDropDownList = function (typeDescription, selectList) {
+        return this.RenderGenericDropList(typeDescription, selectList, true);
     };
     TabFormDrawImplementation.prototype.RenderHidden = function (typeDescription) {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
@@ -142,8 +157,27 @@ var FormDrawFactory = /** @class */ (function () {
 var HtmlDrawHelper = /** @class */ (function () {
     function HtmlDrawHelper() {
     }
-    HtmlDrawHelper.RenderSelect = function (className, propName, selectList) {
-        var select = "<select class=\"" + className + "\" name=\"" + propName + "\">";
+    HtmlDrawHelper.RenderAttributesString = function (attrs) {
+        var result = "";
+        if (attrs == null) {
+            return result;
+        }
+        for (var i = 0; i < attrs._keys.length; i++) {
+            var key = attrs._keys[i];
+            var res = attrs.getByKey(key);
+            if (res == null || res === "") {
+                result += " " + key;
+            }
+            else {
+                result += " " + key + "=\"" + res + "\"";
+            }
+        }
+        return result;
+    };
+    HtmlDrawHelper.RenderSelect = function (className, propName, selectList, attrs) {
+        var attrStr = HtmlDrawHelper.RenderAttributesString(attrs);
+        console.log("RenderSelect", attrStr);
+        var select = "<select" + attrStr + " class=\"" + className + "\" name=\"" + propName + "\">";
         for (var i = 0; i < selectList.length; i++) {
             var item = selectList[i];
             var selected = item.Selected ? " selected=\"selected\"" : '';
@@ -251,6 +285,10 @@ var FormTypeDrawer = /** @class */ (function () {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
         return this._formDrawer.RenderDropDownList(prop, selectList);
     };
+    FormTypeDrawer.prototype.MultipleDropDownFor = function (propertyName, selectList) {
+        var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
+        return this._formDrawer.RenderMultipleDropDownList(prop, selectList);
+    };
     FormTypeDrawer.prototype.HiddenFor = function (propertyName) {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
         return this._formDrawer.RenderHidden(prop);
@@ -289,6 +327,9 @@ var TryForm = /** @class */ (function () {
                     break;
                 case UserInterfaceType.DatePicker:
                     html += drawer.DatePickerFor(block.PropertyName);
+                    break;
+                case UserInterfaceType.MultipleDropDownList:
+                    html += drawer.MultipleDropDownFor(block.PropertyName, block.SelectList);
                     break;
                 default:
                     console.log("Данный блок не реализован", block);

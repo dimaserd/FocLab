@@ -5,4 +5,5 @@ var UserInterfaceType;
     UserInterfaceType[UserInterfaceType["DropDownList"] = "DropDownList"] = "DropDownList";
     UserInterfaceType[UserInterfaceType["Hidden"] = "Hidden"] = "Hidden";
     UserInterfaceType[UserInterfaceType["DatePicker"] = "DatePicker"] = "DatePicker";
+    UserInterfaceType[UserInterfaceType["MultipleDropDownList"] = "MultipleDropDownList"] = "MultipleDropDownList";
 })(UserInterfaceType || (UserInterfaceType = {}));

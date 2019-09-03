@@ -3,5 +3,6 @@ declare enum UserInterfaceType {
     TextArea,
     DropDownList,
     Hidden,
-    DatePicker
+    DatePicker,
+    MultipleDropDownList
 }
