@@ -1,6 +1,5 @@
 ﻿using Croco.Core.Abstractions;
 using Croco.Core.Data.Abstractions;
-using Croco.Core.Data.Models;
 using Croco.Core.Implementations.AmbientContext;
 using Croco.WebApplication.Models;
 using Microsoft.AspNetCore.Http;
@@ -13,21 +12,16 @@ using System.Security.Principal;
 
 namespace FocLab.Api.Controllers.Base
 {
-    public class WebAppCrocoAmbientContext : CrocoAmbientContext
-    {
-        public WebAppCrocoAmbientContext(DbContext dbContext, IRequestContext requestContext, string uri) : base(dbContext, requestContext)
-        {
-            Uri = uri;
-        }
-
-        public string Uri { get; }
-    }
-
+    /// <summary>
+    /// Обобщенный веб-контроллер с основной логикой
+    /// </summary>
+    /// <typeparam name="TContext"></typeparam>
+    /// <typeparam name="TUser"></typeparam>
     public class CrocoGenericController<TContext, TUser> : Controller where TContext : DbContext where TUser : IdentityUser
     {
         private readonly Func<IPrincipal, string> _getUserIdFunc;
 
-        protected IRequestContext _requestContext;
+        private IRequestContext _requestContext;
 
         /// <inheritdoc />
         public CrocoGenericController(TContext context, SignInManager<TUser> signInManager, UserManager<TUser> userManager, Func<IPrincipal, string> getUserIdFunc, IHttpContextAccessor httpContextAccessor)
@@ -63,7 +57,7 @@ namespace FocLab.Api.Controllers.Base
             {
                 if(_requestContext == null)
                 {
-                    _requestContext = new RequestContext(CrocoPrincipal);
+                    _requestContext = new WebAppRequestContext(CrocoPrincipal, Request.GetDisplayUrl());
                 }
 
                 return _requestContext;
@@ -73,7 +67,7 @@ namespace FocLab.Api.Controllers.Base
         /// <summary>
         /// Обёртка для контекста окружения
         /// </summary>
-        public ICrocoAmbientContext AmbientContext => new WebAppCrocoAmbientContext(Context, RequestContext, Request.GetDisplayUrl());
+        public ICrocoAmbientContext AmbientContext => new CrocoAmbientContext(Context, RequestContext);
 
 
         /// <summary>
