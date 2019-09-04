@@ -11,8 +11,8 @@
     var builder = new GenericUserInterfaceModelBuilder<CreateUserModel>(modelPrefix);
 
     builder
-        .MultipleDropDownListFor(x => x.Rights, list)
-        .ShiftToEndFor(x => x.Rights);
+        .HiddenFor(x => x.ConfirmPassword)
+        .HiddenFor(x => x.Rights);
 }
 
 
@@ -30,17 +30,14 @@
 
 </div>
 
-<h2>Создание пользователя</h2>
 
-<div style="height:20px">
-
+<div class="form-group m-form__group m--margin-top-10">
+    <div class="alert m-alert m-alert--default" role="alert">
+        Создание пользователя
+    </div>
 </div>
 
 @await Html.RenderGenericUserInterfaceAsync(builder.Result)
-
-<div style="height:40px">
-
-</div>
 
 <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions">

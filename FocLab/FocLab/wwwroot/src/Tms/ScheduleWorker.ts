@@ -69,7 +69,7 @@ class ScheduleWorker {
 
                     data: x.List.map(t => ({
                         id: t.Id,
-                        text: `${t.Name} ${t.Email}`,
+                        text: t.Email,
                         avatarId: t.AvatarFileId
                     })),
 

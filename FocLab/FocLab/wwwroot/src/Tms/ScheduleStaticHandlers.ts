@@ -50,6 +50,8 @@ class ScheduleStaticHandlers {
 
     static Filter: UserScheduleSearchModel;
 
+    static _countOfChanges: number = 0;
+
     static SetHandlers(): void {
         EventSetter.SetHandlerForClass("tms-next-month-btn", "click", () => ScheduleStaticHandlers.ApplyFilter(true));
         EventSetter.SetHandlerForClass("tms-prev-month-btn", "click", () => ScheduleStaticHandlers.ApplyFilter(false));
@@ -80,6 +82,8 @@ class ScheduleStaticHandlers {
     }
 
 
+
+
     static GetQueryParams(isNextMonth: boolean) : string {
         var data = {
             UserIds: []
@@ -96,7 +100,17 @@ class ScheduleStaticHandlers {
         location.href = `/Schedule/Index?${ScheduleStaticHandlers.GetQueryParams(isNextMonth)}`;
     }
 
-    static ShowUserSchedule() {
+    static OnUsersSelectChanged(): void {
+        ScheduleStaticHandlers._countOfChanges++;
+
+        // Так как в первый раз метод будет задействован, при установке данных FormDataHelper
+        //страница не должна перезагрузится, а только на следующие разы когда жто изменит пользователь
+        if (ScheduleStaticHandlers._countOfChanges > 1) {
+            ScheduleStaticHandlers.ShowUserSchedule();
+        }
+    }
+
+    static ShowUserSchedule() : void {
         var data = {
             UserIds: []
         };

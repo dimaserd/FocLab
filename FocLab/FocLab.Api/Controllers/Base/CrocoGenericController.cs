@@ -1,8 +1,10 @@
 ﻿using Croco.Core.Abstractions;
 using Croco.Core.Data.Abstractions;
+using Croco.Core.Data.Models;
 using Croco.Core.Implementations.AmbientContext;
 using Croco.WebApplication.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,16 @@ using System.Security.Principal;
 
 namespace FocLab.Api.Controllers.Base
 {
+    public class WebAppCrocoAmbientContext : CrocoAmbientContext
+    {
+        public WebAppCrocoAmbientContext(DbContext dbContext, IRequestContext requestContext, string uri) : base(dbContext, requestContext)
+        {
+            Uri = uri;
+        }
+
+        public string Uri { get; }
+    }
+
     public class CrocoGenericController<TContext, TUser> : Controller where TContext : DbContext where TUser : IdentityUser
     {
         private readonly Func<IPrincipal, string> _getUserIdFunc;
@@ -51,7 +63,7 @@ namespace FocLab.Api.Controllers.Base
             {
                 if(_requestContext == null)
                 {
-                    _requestContext = new WebAppCrocoRequestContext(CrocoPrincipal);
+                    _requestContext = new RequestContext(CrocoPrincipal);
                 }
 
                 return _requestContext;
@@ -61,7 +73,7 @@ namespace FocLab.Api.Controllers.Base
         /// <summary>
         /// Обёртка для контекста окружения
         /// </summary>
-        public ICrocoAmbientContext AmbientContext => new CrocoAmbientContext(Context, RequestContext);
+        public ICrocoAmbientContext AmbientContext => new WebAppCrocoAmbientContext(Context, RequestContext, Request.GetDisplayUrl());
 
 
         /// <summary>

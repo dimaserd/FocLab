@@ -66,6 +66,7 @@ namespace FocLab
                 EventSourcer = GetEventSourcer(),
                 CacheManager = new ApplicationCacheManager(memCache),
                 GetDbContext = () => ChemistryDbContext.Create(Configuration),
+                RequestContextLogger = new CrocoWebAppRequestContextLogger(),
                 //Устнавливаю проверщики состояния приложения
                 StateCheckers = new[]
                 {

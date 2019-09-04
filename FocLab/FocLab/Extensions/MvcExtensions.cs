@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Croco.Core.Logic.Workers.Documentation;
+using Croco.Core.Documentation.Services;
 using FocLab.Logic.EntityDtos.Users.Default;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Zoo.GenericUserInterface.Extensions;
 using Zoo.GenericUserInterface.Models;
 
 namespace FocLab.Extensions
@@ -12,18 +12,7 @@ namespace FocLab.Extensions
     {
         public static List<MySelectListItem> GetEnumDropdownList(Type type)
         {
-            if (!type.IsEnum)
-            {
-                throw new ApplicationException($"Тип {type.FullName} не является перечислением");
-            }
-
-            var descr = CrocoTypeDescriptor.GetDocumentationForClass(type);
-
-            return descr.EnumValues.Select(x => new MySelectListItem
-            {
-                Text = x.DisplayName,
-                Value = x.StringRepresentation
-            }).ToList();
+            return MySelectListItemExtensions.GetEnumDropDownList(type);
         }
 
         public static IEnumerable<MySelectListItem> GetSexesSelectList(ApplicationUserDto applicationUser)

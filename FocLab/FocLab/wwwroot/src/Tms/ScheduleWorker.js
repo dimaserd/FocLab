@@ -44,7 +44,7 @@ var ScheduleWorker = /** @class */ (function () {
                 },
                 data: x.List.map(function (t) { return ({
                     id: t.Id,
-                    text: t.Name + " " + t.Email,
+                    text: t.Email,
                     avatarId: t.AvatarFileId
                 }); }),
                 templateSelection: ScheduleWorker.formatStateSelection,

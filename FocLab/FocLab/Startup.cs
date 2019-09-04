@@ -117,6 +117,7 @@ namespace FocLab
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                app.UseExceptionHandler("/Error");
             }
             else
             {

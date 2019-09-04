@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Croco.Core.Logic.Models.Documentation;
-using Croco.Core.Logic.Workers.Documentation;
+using Croco.Core.Documentation.Models;
+using Croco.Core.Documentation.Services;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Services;
 using FocLab.Model.Contexts;

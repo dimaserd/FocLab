@@ -7,8 +7,8 @@
   <ItemGroup>
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.6" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-    <PackageReference Include="NetCroco.Core" Version="1.5.5" />
-    <PackageReference Include="NetCroco.WebApplication" Version="1.2.7" />
+    <PackageReference Include="NetCroco.Core" Version="1.5.8" />
+    <PackageReference Include="NetCroco.WebApplication" Version="1.2.9" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,7 +2,6 @@
 using Croco.Core.Common.Models;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.EntityDtos.Users.Default;
-using FocLab.Logic.Models;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Services;

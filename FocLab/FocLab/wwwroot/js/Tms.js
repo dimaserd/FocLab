@@ -222,6 +222,14 @@ var ScheduleStaticHandlers = /** @class */ (function () {
     ScheduleStaticHandlers.ApplyFilter = function (isNextMonth) {
         location.href = "/Schedule/Index?" + ScheduleStaticHandlers.GetQueryParams(isNextMonth);
     };
+    ScheduleStaticHandlers.OnUsersSelectChanged = function () {
+        ScheduleStaticHandlers._countOfChanges++;
+        // Так как в первый раз метод будет задействован, при установке данных FormDataHelper
+        //страница не должна перезагрузится, а только на следующие разы когда жто изменит пользователь
+        if (ScheduleStaticHandlers._countOfChanges > 1) {
+            ScheduleStaticHandlers.ShowUserSchedule();
+        }
+    };
     ScheduleStaticHandlers.ShowUserSchedule = function () {
         var data = {
             UserIds: []
@@ -319,6 +327,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
     ScheduleStaticHandlers.redirectToProfile = function (profileId) {
         window.open(window.location.origin + "/Client/Details/" + profileId, '_blank');
     };
+    ScheduleStaticHandlers._countOfChanges = 0;
     return ScheduleStaticHandlers;
 }());
 ScheduleStaticHandlers.SetHandlers();
@@ -369,7 +378,7 @@ var ScheduleWorker = /** @class */ (function () {
                 },
                 data: x.List.map(function (t) { return ({
                     id: t.Id,
-                    text: t.Name + " " + t.Email,
+                    text: t.Email,
                     avatarId: t.AvatarFileId
                 }); }),
                 templateSelection: ScheduleWorker.formatStateSelection,

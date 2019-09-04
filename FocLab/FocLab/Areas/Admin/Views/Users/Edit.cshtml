@@ -73,39 +73,4 @@
             });
         });
     </script>
-    <script>
-        $(".m-checkbox").change(function () {
-
-            if (this.checked) {
-                AddRoleToUser('@Model.Id', $(this).attr('name'));
-            }
-            else {
-                RemoveRoleToUser('@Model.Id', $(this).attr('name'));
-            }
-        });
-
-        function AddRoleToUser(userId, role) {
-            RoleToUserAjax(true, userId, role);
-        }
-
-        function RemoveRoleToUser(userId, role) {
-            RoleToUserAjax(false, userId, role);
-        }
-
-        function RoleToUserAjax(type, userId, role) {
-            const url = (type) ? '/Api/User/Role/Add' : '/Api/User/Role/Remove';
-
-            Requester.SendPostRequestWithAnimation(url, { userId: userId, role: role }, x => {
-                if (x.IsSucceeded) {
-                    ToastrWorker.HandleBaseApiResponse(response);
-                    t.prop('checked', true);
-                } else {
-                    const t = $('#' + role);
-                    if (t.is(':checked') === true) {
-                        t.prop('checked', false);
-                    }
-                }
-            });
-        }
-    </script>
 }
