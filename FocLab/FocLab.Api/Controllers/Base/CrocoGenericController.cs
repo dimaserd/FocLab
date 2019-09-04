@@ -21,7 +21,7 @@ namespace FocLab.Api.Controllers.Base
     {
         private readonly Func<IPrincipal, string> _getUserIdFunc;
 
-        private IRequestContext _requestContext;
+        private ICrocoRequestContext _requestContext;
 
         /// <inheritdoc />
         public CrocoGenericController(TContext context, SignInManager<TUser> signInManager, UserManager<TUser> userManager, Func<IPrincipal, string> getUserIdFunc, IHttpContextAccessor httpContextAccessor)
@@ -51,13 +51,13 @@ namespace FocLab.Api.Controllers.Base
         /// <summary>
         /// Контекст текущего запроса
         /// </summary>
-        protected IRequestContext RequestContext 
+        protected ICrocoRequestContext RequestContext 
         {
             get
             {
                 if(_requestContext == null)
                 {
-                    _requestContext = new WebAppRequestContext(CrocoPrincipal, Request.GetDisplayUrl());
+                    _requestContext = new WebAppCrocoRequestContext(CrocoPrincipal, Request.GetDisplayUrl());
                 }
 
                 return _requestContext;

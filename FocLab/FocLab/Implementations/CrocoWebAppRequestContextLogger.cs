@@ -29,7 +29,7 @@ namespace FocLab.Implementations
 
         private void LogRequestToDatabase(ICrocoAmbientContext ambientContext)
         {
-            var requestContext = ambientContext.RequestContext as WebAppRequestContext;
+            var requestContext = ambientContext.RequestContext as WebAppCrocoRequestContext;
 
             var repo = ambientContext.RepositoryFactory.GetRepository<WebAppRequestContextLog>();
 
