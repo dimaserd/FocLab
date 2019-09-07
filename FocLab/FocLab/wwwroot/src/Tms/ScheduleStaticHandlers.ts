@@ -72,6 +72,8 @@ class ScheduleStaticHandlers {
             ScheduleStaticHandlers.updateDayTask();
             ModalWorker.HideModals();
         });
+
+        EventSetter.SetHandlerForClass("tms-redirect-to-full", "click", () => ScheduleStaticHandlers.redirectToFullVersion());
         EventSetter.SetHandlerForClass("tms-create-task-btn", "click", () => ScheduleStaticHandlers.createDayTask());
         EventSetter.SetHandlerForClass("tms-btn-create-task", "click", () => ScheduleStaticHandlers.ShowCreateTaskModal());
         EventSetter.SetHandlerForClass("tms-show-task-modal", "click", x =>
@@ -80,9 +82,6 @@ class ScheduleStaticHandlers {
             ScheduleStaticHandlers.ShowDayTaskModal(taskId);
         })
     }
-
-
-
 
     static GetQueryParams(isNextMonth: boolean) : string {
         var data = {
@@ -177,6 +176,14 @@ class ScheduleStaticHandlers {
         }, null, false);
     }
 
+    static redirectToFullVersion(): void {
+        let data = { Id: "" };
+
+        data = FormDataHelper.CollectDataByPrefix(data, "task.") as { Id: string };
+
+        window.open(`${window.location.origin}/Schedule/Task/${data.Id}`, '_blank');
+    }
+
     static updateDayTask() : void {
 
         var data: CreateOrUpdateDayTask = {
@@ -197,7 +204,6 @@ class ScheduleStaticHandlers {
                 DayTasksWorker.GetTasks()
             }
         }, null, false);
-
     }
 
     static createDayTask(): void {

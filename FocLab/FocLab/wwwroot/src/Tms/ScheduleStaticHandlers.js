@@ -26,6 +26,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
             ScheduleStaticHandlers.updateDayTask();
             ModalWorker.HideModals();
         });
+        EventSetter.SetHandlerForClass("tms-redirect-to-full", "click", function () { return ScheduleStaticHandlers.redirectToFullVersion(); });
         EventSetter.SetHandlerForClass("tms-create-task-btn", "click", function () { return ScheduleStaticHandlers.createDayTask(); });
         EventSetter.SetHandlerForClass("tms-btn-create-task", "click", function () { return ScheduleStaticHandlers.ShowCreateTaskModal(); });
         EventSetter.SetHandlerForClass("tms-show-task-modal", "click", function (x) {
@@ -102,6 +103,11 @@ var ScheduleStaticHandlers = /** @class */ (function () {
                 DayTasksWorker.GetTasks();
             }
         }, null, false);
+    };
+    ScheduleStaticHandlers.redirectToFullVersion = function () {
+        var data = { Id: "" };
+        data = FormDataHelper.CollectDataByPrefix(data, "task.");
+        window.open(window.location.origin + "/Schedule/Task/" + data.Id, '_blank');
     };
     ScheduleStaticHandlers.updateDayTask = function () {
         var data = {

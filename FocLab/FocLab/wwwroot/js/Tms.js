@@ -204,6 +204,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
             ScheduleStaticHandlers.updateDayTask();
             ModalWorker.HideModals();
         });
+        EventSetter.SetHandlerForClass("tms-redirect-to-full", "click", function () { return ScheduleStaticHandlers.redirectToFullVersion(); });
         EventSetter.SetHandlerForClass("tms-create-task-btn", "click", function () { return ScheduleStaticHandlers.createDayTask(); });
         EventSetter.SetHandlerForClass("tms-btn-create-task", "click", function () { return ScheduleStaticHandlers.ShowCreateTaskModal(); });
         EventSetter.SetHandlerForClass("tms-show-task-modal", "click", function (x) {
@@ -281,6 +282,11 @@ var ScheduleStaticHandlers = /** @class */ (function () {
             }
         }, null, false);
     };
+    ScheduleStaticHandlers.redirectToFullVersion = function () {
+        var data = { Id: "" };
+        data = FormDataHelper.CollectDataByPrefix(data, "task.");
+        window.open(window.location.origin + "/Schedule/Task/" + data.Id, '_blank');
+    };
     ScheduleStaticHandlers.updateDayTask = function () {
         var data = {
             TaskText: "",
@@ -345,9 +351,10 @@ var ScheduleWorker = /** @class */ (function () {
             return state.text;
         }
         var img = "";
+        var showAvatar = false;
         if (state.avatarId) {
             var baseUrl = "/FileCopies/Images/Icon/" + state.avatarId + ".jpg";
-            img = "<img src=\"" + baseUrl + "\" class=\"img-max-50\" />";
+            img = showAvatar ? "<img src=\"" + baseUrl + "\" class=\"img-max-50\" />" : "";
         }
         var $state = $("<span>" + img + " " + state.text + "<span>&nbsp;</span></span>");
         return $state;
@@ -357,9 +364,10 @@ var ScheduleWorker = /** @class */ (function () {
             return state.text;
         }
         var img = "";
+        var showAvatar = false;
         if (state.avatarId) {
             var baseUrl = "/FileCopies/Images/Icon/" + state.avatarId + ".jpg";
-            img = "<img src=\"" + baseUrl + "\" class=\"img-max-50\" />";
+            img = showAvatar ? "<img src=\"" + baseUrl + "\" class=\"img-max-50\" />" : "";
         }
         var $state = $("<span>" + img + " " + state.text + "<span>&nbsp;</span></span>");
         return $state;
@@ -369,7 +377,7 @@ var ScheduleWorker = /** @class */ (function () {
         var _this = this;
         Requester.SendAjaxPost("/Api/User/Get", { Count: null, OffSet: 0 }, function (x) {
             ScheduleWorker.Users = x.List;
-            $(".usersSelect").select2({
+            $("#usersSelect").select2({
                 placeholder: "Выберите пользователя",
                 language: {
                     "noResults": function () {

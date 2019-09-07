@@ -48,6 +48,7 @@ declare class ScheduleStaticHandlers {
     static ShowCreateTaskModal(): void;
     static updateComment(commentId: string): void;
     static addComment(): void;
+    static redirectToFullVersion(): void;
     static updateDayTask(): void;
     static createDayTask(): void;
     static hideCreateModal(): void;

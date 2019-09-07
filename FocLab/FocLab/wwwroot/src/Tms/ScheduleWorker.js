@@ -11,9 +11,10 @@ var ScheduleWorker = /** @class */ (function () {
             return state.text;
         }
         var img = "";
+        var showAvatar = false;
         if (state.avatarId) {
             var baseUrl = "/FileCopies/Images/Icon/" + state.avatarId + ".jpg";
-            img = "<img src=\"" + baseUrl + "\" class=\"img-max-50\" />";
+            img = showAvatar ? "<img src=\"" + baseUrl + "\" class=\"img-max-50\" />" : "";
         }
         var $state = $("<span>" + img + " " + state.text + "<span>&nbsp;</span></span>");
         return $state;
@@ -23,9 +24,10 @@ var ScheduleWorker = /** @class */ (function () {
             return state.text;
         }
         var img = "";
+        var showAvatar = false;
         if (state.avatarId) {
             var baseUrl = "/FileCopies/Images/Icon/" + state.avatarId + ".jpg";
-            img = "<img src=\"" + baseUrl + "\" class=\"img-max-50\" />";
+            img = showAvatar ? "<img src=\"" + baseUrl + "\" class=\"img-max-50\" />" : "";
         }
         var $state = $("<span>" + img + " " + state.text + "<span>&nbsp;</span></span>");
         return $state;
@@ -35,7 +37,7 @@ var ScheduleWorker = /** @class */ (function () {
         var _this = this;
         Requester.SendAjaxPost("/Api/User/Get", { Count: null, OffSet: 0 }, function (x) {
             ScheduleWorker.Users = x.List;
-            $(".usersSelect").select2({
+            $("#usersSelect").select2({
                 placeholder: "Выберите пользователя",
                 language: {
                     "noResults": function () {

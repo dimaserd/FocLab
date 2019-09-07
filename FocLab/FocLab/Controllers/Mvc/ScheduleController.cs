@@ -3,8 +3,9 @@ using FocLab.Logic.Services;
 using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Tms.Logic.Models.Tasker;
-using FocLab.Logic.Extensions;
 using Microsoft.AspNetCore.Http;
+using Tms.Logic.Workers.Tasker;
+using System.Threading.Tasks;
 
 namespace FocLab.Controllers.Mvc
 {
@@ -13,6 +14,8 @@ namespace FocLab.Controllers.Mvc
         public ScheduleController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager, IHttpContextAccessor contextAccessor) : base(context, userManager, signInManager)
         {
         }
+
+        private DayTasksWorker TasksWorker => new DayTasksWorker(AmbientContext);
 
         /// <summary>
         /// Показать задания пользователей
@@ -26,6 +29,13 @@ namespace FocLab.Controllers.Mvc
             var viewModel = new CalendarMonthViewModel(model.MonthShift);
 
             return View(viewModel);
+        }
+
+        public async Task<IActionResult> Task(string id)
+        {
+            var model = await TasksWorker.GetDayTaskByIdAsync(id);
+
+            return View(model);
         }
     }
 }

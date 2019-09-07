@@ -20,49 +20,50 @@
 
 @await Html.RenderApplicationFilesAsync("Tasker")
 
+<style>
+    .no-margin {
+        margin: 0 0 0 0;
+    }
+</style>
 
-<div class="container-fluid">
-    <header>
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-between">
-                <div class="form-group m-form__group mr-2">
-                    <select id="usersSelect" class="usersSelect" style="width:100%" name="filter.UserIds" multiple></select>
-                </div>
 
-                
-            </div>
+<div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-between" style="padding-bottom: 10px;">
+            <select id="usersSelect" class="usersSelect" style="width:100%" name="filter.UserIds" multiple></select>
+        </div>
 
-            <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-between">
-                <div id="createTaskBtn" class="form-group m-form__group">
+        <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-end">
+            <div id="createTaskBtn" class="form-group m-form__group">
 
-                </div>
             </div>
         </div>
-        <hr />
-        
-        <h4 class="display-4 mb-4 text-center">
-            <span class="btn btn-success float-left tms-prev-month-btn">
-                <i class="fas fa-angle-left"></i>
-            </span>
+    </div>
 
-            @Model.TodayDate.ToString("MMMM") @Model.TodayDate.Year
+    <hr />
 
-            <span class="btn btn-success float-right tms-next-month-btn">
-                <i class="fas fa-angle-right"></i>
-            </span>
+    <h4 class="display-4 mb-4 text-center">
+        <span class="btn btn-success float-left tms-prev-month-btn">
+            <i class="fas fa-angle-left"></i>
+        </span>
 
-        </h4>
-        <div class="row d-none d-sm-flex p-1 bg-dark text-white">
-            <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Monday)</h5>
-            <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Tuesday)</h5>
-            <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Wednesday)</h5>
-            <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Thursday)</h5>
-            <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Friday)</h5>
-            <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Saturday)</h5>
-            <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Sunday)</h5>
-        </div>
-    </header>
-    <div class="row border border-right-0 border-bottom-0">
+        @Model.TodayDate.ToString("MMMM") @Model.TodayDate.Year
+
+        <span class="btn btn-success float-right tms-next-month-btn">
+            <i class="fas fa-angle-right"></i>
+        </span>
+    </h4>
+
+    <div class="no-margin row d-none d-sm-flex p-1 bg-dark text-white">
+        <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Monday)</h5>
+        <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Tuesday)</h5>
+        <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Wednesday)</h5>
+        <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Thursday)</h5>
+        <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Friday)</h5>
+        <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Saturday)</h5>
+        <h5 class="col-sm p-1 text-center">@DayOfWeekToString(DayOfWeek.Sunday)</h5>
+    </div>
+    <div class="no-margin row border border-right-0 border-bottom-0">
 
         @foreach (var dateP in Model.DaysInPrevMonth)
         {
@@ -107,7 +108,6 @@
                 <div class="m-scrollable m-scrollable--track m-scroller" data-scrollable="true" data-date="@dateP.ToString("dd.MM.yyyy")" data-full-date="@dateP">
                     <p class="no-tasks-text d-sm-none">Нет задач</p>
                 </div>
-                
             </div>
 
             if (dayOfWeek == DayOfWeek.Sunday)
@@ -115,7 +115,6 @@
                 <div class="w-100"></div>
             }
         }
-
 
         @foreach (var dateP in Model.DaysInNextMonth)
         {
@@ -125,10 +124,8 @@
                     <small class="col d-sm-none text-center text-muted">@((DayOfWeekToString(dateP.DayOfWeek)))</small>
                     <span class="col-1"></span>
                 </h5>
-
             </div>
         }
-
 
     </div>
 </div>
@@ -154,17 +151,15 @@
 
 
 
-@section Scripts{ 
-    <script src="~/Plugins/NanoScroller.js"></script>
+@section Scripts{
     <script src="~/js/Tms.min.js"></script>
 
-<script>
-    
+    <script>
 
     var filter = @Html.GetJson(searchModel);
 
     ScheduleWorker.Constructor(filter);
-    
+
     var props = {
         Tasks: null,
         User: null,
@@ -180,9 +175,10 @@
         DayTasksWorker.GetTasks();
 
         $("#usersSelect").select2().on("change", () => { ScheduleStaticHandlers.OnUsersSelectChanged(); });
-        //$("#usersSelect1").select2().on("change", () => { ScheduleStaticHandlers.updateDayTask(); });
     });
 
-</script>
+     $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+
+    </script>
 
 }

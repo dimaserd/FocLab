@@ -89,6 +89,13 @@ namespace Tms.Logic.Workers.Tasker
                 .ToListAsync();
         }
 
+        public Task<DayTaskModel> GetDayTaskByIdAsync(string id)
+        {
+            return GetRepository<ApplicationDayTask>().Query()
+                .Select(DayTaskModel.SelectExpression)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public Task<BaseApiResponse> CreateOrUpdateDayTaskAsync(CreateOrUpdateDayTask model)
         {
             if (string.IsNullOrEmpty(model.Id))
@@ -178,7 +185,6 @@ namespace Tms.Logic.Workers.Tasker
 
             dayTask.TaskTitle = model.TaskTitle;
             dayTask.TaskText = model.TaskText;
-            dayTask.AssigneeUserId = model.AssigneeUserId;
             dayTask.TaskDate = model.TaskDate;
             dayTask.TaskComment = model.TaskComment;
             dayTask.TaskReview = model.TaskReview;

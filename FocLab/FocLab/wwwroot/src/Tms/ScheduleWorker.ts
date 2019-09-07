@@ -20,9 +20,11 @@ class ScheduleWorker {
 
         var img = "";
 
+        let showAvatar = false;
+
         if (state.avatarId) {
             const baseUrl = `/FileCopies/Images/Icon/${state.avatarId}.jpg`;
-            img = `<img src="${baseUrl}" class="img-max-50" />`;
+            img = showAvatar? `<img src="${baseUrl}" class="img-max-50" />` : "";
         }
 
 
@@ -39,9 +41,11 @@ class ScheduleWorker {
 
         var img = "";
 
+        let showAvatar = false;
+
         if (state.avatarId) {
             const baseUrl = `/FileCopies/Images/Icon/${state.avatarId}.jpg`;
-            img = `<img src="${baseUrl}" class="img-max-50" />`;
+            img = showAvatar? `<img src="${baseUrl}" class="img-max-50" />` : "";
         }
 
 
@@ -58,7 +62,7 @@ class ScheduleWorker {
                 
                 ScheduleWorker.Users = x.List;
 
-                $(".usersSelect").select2({
+                $("#usersSelect").select2({
                     placeholder: "Выберите пользователя",
 
                     language: {
