@@ -1,4 +1,4 @@
-declare class SubstanceCounter {
+﻿declare class SubstanceCounter {
     Etalon: Substance;
     Substances: Array<Substance>;
     private prefix;

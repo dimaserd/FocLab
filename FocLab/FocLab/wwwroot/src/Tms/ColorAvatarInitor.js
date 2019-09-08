@@ -1,4 +1,4 @@
-var ColorAvatarInitor = /** @class */ (function () {
+﻿var ColorAvatarInitor = (function () {
     function ColorAvatarInitor() {
     }
     ColorAvatarInitor._avatarsStorage = [];
@@ -17,11 +17,9 @@ var ColorAvatarInitor = /** @class */ (function () {
         "#6c757d"
     ];
     ColorAvatarInitor.InitColorForAvatar = function (task) {
-        /*Проверяю есть ли аватар у клиента*/
         if (task.AssigneeUser.AvatarFileId === null) {
             var idFound_1 = false;
             var color_1 = "";
-            /*Если нет - проверяю, объявлен ли для него цвет*/
             ColorAvatarInitor._avatarsStorage.forEach(function (x) {
                 if (x.id == task.AssigneeUser.Id) {
                     idFound_1 = true;
@@ -32,7 +30,6 @@ var ColorAvatarInitor = /** @class */ (function () {
                 return "<span class='avatar-circle' style='background-color:" + color_1 + "'></span>";
             }
             else {
-                /*Добавляю следующий цвет пользователю*/
                 var count = ColorAvatarInitor._avatarsStorage.length % ColorAvatarInitor._colors.length;
                 ColorAvatarInitor._avatarsStorage.push({ 'id': task.AssigneeUser.Id, 'color': ColorAvatarInitor._colors[count + 1] });
                 return "<span class='avatar-circle' style='background-color:" + ColorAvatarInitor._colors[count + 1] + "'></span>";

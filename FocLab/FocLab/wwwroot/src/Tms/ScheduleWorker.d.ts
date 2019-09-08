@@ -1,4 +1,4 @@
-interface ScheduleWorkerFilter {
+﻿interface ScheduleWorkerFilter {
     UserIds: Array<string>;
 }
 declare class ScheduleWorker {

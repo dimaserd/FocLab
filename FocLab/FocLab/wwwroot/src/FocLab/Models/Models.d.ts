@@ -1,4 +1,4 @@
-interface UserModelBase {
+﻿interface UserModelBase {
     Id: string;
     Name: string;
     Email: string;

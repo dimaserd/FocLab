@@ -1,11 +1,17 @@
 ﻿class Logger {
 
-    public static LogException = function (exception: JQuery.Ajax.ErrorTextStatus, link: string) {
+    static Resourcses: Logger_Resx;
+
+    public static SetResources() {
+        Logger.Resourcses = new Logger_Resx();
+    }
+
+    public static LogException(exception: JQuery.Ajax.ErrorTextStatus, link: string) : void {
             $.ajax({
                 type: "POST",
                 data: {
                     ExceptionDate: new Date().toISOString(),
-                    Description: "Ошибка запроса к апи",
+                    Description: Logger.Resourcses.ErrorOnApiRequest,
                     Message: exception,
                     Uri: link !== null ? link : location.href
                 },
@@ -13,16 +19,16 @@
                 async: true,
                 cache: false,
                 success: function (data) {
-                    console.log("Исключение залоггировано", data);
+                    console.log(Logger.Resourcses.ExceptionLogged, data);
                 },
 
                 error: function () {
-                    alert("Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения");
+                    alert(Logger.Resourcses.ErrorOccuredOnLoggingException);
                 }
             });
         }
 
-    public static LogAction = function (message: string, description: string, groupName: string) {
+    public static LogAction(message: string, description: string, groupName: string) : void {
 
             const data = {
                 LogDate: new Date().toISOString(),
@@ -40,13 +46,28 @@
                 url: "/Api/Log/Action",
                 async: true,
                 cache: false,
-                success: function (response) {
-                    console.log("Действие залоггировано", response);
+                success: response => {
+                    console.log(Logger.Resourcses.ActionLogged, response);
                 },
 
-            error: function () {
-                alert("Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения");
-            }
-        });
+                error: () => {
+                    alert(Logger.Resourcses.LoggingAttempFailed);
+                }
+            });
     }
+}
+
+//Устанавливаем ресурсы
+Logger.SetResources();
+
+class Logger_Resx {
+    LoggingAttempFailed: string = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
+
+    ErrorOnApiRequest: string = "Ошибка запроса к апи";
+
+    ActionLogged: string = "Action logged";
+
+    ExceptionLogged: string = "Исключение залоггировано";
+
+    ErrorOccuredOnLoggingException: string = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
 }

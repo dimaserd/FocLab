@@ -1,4 +1,4 @@
-interface UserWithId {
+﻿interface UserWithId {
     Id: string;
 }
 declare class AccountWorker {

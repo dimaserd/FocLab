@@ -1,4 +1,4 @@
-var FormTypeDrawer = /** @class */ (function () {
+﻿var FormTypeDrawer = (function () {
     function FormTypeDrawer(formDrawer, typeDescription) {
         this._formDrawer = formDrawer;
         this._typeDescription = typeDescription;

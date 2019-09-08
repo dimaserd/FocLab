@@ -36,13 +36,12 @@ class EditableComponents {
     }    
 
     static InitLiasoningOnChange(element: HTMLInputElement, elementId) {
-        element.addEventListener("change", function () {
+        element.addEventListener("change", e => {
 
-            console.log("Обработчик реального измененного элемента");
             let elemId = elementId;
             const fakeElement = document.querySelectorAll(`[data-editable-input="${elemId}"]`)[0] as HTMLInputElement;
 
-            fakeElement.value = this.value;    
+            fakeElement.value = (e.target as HTMLInputElement).value;    
 
         });
 

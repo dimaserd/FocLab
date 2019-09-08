@@ -1,4 +1,4 @@
-var FormDrawFactory = /** @class */ (function () {
+﻿var FormDrawFactory = (function () {
     function FormDrawFactory() {
     }
     FormDrawFactory.GetImplementation = function (buildModel, key) {

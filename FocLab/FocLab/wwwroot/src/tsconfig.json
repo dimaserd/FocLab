@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "lib": [
-      "dom", "es6"
+      "dom",
+      "es6"
     ],
     "baseUrl": ".",
     "paths": {
@@ -9,6 +10,9 @@
     },
     "target": "es5",
     "module": "none",
-    "declaration": true
+    "declaration": true,
+    "removeComments": true,
+    "emitBOM": true,
+    "charset": "utf8"
   }
 }

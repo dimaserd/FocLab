@@ -1,4 +1,4 @@
-declare class SubstanceStaticHandlers {
+﻿declare class SubstanceStaticHandlers {
     static substance: SubstanceCounter;
     static RemoveSubstanceHandler(count: number): void;
     static EtalonChangedHandler(prefix: any): void;

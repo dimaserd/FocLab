@@ -1,4 +1,4 @@
-interface Select2Option {
+﻿interface Select2Option {
     id: string;
     text: string;
 }

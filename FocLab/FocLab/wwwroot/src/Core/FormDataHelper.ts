@@ -23,7 +23,7 @@
             if (Array.isArray(object[index])) {
 
                 if (element.type !== "select-multiple") {
-                    alert("Попытка присвоить массив элементу ввода который не является select с атрибутом multiple");
+                    alert("An attempt to set an array to HTMLInputElement which is not a select with multiple attribute");
                 }
                 let select = element as HTMLSelectElement;
                 for (let i = 0; i < select.options.length; i++) {
@@ -77,7 +77,7 @@
                 const element = document.getElementsByName(name)[0] as any;
 
                 if (element == null) {
-                    alert(`Элемент с именем ${name} не найден на странице проверьте код`);
+                    alert(`Element with name ${name} not found check the source code`);
                     continue;
                 }
 

@@ -1,4 +1,4 @@
-var Dictionary = /** @class */ (function () {
+﻿var Dictionary = (function () {
     function Dictionary(init) {
         this._keys = [];
         this._values = [];
@@ -19,7 +19,7 @@ var Dictionary = /** @class */ (function () {
     };
     Dictionary.prototype.add = function (key, value) {
         if (this.containsKey(key)) {
-            throw new DOMException("\u041A\u043B\u044E\u0447 " + key + " \u0443\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u0432 \u0434\u0430\u043D\u043D\u043E\u043C \u0441\u043B\u043E\u0432\u0430\u0440\u0435");
+            throw new DOMException("Key " + key + " is already exists");
         }
         this[key] = value;
         this._keys.push(key);

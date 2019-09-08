@@ -1,16 +1,13 @@
-var TabFormDrawImplementation = /** @class */ (function () {
+﻿var TabFormDrawImplementation = (function () {
     function TabFormDrawImplementation(model) {
         this._datePickerPropNames = [];
         this._selectClass = 'form-draw-select';
         this._model = model;
     }
     TabFormDrawImplementation.prototype.BeforeFormDrawing = function () {
-        //TODO Init calendar or some scripts
     };
     TabFormDrawImplementation.prototype.AfterFormDrawing = function () {
-        //Красивые селекты
         $("." + this._selectClass).selectpicker('refresh');
-        //Инициация календарей
         for (var i = 0; i < this._datePickerPropNames.length; i++) {
             var datePickerPropName = this._datePickerPropNames[i];
             var propName = "" + this._model.Prefix + datePickerPropName;

@@ -1,4 +1,4 @@
-var GenericUtil = /** @class */ (function () {
+﻿var GenericUtil = (function () {
     function GenericUtil() {
     }
     GenericUtil.GenericUpdateFileByType = function (fileType, link, preData) {

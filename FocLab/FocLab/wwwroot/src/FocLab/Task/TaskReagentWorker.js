@@ -1,4 +1,4 @@
-var TaskReagentWorker = /** @class */ (function () {
+﻿var TaskReagentWorker = (function () {
     function TaskReagentWorker(taskId) {
         this.TaskId = taskId;
     }

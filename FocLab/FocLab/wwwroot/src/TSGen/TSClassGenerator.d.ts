@@ -1,4 +1,4 @@
-/// <reference path="Models/crocoTypeDescription.d.ts" />
+﻿/// <reference path="Models/crocoTypeDescription.d.ts" />
 declare class TSClassTypeMapper {
     private static typesDictionary;
     static GetPropertyType(typeDescription: CrocoTypeDescription): string;

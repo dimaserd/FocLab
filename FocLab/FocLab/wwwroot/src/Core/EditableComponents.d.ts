@@ -1,4 +1,4 @@
-interface EditableElement {
+﻿interface EditableElement {
     ElementId: string;
     Value: string;
     OnValueChangedHandler: Function;

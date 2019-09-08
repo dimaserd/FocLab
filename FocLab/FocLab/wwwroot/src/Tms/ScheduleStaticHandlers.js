@@ -1,13 +1,10 @@
-var ScheduleConsts = /** @class */ (function () {
+﻿var ScheduleConsts = (function () {
     function ScheduleConsts() {
     }
-    /**
-     * Префикс для собирания модели фильтра
-     */
     ScheduleConsts.FilterPrefix = "filter.";
     return ScheduleConsts;
 }());
-var ScheduleStaticHandlers = /** @class */ (function () {
+var ScheduleStaticHandlers = (function () {
     function ScheduleStaticHandlers() {
     }
     ScheduleStaticHandlers.SetHandlers = function () {
@@ -47,8 +44,6 @@ var ScheduleStaticHandlers = /** @class */ (function () {
     };
     ScheduleStaticHandlers.OnUsersSelectChanged = function () {
         ScheduleStaticHandlers._countOfChanges++;
-        // Так как в первый раз метод будет задействован, при установке данных FormDataHelper
-        //страница не должна перезагрузится, а только на следующие разы когда жто изменит пользователь
         if (ScheduleStaticHandlers._countOfChanges > 1) {
             ScheduleStaticHandlers.ShowUserSchedule();
         }

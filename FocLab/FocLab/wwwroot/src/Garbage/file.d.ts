@@ -1,4 +1,4 @@
-declare class Template {
+﻿declare class Template {
     Text: string;
     Translation: string;
 }

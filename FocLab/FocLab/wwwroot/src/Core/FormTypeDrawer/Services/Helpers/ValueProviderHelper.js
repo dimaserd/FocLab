@@ -1,4 +1,4 @@
-var ValueProviderHelper = /** @class */ (function () {
+﻿var ValueProviderHelper = (function () {
     function ValueProviderHelper() {
     }
     ValueProviderHelper.GetStringValueFromValueProvider = function (prop, valueProvider) {

@@ -1,17 +1,10 @@
-﻿class AjaxParameters {
-    public type: String;
-    public data: Object;
-    public url: String;
-    public async: Boolean;
-    public cache: Boolean;
-    public dataType: String;
-    public contentType: String;
-    public processData: Boolean;
-    public success: Function;
-    public error: Function;
-}
+﻿class Requester {
 
-class Requester {
+    static Resources: Requester_Resx;
+
+    static SetResources(): void {
+        Requester.Resources = new Requester_Resx();
+    }
 
     static GoingRequests = new Array<string>();
 
@@ -19,7 +12,7 @@ class Requester {
         Requester.GoingRequests = Requester.GoingRequests.filter(x => x !== link);
     }
 
-    static ParseDate = (date: string): string => {
+    static ParseDate(date: string): string {
 
         date = date.replace(new RegExp("/", 'g'), ".");
         const from = date.split(".");
@@ -29,7 +22,7 @@ class Requester {
         return d.toISOString();
     }
 
-    static GetCombinedData = (prefix: string, obj: Object): Object => {
+    static GetCombinedData(prefix: string, obj: Object): Object {
 
         const resultObj = {};
 
@@ -80,8 +73,8 @@ class Requester {
         const form_data = new FormData();
 
         if (file_data.length === 0) {
-                
-            ToastrWorker.HandleBaseApiResponse(new BaseApiResponse(false, "Файлы не выбраны"));
+
+            ToastrWorker.HandleBaseApiResponse(new BaseApiResponse(false, Requester.Resources.FilesNotSelected));
             return;
         }
 
@@ -114,7 +107,7 @@ class Requester {
                 Requester.DeleteCompletedRequest(link);
                 ModalWorker.HideModals();
 
-                var resp = new BaseApiResponse(false, "Произошла ошибка! Мы уже знаем о ней, скоро с ней разберемся!");
+                var resp = new BaseApiResponse(false, Requester.Resources.ErrorOccuredWeKnowAboutIt);
 
                 ToastrWorker.HandleBaseApiResponse(resp);
 
@@ -122,28 +115,27 @@ class Requester {
                 if (onErrorFunc) {
                     onErrorFunc(jqXHR, textStatus, errorThrown);
                 }
-
             }
         });
 
     }
 
-    static IsRequestGoing = (link: string): boolean => {
-        const any = Requester.GoingRequests.filter(x => x === link);
+    static IsRequestGoing(link: string): boolean {
+        const index = Requester.GoingRequests.indexOf(link);
 
-        return any.length > 0;
+        return index >= 0;
     }
 
-    static OnSuccessAnimationHandler = (data: BaseApiResponse): void => {
+    static OnSuccessAnimationHandler(data: BaseApiResponse): void {
         ModalWorker.HideModals();
         ToastrWorker.HandleBaseApiResponse(data);
     }
 
-    static OnErrorAnimationHandler = (): void => {
+    static OnErrorAnimationHandler(): void {
 
         ModalWorker.HideModals();
 
-        const resp = new BaseApiResponse(false, "Произошла ошибка! Мы уже знаем о ней, и скоро с ней разберемся!");
+        const resp = new BaseApiResponse(false, Requester.Resources.ErrorOccuredWeKnowAboutIt);
         
         ToastrWorker.HandleBaseApiResponse(resp);
     }
@@ -192,7 +184,7 @@ class Requester {
         }
 
         if (data == null) {
-            alert("Вы подали пустой объект в запрос");
+            alert(Requester.Resources.YouPassedAnEmtpyArrayOfObjects);
             return;
         }
 
@@ -246,4 +238,10 @@ class Requester {
         $.ajax(params);
     }
 
+}
+
+class Requester_Resx {
+    YouPassedAnEmtpyArrayOfObjects: string = "Вы подали пустой объект в запрос";
+    ErrorOccuredWeKnowAboutIt: string = "Произошла ошибка! Мы уже знаем о ней, и скоро с ней разберемся!";
+    FilesNotSelected: string = "Файлы не выбраны";
 }

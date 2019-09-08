@@ -1,4 +1,4 @@
-var TaskReagentWorker = /** @class */ (function () {
+var TaskReagentWorker = (function () {
     function TaskReagentWorker(taskId) {
         this.TaskId = taskId;
     }
@@ -35,12 +35,9 @@ var TaskReagentWorker = /** @class */ (function () {
     return TaskReagentWorker;
 }());
 
-var TaskStaticHandlers = /** @class */ (function () {
+var TaskStaticHandlers = (function () {
     function TaskStaticHandlers() {
     }
-    /**
-     * Обработчик клика на кнопку обновить
-     * */
     TaskStaticHandlers.UpdateBtnClickHandler = function () {
         var data = {
             Id: TaskStaticHandlers.TaskId,

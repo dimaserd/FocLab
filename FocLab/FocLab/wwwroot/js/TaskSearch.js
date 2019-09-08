@@ -1,4 +1,4 @@
-var TaskFilterMethods = /** @class */ (function () {
+var TaskFilterMethods = (function () {
     function TaskFilterMethods() {
     }
     TaskFilterMethods.ApplyTextFilter = function (tasks, q) {
@@ -25,7 +25,7 @@ var TaskFilterMethods = /** @class */ (function () {
 }());
 
 
-var IndexPageTaskDrawer = /** @class */ (function () {
+var IndexPageTaskDrawer = (function () {
     function IndexPageTaskDrawer() {
     }
     IndexPageTaskDrawer.GetNotFoundElement = function (colspan) {
@@ -62,7 +62,7 @@ var IndexPageTaskDrawer = /** @class */ (function () {
     return IndexPageTaskDrawer;
 }());
 
-var TasksFilter = /** @class */ (function () {
+var TasksFilter = (function () {
     function TasksFilter() {
     }
     TasksFilter.prototype.SetTasks = function (tasks) {
@@ -151,7 +151,6 @@ var TasksFilter = /** @class */ (function () {
             if (aDate < bDate) {
                 return -1;
             }
-            // a должно быть равным b
             return 0;
         });
         return result;
@@ -164,7 +163,6 @@ var TasksFilter = /** @class */ (function () {
             if (a.PerformerUser.Name < b.PerformerUser.Name) {
                 return -1;
             }
-            // a должно быть равным b
             return 0;
         });
         return result;

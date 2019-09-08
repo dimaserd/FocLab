@@ -1,4 +1,4 @@
-var TaskFilterMethods = /** @class */ (function () {
+﻿var TaskFilterMethods = (function () {
     function TaskFilterMethods() {
     }
     TaskFilterMethods.ApplyTextFilter = function (tasks, q) {

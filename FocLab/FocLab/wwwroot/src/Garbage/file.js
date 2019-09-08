@@ -1,14 +1,14 @@
-var Template = /** @class */ (function () {
+﻿var Template = (function () {
     function Template() {
     }
     return Template;
 }());
-var TemplateJoined = /** @class */ (function () {
+var TemplateJoined = (function () {
     function TemplateJoined() {
     }
     return TemplateJoined;
 }());
-var TableParser = /** @class */ (function () {
+var TableParser = (function () {
     function TableParser() {
     }
     TableParser.GetTemplate = function (elem) {
@@ -45,7 +45,7 @@ var TableParser = /** @class */ (function () {
     };
     return TableParser;
 }());
-var TableFounder = /** @class */ (function () {
+var TableFounder = (function () {
     function TableFounder() {
     }
     TableFounder.Find = function () {

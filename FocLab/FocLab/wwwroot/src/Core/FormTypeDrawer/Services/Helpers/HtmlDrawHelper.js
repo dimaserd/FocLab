@@ -1,4 +1,4 @@
-var HtmlDrawHelper = /** @class */ (function () {
+﻿var HtmlDrawHelper = (function () {
     function HtmlDrawHelper() {
     }
     HtmlDrawHelper.RenderAttributesString = function (attrs) {
@@ -33,8 +33,6 @@ var HtmlDrawHelper = /** @class */ (function () {
     HtmlDrawHelper.ProceesSelectValues = function (typeDescription, rawValue, selectList) {
         if (rawValue != null) {
             selectList.forEach(function (x) { return x.Selected = false; });
-            //Заплатка для выпадающего списка 
-            //TODO Вылечить это
             var item = typeDescription.TypeName == CSharpType.Boolean.toString() ?
                 selectList.find(function (x) { return x.Value.toLowerCase() == rawValue.toLowerCase(); }) :
                 selectList.find(function (x) { return x.Value == rawValue; });

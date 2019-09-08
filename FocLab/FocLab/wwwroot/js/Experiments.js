@@ -1,4 +1,4 @@
-var CreateExperimentHandlers = /** @class */ (function () {
+var CreateExperimentHandlers = (function () {
     function CreateExperimentHandlers() {
     }
     CreateExperimentHandlers.Create = function () {
@@ -19,7 +19,7 @@ var CreateExperimentHandlers = /** @class */ (function () {
 }());
 CreateExperimentHandlers.SetHandlers();
 
-var ExperimentIndexHandlers = /** @class */ (function () {
+var ExperimentIndexHandlers = (function () {
     function ExperimentIndexHandlers() {
     }
     ExperimentIndexHandlers.PerformExperiment = function (id, flag) {
@@ -57,7 +57,7 @@ var ExperimentIndexHandlers = /** @class */ (function () {
 }());
 ExperimentIndexHandlers.SetHandlers();
 
-var ExperimentPageHandlers = /** @class */ (function () {
+var ExperimentPageHandlers = (function () {
     function ExperimentPageHandlers() {
     }
     ExperimentPageHandlers.UpdateFileByType = function (fileType) {

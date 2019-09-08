@@ -1,4 +1,4 @@
-var ScheduleWorker = /** @class */ (function () {
+﻿var ScheduleWorker = (function () {
     function ScheduleWorker() {
     }
     ScheduleWorker.Constructor = function (filter) {

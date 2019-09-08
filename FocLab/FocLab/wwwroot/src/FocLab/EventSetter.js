@@ -1,4 +1,4 @@
-var EventSetter = /** @class */ (function () {
+﻿var EventSetter = (function () {
     function EventSetter() {
     }
     EventSetter.SetHandlerForClass = function (className, eventName, handlerFunction) {

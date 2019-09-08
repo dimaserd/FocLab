@@ -1,8 +1,7 @@
-var SubstanceCounter = /** @class */ (function () {
+﻿var SubstanceCounter = (function () {
     function SubstanceCounter(substanceObj) {
         console.log("SubstanceCounter.constructor", substanceObj);
         this.prefix = "";
-        //this.setProperties();
         this.Substances = [];
         if (substanceObj != null && substanceObj != undefined) {
             this.Etalon = substanceObj.Etalon;

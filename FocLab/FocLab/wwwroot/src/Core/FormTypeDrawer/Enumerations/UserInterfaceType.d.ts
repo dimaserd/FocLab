@@ -1,4 +1,4 @@
-declare enum UserInterfaceType {
+﻿declare enum UserInterfaceType {
     TextBox,
     TextArea,
     DropDownList,

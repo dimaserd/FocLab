@@ -1,9 +1,8 @@
-var AccountWorker = /** @class */ (function () {
+﻿var AccountWorker = (function () {
     function AccountWorker() {
     }
     AccountWorker.User = null;
     AccountWorker.CheckUser = function () {
-        //TODO Implement User Checking
         if (!this.IsAuthenticated() || true) {
             return;
         }

@@ -17,19 +17,16 @@ var UserInterfaceType;
     UserInterfaceType[UserInterfaceType["MultipleDropDownList"] = "MultipleDropDownList"] = "MultipleDropDownList";
 })(UserInterfaceType || (UserInterfaceType = {}));
 
-var FormDrawImplementation = /** @class */ (function () {
+var FormDrawImplementation = (function () {
     function FormDrawImplementation(model) {
         this._datePickerPropNames = [];
         this._selectClass = 'form-draw-select';
         this._model = model;
     }
     FormDrawImplementation.prototype.BeforeFormDrawing = function () {
-        //TODO Init calendar or some scripts
     };
     FormDrawImplementation.prototype.AfterFormDrawing = function () {
-        //Красивые селекты
         $("." + this._selectClass).selectpicker('refresh');
-        //Инициация календарей
         for (var i = 0; i < this._datePickerPropNames.length; i++) {
             var datePickerPropName = this._datePickerPropNames[i];
             var propName = "" + this._model.Prefix + datePickerPropName;
@@ -78,19 +75,16 @@ var FormDrawImplementation = /** @class */ (function () {
     return FormDrawImplementation;
 }());
 
-var TabFormDrawImplementation = /** @class */ (function () {
+var TabFormDrawImplementation = (function () {
     function TabFormDrawImplementation(model) {
         this._datePickerPropNames = [];
         this._selectClass = 'form-draw-select';
         this._model = model;
     }
     TabFormDrawImplementation.prototype.BeforeFormDrawing = function () {
-        //TODO Init calendar or some scripts
     };
     TabFormDrawImplementation.prototype.AfterFormDrawing = function () {
-        //Красивые селекты
         $("." + this._selectClass).selectpicker('refresh');
-        //Инициация календарей
         for (var i = 0; i < this._datePickerPropNames.length; i++) {
             var datePickerPropName = this._datePickerPropNames[i];
             var propName = "" + this._model.Prefix + datePickerPropName;
@@ -137,7 +131,7 @@ var TabFormDrawImplementation = /** @class */ (function () {
 
 
 
-var FormDrawFactory = /** @class */ (function () {
+var FormDrawFactory = (function () {
     function FormDrawFactory() {
     }
     FormDrawFactory.GetImplementation = function (buildModel, key) {
@@ -154,7 +148,7 @@ var FormDrawFactory = /** @class */ (function () {
     return FormDrawFactory;
 }());
 
-var HtmlDrawHelper = /** @class */ (function () {
+var HtmlDrawHelper = (function () {
     function HtmlDrawHelper() {
     }
     HtmlDrawHelper.RenderAttributesString = function (attrs) {
@@ -189,8 +183,6 @@ var HtmlDrawHelper = /** @class */ (function () {
     HtmlDrawHelper.ProceesSelectValues = function (typeDescription, rawValue, selectList) {
         if (rawValue != null) {
             selectList.forEach(function (x) { return x.Selected = false; });
-            //Заплатка для выпадающего списка 
-            //TODO Вылечить это
             var item = typeDescription.TypeName == CSharpType.Boolean.toString() ?
                 selectList.find(function (x) { return x.Value.toLowerCase() == rawValue.toLowerCase(); }) :
                 selectList.find(function (x) { return x.Value == rawValue; });
@@ -203,7 +195,7 @@ var HtmlDrawHelper = /** @class */ (function () {
     return HtmlDrawHelper;
 }());
 
-var ValueProviderHelper = /** @class */ (function () {
+var ValueProviderHelper = (function () {
     function ValueProviderHelper() {
     }
     ValueProviderHelper.GetStringValueFromValueProvider = function (prop, valueProvider) {
@@ -223,7 +215,7 @@ var ValueProviderHelper = /** @class */ (function () {
     return ValueProviderHelper;
 }());
 
-var FormTypeDataGetter = /** @class */ (function () {
+var FormTypeDataGetter = (function () {
     function FormTypeDataGetter(data) {
         if (!data.IsClass) {
             var mes = "Тип не являющийся классом не поддерживается";
@@ -258,7 +250,7 @@ var FormTypeDataGetter = /** @class */ (function () {
     return FormTypeDataGetter;
 }());
 
-var FormTypeDrawer = /** @class */ (function () {
+var FormTypeDrawer = (function () {
     function FormTypeDrawer(formDrawer, typeDescription) {
         this._formDrawer = formDrawer;
         this._typeDescription = typeDescription;
@@ -305,7 +297,7 @@ var FormTypeDrawer = /** @class */ (function () {
     return FormTypeDrawer;
 }());
 
-var TryForm = /** @class */ (function () {
+var TryForm = (function () {
     function TryForm() {
     }
     TryForm.UnWrapModel = function (model, drawer) {
@@ -349,18 +341,12 @@ var TryForm = /** @class */ (function () {
             TryForm.GetForm(elem);
         }
     };
-    /**
-     * Получить объект данных с первой попавшейся формы на странице
-     */
     TryForm.GetDataForFormByModelPrefix = function (modelPrefix) {
         var model = TryForm._genericInterfaces.find(function (x) { return x.Prefix == modelPrefix; });
         if (model == null) {
         }
         return TryForm.GetDataForForm(model);
     };
-    /**
-     * Получить объект данных с первой попавшейся формы на странице
-     */
     TryForm.GetDataForFirstForm = function () {
         if (TryForm._genericInterfaces.length == 0) {
             TryForm.ThrowError("На странице не объявлено ни одной формы");
@@ -368,10 +354,6 @@ var TryForm = /** @class */ (function () {
         var model = TryForm._genericInterfaces[0];
         return TryForm.GetDataForForm(model);
     };
-    /**
-     * Получить данные с формы приведенные к описанному типу данных
-     * @param buildModel Тип данных
-     */
     TryForm.GetDataForForm = function (buildModel) {
         var getter = new FormTypeDataGetter(buildModel.TypeDescription);
         return getter.GetData(buildModel.Prefix);

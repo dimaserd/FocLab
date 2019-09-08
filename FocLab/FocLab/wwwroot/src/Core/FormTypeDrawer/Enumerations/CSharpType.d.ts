@@ -1,4 +1,4 @@
-declare enum CSharpType {
+﻿declare enum CSharpType {
     String,
     Int,
     Decimal,

@@ -1,4 +1,4 @@
-var CookieWorker = /** @class */ (function () {
+﻿var CookieWorker = (function () {
     function CookieWorker() {
     }
     CookieWorker.setCookie = function (name, value, days) {

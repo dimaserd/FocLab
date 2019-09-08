@@ -1,3 +1,3 @@
-declare class SubstanceEventSetter {
+﻿declare class SubstanceEventSetter {
     static InitHandlers(): void;
 }

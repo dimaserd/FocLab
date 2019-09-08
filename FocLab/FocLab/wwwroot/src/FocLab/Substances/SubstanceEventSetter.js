@@ -1,4 +1,4 @@
-var SubstanceEventSetter = /** @class */ (function () {
+﻿var SubstanceEventSetter = (function () {
     function SubstanceEventSetter() {
     }
     SubstanceEventSetter.InitHandlers = function () {

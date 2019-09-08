@@ -1,4 +1,4 @@
-declare class TasksFilter {
+﻿declare class TasksFilter {
     static FilterPrefix: string;
     DefaultFilterState: object;
     Tasks: Array<ChemistryTaskModel>;

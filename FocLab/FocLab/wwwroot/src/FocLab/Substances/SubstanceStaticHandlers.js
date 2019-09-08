@@ -1,4 +1,4 @@
-var SubstanceStaticHandlers = /** @class */ (function () {
+﻿var SubstanceStaticHandlers = (function () {
     function SubstanceStaticHandlers() {
     }
     SubstanceStaticHandlers.RemoveSubstanceHandler = function (count) {
@@ -8,10 +8,6 @@ var SubstanceStaticHandlers = /** @class */ (function () {
         console.log("RemoveSubstanceHandler AfterRemove", SubstanceStaticHandlers.substance);
         SubstanceStaticHandlers.substance.ClearTable();
         SubstanceStaticHandlers.substance.DrawTable();
-        //setTimeout(function () {
-        //    console.log("RemoveSubstanceHandler", SubstanceStaticHandlers.substance);
-        //    TaskStaticHandlers.UpdateBtnClickHandler();
-        //}, 200);
     };
     SubstanceStaticHandlers.EtalonChangedHandler = function (prefix) {
         if (prefix == "") {

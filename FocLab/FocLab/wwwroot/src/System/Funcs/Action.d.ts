@@ -1,4 +1,4 @@
-interface EmptyAction {
+﻿interface EmptyAction {
     (): void;
 }
 interface Action<T> {

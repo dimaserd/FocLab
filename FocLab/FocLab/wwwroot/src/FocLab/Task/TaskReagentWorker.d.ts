@@ -1,4 +1,4 @@
-declare class TaskReagentWorker {
+﻿declare class TaskReagentWorker {
     TaskId: string;
     constructor(taskId: string);
     GetValueByName(name: string): string;

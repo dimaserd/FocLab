@@ -34,7 +34,7 @@ class Dictionary<T> implements IDictionary<T> {
     add(key: string, value: T): void {
 
         if (this.containsKey(key)) {
-            throw new DOMException(`Ключ ${key} уже существует в данном словаре`);
+            throw new DOMException(`Key ${key} is already exists`);
         }
 
         this[key] = value;

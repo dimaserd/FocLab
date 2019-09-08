@@ -1,4 +1,4 @@
-var TryForm = /** @class */ (function () {
+﻿var TryForm = (function () {
     function TryForm() {
     }
     TryForm.UnWrapModel = function (model, drawer) {
@@ -42,18 +42,12 @@ var TryForm = /** @class */ (function () {
             TryForm.GetForm(elem);
         }
     };
-    /**
-     * Получить объект данных с первой попавшейся формы на странице
-     */
     TryForm.GetDataForFormByModelPrefix = function (modelPrefix) {
         var model = TryForm._genericInterfaces.find(function (x) { return x.Prefix == modelPrefix; });
         if (model == null) {
         }
         return TryForm.GetDataForForm(model);
     };
-    /**
-     * Получить объект данных с первой попавшейся формы на странице
-     */
     TryForm.GetDataForFirstForm = function () {
         if (TryForm._genericInterfaces.length == 0) {
             TryForm.ThrowError("На странице не объявлено ни одной формы");
@@ -61,10 +55,6 @@ var TryForm = /** @class */ (function () {
         var model = TryForm._genericInterfaces[0];
         return TryForm.GetDataForForm(model);
     };
-    /**
-     * Получить данные с формы приведенные к описанному типу данных
-     * @param buildModel Тип данных
-     */
     TryForm.GetDataForForm = function (buildModel) {
         var getter = new FormTypeDataGetter(buildModel.TypeDescription);
         return getter.GetData(buildModel.Prefix);

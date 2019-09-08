@@ -1,4 +1,4 @@
-var IndexPageTaskDrawer = /** @class */ (function () {
+﻿var IndexPageTaskDrawer = (function () {
     function IndexPageTaskDrawer() {
     }
     IndexPageTaskDrawer.GetNotFoundElement = function (colspan) {

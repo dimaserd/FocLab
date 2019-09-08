@@ -1,4 +1,4 @@
-var DayTaskDrawer = /** @class */ (function () {
+﻿var DayTaskDrawer = (function () {
     function DayTaskDrawer() {
     }
     DayTaskDrawer.prototype.DrawTasks = function (tasks, isAdmin) {
@@ -27,7 +27,6 @@ var DayTaskDrawer = /** @class */ (function () {
         toAdd.innerHTML = "<a class=\"btn float-right pl-2 pr-2 mb-1 rounded text-truncate bg-success text-white d-none d-lg-inline tms-btn-create-task\">\n                        <i class=\"fas fa-plus-circle fa-fw\" style=\"font-size: 0.8rem;\"></i> \u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0437\u0430\u0434\u0430\u043D\u0438\u0435\n                    </a>\n                    <a class=\"btn float-right pl-2 pr-2 mb-1 rounded text-truncate bg-success text-white  d-inline d-lg-none tms-btn-create-task\">\n                        <i class=\"fas fa-plus-circle fa-fw\" style=\"font-size: 0.8rem;\"></i> \u0421\u043E\u0437\u0434\u0430\u0442\u044C\n                    </a>";
         elem.appendChild(toAdd);
     };
-    //Удаляет все нарисованные задания на календаре
     DayTaskDrawer.prototype.ClearTasks = function () {
         var paras = document.getElementsByClassName("event");
         while (paras[0]) {

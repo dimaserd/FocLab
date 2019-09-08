@@ -1,4 +1,4 @@
-interface UpdateDayTaskComment {
+﻿interface UpdateDayTaskComment {
     DayTaskCommentId: string;
     Comment: string;
 }
@@ -31,9 +31,6 @@ interface UserScheduleSearchModel {
     ShowTasksWithNoAssignee: boolean;
 }
 declare class ScheduleConsts {
-    /**
-     * Префикс для собирания модели фильтра
-     */
     static FilterPrefix: string;
 }
 declare class ScheduleStaticHandlers {

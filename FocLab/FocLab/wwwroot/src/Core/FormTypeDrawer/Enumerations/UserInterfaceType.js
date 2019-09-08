@@ -1,4 +1,4 @@
-var UserInterfaceType;
+﻿var UserInterfaceType;
 (function (UserInterfaceType) {
     UserInterfaceType[UserInterfaceType["TextBox"] = "TextBox"] = "TextBox";
     UserInterfaceType[UserInterfaceType["TextArea"] = "TextArea"] = "TextArea";

@@ -1,4 +1,4 @@
-declare class TabFormDrawImplementation implements IFormDraw {
+﻿declare class TabFormDrawImplementation implements IFormDraw {
     constructor(model: GenerateGenericUserInterfaceModel);
     _model: GenerateGenericUserInterfaceModel;
     _datePickerPropNames: Array<string>;

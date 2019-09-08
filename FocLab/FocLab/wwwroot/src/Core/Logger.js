@@ -1,12 +1,15 @@
-var Logger = /** @class */ (function () {
+﻿var Logger = (function () {
     function Logger() {
     }
+    Logger.SetResources = function () {
+        Logger.Resourcses = new Logger_Resx();
+    };
     Logger.LogException = function (exception, link) {
         $.ajax({
             type: "POST",
             data: {
                 ExceptionDate: new Date().toISOString(),
-                Description: "Ошибка запроса к апи",
+                Description: Logger.Resourcses.ErrorOnApiRequest,
                 Message: exception,
                 Uri: link !== null ? link : location.href
             },
@@ -14,10 +17,10 @@ var Logger = /** @class */ (function () {
             async: true,
             cache: false,
             success: function (data) {
-                console.log("Исключение залоггировано", data);
+                console.log(Logger.Resourcses.ExceptionLogged, data);
             },
             error: function () {
-                alert("Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения");
+                alert(Logger.Resourcses.ErrorOccuredOnLoggingException);
             }
         });
     };
@@ -37,12 +40,23 @@ var Logger = /** @class */ (function () {
             async: true,
             cache: false,
             success: function (response) {
-                console.log("Действие залоггировано", response);
+                console.log(Logger.Resourcses.ActionLogged, response);
             },
             error: function () {
-                alert("Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения");
+                alert(Logger.Resourcses.LoggingAttempFailed);
             }
         });
     };
     return Logger;
+}());
+Logger.SetResources();
+var Logger_Resx = (function () {
+    function Logger_Resx() {
+        this.LoggingAttempFailed = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
+        this.ErrorOnApiRequest = "Ошибка запроса к апи";
+        this.ActionLogged = "Action logged";
+        this.ExceptionLogged = "Исключение залоггировано";
+        this.ErrorOccuredOnLoggingException = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
+    }
+    return Logger_Resx;
 }());

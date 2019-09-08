@@ -1,4 +1,4 @@
-var FormTypeDataGetter = /** @class */ (function () {
+﻿var FormTypeDataGetter = (function () {
     function FormTypeDataGetter(data) {
         if (!data.IsClass) {
             var mes = "Тип не являющийся классом не поддерживается";

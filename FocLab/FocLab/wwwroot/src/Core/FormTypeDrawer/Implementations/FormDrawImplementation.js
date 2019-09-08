@@ -1,16 +1,13 @@
-var FormDrawImplementation = /** @class */ (function () {
+﻿var FormDrawImplementation = (function () {
     function FormDrawImplementation(model) {
         this._datePickerPropNames = [];
         this._selectClass = 'form-draw-select';
         this._model = model;
     }
     FormDrawImplementation.prototype.BeforeFormDrawing = function () {
-        //TODO Init calendar or some scripts
     };
     FormDrawImplementation.prototype.AfterFormDrawing = function () {
-        //Красивые селекты
         $("." + this._selectClass).selectpicker('refresh');
-        //Инициация календарей
         for (var i = 0; i < this._datePickerPropNames.length; i++) {
             var datePickerPropName = this._datePickerPropNames[i];
             var propName = "" + this._model.Prefix + datePickerPropName;

@@ -1,7 +1,6 @@
-var ModalWorker = /** @class */ (function () {
+﻿var ModalWorker = (function () {
     function ModalWorker() {
     }
-    /** Показать модальное окно по идентификатору. */
     ModalWorker.ShowModal = function (modalId) {
         if (modalId == "" || modalId == null || modalId == undefined) {
             modalId = "loadingModal";

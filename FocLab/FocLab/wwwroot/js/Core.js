@@ -49,12 +49,11 @@ var Dictionary = /** @class */ (function () {
     return Dictionary;
 }());
 
-var AccountWorker = /** @class */ (function () {
+var AccountWorker = (function () {
     function AccountWorker() {
     }
     AccountWorker.User = null;
     AccountWorker.CheckUser = function () {
-        //TODO Implement User Checking
         if (!this.IsAuthenticated() || true) {
             return;
         }
@@ -70,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () { AccountWorker.CheckUser(); }, 1100);
 });
 
-var AjaxLoader = /** @class */ (function () {
+var AjaxLoader = (function () {
     function AjaxLoader() {
     }
     AjaxLoader.InitAjaxLoads = function () {
@@ -103,7 +102,7 @@ var AjaxLoader = /** @class */ (function () {
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert("\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u0437\u0430\u043F\u0440\u043E\u0441\u0430 " + link);
+                alert("There is an execption while executing request " + link);
                 console.log(xhr);
             }
         });
@@ -112,7 +111,7 @@ var AjaxLoader = /** @class */ (function () {
 }());
 AjaxLoader.InitAjaxLoads();
 
-var CookieWorker = /** @class */ (function () {
+var CookieWorker = (function () {
     function CookieWorker() {
     }
     CookieWorker.setCookie = function (name, value, days) {
@@ -142,35 +141,29 @@ var CookieWorker = /** @class */ (function () {
     return CookieWorker;
 }());
 
-var EditableComponents = /** @class */ (function () {
+var EditableComponents = (function () {
     function EditableComponents() {
     }
     EditableComponents.InitEditable = function (element, onValueChangedHandler, isTextArea) {
         if (isTextArea === void 0) { isTextArea = false; }
-        //Получить уникальный идентификатор
         var elementId = Math.random().toString(36);
-        //Скрываю настоящий элемент
         element.style.display = "none";
         element.setAttribute("data-editable-real-input", elementId);
-        //Добавляю идентификатор элемента, чтобы потом отлавливать его и изменения его значений
         EditableComponents.Editables.push({
             ElementId: elementId,
             Value: element.value,
             OnValueChangedHandler: onValueChangedHandler
         });
-        // Получаю фейковый элемент который редактируем
         var newNode = EditableComponents.GetFakeElement(element, elementId, isTextArea);
-        // Вставляю новый элемент перед скрытым старым
         element.before(newNode);
         this.InitEditableInner(elementId);
         this.InitLiasoningOnChange(element, elementId);
     };
     EditableComponents.InitLiasoningOnChange = function (element, elementId) {
-        element.addEventListener("change", function () {
-            console.log("Обработчик реального измененного элемента");
+        element.addEventListener("change", function (e) {
             var elemId = elementId;
             var fakeElement = document.querySelectorAll("[data-editable-input=\"" + elemId + "\"]")[0];
-            fakeElement.value = this.value;
+            fakeElement.value = e.target.value;
         });
         var fakeElement = document.querySelectorAll("[data-editable-input=\"" + elementId + "\"]")[0];
         fakeElement.addEventListener("change", function (x) {
@@ -179,7 +172,6 @@ var EditableComponents = /** @class */ (function () {
             realElement.value = x.target.value;
         });
     };
-    //Создать фейковый элемент 
     EditableComponents.GetFakeElement = function (element, elementId, isTextArea) {
         var div = document.createElement("div");
         var html = "<div class=\"form-group editable\" data-editable-form=\"" + elementId + "\">\n        <div class=\"editable-backdrop\" data-editable-backdrop=\"" + elementId + "\"></div>\n        " + EditableComponents.GetFakeInputElement(element, elementId, isTextArea) + "\n        <div class=\"editable-buttons\">\n            <button class=\"btn btn-sm btn-editable\" data-editable-check=\"" + elementId + "\"><i class=\"fas fa-check\"></i></button>\n            <button class=\"btn btn-sm btn-editable\" data-editable-cancel=\"" + elementId + "\"><i class=\"fas fa-times\"></i></button>\n        </div>\n        </div>";
@@ -192,28 +184,22 @@ var EditableComponents = /** @class */ (function () {
         }
         return "<textarea class=\"" + element.className + " editable-input\" name=\"" + element.id + "\" data-editable-input=\"" + elementId + "\"\n                    data-editable-input-id=\"" + elementId + "\">" + element.value + "</textarea>";
     };
-    //Сюда передаётся фейковый элемент
     EditableComponents.InitEditableInner = function (elementId) {
         var _this = this;
         var element = document.querySelectorAll("[data-editable-input=\"" + elementId + "\"]")[0];
         element.addEventListener("click", function (x) { return _this.OnInputClickHandler(x.target); }, false);
-        //<button class="btn btn-sm btn-editable"><i class="fas fa-check"></i></button>
         var btnCheck = document.querySelectorAll("[data-editable-check=\"" + elementId + "\"]")[0];
         btnCheck.addEventListener("click", (function () { this.OnBtnCheckClickHandler(elementId); }).bind(this));
-        //<button class="btn btn-sm btn-editable"><i class="fas fa-times"></i></button>
         var btnBack = document.querySelectorAll("[data-editable-cancel=\"" + elementId + "\"]")[0];
         btnBack.addEventListener("click", (function () { this.OnBtnCancelClickHandler(elementId); }).bind(this));
         var backDrop = document.querySelectorAll("[data-editable-backdrop=\"" + elementId + "\"]")[0];
         backDrop.addEventListener("click", (function () { this.BackDropClickHandler(elementId); }).bind(this));
     };
     EditableComponents.CheckValueChanged = function (elementId) {
-        //Получаю инпут
         var input = document.querySelectorAll("[data-editable-input=\"" + elementId + "\"]")[0];
         var record = EditableComponents.Editables.filter(function (x) { return x.ElementId === elementId; })[0];
         var newValue = input.value;
-        //значит значение изменилось
         if (record.Value !== newValue) {
-            //Вызываю обработчик события для измененного значения
             if (record.OnValueChangedHandler) {
                 record.OnValueChangedHandler(newValue);
             }
@@ -225,18 +211,14 @@ var EditableComponents = /** @class */ (function () {
     EditableComponents.BackDropClickHandler = function (elementId) {
         var form = document.querySelectorAll("[data-editable-form=\"" + elementId + "\"]")[0];
         form.classList.remove("editable--active");
-        //Получаю инпут
         var input = document.querySelectorAll("[data-editable-input=\"" + elementId + "\"]")[0];
         input.removeAttribute("editable");
         EditableComponents.CheckValueChanged(elementId);
     };
-    //Клик на редактируемый инпут
     EditableComponents.OnInputClickHandler = function (x) {
         var elementId = x.getAttribute("data-editable-input-id");
-        //Получаю инпут
         var input = document.querySelectorAll("[data-editable-input=\"" + elementId + "\"]")[0];
         input.setAttribute("editable", "editable");
-        //Получаю форму
         var form = document.querySelectorAll("[data-editable-form=\"" + elementId + "\"]")[0];
         form.classList.add("editable--active");
     };
@@ -253,24 +235,18 @@ var EditableComponents = /** @class */ (function () {
         var form = document.querySelectorAll("[data-editable-form=\"" + elementId + "\"]")[0];
         form.classList.remove("editable--active");
         var record = EditableComponents.Editables.find(function (x) { return x.ElementId === elementId; });
-        //возращение к первичному значению
         input.value = record.Value;
     };
     EditableComponents.Editables = [];
     return EditableComponents;
 }());
 
-var FormDataHelper = /** @class */ (function () {
+var FormDataHelper = (function () {
     function FormDataHelper() {
     }
     FormDataHelper.FillData = function (object) {
         FormDataHelper.FillDataByPrefix(object, "");
     };
-    /**
-     * Собрать данные для свойств объекта с Html страницы
-     * @param object   объект, свойства которого нужно заполнить
-     * @param prefix   префикс стоящий перед свойствами объекта
-     */
     FormDataHelper.FillDataByPrefix = function (object, prefix) {
         for (var index in object) {
             var name_1 = prefix + index;
@@ -304,7 +280,6 @@ var FormDataHelper = /** @class */ (function () {
             else {
                 element.value = object[index];
             }
-            //Выбрасываю событие об изменении значения
             var event_2 = new Event("change");
             element.dispatchEvent(event_2);
         }
@@ -312,18 +287,13 @@ var FormDataHelper = /** @class */ (function () {
     FormDataHelper.CollectData = function (object) {
         return FormDataHelper.CollectDataByPrefix(object, "");
     };
-    /**
-     *   Собрать данные с формы по префиксу
-     * @param object  объект, свойства которого нужно собрать с формы
-     * @param prefix  префикс для свойств объекта
-     */
     FormDataHelper.CollectDataByPrefix = function (object, prefix) {
         for (var index in object) {
             if (object.hasOwnProperty(index)) {
                 var name_2 = prefix + index;
                 var element = document.getElementsByName(name_2)[0];
                 if (element == null) {
-                    alert("\u042D\u043B\u0435\u043C\u0435\u043D\u0442 \u0441 \u0438\u043C\u0435\u043D\u0435\u043C " + name_2 + " \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043A\u043E\u0434");
+                    alert("Element with name " + name_2 + " not found check the source code");
                     continue;
                 }
                 if (element.type === "select-multiple") {
@@ -338,7 +308,6 @@ var FormDataHelper = /** @class */ (function () {
                         (object[index] = document.querySelector("input[name=\"" + name_2 + "\"]:checked")).value;
                     continue;
                 }
-                //Чекбоксы нужно проверять отдельно потому что у них свойство не value а почему-то checked
                 object[index] = element.type === "checkbox" ? element.checked : element.value;
             }
         }
@@ -347,15 +316,18 @@ var FormDataHelper = /** @class */ (function () {
     return FormDataHelper;
 }());
 
-var Logger = /** @class */ (function () {
+var Logger = (function () {
     function Logger() {
     }
+    Logger.SetResources = function () {
+        Logger.Resourcses = new Logger_Resx();
+    };
     Logger.LogException = function (exception, link) {
         $.ajax({
             type: "POST",
             data: {
                 ExceptionDate: new Date().toISOString(),
-                Description: "Ошибка запроса к апи",
+                Description: Logger.Resourcses.ErrorOnApiRequest,
                 Message: exception,
                 Uri: link !== null ? link : location.href
             },
@@ -363,10 +335,10 @@ var Logger = /** @class */ (function () {
             async: true,
             cache: false,
             success: function (data) {
-                console.log("Исключение залоггировано", data);
+                console.log(Logger.Resourcses.ExceptionLogged, data);
             },
             error: function () {
-                alert("Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения");
+                alert(Logger.Resourcses.ErrorOccuredOnLoggingException);
             }
         });
     };
@@ -386,20 +358,30 @@ var Logger = /** @class */ (function () {
             async: true,
             cache: false,
             success: function (response) {
-                console.log("Действие залоггировано", response);
+                console.log(Logger.Resourcses.ActionLogged, response);
             },
             error: function () {
-                alert("Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения");
+                alert(Logger.Resourcses.LoggingAttempFailed);
             }
         });
     };
     return Logger;
 }());
+Logger.SetResources();
+var Logger_Resx = (function () {
+    function Logger_Resx() {
+        this.LoggingAttempFailed = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
+        this.ErrorOnApiRequest = "Ошибка запроса к апи";
+        this.ActionLogged = "Action logged";
+        this.ExceptionLogged = "Исключение залоггировано";
+        this.ErrorOccuredOnLoggingException = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
+    }
+    return Logger_Resx;
+}());
 
-var ModalWorker = /** @class */ (function () {
+var ModalWorker = (function () {
     function ModalWorker() {
     }
-    /** Показать модальное окно по идентификатору. */
     ModalWorker.ShowModal = function (modalId) {
         if (modalId == "" || modalId == null || modalId == undefined) {
             modalId = "loadingModal";
@@ -432,137 +414,11 @@ var ModalWorker = /** @class */ (function () {
     return ModalWorker;
 }());
 
-var AjaxParameters = /** @class */ (function () {
-    function AjaxParameters() {
-    }
-    return AjaxParameters;
-}());
-var Requester = /** @class */ (function () {
+var Requester = (function () {
     function Requester() {
     }
-    Requester.SendPostRequestWithAnimation = function (link, data, onSuccessFunc, onErrorFunc) {
-        //Показываю крутилку
-        ModalWorker.ShowModal("loadingModal");
-        Requester.SendAjaxPost(link, data, onSuccessFunc, onErrorFunc, true);
-    };
-    Requester.UploadFilesToServer = function (inputId, onSuccessFunc, onErrorFunc) {
-        var link = "/Api/FilesDirectory/UploadFiles";
-        if (Requester.IsRequestGoing(link)) {
-            return;
-        }
-        var file_data = $("#" + inputId).prop("files");
-        var form_data = new FormData();
-        if (file_data.length === 0) {
-            ToastrWorker.HandleBaseApiResponse(new BaseApiResponse(false, "Файлы не выбраны"));
-            return;
-        }
-        for (var i = 0; i < file_data.length; i++) {
-            form_data.append("Files", file_data[i]);
-        }
-        $.ajax({
-            url: link,
-            type: "POST",
-            data: form_data,
-            async: true,
-            cache: false,
-            dataType: "json",
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                Requester.DeleteCompletedRequest(link);
-                if (onSuccessFunc) {
-                    onSuccessFunc(response);
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                //Логгирую ошибку
-                Logger.LogException(textStatus, link);
-                Requester.DeleteCompletedRequest(link);
-                ModalWorker.HideModals();
-                var resp = new BaseApiResponse(false, "Произошла ошибка! Мы уже знаем о ней, скоро с ней разберемся!");
-                ToastrWorker.HandleBaseApiResponse(resp);
-                //Вызываю внешнюю функцию-обработчик
-                if (onErrorFunc) {
-                    onErrorFunc(jqXHR, textStatus, errorThrown);
-                }
-            }
-        });
-    };
-    Requester.SendAjaxGet = function (link, data, onSuccessFunc, onErrorFunc) {
-        if (Requester.IsRequestGoing(link)) {
-            return;
-        }
-        var params = {
-            type: "GET",
-            data: data,
-            url: link,
-            async: true,
-            cache: false,
-            success: function (response) {
-                Requester.DeleteCompletedRequest(link);
-                if (onSuccessFunc) {
-                    onSuccessFunc(response);
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                //Логгирую ошибку
-                Logger.LogException(textStatus, link);
-                Requester.DeleteCompletedRequest(link);
-                //Вызываю внешнюю функцию-обработчик
-                if (onErrorFunc) {
-                    onErrorFunc(jqXHR, textStatus, errorThrown);
-                }
-            }
-        };
-        $.ajax(params);
-    };
-    Requester.SendAjaxPost = function (link, data, onSuccessFunc, onErrorFunc, animations) {
-        if (Requester.IsRequestGoing(link)) {
-            return;
-        }
-        if (data == null) {
-            alert("Вы подали пустой объект в запрос");
-            return;
-        }
-        var params = {};
-        params.type = "POST";
-        params.data = data;
-        params.url = link;
-        params.async = true;
-        params.cache = false;
-        params.success = function (response) {
-            Requester.DeleteCompletedRequest(link);
-            if (animations) {
-                Requester.OnSuccessAnimationHandler(response);
-            }
-            if (onSuccessFunc) {
-                onSuccessFunc(response);
-            }
-        };
-        params.error = function (jqXHR, textStatus, errorThrown) {
-            //Логгирую ошибку
-            Logger.LogException(textStatus, link);
-            Requester.DeleteCompletedRequest(link);
-            if (animations) {
-                Requester.OnErrorAnimationHandler();
-            }
-            //Вызываю внешнюю функцию-обработчик
-            if (onErrorFunc) {
-                onErrorFunc(jqXHR, textStatus, errorThrown);
-            }
-        };
-        var isArray = data.constructor === Array;
-        if (isArray) {
-            params.contentType = "application/json; charset=utf-8";
-            params.dataType = "json";
-            params.data = JSON.stringify(data);
-        }
-        Requester.GoingRequests.push(link);
-        $.ajax(params);
-    };
-    Requester.GoingRequests = new Array();
-    Requester.DeleteCompletedRequest = function (link) {
-        Requester.GoingRequests = Requester.GoingRequests.filter(function (x) { return x !== link; });
+    Requester.SetResources = function () {
+        Requester.Resources = new Requester_Resx();
     };
     Requester.ParseDate = function (date) {
         date = date.replace(new RegExp("/", 'g'), ".");
@@ -588,13 +444,54 @@ var Requester = /** @class */ (function () {
         }
         return resultObj;
     };
-    Requester.GetParams = function (obj) {
-        obj = Requester.GetCombinedData("", obj);
-        return $.param(obj, true);
+    Requester.SendPostRequestWithAnimation = function (link, data, onSuccessFunc, onErrorFunc) {
+        ModalWorker.ShowModal("loadingModal");
+        Requester.SendAjaxPost(link, data, onSuccessFunc, onErrorFunc, true);
+    };
+    Requester.UploadFilesToServer = function (inputId, onSuccessFunc, onErrorFunc) {
+        var link = "/Api/FilesDirectory/UploadFiles";
+        if (Requester.IsRequestGoing(link)) {
+            return;
+        }
+        var file_data = $("#" + inputId).prop("files");
+        var form_data = new FormData();
+        if (file_data.length === 0) {
+            ToastrWorker.HandleBaseApiResponse(new BaseApiResponse(false, Requester.Resources.FilesNotSelected));
+            return;
+        }
+        for (var i = 0; i < file_data.length; i++) {
+            form_data.append("Files", file_data[i]);
+        }
+        $.ajax({
+            url: link,
+            type: "POST",
+            data: form_data,
+            async: true,
+            cache: false,
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                Requester.DeleteCompletedRequest(link);
+                if (onSuccessFunc) {
+                    onSuccessFunc(response);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Logger.LogException(textStatus, link);
+                Requester.DeleteCompletedRequest(link);
+                ModalWorker.HideModals();
+                var resp = new BaseApiResponse(false, Requester.Resources.ErrorOccuredWeKnowAboutIt);
+                ToastrWorker.HandleBaseApiResponse(resp);
+                if (onErrorFunc) {
+                    onErrorFunc(jqXHR, textStatus, errorThrown);
+                }
+            }
+        });
     };
     Requester.IsRequestGoing = function (link) {
-        var any = Requester.GoingRequests.filter(function (x) { return x === link; });
-        return any.length > 0;
+        var index = Requester.GoingRequests.indexOf(link);
+        return index >= 0;
     };
     Requester.OnSuccessAnimationHandler = function (data) {
         ModalWorker.HideModals();
@@ -602,13 +499,97 @@ var Requester = /** @class */ (function () {
     };
     Requester.OnErrorAnimationHandler = function () {
         ModalWorker.HideModals();
-        var resp = new BaseApiResponse(false, "Произошла ошибка! Мы уже знаем о ней, и скоро с ней разберемся!");
+        var resp = new BaseApiResponse(false, Requester.Resources.ErrorOccuredWeKnowAboutIt);
         ToastrWorker.HandleBaseApiResponse(resp);
+    };
+    Requester.SendAjaxGet = function (link, data, onSuccessFunc, onErrorFunc) {
+        if (Requester.IsRequestGoing(link)) {
+            return;
+        }
+        var params = {
+            type: "GET",
+            data: data,
+            url: link,
+            async: true,
+            cache: false,
+            success: function (response) {
+                Requester.DeleteCompletedRequest(link);
+                if (onSuccessFunc) {
+                    onSuccessFunc(response);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Logger.LogException(textStatus, link);
+                Requester.DeleteCompletedRequest(link);
+                if (onErrorFunc) {
+                    onErrorFunc(jqXHR, textStatus, errorThrown);
+                }
+            }
+        };
+        $.ajax(params);
+    };
+    Requester.SendAjaxPost = function (link, data, onSuccessFunc, onErrorFunc, animations) {
+        if (Requester.IsRequestGoing(link)) {
+            return;
+        }
+        if (data == null) {
+            alert(Requester.Resources.YouPassedAnEmtpyArrayOfObjects);
+            return;
+        }
+        var params = {};
+        params.type = "POST";
+        params.data = data;
+        params.url = link;
+        params.async = true;
+        params.cache = false;
+        params.success = function (response) {
+            Requester.DeleteCompletedRequest(link);
+            if (animations) {
+                Requester.OnSuccessAnimationHandler(response);
+            }
+            if (onSuccessFunc) {
+                onSuccessFunc(response);
+            }
+        };
+        params.error = function (jqXHR, textStatus, errorThrown) {
+            Logger.LogException(textStatus, link);
+            Requester.DeleteCompletedRequest(link);
+            if (animations) {
+                Requester.OnErrorAnimationHandler();
+            }
+            if (onErrorFunc) {
+                onErrorFunc(jqXHR, textStatus, errorThrown);
+            }
+        };
+        var isArray = data.constructor === Array;
+        if (isArray) {
+            params.contentType = "application/json; charset=utf-8";
+            params.dataType = "json";
+            params.data = JSON.stringify(data);
+        }
+        Requester.GoingRequests.push(link);
+        $.ajax(params);
+    };
+    Requester.GoingRequests = new Array();
+    Requester.DeleteCompletedRequest = function (link) {
+        Requester.GoingRequests = Requester.GoingRequests.filter(function (x) { return x !== link; });
+    };
+    Requester.GetParams = function (obj) {
+        obj = Requester.GetCombinedData("", obj);
+        return $.param(obj, true);
     };
     return Requester;
 }());
+var Requester_Resx = (function () {
+    function Requester_Resx() {
+        this.YouPassedAnEmtpyArrayOfObjects = "Вы подали пустой объект в запрос";
+        this.ErrorOccuredWeKnowAboutIt = "Произошла ошибка! Мы уже знаем о ней, и скоро с ней разберемся!";
+        this.FilesNotSelected = "Файлы не выбраны";
+    }
+    return Requester_Resx;
+}());
 
-var GenericBaseApiResponse = /** @class */ (function () {
+var GenericBaseApiResponse = (function () {
     function GenericBaseApiResponse(isSucceeded, message, resp) {
         this.IsSucceeded = isSucceeded;
         this.Message = message;
@@ -616,14 +597,14 @@ var GenericBaseApiResponse = /** @class */ (function () {
     }
     return GenericBaseApiResponse;
 }());
-var BaseApiResponse = /** @class */ (function () {
+var BaseApiResponse = (function () {
     function BaseApiResponse(isSucceeded, message) {
         this.IsSucceeded = isSucceeded;
         this.Message = message;
     }
     return BaseApiResponse;
 }());
-var ToastrWorker = /** @class */ (function () {
+var ToastrWorker = (function () {
     function ToastrWorker() {
     }
     ToastrWorker.ShowError = function (text) {
@@ -677,9 +658,7 @@ var ToastrWorker = /** @class */ (function () {
     return ToastrWorker;
 }());
 
-/// <reference path="../../../node_modules/@types/bootstrap/index.d.ts"/>
-/// <reference path="../../../node_modules/@types/bootstrap-datepicker/index.d.ts"/>
-var Utils = /** @class */ (function () {
+var Utils = (function () {
     function Utils() {
     }
     Utils.GetDateFromDateRangePicker = function (inputId) {
@@ -811,19 +790,16 @@ var UserInterfaceType;
     UserInterfaceType[UserInterfaceType["MultipleDropDownList"] = "MultipleDropDownList"] = "MultipleDropDownList";
 })(UserInterfaceType || (UserInterfaceType = {}));
 
-var FormDrawImplementation = /** @class */ (function () {
+var FormDrawImplementation = (function () {
     function FormDrawImplementation(model) {
         this._datePickerPropNames = [];
         this._selectClass = 'form-draw-select';
         this._model = model;
     }
     FormDrawImplementation.prototype.BeforeFormDrawing = function () {
-        //TODO Init calendar or some scripts
     };
     FormDrawImplementation.prototype.AfterFormDrawing = function () {
-        //Красивые селекты
         $("." + this._selectClass).selectpicker('refresh');
-        //Инициация календарей
         for (var i = 0; i < this._datePickerPropNames.length; i++) {
             var datePickerPropName = this._datePickerPropNames[i];
             var propName = "" + this._model.Prefix + datePickerPropName;
@@ -872,19 +848,16 @@ var FormDrawImplementation = /** @class */ (function () {
     return FormDrawImplementation;
 }());
 
-var TabFormDrawImplementation = /** @class */ (function () {
+var TabFormDrawImplementation = (function () {
     function TabFormDrawImplementation(model) {
         this._datePickerPropNames = [];
         this._selectClass = 'form-draw-select';
         this._model = model;
     }
     TabFormDrawImplementation.prototype.BeforeFormDrawing = function () {
-        //TODO Init calendar or some scripts
     };
     TabFormDrawImplementation.prototype.AfterFormDrawing = function () {
-        //Красивые селекты
         $("." + this._selectClass).selectpicker('refresh');
-        //Инициация календарей
         for (var i = 0; i < this._datePickerPropNames.length; i++) {
             var datePickerPropName = this._datePickerPropNames[i];
             var propName = "" + this._model.Prefix + datePickerPropName;
@@ -931,7 +904,7 @@ var TabFormDrawImplementation = /** @class */ (function () {
 
 
 
-var FormDrawFactory = /** @class */ (function () {
+var FormDrawFactory = (function () {
     function FormDrawFactory() {
     }
     FormDrawFactory.GetImplementation = function (buildModel, key) {
@@ -948,7 +921,7 @@ var FormDrawFactory = /** @class */ (function () {
     return FormDrawFactory;
 }());
 
-var HtmlDrawHelper = /** @class */ (function () {
+var HtmlDrawHelper = (function () {
     function HtmlDrawHelper() {
     }
     HtmlDrawHelper.RenderAttributesString = function (attrs) {
@@ -983,8 +956,6 @@ var HtmlDrawHelper = /** @class */ (function () {
     HtmlDrawHelper.ProceesSelectValues = function (typeDescription, rawValue, selectList) {
         if (rawValue != null) {
             selectList.forEach(function (x) { return x.Selected = false; });
-            //Заплатка для выпадающего списка 
-            //TODO Вылечить это
             var item = typeDescription.TypeName == CSharpType.Boolean.toString() ?
                 selectList.find(function (x) { return x.Value.toLowerCase() == rawValue.toLowerCase(); }) :
                 selectList.find(function (x) { return x.Value == rawValue; });
@@ -997,7 +968,7 @@ var HtmlDrawHelper = /** @class */ (function () {
     return HtmlDrawHelper;
 }());
 
-var ValueProviderHelper = /** @class */ (function () {
+var ValueProviderHelper = (function () {
     function ValueProviderHelper() {
     }
     ValueProviderHelper.GetStringValueFromValueProvider = function (prop, valueProvider) {
@@ -1017,7 +988,7 @@ var ValueProviderHelper = /** @class */ (function () {
     return ValueProviderHelper;
 }());
 
-var FormTypeDataGetter = /** @class */ (function () {
+var FormTypeDataGetter = (function () {
     function FormTypeDataGetter(data) {
         if (!data.IsClass) {
             var mes = "Тип не являющийся классом не поддерживается";
@@ -1052,7 +1023,7 @@ var FormTypeDataGetter = /** @class */ (function () {
     return FormTypeDataGetter;
 }());
 
-var FormTypeDrawer = /** @class */ (function () {
+var FormTypeDrawer = (function () {
     function FormTypeDrawer(formDrawer, typeDescription) {
         this._formDrawer = formDrawer;
         this._typeDescription = typeDescription;
@@ -1099,7 +1070,7 @@ var FormTypeDrawer = /** @class */ (function () {
     return FormTypeDrawer;
 }());
 
-var TryForm = /** @class */ (function () {
+var TryForm = (function () {
     function TryForm() {
     }
     TryForm.UnWrapModel = function (model, drawer) {
@@ -1143,18 +1114,12 @@ var TryForm = /** @class */ (function () {
             TryForm.GetForm(elem);
         }
     };
-    /**
-     * Получить объект данных с первой попавшейся формы на странице
-     */
     TryForm.GetDataForFormByModelPrefix = function (modelPrefix) {
         var model = TryForm._genericInterfaces.find(function (x) { return x.Prefix == modelPrefix; });
         if (model == null) {
         }
         return TryForm.GetDataForForm(model);
     };
-    /**
-     * Получить объект данных с первой попавшейся формы на странице
-     */
     TryForm.GetDataForFirstForm = function () {
         if (TryForm._genericInterfaces.length == 0) {
             TryForm.ThrowError("На странице не объявлено ни одной формы");
@@ -1162,10 +1127,6 @@ var TryForm = /** @class */ (function () {
         var model = TryForm._genericInterfaces[0];
         return TryForm.GetDataForForm(model);
     };
-    /**
-     * Получить данные с формы приведенные к описанному типу данных
-     * @param buildModel Тип данных
-     */
     TryForm.GetDataForForm = function (buildModel) {
         var getter = new FormTypeDataGetter(buildModel.TypeDescription);
         return getter.GetData(buildModel.Prefix);

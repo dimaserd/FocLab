@@ -1,5 +1,4 @@
-///<reference path="Models/crocoTypeDescription.ts"/>
-var TSClassTypeMapper = /** @class */ (function () {
+﻿var TSClassTypeMapper = (function () {
     function TSClassTypeMapper() {
     }
     TSClassTypeMapper.GetPropertyType = function (typeDescription) {
@@ -14,7 +13,7 @@ var TSClassTypeMapper = /** @class */ (function () {
     ]);
     return TSClassTypeMapper;
 }());
-var TSClassGenerator = /** @class */ (function () {
+var TSClassGenerator = (function () {
     function TSClassGenerator() {
     }
     TSClassGenerator.GetDescription = function (typeDescription) {
@@ -92,9 +91,6 @@ var TSClassGenerator = /** @class */ (function () {
         var uniqueTypes = TSClassGenerator.RemoveDuplicates(this.GetUniqueTypes(typeDescription));
         return uniqueTypes.map(function (x) { return TSClassGenerator.GenerateClass(x); }).join("\n\n\n");
     };
-    /*
-     * TODO Неоптимизированное говно
-     */
     TSClassGenerator.RemoveDuplicates = function (array) {
         var _loop_1 = function (i) {
             var elem = array[i];

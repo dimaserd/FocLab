@@ -1,4 +1,4 @@
-declare class FormTypeDrawer {
+﻿declare class FormTypeDrawer {
     _formDrawer: IFormDraw;
     _typeDescription: CrocoTypeDescription;
     constructor(formDrawer: IFormDraw, typeDescription: CrocoTypeDescription);

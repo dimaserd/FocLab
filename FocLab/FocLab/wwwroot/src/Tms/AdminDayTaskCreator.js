@@ -1,4 +1,4 @@
-var AdminDayTaskCreator = /** @class */ (function () {
+﻿var AdminDayTaskCreator = (function () {
     function AdminDayTaskCreator(props) {
         this.AssigneeUserId = props.AssigneeUserId;
         this.TaskDate = "";

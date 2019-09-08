@@ -1,4 +1,4 @@
-var TaskUpdater = /** @class */ (function () {
+﻿var TaskUpdater = (function () {
     function TaskUpdater(taskId) {
         this.TaskId = taskId;
     }

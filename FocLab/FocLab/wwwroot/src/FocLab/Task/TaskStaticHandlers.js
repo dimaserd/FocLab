@@ -1,9 +1,6 @@
-var TaskStaticHandlers = /** @class */ (function () {
+﻿var TaskStaticHandlers = (function () {
     function TaskStaticHandlers() {
     }
-    /**
-     * Обработчик клика на кнопку обновить
-     * */
     TaskStaticHandlers.UpdateBtnClickHandler = function () {
         var data = {
             Id: TaskStaticHandlers.TaskId,

@@ -1,4 +1,4 @@
-var DayTaskEditor = /** @class */ (function () {
+﻿var DayTaskEditor = (function () {
     function DayTaskEditor() {
     }
     DayTaskEditor.UpdateHtmlProperties = function (data) {

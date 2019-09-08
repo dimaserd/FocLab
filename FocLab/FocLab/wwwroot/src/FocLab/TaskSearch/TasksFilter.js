@@ -1,4 +1,4 @@
-var TasksFilter = /** @class */ (function () {
+﻿var TasksFilter = (function () {
     function TasksFilter() {
     }
     TasksFilter.prototype.SetTasks = function (tasks) {
@@ -87,7 +87,6 @@ var TasksFilter = /** @class */ (function () {
             if (aDate < bDate) {
                 return -1;
             }
-            // a должно быть равным b
             return 0;
         });
         return result;
@@ -100,7 +99,6 @@ var TasksFilter = /** @class */ (function () {
             if (a.PerformerUser.Name < b.PerformerUser.Name) {
                 return -1;
             }
-            // a должно быть равным b
             return 0;
         });
         return result;

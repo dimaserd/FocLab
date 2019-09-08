@@ -1,4 +1,4 @@
-var CreateExperimentHandlers = /** @class */ (function () {
+﻿var CreateExperimentHandlers = (function () {
     function CreateExperimentHandlers() {
     }
     CreateExperimentHandlers.Create = function () {

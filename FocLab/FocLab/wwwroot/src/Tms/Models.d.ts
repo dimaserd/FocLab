@@ -1,4 +1,4 @@
-interface UserFullNameEmailAndAvatarModel {
+﻿interface UserFullNameEmailAndAvatarModel {
     Surname: string;
     Patronymic: string;
     Email: string;

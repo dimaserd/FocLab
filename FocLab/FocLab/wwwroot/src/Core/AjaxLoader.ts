@@ -35,7 +35,7 @@
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert(`Произошла ошибка запроса ${link}`);
+                alert(`There is an execption while executing request ${link}`);
                 console.log(xhr);
             }
         });

@@ -1,4 +1,4 @@
-var DayTasksWorker = /** @class */ (function () {
+﻿var DayTasksWorker = (function () {
     function DayTasksWorker() {
     }
     DayTasksWorker.Constructor = function (props) {
@@ -16,7 +16,6 @@ var DayTasksWorker = /** @class */ (function () {
         var taskId = this.OpenTaskId;
         var task = DayTasksWorker.Tasks.find(function (x) { return x.Id === taskId; });
         if (task != null) {
-            //открываю модал по заданию полученному из ссылки
             ScheduleStaticHandlers.ShowDayTaskModal(task.Id);
         }
     };

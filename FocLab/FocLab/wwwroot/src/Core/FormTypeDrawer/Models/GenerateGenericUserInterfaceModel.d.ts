@@ -1,4 +1,4 @@
-interface GenerateGenericUserInterfaceModel {
+﻿interface GenerateGenericUserInterfaceModel {
     Prefix: string;
     TypeDescription: CrocoTypeDescription;
     Blocks: UserInterfaceBlock[];

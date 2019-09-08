@@ -1,4 +1,4 @@
-declare class FormTypeDataGetter {
+﻿declare class FormTypeDataGetter {
     _typeDescription: CrocoTypeDescription;
     constructor(data: CrocoTypeDescription);
     private BuildObject;

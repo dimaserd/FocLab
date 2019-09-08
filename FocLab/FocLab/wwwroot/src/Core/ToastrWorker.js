@@ -1,4 +1,4 @@
-var GenericBaseApiResponse = /** @class */ (function () {
+﻿var GenericBaseApiResponse = (function () {
     function GenericBaseApiResponse(isSucceeded, message, resp) {
         this.IsSucceeded = isSucceeded;
         this.Message = message;
@@ -6,14 +6,14 @@ var GenericBaseApiResponse = /** @class */ (function () {
     }
     return GenericBaseApiResponse;
 }());
-var BaseApiResponse = /** @class */ (function () {
+var BaseApiResponse = (function () {
     function BaseApiResponse(isSucceeded, message) {
         this.IsSucceeded = isSucceeded;
         this.Message = message;
     }
     return BaseApiResponse;
 }());
-var ToastrWorker = /** @class */ (function () {
+var ToastrWorker = (function () {
     function ToastrWorker() {
     }
     ToastrWorker.ShowError = function (text) {

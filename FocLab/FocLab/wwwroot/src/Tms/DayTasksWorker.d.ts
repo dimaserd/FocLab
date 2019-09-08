@@ -1,4 +1,4 @@
-interface DayTasksWorkerProps {
+﻿interface DayTasksWorkerProps {
     Tasks: Array<DayTaskModel>;
     IsAdmin: boolean;
     User: any;

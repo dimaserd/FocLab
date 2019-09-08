@@ -1,4 +1,4 @@
-interface IFormDraw {
+﻿interface IFormDraw {
     RenderTextBox(typeDescription: CrocoTypeDescription): string;
     RenderTextArea(typeDescription: CrocoTypeDescription): string;
     RenderDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[]): string;

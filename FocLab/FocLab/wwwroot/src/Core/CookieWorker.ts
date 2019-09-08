@@ -1,6 +1,6 @@
 ﻿class CookieWorker {
     
-    static setCookie = function (name, value, days) {
+    static setCookie(name : string, value : string, days: number) : void {
         var expires = "";
         if (days) {
             const date = new Date();
@@ -10,7 +10,7 @@
         document.cookie = name + "=" + (value || "") + expires + "; path=/";
     }
 
-    static getCookie = function (name) {
+    static getCookie(name: string): string {
             const nameEq = name + "=";
             const ca = document.cookie.split(";");
             for (let i = 0; i < ca.length; i++) {
@@ -21,7 +21,7 @@
             return null;
     }
 
-    static eraseCookie = function (name) {
+    static eraseCookie(name: string) : void {
         document.cookie = name + "=; Max-Age=-99999999;";
     }
     

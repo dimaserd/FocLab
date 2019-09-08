@@ -1,6 +1,4 @@
-/// <reference path="../../../node_modules/@types/bootstrap/index.d.ts"/>
-/// <reference path="../../../node_modules/@types/bootstrap-datepicker/index.d.ts"/>
-var Utils = /** @class */ (function () {
+﻿var Utils = (function () {
     function Utils() {
     }
     Utils.GetDateFromDateRangePicker = function (inputId) {

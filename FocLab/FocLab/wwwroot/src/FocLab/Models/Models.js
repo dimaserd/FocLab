@@ -1,4 +1,4 @@
-var ChemistryTaskDbFileType;
+﻿var ChemistryTaskDbFileType;
 (function (ChemistryTaskDbFileType) {
     ChemistryTaskDbFileType[ChemistryTaskDbFileType["ReactionSchemaImage"] = 'ReactionSchemaImage'] = "ReactionSchemaImage";
     ChemistryTaskDbFileType[ChemistryTaskDbFileType["File1"] = 'File1'] = "File1";

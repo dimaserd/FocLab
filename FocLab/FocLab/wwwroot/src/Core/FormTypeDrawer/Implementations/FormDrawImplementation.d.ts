@@ -1,4 +1,4 @@
-declare class FormDrawImplementation implements IFormDraw {
+﻿declare class FormDrawImplementation implements IFormDraw {
     constructor(model: GenerateGenericUserInterfaceModel);
     _model: GenerateGenericUserInterfaceModel;
     _datePickerPropNames: Array<string>;

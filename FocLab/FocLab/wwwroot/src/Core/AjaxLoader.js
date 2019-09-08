@@ -1,4 +1,4 @@
-var AjaxLoader = /** @class */ (function () {
+﻿var AjaxLoader = (function () {
     function AjaxLoader() {
     }
     AjaxLoader.InitAjaxLoads = function () {
@@ -31,7 +31,7 @@ var AjaxLoader = /** @class */ (function () {
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert("\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u0437\u0430\u043F\u0440\u043E\u0441\u0430 " + link);
+                alert("There is an execption while executing request " + link);
                 console.log(xhr);
             }
         });

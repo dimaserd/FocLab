@@ -1,4 +1,4 @@
-interface GenericUserInterfaceValueProvider {
+﻿interface GenericUserInterfaceValueProvider {
     Singles: Array<GenericUserInterfacePropertySingleValue>;
     Arrays: Array<GenericUserInterfacePropertyListValue>;
 }

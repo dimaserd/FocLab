@@ -1,14 +1,9 @@
-var FormDataHelper = /** @class */ (function () {
+﻿var FormDataHelper = (function () {
     function FormDataHelper() {
     }
     FormDataHelper.FillData = function (object) {
         FormDataHelper.FillDataByPrefix(object, "");
     };
-    /**
-     * Собрать данные для свойств объекта с Html страницы
-     * @param object   объект, свойства которого нужно заполнить
-     * @param prefix   префикс стоящий перед свойствами объекта
-     */
     FormDataHelper.FillDataByPrefix = function (object, prefix) {
         for (var index in object) {
             var name_1 = prefix + index;
@@ -42,7 +37,6 @@ var FormDataHelper = /** @class */ (function () {
             else {
                 element.value = object[index];
             }
-            //Выбрасываю событие об изменении значения
             var event_2 = new Event("change");
             element.dispatchEvent(event_2);
         }
@@ -50,18 +44,13 @@ var FormDataHelper = /** @class */ (function () {
     FormDataHelper.CollectData = function (object) {
         return FormDataHelper.CollectDataByPrefix(object, "");
     };
-    /**
-     *   Собрать данные с формы по префиксу
-     * @param object  объект, свойства которого нужно собрать с формы
-     * @param prefix  префикс для свойств объекта
-     */
     FormDataHelper.CollectDataByPrefix = function (object, prefix) {
         for (var index in object) {
             if (object.hasOwnProperty(index)) {
                 var name_2 = prefix + index;
                 var element = document.getElementsByName(name_2)[0];
                 if (element == null) {
-                    alert("\u042D\u043B\u0435\u043C\u0435\u043D\u0442 \u0441 \u0438\u043C\u0435\u043D\u0435\u043C " + name_2 + " \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043A\u043E\u0434");
+                    alert("Element with name " + name_2 + " not found check the source code");
                     continue;
                 }
                 if (element.type === "select-multiple") {
@@ -76,7 +65,6 @@ var FormDataHelper = /** @class */ (function () {
                         (object[index] = document.querySelector("input[name=\"" + name_2 + "\"]:checked")).value;
                     continue;
                 }
-                //Чекбоксы нужно проверять отдельно потому что у них свойство не value а почему-то checked
                 object[index] = element.type === "checkbox" ? element.checked : element.value;
             }
         }

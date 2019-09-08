@@ -1,4 +1,4 @@
-interface UpdateExperiment {
+﻿interface UpdateExperiment {
     Id: string;
     Title: string;
     PerformerText: string;

@@ -1,4 +1,4 @@
-var ExperimentPageHandlers = /** @class */ (function () {
+﻿var ExperimentPageHandlers = (function () {
     function ExperimentPageHandlers() {
     }
     ExperimentPageHandlers.UpdateFileByType = function (fileType) {

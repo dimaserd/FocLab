@@ -1,4 +1,4 @@
-var TaskModalWorker = /** @class */ (function () {
+﻿var TaskModalWorker = (function () {
     function TaskModalWorker() {
     }
     TaskModalWorker.ShowDayTaskModal = function (task) {

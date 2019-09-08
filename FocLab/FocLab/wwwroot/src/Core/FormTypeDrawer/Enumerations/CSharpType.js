@@ -1,4 +1,4 @@
-var CSharpType;
+﻿var CSharpType;
 (function (CSharpType) {
     CSharpType[CSharpType["String"] = "String"] = "String";
     CSharpType[CSharpType["Int"] = "Int32"] = "Int";

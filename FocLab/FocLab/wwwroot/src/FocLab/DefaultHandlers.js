@@ -1,4 +1,4 @@
-var DefaultHandlers = /** @class */ (function () {
+﻿var DefaultHandlers = (function () {
     function DefaultHandlers() {
     }
     DefaultHandlers.IfSuccessReloadPageAfter1500MSecs = function (x) {

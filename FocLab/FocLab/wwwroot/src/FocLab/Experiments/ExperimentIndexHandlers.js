@@ -1,4 +1,4 @@
-var ExperimentIndexHandlers = /** @class */ (function () {
+﻿var ExperimentIndexHandlers = (function () {
     function ExperimentIndexHandlers() {
     }
     ExperimentIndexHandlers.PerformExperiment = function (id, flag) {

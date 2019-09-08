@@ -1,4 +1,4 @@
-var DefaultHandlers = /** @class */ (function () {
+var DefaultHandlers = (function () {
     function DefaultHandlers() {
     }
     DefaultHandlers.IfSuccessReloadPageAfter1500MSecs = function (x) {
@@ -11,7 +11,7 @@ var DefaultHandlers = /** @class */ (function () {
     return DefaultHandlers;
 }());
 
-var EventSetter = /** @class */ (function () {
+var EventSetter = (function () {
     function EventSetter() {
     }
     EventSetter.SetHandlerForClass = function (className, eventName, handlerFunction) {
@@ -21,7 +21,7 @@ var EventSetter = /** @class */ (function () {
     return EventSetter;
 }());
 
-var GenericUtil = /** @class */ (function () {
+var GenericUtil = (function () {
     function GenericUtil() {
     }
     GenericUtil.GenericUpdateFileByType = function (fileType, link, preData) {

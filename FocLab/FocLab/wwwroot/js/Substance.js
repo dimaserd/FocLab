@@ -1,8 +1,7 @@
-var SubstanceCounter = /** @class */ (function () {
+var SubstanceCounter = (function () {
     function SubstanceCounter(substanceObj) {
         console.log("SubstanceCounter.constructor", substanceObj);
         this.prefix = "";
-        //this.setProperties();
         this.Substances = [];
         if (substanceObj != null && substanceObj != undefined) {
             this.Etalon = substanceObj.Etalon;
@@ -84,7 +83,7 @@ var SubstanceCounter = /** @class */ (function () {
     return SubstanceCounter;
 }());
 
-var SubstanceEventSetter = /** @class */ (function () {
+var SubstanceEventSetter = (function () {
     function SubstanceEventSetter() {
     }
     SubstanceEventSetter.InitHandlers = function () {
@@ -137,7 +136,7 @@ var SubstanceEventSetter = /** @class */ (function () {
 }());
 
 
-var SubstanceStaticHandlers = /** @class */ (function () {
+var SubstanceStaticHandlers = (function () {
     function SubstanceStaticHandlers() {
     }
     SubstanceStaticHandlers.RemoveSubstanceHandler = function (count) {
@@ -147,10 +146,6 @@ var SubstanceStaticHandlers = /** @class */ (function () {
         console.log("RemoveSubstanceHandler AfterRemove", SubstanceStaticHandlers.substance);
         SubstanceStaticHandlers.substance.ClearTable();
         SubstanceStaticHandlers.substance.DrawTable();
-        //setTimeout(function () {
-        //    console.log("RemoveSubstanceHandler", SubstanceStaticHandlers.substance);
-        //    TaskStaticHandlers.UpdateBtnClickHandler();
-        //}, 200);
     };
     SubstanceStaticHandlers.EtalonChangedHandler = function (prefix) {
         if (prefix == "") {

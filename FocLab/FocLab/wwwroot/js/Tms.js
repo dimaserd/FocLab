@@ -1,4 +1,4 @@
-var AdminDayTaskCreator = /** @class */ (function () {
+var AdminDayTaskCreator = (function () {
     function AdminDayTaskCreator(props) {
         this.AssigneeUserId = props.AssigneeUserId;
         this.TaskDate = "";
@@ -31,7 +31,7 @@ var AdminDayTaskCreator = /** @class */ (function () {
     return AdminDayTaskCreator;
 }());
 
-var ColorAvatarInitor = /** @class */ (function () {
+var ColorAvatarInitor = (function () {
     function ColorAvatarInitor() {
     }
     ColorAvatarInitor._avatarsStorage = [];
@@ -50,11 +50,9 @@ var ColorAvatarInitor = /** @class */ (function () {
         "#6c757d"
     ];
     ColorAvatarInitor.InitColorForAvatar = function (task) {
-        /*Проверяю есть ли аватар у клиента*/
         if (task.AssigneeUser.AvatarFileId === null) {
             var idFound_1 = false;
             var color_1 = "";
-            /*Если нет - проверяю, объявлен ли для него цвет*/
             ColorAvatarInitor._avatarsStorage.forEach(function (x) {
                 if (x.id == task.AssigneeUser.Id) {
                     idFound_1 = true;
@@ -65,7 +63,6 @@ var ColorAvatarInitor = /** @class */ (function () {
                 return "<span class='avatar-circle' style='background-color:" + color_1 + "'></span>";
             }
             else {
-                /*Добавляю следующий цвет пользователю*/
                 var count = ColorAvatarInitor._avatarsStorage.length % ColorAvatarInitor._colors.length;
                 ColorAvatarInitor._avatarsStorage.push({ 'id': task.AssigneeUser.Id, 'color': ColorAvatarInitor._colors[count + 1] });
                 return "<span class='avatar-circle' style='background-color:" + ColorAvatarInitor._colors[count + 1] + "'></span>";
@@ -78,7 +75,7 @@ var ColorAvatarInitor = /** @class */ (function () {
     return ColorAvatarInitor;
 }());
 
-var DayTaskDrawer = /** @class */ (function () {
+var DayTaskDrawer = (function () {
     function DayTaskDrawer() {
     }
     DayTaskDrawer.prototype.DrawTasks = function (tasks, isAdmin) {
@@ -107,7 +104,6 @@ var DayTaskDrawer = /** @class */ (function () {
         toAdd.innerHTML = "<a class=\"btn float-right pl-2 pr-2 mb-1 rounded text-truncate bg-success text-white d-none d-lg-inline tms-btn-create-task\">\n                        <i class=\"fas fa-plus-circle fa-fw\" style=\"font-size: 0.8rem;\"></i> \u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0437\u0430\u0434\u0430\u043D\u0438\u0435\n                    </a>\n                    <a class=\"btn float-right pl-2 pr-2 mb-1 rounded text-truncate bg-success text-white  d-inline d-lg-none tms-btn-create-task\">\n                        <i class=\"fas fa-plus-circle fa-fw\" style=\"font-size: 0.8rem;\"></i> \u0421\u043E\u0437\u0434\u0430\u0442\u044C\n                    </a>";
         elem.appendChild(toAdd);
     };
-    //Удаляет все нарисованные задания на календаре
     DayTaskDrawer.prototype.ClearTasks = function () {
         var paras = document.getElementsByClassName("event");
         while (paras[0]) {
@@ -117,7 +113,7 @@ var DayTaskDrawer = /** @class */ (function () {
     return DayTaskDrawer;
 }());
 
-var DayTaskEditor = /** @class */ (function () {
+var DayTaskEditor = (function () {
     function DayTaskEditor() {
     }
     DayTaskEditor.UpdateHtmlProperties = function (data) {
@@ -131,7 +127,7 @@ var DayTaskEditor = /** @class */ (function () {
     return DayTaskEditor;
 }());
 
-var DayTasksWorker = /** @class */ (function () {
+var DayTasksWorker = (function () {
     function DayTasksWorker() {
     }
     DayTasksWorker.Constructor = function (props) {
@@ -149,7 +145,6 @@ var DayTasksWorker = /** @class */ (function () {
         var taskId = this.OpenTaskId;
         var task = DayTasksWorker.Tasks.find(function (x) { return x.Id === taskId; });
         if (task != null) {
-            //открываю модал по заданию полученному из ссылки
             ScheduleStaticHandlers.ShowDayTaskModal(task.Id);
         }
     };
@@ -176,16 +171,13 @@ var DayTasksWorker = /** @class */ (function () {
 }());
 
 
-var ScheduleConsts = /** @class */ (function () {
+var ScheduleConsts = (function () {
     function ScheduleConsts() {
     }
-    /**
-     * Префикс для собирания модели фильтра
-     */
     ScheduleConsts.FilterPrefix = "filter.";
     return ScheduleConsts;
 }());
-var ScheduleStaticHandlers = /** @class */ (function () {
+var ScheduleStaticHandlers = (function () {
     function ScheduleStaticHandlers() {
     }
     ScheduleStaticHandlers.SetHandlers = function () {
@@ -225,8 +217,6 @@ var ScheduleStaticHandlers = /** @class */ (function () {
     };
     ScheduleStaticHandlers.OnUsersSelectChanged = function () {
         ScheduleStaticHandlers._countOfChanges++;
-        // Так как в первый раз метод будет задействован, при установке данных FormDataHelper
-        //страница не должна перезагрузится, а только на следующие разы когда жто изменит пользователь
         if (ScheduleStaticHandlers._countOfChanges > 1) {
             ScheduleStaticHandlers.ShowUserSchedule();
         }
@@ -338,7 +328,7 @@ var ScheduleStaticHandlers = /** @class */ (function () {
 }());
 ScheduleStaticHandlers.SetHandlers();
 
-var ScheduleWorker = /** @class */ (function () {
+var ScheduleWorker = (function () {
     function ScheduleWorker() {
     }
     ScheduleWorker.Constructor = function (filter) {
@@ -405,7 +395,7 @@ var ScheduleWorker = /** @class */ (function () {
     return ScheduleWorker;
 }());
 
-var TaskModalWorker = /** @class */ (function () {
+var TaskModalWorker = (function () {
     function TaskModalWorker() {
     }
     TaskModalWorker.ShowDayTaskModal = function (task) {
