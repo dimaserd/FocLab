@@ -66,6 +66,24 @@ var ScheduleStaticHandlers = (function () {
             TaskText: "",
             TaskTitle: ""
         };
+        $("#usersSelect2").select2({
+            placeholder: ScheduleWorker.Resources.SelectUser,
+            language: {
+                "noResults": function () {
+                    return ScheduleWorker.Resources.UserNotFound;
+                }
+            },
+            data: ScheduleWorker.Users.map(function (t) { return ({
+                id: t.Id,
+                text: t.Email,
+                avatarId: t.AvatarFileId
+            }); }),
+            templateSelection: ScheduleWorker.formatStateSelection,
+            templateResult: ScheduleWorker.formatStateResult,
+            escapeMarkup: function (markup) {
+                return markup;
+            }
+        });
         FormDataHelper.FillDataByPrefix(data, "create.");
         Utils.SetDatePicker("input[name='create.TaskDate']", '0');
         ModalWorker.ShowModal("createDayTaskModal");

@@ -10,13 +10,12 @@ class ScheduleWorker_Resx {
 class ScheduleWorker {
 
     static filter: ScheduleWorkerFilter
-    static Users: Array<any>;
+    static Users: Array<any> = [];
     static Resources: ScheduleWorker_Resx = new ScheduleWorker_Resx();
 
     static Constructor(filter: ScheduleWorkerFilter) {
         ScheduleWorker.filter = filter;
         ScheduleWorker.SetUsersSelect();
-        ScheduleWorker.Users = [];
     }
 
     static formatStateSelection(state) {
@@ -66,7 +65,7 @@ class ScheduleWorker {
         Requester.SendAjaxPost("/Api/User/Get", { Count: null, OffSet: 0 },
             x => {
                 
-                ScheduleWorker.Users = x.List;
+                ScheduleWorker.Users = x.List as Array<ApplicationUserModel>;
 
                 $("#usersSelect").select2({
                     placeholder: ScheduleWorker.Resources.SelectUser,

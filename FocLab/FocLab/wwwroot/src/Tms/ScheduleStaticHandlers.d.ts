@@ -1,4 +1,9 @@
-﻿interface UpdateDayTaskComment {
+﻿interface ApplicationUserModel {
+    Id: string;
+    Email: string;
+    AvatarFileId: number;
+}
+interface UpdateDayTaskComment {
     DayTaskCommentId: string;
     Comment: string;
 }

@@ -1,3 +1,9 @@
+interface ApplicationUserModel {
+    Id: string;
+    Email: string;
+    AvatarFileId: number;
+}
+
 interface UpdateDayTaskComment {
     DayTaskCommentId: string;
     Comment: string;
@@ -134,6 +140,29 @@ class ScheduleStaticHandlers {
             TaskText: "",
             TaskTitle: ""
         };
+
+        $("#usersSelect2").select2({
+            placeholder: ScheduleWorker.Resources.SelectUser,
+
+            language: {
+                "noResults": function () {
+                    return ScheduleWorker.Resources.UserNotFound;
+                }
+            },
+
+            data: ScheduleWorker.Users.map(t => ({
+                id: t.Id,
+                text: t.Email,
+                avatarId: t.AvatarFileId
+            })),
+
+            templateSelection: ScheduleWorker.formatStateSelection,
+            templateResult: ScheduleWorker.formatStateResult,
+
+            escapeMarkup: function (markup) {
+                return markup;
+            }
+        });
 
         FormDataHelper.FillDataByPrefix(data, "create.");
 

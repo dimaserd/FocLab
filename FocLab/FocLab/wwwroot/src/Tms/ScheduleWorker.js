@@ -11,7 +11,6 @@ var ScheduleWorker = (function () {
     ScheduleWorker.Constructor = function (filter) {
         ScheduleWorker.filter = filter;
         ScheduleWorker.SetUsersSelect();
-        ScheduleWorker.Users = [];
     };
     ScheduleWorker.formatStateSelection = function (state) {
         if (!state.id) {
@@ -69,6 +68,7 @@ var ScheduleWorker = (function () {
             $('.select2-selection__rendered img').addClass('m--img-rounded m--marginless m--img-centered');
         }, null, false);
     };
+    ScheduleWorker.Users = [];
     ScheduleWorker.Resources = new ScheduleWorker_Resx();
     return ScheduleWorker;
 }());
