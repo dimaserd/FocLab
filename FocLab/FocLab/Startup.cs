@@ -33,7 +33,7 @@ namespace FocLab
 
             var user = httpContext.User;
 
-            // Allow all authenticated users to see the Dashboard (potentially dangerous).
+            //Разрешаем всем пользователям с данными правами доступ к дашборду
             return user.HasRight(UserRight.Developer) || user.IsAdmin();
         }
     }
