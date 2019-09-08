@@ -144,14 +144,8 @@ namespace FocLab
             }
 
             app.ConfigureExceptionHandler(new ApplicationLoggerManager());
-            app.UseHangfireServer();
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions
-            {
-                Authorization = new IDashboardAuthorizationFilter[]
-                {
-                    new MyDashboardAuthorizationFilter()
-                }
-            });
+            
+            
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -168,6 +162,16 @@ namespace FocLab
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new IDashboardAuthorizationFilter[]
+                {
+                    new MyDashboardAuthorizationFilter()
+                }
+            });
+
+            app.UseHangfireServer();
 
             app.UseMvc(routes =>
             {
