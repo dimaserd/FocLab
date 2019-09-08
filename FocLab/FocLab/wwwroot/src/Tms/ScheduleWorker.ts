@@ -1,11 +1,17 @@
-﻿interface ScheduleWorkerFilter {
+interface ScheduleWorkerFilter {
     UserIds: Array<string>
+}
+
+class ScheduleWorker_Resx {
+    SelectUser: string = "Выберите пользователя";
+    UserNotFound: string = "Пользователь не найден.";
 }
 
 class ScheduleWorker {
 
     static filter: ScheduleWorkerFilter
     static Users: Array<any>;
+    static Resources: ScheduleWorker_Resx = new ScheduleWorker_Resx();
 
     static Constructor(filter: ScheduleWorkerFilter) {
         ScheduleWorker.filter = filter;
@@ -63,11 +69,11 @@ class ScheduleWorker {
                 ScheduleWorker.Users = x.List;
 
                 $("#usersSelect").select2({
-                    placeholder: "Выберите пользователя",
+                    placeholder: ScheduleWorker.Resources.SelectUser,
 
                     language: {
                         "noResults": function () {
-                            return "Пользователь не найден.";
+                            return ScheduleWorker.Resources.UserNotFound;
                         }
                     },
 

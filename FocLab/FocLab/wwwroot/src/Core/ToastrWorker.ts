@@ -1,4 +1,4 @@
-﻿declare var toastr: any;
+declare var toastr: any;
 
 class GenericBaseApiResponse<T> {
 
@@ -31,7 +31,7 @@ class BaseApiResponse {
 class ToastrWorker {
     
 
-    public static ShowError = function (text: string) : void {
+    public static ShowError(text: string) : void {
         const data = {
             IsSucceeded: false,
             Message: text
@@ -41,7 +41,7 @@ class ToastrWorker {
     }
 
 
-    public static ShowSuccess = function (text : string) : void {
+    public static ShowSuccess(text : string) : void {
         const data = {
             IsSucceeded: true,
             Message: text
@@ -50,7 +50,7 @@ class ToastrWorker {
         ToastrWorker.HandleBaseApiResponse(data);
     }
 
-    public static HandleBaseApiResponse = function (data: BaseApiResponse): void {
+    public static HandleBaseApiResponse(data: BaseApiResponse): void {
 
         console.log("HandleBaseApiResponse", data);
 

@@ -256,7 +256,7 @@ var FormDataHelper = (function () {
             }
             if (Array.isArray(object[index])) {
                 if (element.type !== "select-multiple") {
-                    alert("Попытка присвоить массив элементу ввода который не является select с атрибутом multiple");
+                    alert("An attempt to set an array to HTMLInputElement which is not a select with multiple attribute");
                 }
                 var select = element;
                 var _loop_1 = function (i) {
@@ -316,12 +316,19 @@ var FormDataHelper = (function () {
     return FormDataHelper;
 }());
 
+var Logger_Resx = (function () {
+    function Logger_Resx() {
+        this.LoggingAttempFailed = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
+        this.ErrorOnApiRequest = "Ошибка запроса к апи";
+        this.ActionLogged = "Action logged";
+        this.ExceptionLogged = "Исключение залоггировано";
+        this.ErrorOccuredOnLoggingException = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
+    }
+    return Logger_Resx;
+}());
 var Logger = (function () {
     function Logger() {
     }
-    Logger.SetResources = function () {
-        Logger.Resourcses = new Logger_Resx();
-    };
     Logger.LogException = function (exception, link) {
         $.ajax({
             type: "POST",
@@ -365,18 +372,8 @@ var Logger = (function () {
             }
         });
     };
+    Logger.Resourcses = new Logger_Resx();
     return Logger;
-}());
-Logger.SetResources();
-var Logger_Resx = (function () {
-    function Logger_Resx() {
-        this.LoggingAttempFailed = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
-        this.ErrorOnApiRequest = "Ошибка запроса к апи";
-        this.ActionLogged = "Action logged";
-        this.ExceptionLogged = "Исключение залоггировано";
-        this.ErrorOccuredOnLoggingException = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
-    }
-    return Logger_Resx;
 }());
 
 var ModalWorker = (function () {
@@ -414,12 +411,17 @@ var ModalWorker = (function () {
     return ModalWorker;
 }());
 
+var Requester_Resx = (function () {
+    function Requester_Resx() {
+        this.YouPassedAnEmtpyArrayOfObjects = "Вы подали пустой объект в запрос";
+        this.ErrorOccuredWeKnowAboutIt = "Произошла ошибка! Мы уже знаем о ней, и скоро с ней разберемся!";
+        this.FilesNotSelected = "Файлы не выбраны";
+    }
+    return Requester_Resx;
+}());
 var Requester = (function () {
     function Requester() {
     }
-    Requester.SetResources = function () {
-        Requester.Resources = new Requester_Resx();
-    };
     Requester.ParseDate = function (date) {
         date = date.replace(new RegExp("/", 'g'), ".");
         var from = date.split(".");
@@ -570,6 +572,7 @@ var Requester = (function () {
         Requester.GoingRequests.push(link);
         $.ajax(params);
     };
+    Requester.Resources = new Requester_Resx();
     Requester.GoingRequests = new Array();
     Requester.DeleteCompletedRequest = function (link) {
         Requester.GoingRequests = Requester.GoingRequests.filter(function (x) { return x !== link; });
@@ -579,14 +582,6 @@ var Requester = (function () {
         return $.param(obj, true);
     };
     return Requester;
-}());
-var Requester_Resx = (function () {
-    function Requester_Resx() {
-        this.YouPassedAnEmtpyArrayOfObjects = "Вы подали пустой объект в запрос";
-        this.ErrorOccuredWeKnowAboutIt = "Произошла ошибка! Мы уже знаем о ней, и скоро с ней разберемся!";
-        this.FilesNotSelected = "Файлы не выбраны";
-    }
-    return Requester_Resx;
 }());
 
 var GenericBaseApiResponse = (function () {
@@ -685,7 +680,7 @@ var Utils = (function () {
             if (dates[1] != undefined)
                 data.Max = dates[1];
             console.log(data, dates[0], dates[1]);
-            return (data);
+            return data;
         }
         else {
             return null;

@@ -1,4 +1,4 @@
-﻿class ColorAvatarInitor {
+class ColorAvatarInitor {
 
     private static _avatarsStorage: { 'id': string, 'color': string }[] = [];
 

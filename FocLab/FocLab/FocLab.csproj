@@ -96,11 +96,7 @@
     <None Include="wwwroot\src\Core\Requester.d.ts" />
     <None Include="wwwroot\src\Core\Requester.js" />
     <None Include="wwwroot\src\Core\Requester.ts" />
-    <None Include="wwwroot\src\Core\ToastrWorker.d.ts" />
-    <None Include="wwwroot\src\Core\ToastrWorker.js" />
     <None Include="wwwroot\src\Core\ToastrWorker.ts" />
-    <None Include="wwwroot\src\Core\Utils.d.ts" />
-    <None Include="wwwroot\src\Core\Utils.js" />
     <None Include="wwwroot\src\Core\Utils.ts" />
   </ItemGroup>
 

@@ -1,4 +1,11 @@
-﻿var ScheduleWorker = (function () {
+﻿var ScheduleWorker_Resx = (function () {
+    function ScheduleWorker_Resx() {
+        this.SelectUser = "Выберите пользователя";
+        this.UserNotFound = "Пользователь не найден.";
+    }
+    return ScheduleWorker_Resx;
+}());
+var ScheduleWorker = (function () {
     function ScheduleWorker() {
     }
     ScheduleWorker.Constructor = function (filter) {
@@ -38,10 +45,10 @@
         Requester.SendAjaxPost("/Api/User/Get", { Count: null, OffSet: 0 }, function (x) {
             ScheduleWorker.Users = x.List;
             $("#usersSelect").select2({
-                placeholder: "Выберите пользователя",
+                placeholder: ScheduleWorker.Resources.SelectUser,
                 language: {
                     "noResults": function () {
-                        return "Пользователь не найден.";
+                        return ScheduleWorker.Resources.UserNotFound;
                     }
                 },
                 data: x.List.map(function (t) { return ({
@@ -62,5 +69,6 @@
             $('.select2-selection__rendered img').addClass('m--img-rounded m--marginless m--img-centered');
         }, null, false);
     };
+    ScheduleWorker.Resources = new ScheduleWorker_Resx();
     return ScheduleWorker;
 }());

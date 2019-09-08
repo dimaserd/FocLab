@@ -1,10 +1,18 @@
-﻿class Logger {
+﻿class Logger_Resx {
+    LoggingAttempFailed: string = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
 
-    static Resourcses: Logger_Resx;
+    ErrorOnApiRequest: string = "Ошибка запроса к апи";
 
-    public static SetResources() {
-        Logger.Resourcses = new Logger_Resx();
-    }
+    ActionLogged: string = "Action logged";
+
+    ExceptionLogged: string = "Исключение залоггировано";
+
+    ErrorOccuredOnLoggingException: string = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
+}
+
+class Logger {
+
+    static Resourcses: Logger_Resx = new Logger_Resx();
 
     public static LogException(exception: JQuery.Ajax.ErrorTextStatus, link: string) : void {
             $.ajax({
@@ -57,17 +65,4 @@
     }
 }
 
-//Устанавливаем ресурсы
-Logger.SetResources();
 
-class Logger_Resx {
-    LoggingAttempFailed: string = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
-
-    ErrorOnApiRequest: string = "Ошибка запроса к апи";
-
-    ActionLogged: string = "Action logged";
-
-    ExceptionLogged: string = "Исключение залоггировано";
-
-    ErrorOccuredOnLoggingException: string = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
-}

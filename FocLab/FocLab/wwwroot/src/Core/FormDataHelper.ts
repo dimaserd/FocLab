@@ -1,4 +1,4 @@
-﻿class FormDataHelper {
+class FormDataHelper {
     static FillData(object: Object) : void {
         FormDataHelper.FillDataByPrefix(object, "");
     }

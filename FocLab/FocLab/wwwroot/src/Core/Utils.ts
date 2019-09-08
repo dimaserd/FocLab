@@ -1,4 +1,4 @@
-﻿interface Select2Option {
+interface Select2Option {
     id: string;
     text: string;
 }
@@ -107,7 +107,7 @@ class Utils {
             if (dates[1] != undefined)
                 data.Max = dates[1];
             console.log(data, dates[0], dates[1]);
-            return (data);
+            return data;
         } else {
             return null;
         }

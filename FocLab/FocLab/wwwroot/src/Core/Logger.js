@@ -1,9 +1,16 @@
-﻿var Logger = (function () {
+﻿var Logger_Resx = (function () {
+    function Logger_Resx() {
+        this.LoggingAttempFailed = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
+        this.ErrorOnApiRequest = "Ошибка запроса к апи";
+        this.ActionLogged = "Action logged";
+        this.ExceptionLogged = "Исключение залоггировано";
+        this.ErrorOccuredOnLoggingException = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
+    }
+    return Logger_Resx;
+}());
+var Logger = (function () {
     function Logger() {
     }
-    Logger.SetResources = function () {
-        Logger.Resourcses = new Logger_Resx();
-    };
     Logger.LogException = function (exception, link) {
         $.ajax({
             type: "POST",
@@ -47,16 +54,6 @@
             }
         });
     };
+    Logger.Resourcses = new Logger_Resx();
     return Logger;
-}());
-Logger.SetResources();
-var Logger_Resx = (function () {
-    function Logger_Resx() {
-        this.LoggingAttempFailed = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
-        this.ErrorOnApiRequest = "Ошибка запроса к апи";
-        this.ActionLogged = "Action logged";
-        this.ExceptionLogged = "Исключение залоггировано";
-        this.ErrorOccuredOnLoggingException = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
-    }
-    return Logger_Resx;
 }());

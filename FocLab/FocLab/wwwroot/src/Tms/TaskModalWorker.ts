@@ -1,4 +1,4 @@
-﻿class TaskModalWorker {
+class TaskModalWorker {
 
     public static ShowDayTaskModal(task: DayTaskModel) {
         TaskModalWorker.InitTask(task);

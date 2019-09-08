@@ -13,7 +13,7 @@
             }
             if (Array.isArray(object[index])) {
                 if (element.type !== "select-multiple") {
-                    alert("Попытка присвоить массив элементу ввода который не является select с атрибутом multiple");
+                    alert("An attempt to set an array to HTMLInputElement which is not a select with multiple attribute");
                 }
                 var select = element;
                 var _loop_1 = function (i) {

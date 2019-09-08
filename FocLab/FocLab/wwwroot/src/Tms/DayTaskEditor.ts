@@ -1,4 +1,4 @@
-﻿class DayTaskEditor {
+class DayTaskEditor {
     static UpdateHtmlProperties(data) {
 
         ModalWorker.ShowModal("loadingModal");

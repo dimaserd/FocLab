@@ -1,4 +1,4 @@
-﻿interface UpdateDayTaskComment {
+interface UpdateDayTaskComment {
     DayTaskCommentId: string;
     Comment: string;
 }

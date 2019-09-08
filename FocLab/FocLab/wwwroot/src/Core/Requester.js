@@ -1,9 +1,14 @@
-﻿var Requester = (function () {
+﻿var Requester_Resx = (function () {
+    function Requester_Resx() {
+        this.YouPassedAnEmtpyArrayOfObjects = "Вы подали пустой объект в запрос";
+        this.ErrorOccuredWeKnowAboutIt = "Произошла ошибка! Мы уже знаем о ней, и скоро с ней разберемся!";
+        this.FilesNotSelected = "Файлы не выбраны";
+    }
+    return Requester_Resx;
+}());
+var Requester = (function () {
     function Requester() {
     }
-    Requester.SetResources = function () {
-        Requester.Resources = new Requester_Resx();
-    };
     Requester.ParseDate = function (date) {
         date = date.replace(new RegExp("/", 'g'), ".");
         var from = date.split(".");
@@ -154,6 +159,7 @@
         Requester.GoingRequests.push(link);
         $.ajax(params);
     };
+    Requester.Resources = new Requester_Resx();
     Requester.GoingRequests = new Array();
     Requester.DeleteCompletedRequest = function (link) {
         Requester.GoingRequests = Requester.GoingRequests.filter(function (x) { return x !== link; });
@@ -163,12 +169,4 @@
         return $.param(obj, true);
     };
     return Requester;
-}());
-var Requester_Resx = (function () {
-    function Requester_Resx() {
-        this.YouPassedAnEmtpyArrayOfObjects = "Вы подали пустой объект в запрос";
-        this.ErrorOccuredWeKnowAboutIt = "Произошла ошибка! Мы уже знаем о ней, и скоро с ней разберемся!";
-        this.FilesNotSelected = "Файлы не выбраны";
-    }
-    return Requester_Resx;
 }());

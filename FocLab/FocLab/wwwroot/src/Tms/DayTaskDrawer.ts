@@ -1,4 +1,3 @@
-﻿
 declare var moment: Function;
 
 class DayTaskDrawer {

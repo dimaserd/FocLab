@@ -1,10 +1,12 @@
-﻿class Requester {
+class Requester_Resx {
+    YouPassedAnEmtpyArrayOfObjects: string = "Вы подали пустой объект в запрос";
+    ErrorOccuredWeKnowAboutIt: string = "Произошла ошибка! Мы уже знаем о ней, и скоро с ней разберемся!";
+    FilesNotSelected: string = "Файлы не выбраны";
+}
 
-    static Resources: Requester_Resx;
+class Requester {
 
-    static SetResources(): void {
-        Requester.Resources = new Requester_Resx();
-    }
+    static Resources: Requester_Resx = new Requester_Resx();
 
     static GoingRequests = new Array<string>();
 
@@ -238,10 +240,4 @@
         $.ajax(params);
     }
 
-}
-
-class Requester_Resx {
-    YouPassedAnEmtpyArrayOfObjects: string = "Вы подали пустой объект в запрос";
-    ErrorOccuredWeKnowAboutIt: string = "Произошла ошибка! Мы уже знаем о ней, и скоро с ней разберемся!";
-    FilesNotSelected: string = "Файлы не выбраны";
 }

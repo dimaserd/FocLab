@@ -1,4 +1,4 @@
-﻿interface AdminDayTaskCreatorProps {
+interface AdminDayTaskCreatorProps {
     AssigneeUserId: string;
 }
 

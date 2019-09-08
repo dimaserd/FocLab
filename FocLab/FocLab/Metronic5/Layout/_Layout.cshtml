@@ -151,8 +151,14 @@
     <script src="/Metronic5.5/assets/demo/default/custom/crud/forms/widgets/bootstrap-select.js" type="text/javascript"></script>
 
     <script src="~/js/Core.min.js"></script>
+
+
+
     <script>
-        AccountWorker.User = @Html.GetJson(user);
+        document.addEventListener("DOMContentLoaded", function () {
+            AccountWorker.User = @Html.GetJson(user);
+        })
+        
     </script>
     <script src="~/js/FocLabCore.min.js"></script>
 

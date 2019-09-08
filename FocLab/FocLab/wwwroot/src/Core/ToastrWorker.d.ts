@@ -11,7 +11,7 @@ declare class BaseApiResponse {
     Message: string;
 }
 declare class ToastrWorker {
-    static ShowError: (text: string) => void;
-    static ShowSuccess: (text: string) => void;
-    static HandleBaseApiResponse: (data: BaseApiResponse) => void;
+    static ShowError(text: string): void;
+    static ShowSuccess(text: string): void;
+    static HandleBaseApiResponse(data: BaseApiResponse): void;
 }
