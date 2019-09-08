@@ -1,4 +1,7 @@
-﻿declare class TaskModalWorker {
+﻿declare class TaskModalConsts {
+    static UserSelectId: string;
+}
+declare class TaskModalWorker {
     static ShowDayTaskModal(task: DayTaskModel): void;
     static InitTask(task: DayTaskModel): void;
     static DrawComments(divId: string, task: DayTaskModel): void;

@@ -48,6 +48,7 @@ declare class ScheduleStaticHandlers {
     static ShowUserSchedule(): void;
     static ShowDayTaskModal(taskId: string): void;
     static ShowCreateTaskModal(): void;
+    static InitUserSelect(selector: string): void;
     static updateComment(commentId: string): void;
     static addComment(): void;
     static redirectToFullVersion(): void;

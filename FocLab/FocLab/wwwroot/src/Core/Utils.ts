@@ -55,7 +55,7 @@ class Utils {
         });
     }
 
-    public static SetDateRangePicker = (selector: string): void => {
+    public static SetDateRangePicker(selector: string): void {
 
         $(selector).daterangepicker({
             autoUpdateInput: false,

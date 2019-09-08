@@ -4,7 +4,9 @@ using FocLab.Implementations;
 using FocLab.Logic.Services;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
+using FocLab.Model.Enumerations;
 using Hangfire;
+using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,9 +21,23 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
+using FocLab.Logic.Extensions;
 
 namespace FocLab
 {
+    public class MyDashboardAuthorizationFilter : IDashboardAuthorizationFilter
+    {
+        public bool Authorize(DashboardContext context)
+        {
+            var httpContext = context.GetHttpContext();
+
+            var user = httpContext.User;
+
+            // Allow all authenticated users to see the Dashboard (potentially dangerous).
+            return user.HasRight(UserRight.Developer) || user.IsAdmin();
+        }
+    }
+
     public class Startup
     {
         public Startup(IConfiguration configuration, IHostingEnvironment env)
@@ -129,7 +145,13 @@ namespace FocLab
 
             app.ConfigureExceptionHandler(new ApplicationLoggerManager());
             app.UseHangfireServer();
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new IDashboardAuthorizationFilter[]
+                {
+                    new MyDashboardAuthorizationFilter()
+                }
+            });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

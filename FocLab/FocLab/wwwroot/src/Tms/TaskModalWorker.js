@@ -1,10 +1,19 @@
-﻿var TaskModalWorker = (function () {
+﻿var TaskModalConsts = (function () {
+    function TaskModalConsts() {
+    }
+    TaskModalConsts.UserSelectId = "usersSelect1";
+    return TaskModalConsts;
+}());
+var TaskModalWorker = (function () {
     function TaskModalWorker() {
     }
     TaskModalWorker.ShowDayTaskModal = function (task) {
         TaskModalWorker.InitTask(task);
         FormDataHelper.FillDataByPrefix(task, "task.");
         Utils.SetDatePicker("input[name='task.TaskDate']");
+        var selector = "#" + TaskModalConsts.UserSelectId;
+        ScheduleStaticHandlers.InitUserSelect(selector);
+        $(selector).val(task.AssigneeUser.Id).trigger('change');
         ModalWorker.ShowModal("dayTaskModal");
     };
     TaskModalWorker.InitTask = function (task) {

@@ -79,7 +79,7 @@ interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
 }
 declare class Utils {
     static SetDatePicker: (selector: string, startDate?: string) => void;
-    static SetDateRangePicker: (selector: string) => void;
+    static SetDateRangePicker(selector: string): void;
     static GetDateFromDateRangePicker(inputId: string): object;
     static GetDateFromDatePicker(inputId: string): object;
     static FillSelect(select: HTMLElement, array: Array<string>, htmlFunc: Function, valueFunc: Function): void;

@@ -1,6 +1,28 @@
 ﻿var Utils = (function () {
     function Utils() {
     }
+    Utils.SetDateRangePicker = function (selector) {
+        $(selector).daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: "Очистить",
+                applyLabel: "Применить",
+                daysOfWeek: [
+                    "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"
+                ],
+                monthNames: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+                    "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+                firstDay: 0
+            }
+        });
+        $(selector).on("apply.daterangepicker", function (ev, picker) {
+            $(this).val(picker.startDate.format("DD/MM/YYYY") + " - " + picker.endDate.format("DD/MM/YYYY"));
+        });
+        $(selector).on("cancel.daterangepicker", function (ev, picker) {
+            $(this).val("");
+        });
+    };
+    ;
     Utils.GetDateFromDateRangePicker = function (inputId) {
         var inputDate = document.getElementById(inputId);
         if (inputDate === null) {
@@ -78,27 +100,6 @@
             autoclose: true,
             language: "ru",
             startDate: startDate
-        });
-    };
-    Utils.SetDateRangePicker = function (selector) {
-        $(selector).daterangepicker({
-            autoUpdateInput: false,
-            locale: {
-                cancelLabel: "Очистить",
-                applyLabel: "Применить",
-                daysOfWeek: [
-                    "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"
-                ],
-                monthNames: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-                    "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
-                firstDay: 0
-            }
-        });
-        $(selector).on("apply.daterangepicker", function (ev, picker) {
-            $(this).val(picker.startDate.format("DD/MM/YYYY") + " - " + picker.endDate.format("DD/MM/YYYY"));
-        });
-        $(selector).on("cancel.daterangepicker", function (ev, picker) {
-            $(this).val("");
         });
     };
     return Utils;

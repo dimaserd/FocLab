@@ -66,7 +66,13 @@ var ScheduleStaticHandlers = (function () {
             TaskText: "",
             TaskTitle: ""
         };
-        $("#usersSelect2").select2({
+        ScheduleStaticHandlers.InitUserSelect("#usersSelect2");
+        FormDataHelper.FillDataByPrefix(data, "create.");
+        Utils.SetDatePicker("input[name='create.TaskDate']", '0');
+        ModalWorker.ShowModal("createDayTaskModal");
+    };
+    ScheduleStaticHandlers.InitUserSelect = function (selector) {
+        $(selector).select2({
             placeholder: ScheduleWorker.Resources.SelectUser,
             language: {
                 "noResults": function () {
@@ -84,9 +90,6 @@ var ScheduleStaticHandlers = (function () {
                 return markup;
             }
         });
-        FormDataHelper.FillDataByPrefix(data, "create.");
-        Utils.SetDatePicker("input[name='create.TaskDate']", '0');
-        ModalWorker.ShowModal("createDayTaskModal");
     };
     ScheduleStaticHandlers.updateComment = function (commentId) {
         var data = {

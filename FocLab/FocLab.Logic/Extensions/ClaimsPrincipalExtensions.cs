@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FocLab.Model.Enumerations;
+using System;
 using System.Security.Claims;
 using System.Security.Principal;
 
@@ -12,6 +13,14 @@ namespace FocLab.Logic.Extensions
                 throw new ArgumentNullException(nameof(principal));
 
             return principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        public static bool HasRight(this ClaimsPrincipal principal, UserRight right)
+        {
+            if (principal == null)
+                throw new ArgumentNullException(nameof(principal));
+
+            return principal.IsInRole(right.ToString());
         }
 
         public static string GetUserId(this IPrincipal principal)

@@ -11,8 +11,6 @@ namespace FocLab.Model
 
         public ChemistryDbContext CreateDbContext(string[] args)
         {
-
-
             return ChemistryDbContext.Create(ServerConnection);
         }
     }

@@ -1,3 +1,7 @@
+class TaskModalConsts {
+    static UserSelectId: string = "usersSelect1";
+}
+
 class TaskModalWorker {
 
     public static ShowDayTaskModal(task: DayTaskModel) {
@@ -6,6 +10,11 @@ class TaskModalWorker {
         FormDataHelper.FillDataByPrefix(task, "task.");
 
         Utils.SetDatePicker("input[name='task.TaskDate']");
+
+        let selector = `#${TaskModalConsts.UserSelectId}`;
+
+        ScheduleStaticHandlers.InitUserSelect(selector);
+        $(selector).val(task.AssigneeUser.Id).trigger('change');
 
         ModalWorker.ShowModal("dayTaskModal");
     }

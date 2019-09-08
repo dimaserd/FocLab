@@ -141,7 +141,17 @@ class ScheduleStaticHandlers {
             TaskTitle: ""
         };
 
-        $("#usersSelect2").select2({
+        ScheduleStaticHandlers.InitUserSelect("#usersSelect2");
+        
+        FormDataHelper.FillDataByPrefix(data, "create.");
+
+        Utils.SetDatePicker("input[name='create.TaskDate']", '0');
+
+        ModalWorker.ShowModal("createDayTaskModal");
+    }
+
+    static InitUserSelect(selector: string) : void {
+        $(selector).select2({
             placeholder: ScheduleWorker.Resources.SelectUser,
 
             language: {
@@ -163,12 +173,6 @@ class ScheduleStaticHandlers {
                 return markup;
             }
         });
-
-        FormDataHelper.FillDataByPrefix(data, "create.");
-
-        Utils.SetDatePicker("input[name='create.TaskDate']", '0');
-
-        ModalWorker.ShowModal("createDayTaskModal");
     }
 
     static updateComment(commentId : string) : void {

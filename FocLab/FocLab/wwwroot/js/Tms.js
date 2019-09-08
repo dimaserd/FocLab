@@ -239,7 +239,13 @@ var ScheduleStaticHandlers = (function () {
             TaskText: "",
             TaskTitle: ""
         };
-        $("#usersSelect2").select2({
+        ScheduleStaticHandlers.InitUserSelect("#usersSelect2");
+        FormDataHelper.FillDataByPrefix(data, "create.");
+        Utils.SetDatePicker("input[name='create.TaskDate']", '0');
+        ModalWorker.ShowModal("createDayTaskModal");
+    };
+    ScheduleStaticHandlers.InitUserSelect = function (selector) {
+        $(selector).select2({
             placeholder: ScheduleWorker.Resources.SelectUser,
             language: {
                 "noResults": function () {
@@ -257,9 +263,6 @@ var ScheduleStaticHandlers = (function () {
                 return markup;
             }
         });
-        FormDataHelper.FillDataByPrefix(data, "create.");
-        Utils.SetDatePicker("input[name='create.TaskDate']", '0');
-        ModalWorker.ShowModal("createDayTaskModal");
     };
     ScheduleStaticHandlers.updateComment = function (commentId) {
         var data = {
@@ -421,6 +424,12 @@ var ScheduleWorker = (function () {
     return ScheduleWorker;
 }());
 
+var TaskModalConsts = (function () {
+    function TaskModalConsts() {
+    }
+    TaskModalConsts.UserSelectId = "usersSelect1";
+    return TaskModalConsts;
+}());
 var TaskModalWorker = (function () {
     function TaskModalWorker() {
     }
@@ -428,6 +437,9 @@ var TaskModalWorker = (function () {
         TaskModalWorker.InitTask(task);
         FormDataHelper.FillDataByPrefix(task, "task.");
         Utils.SetDatePicker("input[name='task.TaskDate']");
+        var selector = "#" + TaskModalConsts.UserSelectId;
+        ScheduleStaticHandlers.InitUserSelect(selector);
+        $(selector).val(task.AssigneeUser.Id).trigger('change');
         ModalWorker.ShowModal("dayTaskModal");
     };
     TaskModalWorker.InitTask = function (task) {
