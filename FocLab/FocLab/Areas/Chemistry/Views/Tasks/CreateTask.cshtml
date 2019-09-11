@@ -1,4 +1,5 @@
-﻿@model FocLab.Logic.Models.Tasks.ChemistryCreateTask
+﻿@using FocLab.Logic.Models.Tasks
+@model ChemistryCreateTask
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Создать задание";
@@ -12,22 +13,27 @@
     var s = fileMethodsSelectList.FirstOrDefault(x => string.IsNullOrWhiteSpace(x.Value));
 
     s.Value = NotSelectedValue;
+
+    var modelPrefix = "create.";
+
+    var builder = new GenericUserInterfaceModelBuilder<ChemistryCreateTask>(modelPrefix);
+
+    builder
+        .HiddenFor(x => x.AdminId);
 }
 
 <div style="height:20px">
 
 </div>
 
-
-
 <div class="row">
     <div class="col-12">
-        <a class="btn btn-success" href="/Chemistry/Tasks/Index">
+        <a class="btn btn-success" href="/Chemistry/Tasks/Index" style="margin-top:10px">
             <i class="fas fa-globe"></i>
             Список заданий
         </a>
         |
-        <a class="btn btn-success" href="/Chemistry/Methods/Index">
+        <a class="btn btn-success" href="/Chemistry/Methods/Index" style="margin-top:10px">
             <i class="fas fa-globe"></i>
             Список методов решений
         </a>
@@ -64,7 +70,6 @@
 
     <div class="form-group m-form__group">
         @Html.LabelFor(x => x.PerformerId)
-
         @Html.DropDownListFor(x => x.PerformerId, usersSelectList, new { id = "PerformerSelect", @class = "form-control" })
     </div>
 
@@ -145,7 +150,7 @@
                 data.FileMethodId = null;
             }
 
-            Requester.SendPostRequestWithAnimation("/Api/Chemistry/Tasks/Create", data, x => {
+            Requester.SendPostRequestWithAnimation("/Api/Chemistry/Tasks/Admin/Create", data, x => {
                 if (x.IsSucceeded) {
                     setTimeout(() => location.href = "/Chemistry/Tasks/Index", 1500);
                 }
