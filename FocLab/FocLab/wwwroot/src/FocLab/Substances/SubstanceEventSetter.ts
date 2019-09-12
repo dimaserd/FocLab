@@ -15,6 +15,10 @@
 
 
         EventSetter.SetHandlerForClass("add-substance-btn", "click", x => {
+
+            x.stopImmediatePropagation();
+            console.log("add-substance-btn clicked");
+
             var prefix = $(x.target).data("prefix").toString();
             SubstanceStaticHandlers.AddSubstance(prefix);
         });
@@ -42,6 +46,7 @@
 
         EventSetter.SetHandlerForClass("substance-remove", "click", x => {
 
+            x.stopImmediatePropagation();
             var target = x.srcElement;
             console.log(".substance-remove clicked", x.target);
             var count = +$(target).data("count");

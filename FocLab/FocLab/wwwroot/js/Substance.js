@@ -41,14 +41,16 @@ var SubstanceCounter = (function () {
         SubstanceEventSetter.InitHandlers();
     };
     SubstanceCounter.prototype.AddSubstance = function () {
-        var count = SubstanceStaticHandlers.substance.Substances.length;
-        this.DrawSubstance(count);
         this.Substances.push({
             Koef: 1,
             Massa: 1,
             MolarMassa: 1,
             Name: ""
         });
+        var l = this.Substances.length - 1;
+        this.DrawSubstance(l);
+        this.setValuesToSubstance(l);
+        SubstanceEventSetter.InitHandlers();
     };
     SubstanceCounter.prototype.RecalcSubstances = function () {
         for (var i = 0; i < this.Substances.length; i++) {
@@ -96,6 +98,8 @@ var SubstanceEventSetter = (function () {
             SubstanceStaticHandlers.WriteMassa(+$(x.target).val(), count);
         });
         EventSetter.SetHandlerForClass("add-substance-btn", "click", function (x) {
+            x.stopImmediatePropagation();
+            console.log("add-substance-btn clicked");
             var prefix = $(x.target).data("prefix").toString();
             SubstanceStaticHandlers.AddSubstance(prefix);
         });
@@ -120,6 +124,7 @@ var SubstanceEventSetter = (function () {
             SubstanceStaticHandlers.ChangeMassa(count, prefix);
         });
         EventSetter.SetHandlerForClass("substance-remove", "click", function (x) {
+            x.stopImmediatePropagation();
             var target = x.srcElement;
             console.log(".substance-remove clicked", x.target);
             var count = +$(target).data("count");
@@ -154,6 +159,7 @@ var SubstanceStaticHandlers = (function () {
         }
     };
     SubstanceStaticHandlers.ChangeMassa = function (count, prefix) {
+        console.log("ChangeMassa", count, prefix);
         var molarMassa = +document.getElementsByName(prefix + ".MolarMassa[" + count + "]")[0].value;
         var koef = +document.getElementsByName(prefix + ".Koef[" + count + "]")[0].value;
         var massa = SubstanceStaticHandlers.substance.getTotalKoef() * koef * molarMassa;

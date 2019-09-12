@@ -11,6 +11,8 @@
             SubstanceStaticHandlers.WriteMassa(+$(x.target).val(), count);
         });
         EventSetter.SetHandlerForClass("add-substance-btn", "click", function (x) {
+            x.stopImmediatePropagation();
+            console.log("add-substance-btn clicked");
             var prefix = $(x.target).data("prefix").toString();
             SubstanceStaticHandlers.AddSubstance(prefix);
         });
@@ -35,6 +37,7 @@
             SubstanceStaticHandlers.ChangeMassa(count, prefix);
         });
         EventSetter.SetHandlerForClass("substance-remove", "click", function (x) {
+            x.stopImmediatePropagation();
             var target = x.srcElement;
             console.log(".substance-remove clicked", x.target);
             var count = +$(target).data("count");

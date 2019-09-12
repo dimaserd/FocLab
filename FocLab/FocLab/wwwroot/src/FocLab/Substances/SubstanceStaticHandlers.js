@@ -16,6 +16,7 @@
         }
     };
     SubstanceStaticHandlers.ChangeMassa = function (count, prefix) {
+        console.log("ChangeMassa", count, prefix);
         var molarMassa = +document.getElementsByName(prefix + ".MolarMassa[" + count + "]")[0].value;
         var koef = +document.getElementsByName(prefix + ".Koef[" + count + "]")[0].value;
         var massa = SubstanceStaticHandlers.substance.getTotalKoef() * koef * molarMassa;

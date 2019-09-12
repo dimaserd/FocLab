@@ -88,14 +88,20 @@
         SubstanceEventSetter.InitHandlers();
     }
     AddSubstance(): void {
-        var count = SubstanceStaticHandlers.substance.Substances.length;
-        this.DrawSubstance(count);
+
         this.Substances.push({
             Koef: 1,
             Massa: 1,
             MolarMassa: 1,
             Name: ""
         });
+
+        let l = this.Substances.length - 1;
+        this.DrawSubstance(l);
+        this.setValuesToSubstance(l);
+
+        SubstanceEventSetter.InitHandlers();
+        
     }
     RecalcSubstances(): void {
         for (let i = 0; i < this.Substances.length; i++) {
