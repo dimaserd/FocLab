@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\src\Areas\Admin\UserCreatePage.ts" />
+    <Content Remove="wwwroot\src\Areas\Chemistry\Experiments\CreateExperiment.ts" />
     <Content Remove="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />
     <Content Remove="wwwroot\src\Core\EditableComponents.ts" />
     <Content Remove="wwwroot\src\Core\FormTypeDrawer\Services\FormTypeDrawerModelBuilder.ts" />
@@ -114,6 +115,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="wwwroot\src\Areas\Admin\UserCreatePage.ts" />
+    <TypeScriptCompile Include="wwwroot\src\Areas\Chemistry\Experiments\CreateExperiment.ts" />
     <TypeScriptCompile Include="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />
     <TypeScriptCompile Include="wwwroot\src\Core\EditableComponents.ts" />
     <TypeScriptCompile Include="wwwroot\src\Core\FormTypeDrawer\Services\FormTypeDrawerModelBuilder.ts" />

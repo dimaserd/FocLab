@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Croco.Core.Common.Models;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Abstractions;
@@ -32,6 +33,12 @@ namespace FocLab.Api.Controllers.Api.FocLab
 
 
         private readonly IUserMailSender MailSender = new FocLabEmailSender();
+
+        [HttpGet("GetAll")]
+        public Task<List<ChemistryTaskModel>> GetTasks()
+        {
+            return ChemistryTasksWorker.GetAllTasksAsync();
+        }
 
         /// <summary>
         /// Обновить поля задания как исполнитель

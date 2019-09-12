@@ -8,6 +8,7 @@ using FocLab.Logic.Workers.ChemistryTasks;
 using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Zoo.GenericUserInterface.Models;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
@@ -72,7 +73,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         {
             var tasks = await ChemistryTasksWorker.GetAllTasksAsync();
 
-            var selectData = tasks.Select(x => new SelectListItem
+            var selectData = tasks.Select(x => new MySelectListItem
             {
                 Selected = x.Id == id,
                 Text = x.Title,

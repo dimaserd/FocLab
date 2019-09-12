@@ -4,36 +4,23 @@
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Задание";
 
-    List<SelectListItem> selectData = ViewData["selectData"] as List<SelectListItem>;
+    List<MySelectListItem> selectData = ViewData["selectData"] as List<MySelectListItem>;
 
     var modelPrefix = "create.";
 
     var builder = new GenericUserInterfaceModelBuilder<CreateExperiment>(modelPrefix);
 
-    //builder.DropDownListFor(x => x.TaskId, selectData);
-
+    builder.DropDownListFor(x => x.TaskId, selectData);
     
 }
 
-
-    <div class="form-group m-form__group m--margin-top-10">
-        <div class="alert m-alert m-alert--default" role="alert">
-            Создание эксперимента к задаче
-        </div>
+<div class="form-group m-form__group m--margin-top-10">
+    <div class="alert m-alert m-alert--default" role="alert">
+        Создание эксперимента к задаче
     </div>
+</div>  
 
-    
-
-    <div class="form-group m-form__group">
-        @Html.LabelFor(x => x.Title)
-        @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
-    </div>
-
-    <div class="form-group m-form__group">
-        @Html.LabelFor(x => x.TaskId)
-        @Html.DropDownList(nameof(CreateExperiment.TaskId), selectData, new { id = "TasksSelect", @class = "form-control" })
-    </div>
-
+@Html.RenderGenericUserInterfaceAsync(builder.Result)
 
 <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions m-form__actions">
