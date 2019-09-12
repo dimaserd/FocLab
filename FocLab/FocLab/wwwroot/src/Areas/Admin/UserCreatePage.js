@@ -6,6 +6,17 @@
 var UserCreatePage = (function () {
     function UserCreatePage() {
     }
+    UserCreatePage.SetHandlers = function (modelPrefix) {
+        $(".action-btn").on("click", function () {
+            var data = TryForm.GetDataForFormByModelPrefix(modelPrefix);
+            ;
+            Requester.SendPostRequestWithAnimation("/Api/User/Create", data, function (resp) {
+                if (resp.IsSucceeded) {
+                    setTimeout(function () { location.href = '/Admin/Users/Index'; }, 1000);
+                }
+            }, null);
+        });
+    };
     UserCreatePage.AfterDrawHandler = function (modelPrefix) {
         Requester.SendAjaxPost("/Api/User/Get", { Count: null, OffSet: 0 }, function (resp) {
             var t = TryForm._genericInterfaces.find(function (x) { return x.Prefix == modelPrefix; });
@@ -20,8 +31,9 @@ var UserCreatePage = (function () {
             });
             var html = drawer.RenderDropDownList(prop, selList, false);
             FormTypeAfterDrawnDrawer.SetInnerHtmlForProperty(prop.PropertyName, modelPrefix, html);
+            drawer.AfterFormDrawing();
         }, null, false);
     };
     return UserCreatePage;
 }());
-UserCreatePage.AfterDrawHandler("create.");
+UserCreatePage.SetHandlers("create.");

@@ -13,7 +13,21 @@ class GetListResut<T>{
 }
 
 class UserCreatePage {
+
+    static SetHandlers(modelPrefix: string): void {
+        $(".action-btn").on("click", () => {
+            const data = TryForm.GetDataForFormByModelPrefix(modelPrefix);;
+
+            Requester.SendPostRequestWithAnimation("/Api/User/Create", data, resp => {
+                if (resp.IsSucceeded) {
+                    setTimeout(() => { location.href = '/Admin/Users/Index' }, 1000)
+                }
+            }, null);
+        });
+    }
+
     static AfterDrawHandler(modelPrefix: string): void {
+
         Requester.SendAjaxPost("/Api/User/Get", { Count: null, OffSet: 0 }, (resp: GetListResut<ApplicationUser>) => {
 
             let t = TryForm._genericInterfaces.find(x => x.Prefix == modelPrefix);
@@ -34,8 +48,12 @@ class UserCreatePage {
             
             FormTypeAfterDrawnDrawer.SetInnerHtmlForProperty(prop.PropertyName, modelPrefix, html);
 
+            drawer.AfterFormDrawing();
+
         }, null, false)
     }
 }
 
-UserCreatePage.AfterDrawHandler("create.");
+UserCreatePage.SetHandlers("create.")
+
+//UserCreatePage.AfterDrawHandler("create.");

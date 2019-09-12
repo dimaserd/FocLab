@@ -11,5 +11,6 @@ declare class GetListResut<T> {
     OffSet: number;
 }
 declare class UserCreatePage {
+    static SetHandlers(modelPrefix: string): void;
     static AfterDrawHandler(modelPrefix: string): void;
 }
