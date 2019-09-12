@@ -5,6 +5,14 @@
     ViewBag.Title = "Задание";
 
     List<SelectListItem> selectData = ViewData["selectData"] as List<SelectListItem>;
+
+    var modelPrefix = "create.";
+
+    var builder = new GenericUserInterfaceModelBuilder<CreateExperiment>(modelPrefix);
+
+    //builder.DropDownListFor(x => x.TaskId, selectData);
+
+    
 }
 
 
@@ -13,6 +21,8 @@
             Создание эксперимента к задаче
         </div>
     </div>
+
+    
 
     <div class="form-group m-form__group">
         @Html.LabelFor(x => x.Title)

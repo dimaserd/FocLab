@@ -2,6 +2,16 @@
 
     static _genericInterfaces: Array<GenerateGenericUserInterfaceModel> = [];
 
+    /*
+     * Обработчики, которые будут вызваны до генерации интерфейса, для переопределения стандартно сгенерированных типов 
+     */
+    static _beforeDrawInterfaceHandlers: Dictionary<Func<GenerateGenericUserInterfaceModel, GenerateGenericUserInterfaceModel>> = new Dictionary<Func<GenerateGenericUserInterfaceModel, GenerateGenericUserInterfaceModel>>();
+
+    /*
+     * Обработчики, которые будут вызваны после генерации интерфейса
+     */
+    static _afterDrawInterfaceHandlers: Dictionary<Action<GenerateGenericUserInterfaceModel>> = new Dictionary<Action<GenerateGenericUserInterfaceModel>>();
+
     static UnWrapModel(model: GenerateGenericUserInterfaceModel, drawer: FormTypeDrawer) : string {
 
         let html = "";
@@ -37,9 +47,27 @@
         return html;
     }
 
-    static ThrowError(mes: string) {
+    static ThrowError(mes: string): void {
         alert(mes);
         throw Error(mes);
+    }
+
+    /**
+     * Установить обработчик, который отработает перед отрисовкой пользовательского интерфейса
+     * @param modelPrefix префикс модели, по которой будет построен обобщенный пользовательский интерфейс
+     * @param func функция которая переопределит стандартную модель для отрисовки
+     */
+    static SetBeforeDrawingHandler(modelPrefix: string, func: Func<GenerateGenericUserInterfaceModel, GenerateGenericUserInterfaceModel>): void {
+        TryForm._beforeDrawInterfaceHandlers.add(modelPrefix, func);
+    }
+
+    /**
+     * Установить обработчик, который отработает после отрисовки
+     * @param modelPrefix префикс модели, по будет которой построен обобщенный пользовательский интерфейс
+     * @param func действие обработчик
+     */
+    static SetAfterDrawingHandler(modelPrefix: string, func: Action<GenerateGenericUserInterfaceModel>): void {
+        TryForm._afterDrawInterfaceHandlers.add(modelPrefix, func);
     }
 
     static GetForms() : void {
@@ -107,6 +135,13 @@
 
         var buildModel = window[id] as GenerateGenericUserInterfaceModel;
 
+        if (TryForm._beforeDrawInterfaceHandlers.containsKey(formDrawKey)) {
+
+            //Получаю функцию, которая произведет преобразования
+            var func = TryForm._beforeDrawInterfaceHandlers.getByKey(formDrawKey);
+            buildModel = func(buildModel);
+        }
+
         TryForm.AddBuildModel(buildModel);
 
         var drawImpl = FormDrawFactory.GetImplementation(buildModel, formDrawKey);
@@ -118,6 +153,15 @@
         elem.innerHTML = TryForm.UnWrapModel(buildModel, drawer);
 
         drawer.AfterFormDrawing();
+
+        if (TryForm._afterDrawInterfaceHandlers.containsKey(formDrawKey)) {
+
+            //Получаю действие обработчик, которое произведет преобразование интерфейса
+            var action = TryForm._afterDrawInterfaceHandlers.getByKey(formDrawKey);
+
+            //Вызываю эту функцию
+            action(buildModel);
+        }
     }
 }
 
