@@ -17,41 +17,41 @@
         this._formDrawer.AfterFormDrawing();
     }
 
-    public TextBoxFor(propertyName: string): string {
+    public TextBoxFor(propertyName: string, wrap: boolean): string {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
 
-        return this._formDrawer.RenderTextBox(prop);
+        return this._formDrawer.RenderTextBox(prop, wrap);
     }
 
-    public DatePickerFor(propertyName: string): string {
+    public DatePickerFor(propertyName: string, wrap: boolean): string {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
 
-        return this._formDrawer.RenderDatePicker(prop);
+        return this._formDrawer.RenderDatePicker(prop, wrap);
     }
 
 
-    public TextAreaFor(propertyName: string) : string {
+    public TextAreaFor(propertyName: string, wrap: boolean) : string {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
 
-        return this._formDrawer.RenderTextArea(prop);
+        return this._formDrawer.RenderTextArea(prop, wrap);
     }
 
-    public DropDownFor(propertyName: string, selectList: SelectListItem[]) : string {
+    public DropDownFor(propertyName: string, selectList: SelectListItem[], wrap: boolean) : string {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
 
-        return this._formDrawer.RenderDropDownList(prop, selectList);
+        return this._formDrawer.RenderDropDownList(prop, selectList, wrap);
     }
 
-    public MultipleDropDownFor(propertyName: string, selectList: SelectListItem[]): string {
+    public MultipleDropDownFor(propertyName: string, selectList: SelectListItem[], wrap: boolean): string {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
 
-        return this._formDrawer.RenderMultipleDropDownList(prop, selectList);
+        return this._formDrawer.RenderMultipleDropDownList(prop, selectList, wrap);
     }
 
-    public HiddenFor(propertyName: string): string {
+    public HiddenFor(propertyName: string, wrap: boolean): string {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
 
-        return this._formDrawer.RenderHidden(prop);
+        return this._formDrawer.RenderHidden(prop, wrap);
     }
 
     static FindPropByName(type: CrocoTypeDescription, propName: string): CrocoTypeDescription {

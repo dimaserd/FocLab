@@ -4,11 +4,11 @@
     constructor(formDrawer: IFormDraw, typeDescription: CrocoTypeDescription);
     BeforeFormDrawing(): void;
     AfterFormDrawing(): void;
-    TextBoxFor(propertyName: string): string;
-    DatePickerFor(propertyName: string): string;
-    TextAreaFor(propertyName: string): string;
-    DropDownFor(propertyName: string, selectList: SelectListItem[]): string;
-    MultipleDropDownFor(propertyName: string, selectList: SelectListItem[]): string;
-    HiddenFor(propertyName: string): string;
+    TextBoxFor(propertyName: string, wrap: boolean): string;
+    DatePickerFor(propertyName: string, wrap: boolean): string;
+    TextAreaFor(propertyName: string, wrap: boolean): string;
+    DropDownFor(propertyName: string, selectList: SelectListItem[], wrap: boolean): string;
+    MultipleDropDownFor(propertyName: string, selectList: SelectListItem[], wrap: boolean): string;
+    HiddenFor(propertyName: string, wrap: boolean): string;
     static FindPropByName(type: CrocoTypeDescription, propName: string): CrocoTypeDescription;
 }

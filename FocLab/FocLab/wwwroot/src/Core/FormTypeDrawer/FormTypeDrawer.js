@@ -36,41 +36,53 @@ var FormDrawImplementation = (function () {
     FormDrawImplementation.InitCalendarForPrefixedProperty = function (prefixedPropName) {
         Utils.SetDatePicker("input[name='" + prefixedPropName + "']");
     };
-    FormDrawImplementation.prototype.GetPropertyValueName = function (typeDescription) {
-        return "" + this._model.Prefix + typeDescription.PropertyName;
-    };
-    FormDrawImplementation.prototype.RenderDatePicker = function (typeDescription) {
+    FormDrawImplementation.prototype.RenderDatePicker = function (typeDescription, wrap) {
         this._datePickerPropNames.push(typeDescription.PropertyName);
-        return this.RenderTextBox(typeDescription);
+        return this.RenderTextBox(typeDescription, wrap);
     };
-    FormDrawImplementation.prototype.RenderHidden = function (typeDescription) {
+    FormDrawImplementation.prototype.RenderHidden = function (typeDescription, wrap) {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
-        return "<input type=\"hidden\" name=\"" + this.GetPropertyValueName(typeDescription) + "\" value=\"" + value + "\">";
+        var html = "<input type=\"hidden\" name=\"" + FormDrawHelper.GetPropertyValueName(typeDescription.PropertyName, this._model.Prefix) + "\" value=\"" + value + "\">";
+        if (!wrap) {
+            return html;
+        }
+        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + "\n                    " + html + "\n                </div>";
     };
-    FormDrawImplementation.prototype.RenderTextBox = function (typeDescription) {
+    FormDrawImplementation.prototype.RenderTextBox = function (typeDescription, wrap) {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
-        var t = "<div class=\"form-group m-form__group\">\n                <label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n                <input autocomplete=\"false\" class=\"form-control m-input\" name=\"" + this.GetPropertyValueName(typeDescription) + "\" type=\"text\" value=\"" + value + "\">\n            </div>";
+        var html = "<label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n                <input autocomplete=\"false\" class=\"form-control m-input\" name=\"" + FormDrawHelper.GetPropertyValueName(typeDescription.PropertyName, this._model.Prefix) + "\" type=\"text\" value=\"" + value + "\">";
+        if (!wrap) {
+            return html;
+        }
+        var t = "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + ">\n                    " + html + "\n                </div>";
         return t;
     };
-    FormDrawImplementation.prototype.RenderTextArea = function (typeDescription) {
+    FormDrawImplementation.prototype.RenderTextArea = function (typeDescription, wrap) {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
         var styles = "style=\"margin-top: 0px; margin-bottom: 0px; height: 79px;\"";
-        var t = "<div class=\"form-group m-form__group\">\n                <label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n                <textarea autocomplete=\"false\" class=\"form-control m-input\" name=\"" + this.GetPropertyValueName(typeDescription) + "\" rows=\"3\" " + styles + ">" + value + "</textarea>\n            </div>";
-        return t;
+        var html = "<label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n            <textarea autocomplete=\"false\" class=\"form-control m-input\" name=\"" + FormDrawHelper.GetPropertyValueName(typeDescription.PropertyName, this._model.Prefix) + "\" rows=\"3\" " + styles + ">" + value + "</textarea>";
+        if (!wrap) {
+            return html;
+        }
+        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + ">\n                      " + html + "\n                </div>";
     };
-    FormDrawImplementation.prototype.RenderGenericDropList = function (typeDescription, selectList, isMultiple) {
+    FormDrawImplementation.prototype.RenderGenericDropList = function (typeDescription, selectList, isMultiple, wrap) {
         var rawValue = ValueProviderHelper.GetRawValueFromValueProvider(typeDescription, this._model.ValueProvider);
         selectList = HtmlDrawHelper.ProceesSelectValues(typeDescription, rawValue, selectList);
         var _class = this._selectClass + " form-control m-input m-bootstrap-select m_selectpicker";
         var dict = isMultiple ? new Dictionary([{ key: "multiple", value: "" }]) : null;
-        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription), selectList, dict);
-        return "<div class=\"form-group m-form__group\">\n                <label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n                " + select + "   \n            </div>";
+        var select = HtmlDrawHelper.RenderSelect(_class, FormDrawHelper.GetPropertyValueName(typeDescription.PropertyName, this._model.Prefix), selectList, dict);
+        var html = "<label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>" + select;
+        if (!wrap) {
+            return html;
+        }
+        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + ">\n                    " + html + "\n            </div>";
     };
-    FormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList) {
-        return this.RenderGenericDropList(typeDescription, selectList, false);
+    FormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList, wrap) {
+        return this.RenderGenericDropList(typeDescription, selectList, false, wrap);
     };
-    FormDrawImplementation.prototype.RenderMultipleDropDownList = function (typeDescription, selectList) {
-        return this.RenderGenericDropList(typeDescription, selectList, true);
+    FormDrawImplementation.prototype.RenderMultipleDropDownList = function (typeDescription, selectList, wrap) {
+        return this.RenderGenericDropList(typeDescription, selectList, true, wrap);
     };
     return FormDrawImplementation;
 }());
@@ -148,6 +160,23 @@ var FormDrawFactory = (function () {
     return FormDrawFactory;
 }());
 
+var FormDrawHelper = (function () {
+    function FormDrawHelper() {
+    }
+    FormDrawHelper.GetPropertyValueName = function (propertyName, modelPrefix) {
+        return "" + modelPrefix + propertyName;
+    };
+    FormDrawHelper.GetOuterFormElement = function (propertyName, modelPrefix) {
+        return document.querySelector("[" + FormDrawHelper.FormPropertyName + "=\"" + propertyName + "\"][" + FormDrawHelper.FormModelPrefix + "=\"" + modelPrefix + "\"]");
+    };
+    FormDrawHelper.GetOuterFormAttributes = function (propertyName, modelPrefix) {
+        return FormDrawHelper.FormPropertyName + "=\"" + propertyName + "\" " + FormDrawHelper.FormModelPrefix + "=\"" + modelPrefix + "\"";
+    };
+    FormDrawHelper.FormPropertyName = "form-property-name";
+    FormDrawHelper.FormModelPrefix = "form-model-prefix";
+    return FormDrawHelper;
+}());
+
 var HtmlDrawHelper = (function () {
     function HtmlDrawHelper() {
     }
@@ -215,6 +244,17 @@ var ValueProviderHelper = (function () {
     return ValueProviderHelper;
 }());
 
+var FormTypeAfterDrawnDrawer = (function () {
+    function FormTypeAfterDrawnDrawer() {
+    }
+    FormTypeAfterDrawnDrawer.SetInnerHtmlForProperty = function (propertyName, modelPrefix, innerHtml) {
+        var elem = FormDrawHelper.GetOuterFormElement(propertyName, modelPrefix);
+        console.log("SetInnerHtmlForProperty elem", elem);
+        elem.innerHTML = innerHtml;
+    };
+    return FormTypeAfterDrawnDrawer;
+}());
+
 var FormTypeDataGetter = (function () {
     function FormTypeDataGetter(data) {
         if (!data.IsClass) {
@@ -261,29 +301,29 @@ var FormTypeDrawer = (function () {
     FormTypeDrawer.prototype.AfterFormDrawing = function () {
         this._formDrawer.AfterFormDrawing();
     };
-    FormTypeDrawer.prototype.TextBoxFor = function (propertyName) {
+    FormTypeDrawer.prototype.TextBoxFor = function (propertyName, wrap) {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
-        return this._formDrawer.RenderTextBox(prop);
+        return this._formDrawer.RenderTextBox(prop, wrap);
     };
-    FormTypeDrawer.prototype.DatePickerFor = function (propertyName) {
+    FormTypeDrawer.prototype.DatePickerFor = function (propertyName, wrap) {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
-        return this._formDrawer.RenderDatePicker(prop);
+        return this._formDrawer.RenderDatePicker(prop, wrap);
     };
-    FormTypeDrawer.prototype.TextAreaFor = function (propertyName) {
+    FormTypeDrawer.prototype.TextAreaFor = function (propertyName, wrap) {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
-        return this._formDrawer.RenderTextArea(prop);
+        return this._formDrawer.RenderTextArea(prop, wrap);
     };
-    FormTypeDrawer.prototype.DropDownFor = function (propertyName, selectList) {
+    FormTypeDrawer.prototype.DropDownFor = function (propertyName, selectList, wrap) {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
-        return this._formDrawer.RenderDropDownList(prop, selectList);
+        return this._formDrawer.RenderDropDownList(prop, selectList, wrap);
     };
-    FormTypeDrawer.prototype.MultipleDropDownFor = function (propertyName, selectList) {
+    FormTypeDrawer.prototype.MultipleDropDownFor = function (propertyName, selectList, wrap) {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
-        return this._formDrawer.RenderMultipleDropDownList(prop, selectList);
+        return this._formDrawer.RenderMultipleDropDownList(prop, selectList, wrap);
     };
-    FormTypeDrawer.prototype.HiddenFor = function (propertyName) {
+    FormTypeDrawer.prototype.HiddenFor = function (propertyName, wrap) {
         var prop = FormTypeDrawer.FindPropByName(this._typeDescription, propertyName);
-        return this._formDrawer.RenderHidden(prop);
+        return this._formDrawer.RenderHidden(prop, wrap);
     };
     FormTypeDrawer.FindPropByName = function (type, propName) {
         for (var i = 0; i < type.Properties.length; i++) {
@@ -297,6 +337,53 @@ var FormTypeDrawer = (function () {
     return FormTypeDrawer;
 }());
 
+var FormTypeDrawerModelBuilder = (function () {
+    function FormTypeDrawerModelBuilder(model) {
+        this._model = model;
+    }
+    FormTypeDrawerModelBuilder.prototype.SetMultipleDropDownListFor = function (propertyName, selectListItems) {
+        var block = this.GetPropertyBlockByName(propertyName);
+        block.InterfaceType = UserInterfaceType.MultipleDropDownList;
+        block.SelectList = selectListItems;
+        this.ResetBlock(block);
+        return this;
+    };
+    FormTypeDrawerModelBuilder.prototype.SetDropDownListFor = function (propertyName, selectListItems) {
+        var block = this.GetPropertyBlockByName(propertyName);
+        block.InterfaceType = UserInterfaceType.DropDownList;
+        block.SelectList = selectListItems;
+        this.ResetBlock(block);
+        return this;
+    };
+    FormTypeDrawerModelBuilder.prototype.SetTextAreaFor = function (propertyName) {
+        var block = this.GetPropertyBlockByName(propertyName);
+        if (block.InterfaceType != UserInterfaceType.TextBox) {
+            throw new Error("\u0422\u043E\u043B\u044C\u043A\u043E \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u0441 \u0442\u0438\u043F\u043E\u043C " + UserInterfaceType.TextBox + " \u043C\u043E\u0436\u043D\u043E \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u044C \u043D\u0430 " + UserInterfaceType.TextArea);
+        }
+        block.InterfaceType = UserInterfaceType.TextArea;
+        this.ResetBlock(block);
+        return this;
+    };
+    FormTypeDrawerModelBuilder.prototype.SetHiddenFor = function (propertyName) {
+        var block = this.GetPropertyBlockByName(propertyName);
+        block.InterfaceType = UserInterfaceType.Hidden;
+        this.ResetBlock(block);
+        return this;
+    };
+    FormTypeDrawerModelBuilder.prototype.ResetBlock = function (block) {
+        var index = this._model.Blocks.findIndex(function (x) { return x.PropertyName == block.PropertyName; });
+        this._model.Blocks[index] = block;
+    };
+    FormTypeDrawerModelBuilder.prototype.GetPropertyBlockByName = function (propertyName) {
+        var block = this._model.Blocks.find(function (x) { return x.PropertyName == propertyName; });
+        if (block == null) {
+            throw new Error("\u0411\u043B\u043E\u043A \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D \u043F\u043E \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u043C\u0443 \u0438\u043C\u0435\u043D\u0438 " + propertyName);
+        }
+        return block;
+    };
+    return FormTypeDrawerModelBuilder;
+}());
+
 var TryForm = (function () {
     function TryForm() {
     }
@@ -306,22 +393,22 @@ var TryForm = (function () {
             var block = model.Blocks[i];
             switch (block.InterfaceType) {
                 case UserInterfaceType.TextBox:
-                    html += drawer.TextBoxFor(block.PropertyName);
+                    html += drawer.TextBoxFor(block.PropertyName, true);
                     break;
                 case UserInterfaceType.TextArea:
-                    html += drawer.TextAreaFor(block.PropertyName);
+                    html += drawer.TextAreaFor(block.PropertyName, true);
                     break;
                 case UserInterfaceType.DropDownList:
-                    html += drawer.DropDownFor(block.PropertyName, block.SelectList);
+                    html += drawer.DropDownFor(block.PropertyName, block.SelectList, true);
                     break;
                 case UserInterfaceType.Hidden:
-                    html += drawer.HiddenFor(block.PropertyName);
+                    html += drawer.HiddenFor(block.PropertyName, true);
                     break;
                 case UserInterfaceType.DatePicker:
-                    html += drawer.DatePickerFor(block.PropertyName);
+                    html += drawer.DatePickerFor(block.PropertyName, true);
                     break;
                 case UserInterfaceType.MultipleDropDownList:
-                    html += drawer.MultipleDropDownFor(block.PropertyName, block.SelectList);
+                    html += drawer.MultipleDropDownFor(block.PropertyName, block.SelectList, true);
                     break;
                 default:
                     console.log("Данный блок не реализован", block);
@@ -333,6 +420,12 @@ var TryForm = (function () {
     TryForm.ThrowError = function (mes) {
         alert(mes);
         throw Error(mes);
+    };
+    TryForm.SetBeforeDrawingHandler = function (modelPrefix, func) {
+        TryForm._beforeDrawInterfaceHandlers.add(modelPrefix, func);
+    };
+    TryForm.SetAfterDrawingHandler = function (modelPrefix, func) {
+        TryForm._afterDrawInterfaceHandlers.add(modelPrefix, func);
     };
     TryForm.GetForms = function () {
         var elems = document.getElementsByClassName("generic-user-interface");
@@ -369,14 +462,24 @@ var TryForm = (function () {
         var id = elem.getAttribute("data-id");
         var formDrawKey = elem.getAttribute("data-form-draw");
         var buildModel = window[id];
+        if (TryForm._beforeDrawInterfaceHandlers.containsKey(formDrawKey)) {
+            var func = TryForm._beforeDrawInterfaceHandlers.getByKey(formDrawKey);
+            buildModel = func(buildModel);
+        }
         TryForm.AddBuildModel(buildModel);
         var drawImpl = FormDrawFactory.GetImplementation(buildModel, formDrawKey);
         var drawer = new FormTypeDrawer(drawImpl, buildModel.TypeDescription);
         drawer.BeforeFormDrawing();
         elem.innerHTML = TryForm.UnWrapModel(buildModel, drawer);
         drawer.AfterFormDrawing();
+        if (TryForm._afterDrawInterfaceHandlers.containsKey(formDrawKey)) {
+            var action = TryForm._afterDrawInterfaceHandlers.getByKey(formDrawKey);
+            action(buildModel);
+        }
     };
     TryForm._genericInterfaces = [];
+    TryForm._beforeDrawInterfaceHandlers = new Dictionary();
+    TryForm._afterDrawInterfaceHandlers = new Dictionary();
     return TryForm;
 }());
 TryForm.GetForms();

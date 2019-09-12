@@ -6,12 +6,11 @@
     BeforeFormDrawing(): void;
     AfterFormDrawing(): void;
     static InitCalendarForPrefixedProperty(prefixedPropName: string): void;
-    private GetPropertyValueName;
-    RenderDatePicker(typeDescription: CrocoTypeDescription): string;
-    RenderHidden(typeDescription: CrocoTypeDescription): string;
-    RenderTextBox(typeDescription: CrocoTypeDescription): string;
-    RenderTextArea(typeDescription: CrocoTypeDescription): string;
-    RenderGenericDropList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[], isMultiple: boolean): string;
-    RenderDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[]): string;
-    RenderMultipleDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[]): string;
+    RenderDatePicker(typeDescription: CrocoTypeDescription, wrap: boolean): string;
+    RenderHidden(typeDescription: CrocoTypeDescription, wrap: boolean): string;
+    RenderTextBox(typeDescription: CrocoTypeDescription, wrap: boolean): string;
+    RenderTextArea(typeDescription: CrocoTypeDescription, wrap: boolean): string;
+    RenderGenericDropList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[], isMultiple: boolean, wrap: boolean): string;
+    RenderDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[], wrap: boolean): string;
+    RenderMultipleDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[], wrap: boolean): string;
 }

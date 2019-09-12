@@ -21,22 +21,22 @@
 
             switch (block.InterfaceType) {
                 case UserInterfaceType.TextBox:
-                    html += drawer.TextBoxFor(block.PropertyName);
+                    html += drawer.TextBoxFor(block.PropertyName, true);
                     break;
                 case UserInterfaceType.TextArea:
-                    html += drawer.TextAreaFor(block.PropertyName);
+                    html += drawer.TextAreaFor(block.PropertyName, true);
                     break;
                 case UserInterfaceType.DropDownList:
-                    html += drawer.DropDownFor(block.PropertyName, block.SelectList);
+                    html += drawer.DropDownFor(block.PropertyName, block.SelectList, true);
                     break;
                 case UserInterfaceType.Hidden:
-                    html += drawer.HiddenFor(block.PropertyName);
+                    html += drawer.HiddenFor(block.PropertyName, true);
                     break;
                 case UserInterfaceType.DatePicker:
-                    html += drawer.DatePickerFor(block.PropertyName);
+                    html += drawer.DatePickerFor(block.PropertyName, true);
                     break;
                 case UserInterfaceType.MultipleDropDownList:
-                    html += drawer.MultipleDropDownFor(block.PropertyName, block.SelectList);
+                    html += drawer.MultipleDropDownFor(block.PropertyName, block.SelectList, true);
                     break;
                 default:
                     console.log("Данный блок не реализован", block);

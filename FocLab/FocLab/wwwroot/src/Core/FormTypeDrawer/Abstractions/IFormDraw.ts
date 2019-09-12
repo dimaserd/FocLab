@@ -1,10 +1,10 @@
 ﻿interface IFormDraw {
-    RenderTextBox(typeDescription: CrocoTypeDescription): string;
-    RenderTextArea(typeDescription: CrocoTypeDescription): string;
-    RenderDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[]): string;
-    RenderMultipleDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[]): string;
-    RenderHidden(typeDescription: CrocoTypeDescription): string;
-    RenderDatePicker(typeDescription: CrocoTypeDescription): string;
+    RenderTextBox(typeDescription: CrocoTypeDescription, wrap: boolean): string;
+    RenderTextArea(typeDescription: CrocoTypeDescription, wrap: boolean): string;
+    RenderDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[], wrap: boolean): string;
+    RenderMultipleDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[], wrap: boolean): string;
+    RenderHidden(typeDescription: CrocoTypeDescription, wrap: boolean): string;
+    RenderDatePicker(typeDescription: CrocoTypeDescription, wrap: boolean): string;
 
     BeforeFormDrawing(): void;
     AfterFormDrawing(): void;

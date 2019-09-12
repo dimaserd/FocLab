@@ -17,41 +17,53 @@
     FormDrawImplementation.InitCalendarForPrefixedProperty = function (prefixedPropName) {
         Utils.SetDatePicker("input[name='" + prefixedPropName + "']");
     };
-    FormDrawImplementation.prototype.GetPropertyValueName = function (typeDescription) {
-        return "" + this._model.Prefix + typeDescription.PropertyName;
-    };
-    FormDrawImplementation.prototype.RenderDatePicker = function (typeDescription) {
+    FormDrawImplementation.prototype.RenderDatePicker = function (typeDescription, wrap) {
         this._datePickerPropNames.push(typeDescription.PropertyName);
-        return this.RenderTextBox(typeDescription);
+        return this.RenderTextBox(typeDescription, wrap);
     };
-    FormDrawImplementation.prototype.RenderHidden = function (typeDescription) {
+    FormDrawImplementation.prototype.RenderHidden = function (typeDescription, wrap) {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
-        return "<input type=\"hidden\" name=\"" + this.GetPropertyValueName(typeDescription) + "\" value=\"" + value + "\">";
+        var html = "<input type=\"hidden\" name=\"" + FormDrawHelper.GetPropertyValueName(typeDescription.PropertyName, this._model.Prefix) + "\" value=\"" + value + "\">";
+        if (!wrap) {
+            return html;
+        }
+        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + "\n                    " + html + "\n                </div>";
     };
-    FormDrawImplementation.prototype.RenderTextBox = function (typeDescription) {
+    FormDrawImplementation.prototype.RenderTextBox = function (typeDescription, wrap) {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
-        var t = "<div class=\"form-group m-form__group\">\n                <label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n                <input autocomplete=\"false\" class=\"form-control m-input\" name=\"" + this.GetPropertyValueName(typeDescription) + "\" type=\"text\" value=\"" + value + "\">\n            </div>";
+        var html = "<label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n                <input autocomplete=\"false\" class=\"form-control m-input\" name=\"" + FormDrawHelper.GetPropertyValueName(typeDescription.PropertyName, this._model.Prefix) + "\" type=\"text\" value=\"" + value + "\">";
+        if (!wrap) {
+            return html;
+        }
+        var t = "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + ">\n                    " + html + "\n                </div>";
         return t;
     };
-    FormDrawImplementation.prototype.RenderTextArea = function (typeDescription) {
+    FormDrawImplementation.prototype.RenderTextArea = function (typeDescription, wrap) {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
         var styles = "style=\"margin-top: 0px; margin-bottom: 0px; height: 79px;\"";
-        var t = "<div class=\"form-group m-form__group\">\n                <label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n                <textarea autocomplete=\"false\" class=\"form-control m-input\" name=\"" + this.GetPropertyValueName(typeDescription) + "\" rows=\"3\" " + styles + ">" + value + "</textarea>\n            </div>";
-        return t;
+        var html = "<label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n            <textarea autocomplete=\"false\" class=\"form-control m-input\" name=\"" + FormDrawHelper.GetPropertyValueName(typeDescription.PropertyName, this._model.Prefix) + "\" rows=\"3\" " + styles + ">" + value + "</textarea>";
+        if (!wrap) {
+            return html;
+        }
+        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + ">\n                      " + html + "\n                </div>";
     };
-    FormDrawImplementation.prototype.RenderGenericDropList = function (typeDescription, selectList, isMultiple) {
+    FormDrawImplementation.prototype.RenderGenericDropList = function (typeDescription, selectList, isMultiple, wrap) {
         var rawValue = ValueProviderHelper.GetRawValueFromValueProvider(typeDescription, this._model.ValueProvider);
         selectList = HtmlDrawHelper.ProceesSelectValues(typeDescription, rawValue, selectList);
         var _class = this._selectClass + " form-control m-input m-bootstrap-select m_selectpicker";
         var dict = isMultiple ? new Dictionary([{ key: "multiple", value: "" }]) : null;
-        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription), selectList, dict);
-        return "<div class=\"form-group m-form__group\">\n                <label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>\n                " + select + "   \n            </div>";
+        var select = HtmlDrawHelper.RenderSelect(_class, FormDrawHelper.GetPropertyValueName(typeDescription.PropertyName, this._model.Prefix), selectList, dict);
+        var html = "<label for=\"" + typeDescription.PropertyName + "\">" + typeDescription.PropertyDisplayName + "</label>" + select;
+        if (!wrap) {
+            return html;
+        }
+        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + ">\n                    " + html + "\n            </div>";
     };
-    FormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList) {
-        return this.RenderGenericDropList(typeDescription, selectList, false);
+    FormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList, wrap) {
+        return this.RenderGenericDropList(typeDescription, selectList, false, wrap);
     };
-    FormDrawImplementation.prototype.RenderMultipleDropDownList = function (typeDescription, selectList) {
-        return this.RenderGenericDropList(typeDescription, selectList, true);
+    FormDrawImplementation.prototype.RenderMultipleDropDownList = function (typeDescription, selectList, wrap) {
+        return this.RenderGenericDropList(typeDescription, selectList, true, wrap);
     };
     return FormDrawImplementation;
 }());

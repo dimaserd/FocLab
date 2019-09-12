@@ -34,9 +34,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\src\Areas\Admin\UserCreatePage.ts" />
     <Content Remove="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />
     <Content Remove="wwwroot\src\Core\EditableComponents.ts" />
     <Content Remove="wwwroot\src\Core\FormTypeDrawer\Services\FormTypeDrawerModelBuilder.ts" />
+    <Content Remove="wwwroot\src\Core\FormTypeDrawer\Services\Helpers\FormDrawHelper.ts" />
     <Content Remove="wwwroot\src\FocLab\AdminTasksIndex.ts" />
     <Content Remove="wwwroot\src\FocLab\DefaultHandlers.ts" />
     <Content Remove="wwwroot\src\FocLab\EventSetter.ts" />
@@ -111,9 +113,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\src\Areas\Admin\UserCreatePage.ts" />
     <TypeScriptCompile Include="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />
     <TypeScriptCompile Include="wwwroot\src\Core\EditableComponents.ts" />
     <TypeScriptCompile Include="wwwroot\src\Core\FormTypeDrawer\Services\FormTypeDrawerModelBuilder.ts" />
+    <TypeScriptCompile Include="wwwroot\src\Core\FormTypeDrawer\Services\Helpers\FormDrawHelper.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\TaskSearch\AdminTasksIndex.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\DefaultHandlers.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\EventSetter.ts" />

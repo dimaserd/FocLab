@@ -7,22 +7,22 @@
             var block = model.Blocks[i];
             switch (block.InterfaceType) {
                 case UserInterfaceType.TextBox:
-                    html += drawer.TextBoxFor(block.PropertyName);
+                    html += drawer.TextBoxFor(block.PropertyName, true);
                     break;
                 case UserInterfaceType.TextArea:
-                    html += drawer.TextAreaFor(block.PropertyName);
+                    html += drawer.TextAreaFor(block.PropertyName, true);
                     break;
                 case UserInterfaceType.DropDownList:
-                    html += drawer.DropDownFor(block.PropertyName, block.SelectList);
+                    html += drawer.DropDownFor(block.PropertyName, block.SelectList, true);
                     break;
                 case UserInterfaceType.Hidden:
-                    html += drawer.HiddenFor(block.PropertyName);
+                    html += drawer.HiddenFor(block.PropertyName, true);
                     break;
                 case UserInterfaceType.DatePicker:
-                    html += drawer.DatePickerFor(block.PropertyName);
+                    html += drawer.DatePickerFor(block.PropertyName, true);
                     break;
                 case UserInterfaceType.MultipleDropDownList:
-                    html += drawer.MultipleDropDownFor(block.PropertyName, block.SelectList);
+                    html += drawer.MultipleDropDownFor(block.PropertyName, block.SelectList, true);
                     break;
                 default:
                     console.log("Данный блок не реализован", block);
@@ -34,6 +34,12 @@
     TryForm.ThrowError = function (mes) {
         alert(mes);
         throw Error(mes);
+    };
+    TryForm.SetBeforeDrawingHandler = function (modelPrefix, func) {
+        TryForm._beforeDrawInterfaceHandlers.add(modelPrefix, func);
+    };
+    TryForm.SetAfterDrawingHandler = function (modelPrefix, func) {
+        TryForm._afterDrawInterfaceHandlers.add(modelPrefix, func);
     };
     TryForm.GetForms = function () {
         var elems = document.getElementsByClassName("generic-user-interface");
@@ -70,14 +76,24 @@
         var id = elem.getAttribute("data-id");
         var formDrawKey = elem.getAttribute("data-form-draw");
         var buildModel = window[id];
+        if (TryForm._beforeDrawInterfaceHandlers.containsKey(formDrawKey)) {
+            var func = TryForm._beforeDrawInterfaceHandlers.getByKey(formDrawKey);
+            buildModel = func(buildModel);
+        }
         TryForm.AddBuildModel(buildModel);
         var drawImpl = FormDrawFactory.GetImplementation(buildModel, formDrawKey);
         var drawer = new FormTypeDrawer(drawImpl, buildModel.TypeDescription);
         drawer.BeforeFormDrawing();
         elem.innerHTML = TryForm.UnWrapModel(buildModel, drawer);
         drawer.AfterFormDrawing();
+        if (TryForm._afterDrawInterfaceHandlers.containsKey(formDrawKey)) {
+            var action = TryForm._afterDrawInterfaceHandlers.getByKey(formDrawKey);
+            action(buildModel);
+        }
     };
     TryForm._genericInterfaces = [];
+    TryForm._beforeDrawInterfaceHandlers = new Dictionary();
+    TryForm._afterDrawInterfaceHandlers = new Dictionary();
     return TryForm;
 }());
 TryForm.GetForms();
