@@ -54,8 +54,7 @@ var FormDrawImplementation = (function () {
         if (!wrap) {
             return html;
         }
-        var t = "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + ">\n                    " + html + "\n                </div>";
-        return t;
+        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + ">\n                    " + html + "\n                </div>";
     };
     FormDrawImplementation.prototype.RenderTextArea = function (typeDescription, wrap) {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
@@ -166,6 +165,10 @@ var FormDrawHelper = (function () {
     FormDrawHelper.GetPropertyValueName = function (propertyName, modelPrefix) {
         return "" + modelPrefix + propertyName;
     };
+    FormDrawHelper.GetPropertySelector = function (propertyName, modelPrefix) {
+        var prefixedPropName = FormDrawHelper.GetPropertyValueName(propertyName, modelPrefix);
+        return "input[name='" + prefixedPropName + "']";
+    };
     FormDrawHelper.GetOuterFormElement = function (propertyName, modelPrefix) {
         return document.querySelector("[" + FormDrawHelper.FormPropertyName + "=\"" + propertyName + "\"][" + FormDrawHelper.FormModelPrefix + "=\"" + modelPrefix + "\"]");
     };
@@ -251,6 +254,14 @@ var FormTypeAfterDrawnDrawer = (function () {
         var elem = FormDrawHelper.GetOuterFormElement(propertyName, modelPrefix);
         console.log("SetInnerHtmlForProperty elem", elem);
         elem.innerHTML = innerHtml;
+    };
+    FormTypeAfterDrawnDrawer.SetSelectListForProperty = function (propertyName, modelPrefix, selectList) {
+        var t = TryForm._genericInterfaces.find(function (x) { return x.Prefix === modelPrefix; });
+        var prop = t.TypeDescription.Properties.find(function (x) { return x.PropertyName === propertyName; });
+        var drawer = new FormDrawImplementation(t);
+        var html = drawer.RenderDropDownList(prop, selectList, false);
+        FormTypeAfterDrawnDrawer.SetInnerHtmlForProperty(prop.PropertyName, modelPrefix, html);
+        drawer.AfterFormDrawing();
     };
     return FormTypeAfterDrawnDrawer;
 }());

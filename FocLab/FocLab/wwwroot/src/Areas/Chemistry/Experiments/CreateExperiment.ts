@@ -1,12 +1,10 @@
-﻿interface 
-
-class CreateExperiment {
+﻿class CreateExperiment {
 
     static _modelPrefix: string = "create.";
 
     static Create(): void {
 
-        let data = TryForm.GetDataForFormByModelPrefix(CreateExperiment._modelPrefix);
+        const data = TryForm.GetDataForFormByModelPrefix(CreateExperiment._modelPrefix);
 
         Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Create', data, (x: BaseApiResponse) => {
             if (x.IsSucceeded) {
@@ -17,33 +15,39 @@ class CreateExperiment {
 
     static SetHandlers(): void {
         EventSetter.SetHandlerForClass("btn-exp-create", "click", () => CreateExperimentHandlers.Create());
+        CreateExperiment.AfterDrawHandler();
     }
 
-    static AfterDrawHandler(modelPrefix: string): void {
+    static AfterDrawHandler(): void {
 
-        Requester.SendAjaxPost("/Api/User/Get", { Count: null, OffSet: 0 }, (resp: GetListResut<ApplicationUser>) => {
+        Requester.SendAjaxGet("/Api/Chemistry/Tasks/GetAll", null, (resp: Array<{Id: string, Title: string}>) => {
 
-            let t = TryForm._genericInterfaces.find(x => x.Prefix == modelPrefix);
-
-            let prop = t.TypeDescription.Properties.find(x => x.PropertyName == "Email")
-
-            let drawer: FormDrawImplementation = new FormDrawImplementation(t);
-
-            let selList: Array<SelectListItem> = resp.List.map(t => {
+            const selList: Array<SelectListItem> = resp.map(t => {
                 return {
                     Value: t.Id,
-                    Text: t.Email,
+                    Text: t.Title,
                     Selected: false
                 }
             });
 
-            let html = drawer.RenderDropDownList(prop, selList, false);
+            const taskIdPropName = "TaskId";
 
-            FormTypeAfterDrawnDrawer.SetInnerHtmlForProperty(prop.PropertyName, modelPrefix, html);
+            FormTypeAfterDrawnDrawer.SetSelectListForProperty(taskIdPropName, CreateExperiment._modelPrefix, selList);
 
-            drawer.AfterFormDrawing();
+            $(FormDrawHelper.GetPropertySelector(taskIdPropName, CreateExperiment._modelPrefix)).select2({
+                placeholder: "Выберите задачу",
 
-        }, null, false)
+                language: {
+                    "noResults"() {
+                        return "Задача не найдена.";
+                    }
+                },
+                escapeMarkup(markup) {
+                    return markup;
+                }
+            });
+
+        }, null);
     }
 }
 

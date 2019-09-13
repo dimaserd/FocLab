@@ -12,7 +12,19 @@ interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
         templateResult: (state: any) => JQuery<HTMLElement>
     });
     select2(arg0: { width: string; });
-    select2(arg0: { placeholder: string; language: { "noResults": () => string; }; data: any; templateSelection: any; templateResult: any; escapeMarkup: (markup: any) => any; });
+    select2(arg0: {
+        placeholder: string;
+        language: { "noResults": () => string; };
+        data: any;
+        templateSelection: any;
+        templateResult: any;
+        escapeMarkup: (markup: any) => any;
+    });
+    select2(arg0: {
+        placeholder: string;
+        language: { "noResults": () => string; };
+        escapeMarkup: (markup: any) => any;
+    });
 }
 
 interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {

@@ -37,19 +37,5 @@
 @section Scripts{
 
     <script src="~/js/Experiments.min.js"></script>
-    
-    <script>
-        $("#TasksSelect").select2({
-            placeholder: "Выберите задачу",
-
-            "language": {
-                "noResults": function() {
-                    return "Задача не найдена.";
-                }
-            },
-            escapeMarkup: function(markup) {
-                return markup;
-            }
-        });
-    </script>
+    <script src="src/Areas/Chemistry/Experiments/CreateExperiment.js"></script>
 }

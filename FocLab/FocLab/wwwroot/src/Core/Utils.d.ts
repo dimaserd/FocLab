@@ -25,6 +25,13 @@ interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
         templateResult: any;
         escapeMarkup: (markup: any) => any;
     }): any;
+    select2(arg0: {
+        placeholder: string;
+        language: {
+            "noResults": () => string;
+        };
+        escapeMarkup: (markup: any) => any;
+    }): any;
 }
 interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
     sortable(arg0: {

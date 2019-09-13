@@ -14,7 +14,6 @@ namespace FocLab.Logic.Models.Tasks
 {
     public class ChemistryTaskModel
     {
-
         public string Id { get; set; }
 
         /// <summary>
@@ -185,6 +184,5 @@ namespace FocLab.Logic.Models.Tasks
                 }
             }).ToList()
         };
-
     }
 }

@@ -35,8 +35,7 @@
         if (!wrap) {
             return html;
         }
-        var t = "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + ">\n                    " + html + "\n                </div>";
-        return t;
+        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + ">\n                    " + html + "\n                </div>";
     };
     FormDrawImplementation.prototype.RenderTextArea = function (typeDescription, wrap) {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
