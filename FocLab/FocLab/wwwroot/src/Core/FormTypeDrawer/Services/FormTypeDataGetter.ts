@@ -1,6 +1,6 @@
 ﻿class FormTypeDataGetter {
 
-    _typeDescription: CrocoTypeDescription;
+    private readonly _typeDescription: CrocoTypeDescription;
 
     constructor(data: CrocoTypeDescription) {
 
