@@ -1,5 +1,5 @@
 ﻿declare class FormTypeDataGetter {
-    _typeDescription: CrocoTypeDescription;
+    private readonly _typeDescription;
     constructor(data: CrocoTypeDescription);
     private BuildObject;
     GetData(modelPrefix: string): object;

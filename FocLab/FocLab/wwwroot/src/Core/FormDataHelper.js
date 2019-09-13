@@ -45,6 +45,7 @@
         return FormDataHelper.CollectDataByPrefix(object, "");
     };
     FormDataHelper.CollectDataByPrefix = function (object, prefix) {
+        console.log("FormDataHelper.CollectDataByPrefix", object, prefix);
         for (var index in object) {
             if (object.hasOwnProperty(index)) {
                 var name_2 = prefix + index;

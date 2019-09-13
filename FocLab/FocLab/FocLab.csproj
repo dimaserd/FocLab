@@ -44,7 +44,6 @@
     <Content Remove="wwwroot\src\FocLab\AdminTasksIndex.ts" />
     <Content Remove="wwwroot\src\FocLab\DefaultHandlers.ts" />
     <Content Remove="wwwroot\src\FocLab\EventSetter.ts" />
-    <Content Remove="wwwroot\src\FocLab\Experiments\CreateExperimentHandlers.ts" />
     <Content Remove="wwwroot\src\FocLab\Experiments\ExperimentIndexHandlers.ts" />
     <Content Remove="wwwroot\src\FocLab\Experiments\ExperimentPageHandlers.ts" />
     <Content Remove="wwwroot\src\FocLab\GenericUtil.ts" />
@@ -130,7 +129,6 @@
     <TypeScriptCompile Include="wwwroot\src\FocLab\TaskSearch\AdminTasksIndex.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\DefaultHandlers.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\EventSetter.ts" />
-    <TypeScriptCompile Include="wwwroot\src\FocLab\Experiments\CreateExperimentHandlers.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Experiments\ExperimentIndexHandlers.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Experiments\ExperimentPageHandlers.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\GenericUtil.ts" />

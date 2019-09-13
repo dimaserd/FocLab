@@ -15,36 +15,40 @@
                 </tr>
 
                 @if (Model.ReactionSchemaImage != null)
-            {
+                {
                 <tr>
                     <th colspan="2">
                         <img class="img-responsive img-fluid" src="/Files/GetDbFileById?id=@Model.ReactionSchemaImage.FileId&type=Medium" />
                     </th>
                 </tr>
 
-            }
+                }
                 @{
                 var btnText = Model.ReactionSchemaImage != null ? "Перезагрузить файл реакции" : "Загрузить файл реакции";
                 }
                 <tr>
                     <th>
-                        @if (!User.HasRight(UserRight.Admin) && !User.HasRight(UserRight.SuperAdmin))
-                    {
-                        <input type="file" accept="image/*" id="@RenderTaskFilesViewModel.ToInt(ChemistryTaskDbFileType.ReactionSchemaImage)" />
-                    }
+                        @if (Model.CanEdit)
+                        {
+                            <input type="file" accept="image/*" id="@RenderTaskFilesViewModel.ToInt(ChemistryTaskDbFileType.ReactionSchemaImage)" />
+                        }
                     </th>
 
                     <th>
-                        <button class="btn btn-success" onclick="UpdateFileByType('@(RenderTaskFilesViewModel.ToInt(ChemistryTaskDbFileType.ReactionSchemaImage))')">
-                            @btnText
-                        </button>
+                        @if (Model.CanEdit)
+                        {
+                            <button class="btn btn-success" onclick="UpdateFileByType('@(RenderTaskFilesViewModel.ToInt(ChemistryTaskDbFileType.ReactionSchemaImage))')">
+                                @btnText
+                            </button>
+                        }
+
 
                         @if (Model.ReactionSchemaImage != null)
-                    {
-                        <a class="btn btn-primary" href="/Files/GetDbFileById/@Model.ReactionSchemaImage.FileId">
-                            Скачать изображение реакции
-                        </a>
-                    }
+                        {
+                            <a class="btn btn-primary" href="/Files/GetDbFileById/@Model.ReactionSchemaImage.FileId">
+                                Скачать изображение реакции
+                            </a>
+                        }
 
                     </th>
                 </tr>

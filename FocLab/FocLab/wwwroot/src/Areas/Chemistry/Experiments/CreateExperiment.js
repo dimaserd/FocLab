@@ -2,6 +2,7 @@
     function CreateExperiment() {
     }
     CreateExperiment.Create = function () {
+        console.log("CreateExperiment.Click");
         var data = TryForm.GetDataForFormByModelPrefix(CreateExperiment._modelPrefix);
         Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Create', data, function (x) {
             if (x.IsSucceeded) {
@@ -10,7 +11,7 @@
         }, null);
     };
     CreateExperiment.SetHandlers = function () {
-        EventSetter.SetHandlerForClass("btn-exp-create", "click", function () { return CreateExperimentHandlers.Create(); });
+        EventSetter.SetHandlerForClass("btn-exp-create", "click", function () { return CreateExperiment.Create(); });
         CreateExperiment.AfterDrawHandler();
     };
     CreateExperiment.AfterDrawHandler = function () {

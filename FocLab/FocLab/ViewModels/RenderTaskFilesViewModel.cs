@@ -8,7 +8,7 @@ namespace FocLab.ViewModels
 {
     public class RenderTaskFilesViewModel
     {
-        static List<ChemistryTaskDbFileType> ForeachTypes = new List<ChemistryTaskDbFileType>
+        static readonly List<ChemistryTaskDbFileType> ForeachTypes = new List<ChemistryTaskDbFileType>
         {
             ChemistryTaskDbFileType.File1,
             ChemistryTaskDbFileType.File2,
@@ -22,21 +22,27 @@ namespace FocLab.ViewModels
 
         public bool IsAdmin { get; set; }
 
-        public static RenderTaskFilesViewModel Create(ChemistryTaskModel task, bool isAdmin)
+        public bool IsPerformer { get; set; }
+
+        public bool CanEdit => IsAdmin || IsPerformer;
+
+        public static RenderTaskFilesViewModel Create(ChemistryTaskModel task, bool isAdmin, string userId)
         {
             return new RenderTaskFilesViewModel
             {
                 Types = ForeachTypes,
                 IsAdmin = isAdmin,
+                IsPerformer = task.PerformerUser.Id == userId,
                 Files = task.Files
             };
         }
 
-        public static RenderTaskFilesViewModel Create(ChemistryTaskExperimentModel model, bool isAdmin)
+        public static RenderTaskFilesViewModel Create(ChemistryTaskExperimentModel model, bool isAdmin, string userId)
         {
             return new RenderTaskFilesViewModel
             {
                 Types = ForeachTypes,
+                IsPerformer = model.Performer.Id == userId,
                 Files = model.Files.Select(x => new ChemistryTaskFileModel
                 {
                     FileId = x.FileId,

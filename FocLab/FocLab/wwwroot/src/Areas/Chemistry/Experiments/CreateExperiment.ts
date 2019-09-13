@@ -4,6 +4,8 @@
 
     static Create(): void {
 
+        console.log("CreateExperiment.Click");
+
         const data = TryForm.GetDataForFormByModelPrefix(CreateExperiment._modelPrefix);
 
         Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Create', data, (x: BaseApiResponse) => {
@@ -14,7 +16,7 @@
     }
 
     static SetHandlers(): void {
-        EventSetter.SetHandlerForClass("btn-exp-create", "click", () => CreateExperimentHandlers.Create());
+        EventSetter.SetHandlerForClass("btn-exp-create", "click", () => CreateExperiment.Create());
         CreateExperiment.AfterDrawHandler();
     }
 

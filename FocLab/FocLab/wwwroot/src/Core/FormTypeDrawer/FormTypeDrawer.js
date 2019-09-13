@@ -292,7 +292,7 @@ var FormTypeDataGetter = (function () {
                     initData[prop.PropertyName] = Number(initData[prop.PropertyName].replace(/,/g, '.'));
                     break;
                 case CSharpType.Boolean.toString():
-                    initData[prop.PropertyName] = initData[prop.PropertyName].toLowerCase() == "true";
+                    initData[prop.PropertyName] = initData[prop.PropertyName].toLowerCase() === "true";
                     break;
             }
         }
@@ -446,13 +446,14 @@ var TryForm = (function () {
         }
     };
     TryForm.GetDataForFormByModelPrefix = function (modelPrefix) {
-        var model = TryForm._genericInterfaces.find(function (x) { return x.Prefix == modelPrefix; });
+        var model = TryForm._genericInterfaces.find(function (x) { return x.Prefix === modelPrefix; });
         if (model == null) {
+            throw new Error("Generic user interface model is not defined by prefix '" + modelPrefix + "'");
         }
         return TryForm.GetDataForForm(model);
     };
     TryForm.GetDataForFirstForm = function () {
-        if (TryForm._genericInterfaces.length == 0) {
+        if (TryForm._genericInterfaces.length === 0) {
             TryForm.ThrowError("На странице не объявлено ни одной формы");
         }
         var model = TryForm._genericInterfaces[0];

@@ -69,6 +69,8 @@ class FormDataHelper {
      */
     static CollectDataByPrefix(object: object, prefix: string): object {
 
+        console.log("FormDataHelper.CollectDataByPrefix", object, prefix);
+
         for (let index in object) {
             if (object.hasOwnProperty(index)) {
 

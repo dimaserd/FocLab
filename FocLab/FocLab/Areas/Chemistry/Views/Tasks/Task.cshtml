@@ -52,7 +52,7 @@
         }
 
 
-        <a  href="/Chemistry/Tasks/Print/@Model.Id" class="btn btn-success" style="margin-top:5px">
+        <a href="/Chemistry/Tasks/Print/@Model.Id" class="btn btn-success" style="margin-top:5px">
             <i class="fa fa-print" aria-hidden="true"></i>
             Печать документа
         </a>
@@ -71,13 +71,13 @@
 </div>
 
 
-@await Html.PartialAsync("~/Areas/Chemistry/Views/Tasks/Partials/ReactionMainImage.cshtml", RenderReactionMainSchemaImageViewModel.Create(Model))
+@await Html.PartialAsync("~/Areas/Chemistry/Views/Tasks/Partials/ReactionMainImage.cshtml", RenderReactionMainSchemaImageViewModel.Create(Model, !isNotAdmin, User.GetUserId()))
 
 <div style="height:20px">
 
 </div>
 
-@await Html.PartialAsync("~/Areas/Chemistry/Views/Tasks/Partials/TaskFiles.cshtml", RenderTaskFilesViewModel.Create(Model, !isNotAdmin))
+@await Html.PartialAsync("~/Areas/Chemistry/Views/Tasks/Partials/TaskFiles.cshtml", RenderTaskFilesViewModel.Create(Model, !isNotAdmin, User.GetUserId()))
 
 
 <div class="row">

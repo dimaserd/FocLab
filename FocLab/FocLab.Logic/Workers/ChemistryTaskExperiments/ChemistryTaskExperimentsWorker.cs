@@ -135,9 +135,9 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
 
             var userId = UserId;
 
-            if (experiment.Performer.Id != userId)
+            if (experiment.Performer.Id != userId && User.IsAdmin())
             {
-                return new BaseApiResponse(false, "Вы не имеете прав для редактирования эксперимента. Так как вы не являетесь экспериментатором.");
+                return new BaseApiResponse(false, "Вы не имеете прав для редактирования эксперимента. Так как вы не являетесь экспериментатором или администратором.");
             }
 
             if (experiment.Deleted)

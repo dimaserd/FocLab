@@ -16,6 +16,9 @@ class UserCreatePage {
 
     static SetHandlers(modelPrefix: string): void {
         $(".action-btn").on("click", () => {
+
+            console.log("UserCreatePage.Click");
+
             const data = TryForm.GetDataForFormByModelPrefix(modelPrefix);;
 
             Requester.SendPostRequestWithAnimation("/Api/User/Create", data, resp => {

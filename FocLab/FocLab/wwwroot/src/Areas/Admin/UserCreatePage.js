@@ -8,6 +8,7 @@ var UserCreatePage = (function () {
     }
     UserCreatePage.SetHandlers = function (modelPrefix) {
         $(".action-btn").on("click", function () {
+            console.log("UserCreatePage.Click");
             var data = TryForm.GetDataForFormByModelPrefix(modelPrefix);
             ;
             Requester.SendPostRequestWithAnimation("/Api/User/Create", data, function (resp) {

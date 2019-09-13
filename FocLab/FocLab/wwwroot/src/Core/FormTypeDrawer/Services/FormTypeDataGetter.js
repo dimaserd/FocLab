@@ -24,7 +24,7 @@
                     initData[prop.PropertyName] = Number(initData[prop.PropertyName].replace(/,/g, '.'));
                     break;
                 case CSharpType.Boolean.toString():
-                    initData[prop.PropertyName] = initData[prop.PropertyName].toLowerCase() == "true";
+                    initData[prop.PropertyName] = initData[prop.PropertyName].toLowerCase() === "true";
                     break;
             }
         }

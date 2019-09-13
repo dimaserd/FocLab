@@ -17,11 +17,30 @@
     var json = Model.SubstanceCounterJson ?? "";
 
     var title = string.IsNullOrEmpty(Model.Title) ? "[Без названия]" : Model.Title;
-
 }
 
 
 <div>
+
+    <div class="row">
+        <div class="col-12">
+            <a href="/Chemistry/Experiments/Index" class="btn btn-primary" style="margin-top:5px">
+                <i class="fa fa-list"></i>
+                Список экспериментов
+            </a>
+
+            <a href="/Chemistry/Experiments/Print/@Model.Id" class="btn btn-success" style="margin-top:5px">
+                <i class="fa fa-print" aria-hidden="true"></i>
+                Печать документа
+            </a>
+
+        </div>
+    </div>
+
+    <div style="height:10px">
+
+    </div>
+
 
     <div class="form-group m-form__group m--margin-top-10">
         <div class="alert m-alert m-alert--default" role="alert">
@@ -47,9 +66,9 @@
 
 </div>
 
-@await Html.PartialAsync("~/Areas/Chemistry/Views/Tasks/Partials/ReactionMainImage.cshtml", RenderReactionMainSchemaImageViewModel.Create(Model))
+@await Html.PartialAsync("~/Areas/Chemistry/Views/Tasks/Partials/ReactionMainImage.cshtml", RenderReactionMainSchemaImageViewModel.Create(Model, !isNotAdmin, User.GetUserId()))
 
-@await Html.PartialAsync("~/Areas/Chemistry/Views/Tasks/Partials/TaskFiles.cshtml", RenderTaskFilesViewModel.Create(Model, !isNotAdmin))
+@await Html.PartialAsync("~/Areas/Chemistry/Views/Tasks/Partials/TaskFiles.cshtml", RenderTaskFilesViewModel.Create(Model, !isNotAdmin, User.GetUserId()))
 
 <div style="height:20px">
 
@@ -111,7 +130,5 @@
 
             ExperimentPageHandlers.UpdateFileByType(fileType);
         }
-
-
     </script>
 }

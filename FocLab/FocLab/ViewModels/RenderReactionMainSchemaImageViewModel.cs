@@ -7,15 +7,18 @@ namespace FocLab.ViewModels
     {
         public ChemistryTaskFileModel ReactionSchemaImage { get; set; }
 
-        public static RenderReactionMainSchemaImageViewModel Create(ChemistryTaskModel model)
+        public bool CanEdit { get; private set; }
+
+        public static RenderReactionMainSchemaImageViewModel Create(ChemistryTaskModel model, bool isAdmin, string userId)
         {
             return new RenderReactionMainSchemaImageViewModel
             {
-                ReactionSchemaImage = model.ReactionSchemaImage
+                ReactionSchemaImage = model.ReactionSchemaImage,
+                CanEdit = isAdmin || model.PerformerUser.Id == userId
             };
         }
 
-        public static RenderReactionMainSchemaImageViewModel Create(ChemistryTaskExperimentModel model)
+        public static RenderReactionMainSchemaImageViewModel Create(ChemistryTaskExperimentModel model, bool isAdmin, string userId)
         {
             return new RenderReactionMainSchemaImageViewModel
             {
@@ -23,7 +26,8 @@ namespace FocLab.ViewModels
                 {
                     FileId = model.ReactionSchemaImage.FileId,
                     Type = model.ReactionSchemaImage.Type
-                } : null
+                } : null,
+                CanEdit = isAdmin || model.Performer.Id == userId
             };
         }
     }

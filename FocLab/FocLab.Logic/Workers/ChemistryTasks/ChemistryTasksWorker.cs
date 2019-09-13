@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
+using FocLab.Logic.Extensions;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Model.Entities.Chemistry;
@@ -39,9 +40,9 @@ namespace FocLab.Logic.Workers.ChemistryTasks
 
             var userId = UserId;
 
-            if (task.PerformerUserId != userId)
+            if (task.PerformerUserId != userId && !User.IsAdmin())
             {
-                return new BaseApiResponse(false, "Вы не имеете прав для редактирования задания. Так как вы не являетесь экспериментатором.");
+                return new BaseApiResponse(false, "Вы не имеете прав для редактирования задания. Так как вы не являетесь экспериментатором или администратором.");
             }
 
             if (task.Deleted)
