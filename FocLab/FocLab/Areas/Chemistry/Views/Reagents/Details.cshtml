@@ -1,42 +1,36 @@
 ﻿@using FocLab.Logic
-@model FocLab.Logic.Models.Reagents.ChemistryReagentModel
+@using FocLab.Logic.Models.Reagents
+@model ChemistryReagentModel
 @{
     Layout = ChemistrySettings.LayoutPath;
-    ViewBag.Title = "Создание реагента";
+
+
+    ViewBag.Title = "Редактирование реагента";
+
+    var modelPrefix = "updateReagent.";
+
+    var builder = new GenericUserInterfaceModelBuilder<ChemistryReagentNameAndIdModel>(modelPrefix, GenericUserInterfaceValueProvider.Create(Model));
+        
+    builder = builder.HiddenFor(x => x.Id);
 }
 
-<h2>Редактирование реагента</h2>
+<div class="form-group m-form__group m--margin-top-10">
+    <div class="alert m-alert m-alert--default" role="alert">
+        Редактирование реагента
+    </div>
+</div>
 
-<div class="table-responsive">
-    <table class="table table-hover">
-        <thead>
+@await Html.RenderGenericUserInterfaceAsync(builder.Result)
 
-        </thead>
-
-        <tbody>
-            <tr>
-                <th>
-                    <strong>Название</strong>
-                </th>
-
-                <th>
-                    <strong>
-                        @Html.TextBox("Name", value: Model.Name, htmlAttributes: new { @class = "form-control" })
-                    </strong>
-                    
-                </th>
-            </tr>
-
-            <tr>
-                <th colspan="2">
-                    <button class="btn btn-primary btn-block" onclick="EditReagentHandler()">
-                        
-                        Редактировать реагент
-                    </button>
-                </th>
-            </tr>
-        </tbody>
-    </table>
+<div class="m-portlet__foot m-portlet__foot--fit">
+    <div class="m-form__actions m-form__actions">
+        <div class="row">
+            <div class="col-lg-9">
+                <button type="reset" class="btn btn-brand form-action-btn btn-reagent-create">Редактировать</button>
+                <button type="reset" onclick="location.href='/Chemistry/Reagents/Index'" class="btn btn-secondary">Отмена</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div style="height:50px">
@@ -53,61 +47,61 @@
             <tr>
                 <th>
                     <strong>Название задания</strong>
-                    
+
                 </th>
 
                 <th>
                     <strong>Исполнитель</strong>
-                    
+
                 </th>
 
                 <th>
                     <strong>Получено (кг)</strong>
-                    
+
                 </th>
 
                 <th>
                     <strong>Сдано (кг)</strong>
-                    
+
                 </th>
 
                 <th>
                     <strong>Расход (кг)</strong>
-                    
+
                 </th>
 
             </tr>
         </thead>
 
         <tbody>
-            @foreach(var task in Model.Tasks)
+            @foreach (var task in Model.Tasks)
             {
-            <tr>
-                <td>
-                    <a href="/Chemistry/Tasks/Task/@task.Task.Id">
-                        @task.Task.Title
-                    </a>
+                <tr>
+                    <td>
+                        <a href="/Chemistry/Tasks/Task/@task.Task.Id">
+                            @task.Task.Title
+                        </a>
 
-                </td>
+                    </td>
 
-                <td>
-                    <a href="/Admin/Users/Details/@task.Task.PerformerUser.Id">
-                        @task.Task.PerformerUser.Name
-                    </a>
-                </td>
+                    <td>
+                        <a href="/Admin/Users/Details/@task.Task.PerformerUser.Id">
+                            @task.Task.PerformerUser.Name
+                        </a>
+                    </td>
 
-                <td>
-                    @task.TakenQuantity
-                </td>
+                    <td>
+                        @task.TakenQuantity
+                    </td>
 
-                <td>
-                    @task.ReturnedQuantity
-                </td>
+                    <td>
+                        @task.ReturnedQuantity
+                    </td>
 
-                <td>
-                    @(task.TakenQuantity-task.ReturnedQuantity)
-                </td>
-            </tr>
+                    <td>
+                        @(task.TakenQuantity - task.ReturnedQuantity)
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -115,17 +109,15 @@
 
 @section Scripts {
     <script>
-        function EditReagentHandler() {
-            var data = {
-                Id: "@Model.Id",
-                Name: document.getElementsByName("Name")[0].value
-            };
+        $(".btn-reagent-create").on("click", () => {
+            
+            const data = TryForm.GetDataForFormByModelPrefix("@modelPrefix");
 
             Requester.SendPostRequestWithAnimation("/Api/Chemistry/Reagents/CreateOrUpdate", data, x => {
                 if (x.IsSucceeded) {
                     setTimeout(() => location.href = '/Chemistry/Reagents/Index', 1500);
                 }
             });
-        }
+        })
     </script>
 }

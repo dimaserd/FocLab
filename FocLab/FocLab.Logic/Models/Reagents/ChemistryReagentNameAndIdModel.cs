@@ -1,6 +1,7 @@
 ﻿using FocLab.Model.Entities.Chemistry;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
 namespace FocLab.Logic.Models.Reagents
@@ -9,6 +10,7 @@ namespace FocLab.Logic.Models.Reagents
     {
         public string Id { get; set; }
 
+        [Display(Name = "Название реагента")]
         public string Name { get; set; }
 
         [JsonIgnore]

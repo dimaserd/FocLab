@@ -11,6 +11,7 @@
     RenderTextBox(typeDescription: CrocoTypeDescription, wrap: boolean): string;
     RenderTextArea(typeDescription: CrocoTypeDescription, wrap: boolean): string;
     RenderGenericDropList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[], isMultiple: boolean, wrap: boolean): string;
+    private WrapInForm;
     RenderDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[], wrap: boolean): string;
     RenderMultipleDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[], wrap: boolean): string;
 }

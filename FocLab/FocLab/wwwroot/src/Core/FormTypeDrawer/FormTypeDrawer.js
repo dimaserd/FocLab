@@ -46,7 +46,7 @@ var FormDrawImplementation = (function () {
         if (!wrap) {
             return html;
         }
-        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + "\n                    " + html + "\n                </div>";
+        return this.WrapInForm(typeDescription, html);
     };
     FormDrawImplementation.prototype.RenderTextBox = function (typeDescription, wrap) {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
@@ -54,7 +54,7 @@ var FormDrawImplementation = (function () {
         if (!wrap) {
             return html;
         }
-        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + ">\n                    " + html + "\n                </div>";
+        return this.WrapInForm(typeDescription, html);
     };
     FormDrawImplementation.prototype.RenderTextArea = function (typeDescription, wrap) {
         var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
@@ -63,7 +63,7 @@ var FormDrawImplementation = (function () {
         if (!wrap) {
             return html;
         }
-        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + ">\n                      " + html + "\n                </div>";
+        return this.WrapInForm(typeDescription, html);
     };
     FormDrawImplementation.prototype.RenderGenericDropList = function (typeDescription, selectList, isMultiple, wrap) {
         var rawValue = ValueProviderHelper.GetRawValueFromValueProvider(typeDescription, this._model.ValueProvider);
@@ -75,7 +75,10 @@ var FormDrawImplementation = (function () {
         if (!wrap) {
             return html;
         }
-        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix) + ">\n                    " + html + "\n            </div>";
+        return this.WrapInForm(typeDescription, html);
+    };
+    FormDrawImplementation.prototype.WrapInForm = function (prop, html) {
+        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(prop.PropertyName, this._model.Prefix) + ">\n                    " + html + "\n                </div>";
     };
     FormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList, wrap) {
         return this.RenderGenericDropList(typeDescription, selectList, false, wrap);

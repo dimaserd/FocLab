@@ -1,50 +1,48 @@
 ﻿@using FocLab.Logic
+@using FocLab.Logic.Models.Reagents
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Создание реагента";
+
+    var modelPrefix = "create.";
+
+    var builder = new GenericUserInterfaceModelBuilder<ChemistryReagentNameAndIdModel>(modelPrefix)
+        .HiddenFor(x => x.Id);
+
 }
 
-<h2>Создание нового реагента</h2>
+<div class="form-group m-form__group m--margin-top-10">
+    <div class="alert m-alert m-alert--default" role="alert">
+        Создание нового реагента
+    </div>
+</div>
 
-<div class="table-responsive">
-    <table class="table table-bordered table-striped">
-        <thead>
+@await Html.RenderGenericUserInterfaceAsync(builder.Result)
 
-        </thead>
-
-        <tbody>
-            <tr>
-                <th>
-                    Название
-                </th>
-
-                <th>
-                    @Html.TextBox("Name", "", new { @class = "form-control" })
-                </th>
-            </tr>
-
-            <tr>
-                <th colspan="2">
-                    <button class="btn btn-primary btn-block" onclick="CreateReagentHandler()">
-                        <i class="fa fa-plus-circle"></i>
-                        Создать реагент
-                    </button>
-                </th>
-            </tr>
-        </tbody>
-    </table>
+<div class="m-portlet__foot m-portlet__foot--fit">
+    <div class="m-form__actions m-form__actions">
+        <div class="row">
+            <div class="col-lg-9">
+                <button type="reset" class="btn btn-brand form-action-btn btn-reagent-create">Создать</button>
+                <button type="reset" onclick="location.href='/Chemistry/Reagents/Index'" class="btn btn-secondary">Отмена</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     <script>
-        function CreateReagentHandler() {
-            const data = { Name: document.getElementsByName("Name")[0].value };
+
+        $(".btn-reagent-create").on("click", () => {
+            
+            const data = TryForm.GetDataForFormByModelPrefix("@modelPrefix");
 
             Requester.SendPostRequestWithAnimation("/Api/Chemistry/Reagents/CreateOrUpdate", data, x => {
                 if (x.IsSucceeded) {
                     setTimeout(() => location.href = '/Chemistry/Reagents/Index', 1500);
                 }
             });
-        }
+        })
+
     </script>
 }

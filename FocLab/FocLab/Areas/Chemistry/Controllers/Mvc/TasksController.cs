@@ -124,11 +124,6 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
                 return RedirectToAction("Index");
             }
 
-            if (!User.HasRight(UserRight.Admin) && !User.HasRight(UserRight.SuperAdmin) && task.PerformerUser.Id != UserId)
-            {
-                return RedirectToAction("Index");
-            }
-
             ViewData["task"] = task;
             return View(task);
         }

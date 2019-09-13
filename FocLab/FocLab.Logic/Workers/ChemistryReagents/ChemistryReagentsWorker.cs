@@ -100,6 +100,11 @@ namespace FocLab.Logic.Workers.ChemistryReagents
                 return new BaseApiResponse(false, "Реагент не найден по указанному идентификатору");
             }
 
+            if(chemistryReagent.Name == model.Name)
+            {
+                return new BaseApiResponse(false, "Название реагента не изменилось");
+            }
+
             chemistryReagent.Name = model.Name;
 
             repo.UpdateHandled(chemistryReagent);

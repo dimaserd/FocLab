@@ -44,9 +44,7 @@
             return html;
         }
 
-        return `<div class="form-group m-form__group" ${FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix)}
-                    ${html}
-                </div>`;
+        return this.WrapInForm(typeDescription, html);
     }
 
     RenderTextBox(typeDescription: CrocoTypeDescription, wrap: boolean): string {
@@ -60,9 +58,7 @@
             return html;
         }
 
-        return  `<div class="form-group m-form__group" ${FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix)}>
-                    ${html}
-                </div>`;
+        return this.WrapInForm(typeDescription, html);
     }
 
     RenderTextArea(typeDescription: CrocoTypeDescription, wrap: boolean): string {
@@ -78,9 +74,7 @@
             return html;
         }
 
-        return `<div class="form-group m-form__group" ${FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix)}>
-                      ${html}
-                </div>`;
+        return this.WrapInForm(typeDescription, html);
     }
 
     RenderGenericDropList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[], isMultiple: boolean, wrap: boolean): string {
@@ -101,9 +95,13 @@
             return html;
         }
 
-        return `<div class="form-group m-form__group" ${FormDrawHelper.GetOuterFormAttributes(typeDescription.PropertyName, this._model.Prefix)}>
+        return this.WrapInForm(typeDescription, html);
+    }
+
+    private WrapInForm(prop: CrocoTypeDescription, html: string): string {
+        return `<div class="form-group m-form__group" ${FormDrawHelper.GetOuterFormAttributes(prop.PropertyName, this._model.Prefix)}>
                     ${html}
-            </div>`;
+                </div>`;
     }
 
     RenderDropDownList(typeDescription: CrocoTypeDescription, selectList: SelectListItem[], wrap: boolean): string {

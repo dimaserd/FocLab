@@ -19,7 +19,6 @@ using Zoo.Doc.WordGen.Workers;
 
 namespace Doc.Logic.Workers
 {
-
     /// <summary>
     /// Класс для процессинга документов
     /// </summary>
@@ -60,7 +59,55 @@ namespace Doc.Logic.Workers
         /// <param name="model"></param>
         private static BaseApiResponse RenderInner(ChemistryTask model, string docTemplateFileName, string docSaveFileName)
         {
-            var substanceCounter = Tool.JsonConverter.Deserialize<Chemistry_SubstanceCounter>(model.SubstanceCounterJson);
+            var file = model.Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage);
+
+            var docModel = GetDocumentObjectModel(docTemplateFileName, docSaveFileName,
+                model.SubstanceCounterJson, GetDocumentReplacesDicitonaryByTask(model), file);
+
+            var proccessor = new WordDocumentProcessor(new WordDocumentProcessorOptions {
+                Engine = new DocOpenFormatWordEngine()
+            });
+
+            return proccessor.RenderDocument(docModel);
+        }
+
+
+        private static DocXDocumentObjectModel GetDocumentObjectModel(string docTemplateFileName, string docSaveFileName, string substanceCounterJson, Dictionary<string, string> replaceDict, ChemistryTaskDbFile file)
+        {
+            var res = new  DocXDocumentObjectModel
+            {
+                Replaces = replaceDict,
+
+                Tables = new List<DocumentTable>
+                {
+                    GetSubstanceDocumentTable(substanceCounterJson)
+                },
+
+                DocumentTemplateFileName = docTemplateFileName,
+
+                ToReplaceImages = file != null ? new List<DocxImageReplace>
+                {
+                    new DocxImageReplace
+                    {
+                        TextToReplace = "{PicturePlace}",
+                        ImageFilePath = CrocoApp.Application.FileCopyWorker.GetResizedImageLocalPath(file.FileId, ImageSizeType.Original),
+                    }
+                } : new List<DocxImageReplace>(),
+
+                DocumentSaveFileName = docSaveFileName,
+            };
+
+            if (file == null)
+            {
+                res.Replaces.Add("{PicturePlace}", "");
+            }
+
+            return res;
+        }
+
+        private static DocumentTable GetSubstanceDocumentTable(string substanceJson)
+        {
+            var substanceCounter = Tool.JsonConverter.Deserialize<Chemistry_SubstanceCounter>(substanceJson);
 
             if (substanceCounter == null)
             {
@@ -92,73 +139,40 @@ namespace Doc.Logic.Workers
                 }
             });
 
-            var file = model.Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage);
-
-            var imgPath = file != null ? 
-                CrocoApp.Application.FileCopyWorker.GetResizedImageLocalPath(file.FileId, ImageSizeType.Original)
-                : "";
-
-            var docModel = new DocXDocumentObjectModel
+            return new DocumentTable
             {
-                Replaces = new Dictionary<string, string>
+                PlacingText = "{SubstancesTablePlace}",
+
+                Header = new List<string>
                 {
-                    ["{Title}"] = model.Title,
-                    ["{PerformerQuality}"] = model.PerformerQuality,
-                    ["{PerformerQuantity}"] = model.PerformerQuantity,
-                    ["{AdminQuality}"] = model.AdminQuality,
-                    ["{AdminQuantity}"] = model.AdminQuantity,
-                    ["{PerformerName}"] = model.PerformerUser.Name,
-                    ["{PerformerText}"] = model.PerformerText
+                    "Название вещества",
+                    "Масса вещества (г)",
+                    "Молярная масса (г / моль)",
+                    "Коэфициент"
                 },
 
-                Tables = new List<DocumentTable>
+                Data = substanceCounter.Substances.Select(x => new List<string>
                 {
-                    new DocumentTable
-                    {
-                        PlacingText = "{SubstancesTablePlace}",
-
-                        Header = new List<string>
-                        {
-                            "Название вещества",
-                            "Масса вещества (г)",
-                            "Молярная масса (г / моль)",
-                            "Коэфициент"
-                        },
-
-                        Data = substanceCounter.Substances.Select(x => new List<string>
-                        {
-                            x.Name,
-                            x.Massa,
-                            x.MolarMassa,
-                            x.Koef
-                        }).ToList()
-                    }
-                },
-
-                DocumentTemplateFileName = docTemplateFileName,
-
-                ToReplaceImages = file != null ? new List<DocxImageReplace>
-                {
-                    new DocxImageReplace
-                    {
-                        TextToReplace = "{PicturePlace}",
-                        ImageFilePath = imgPath,
-                    }
-                } : new List<DocxImageReplace>(),
-
-                DocumentSaveFileName = docSaveFileName,
+                    x.Name,
+                    x.Massa,
+                    x.MolarMassa,
+                    x.Koef
+                }).ToList()
             };
+        }
 
-            if (file == null)
+        private static Dictionary<string, string> GetDocumentReplacesDicitonaryByTask(ChemistryTask model)
+        {
+            return new Dictionary<string, string>
             {
-                docModel.Replaces.Add("{PicturePlace}", "");
-            }
-
-            var proccessor = new WordDocumentProcessor(new WordDocumentProcessorOptions {
-                Engine = new DocOpenFormatWordEngine()
-            });
-
-            return proccessor.RenderDocument(docModel);
+                ["{Title}"] = model.Title,
+                ["{PerformerQuality}"] = model.PerformerQuality,
+                ["{PerformerQuantity}"] = model.PerformerQuantity,
+                ["{AdminQuality}"] = model.AdminQuality,
+                ["{AdminQuantity}"] = model.AdminQuantity,
+                ["{PerformerName}"] = model.PerformerUser.Name,
+                ["{PerformerText}"] = model.PerformerText
+            };
         }
     }
 }

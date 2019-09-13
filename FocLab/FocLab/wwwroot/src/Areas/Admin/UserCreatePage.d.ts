@@ -12,5 +12,4 @@ declare class GetListResut<T> {
 }
 declare class UserCreatePage {
     static SetHandlers(modelPrefix: string): void;
-    static AfterDrawHandler(modelPrefix: string): void;
 }
