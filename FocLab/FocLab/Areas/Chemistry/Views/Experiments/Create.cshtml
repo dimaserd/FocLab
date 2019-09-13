@@ -4,14 +4,9 @@
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Задание";
 
-    List<MySelectListItem> selectData = ViewData["selectData"] as List<MySelectListItem>;
-
     var modelPrefix = "create.";
 
     var builder = new GenericUserInterfaceModelBuilder<CreateExperiment>(modelPrefix);
-
-    builder.DropDownListFor(x => x.TaskId, selectData);
-    
 }
 
 <div class="form-group m-form__group m--margin-top-10">
@@ -20,7 +15,7 @@
     </div>
 </div>  
 
-@Html.RenderGenericUserInterfaceAsync(builder.Result)
+@await Html.RenderGenericUserInterfaceAsync(builder.Result)
 
 <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions m-form__actions">
@@ -35,7 +30,6 @@
 
 
 @section Scripts{
-
     <script src="~/js/Experiments.min.js"></script>
-    <script src="src/Areas/Chemistry/Experiments/CreateExperiment.js"></script>
+    <script src="~/src/Areas/Chemistry/Experiments/CreateExperiment.js"></script>
 }

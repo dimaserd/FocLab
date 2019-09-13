@@ -34,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\Task.min.js" />
     <Content Remove="wwwroot\src\Areas\Admin\UserCreatePage.ts" />
     <Content Remove="wwwroot\src\Areas\Chemistry\Experiments\CreateExperiment.ts" />
     <Content Remove="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />
@@ -62,6 +63,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\Task.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\src\Core\FormTypeDrawer\FormTypeDrawer.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.6" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.7.6" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -79,6 +85,7 @@
 
   <ItemGroup>
     <None Include="wwwroot\DocTemplates\Document.docx" />
+    <None Include="wwwroot\js\Task.min.js" />
     <None Include="wwwroot\src\Core\AccountWorker.d.ts" />
     <None Include="wwwroot\src\Core\AccountWorker.js" />
     <None Include="wwwroot\src\Core\AccountWorker.ts" />

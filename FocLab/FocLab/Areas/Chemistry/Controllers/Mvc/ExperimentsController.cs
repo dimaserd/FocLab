@@ -69,19 +69,8 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<ActionResult> Create(string id)
+        public ActionResult Create(string id)
         {
-            var tasks = await ChemistryTasksWorker.GetAllTasksAsync();
-
-            var selectData = tasks.Select(x => new MySelectListItem
-            {
-                Selected = x.Id == id,
-                Text = x.Title,
-                Value = x.Id
-            }).ToList();
-
-            ViewData["selectData"] = selectData;
-
             return View();
         }
 
