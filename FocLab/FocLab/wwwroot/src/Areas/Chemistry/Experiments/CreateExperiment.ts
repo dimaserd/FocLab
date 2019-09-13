@@ -1,6 +1,6 @@
 ﻿class CreateExperiment {
 
-    static _modelPrefix: string = "create.";
+    static _modelPrefix = "create.";
 
     static Create(): void {
 
@@ -22,11 +22,15 @@
 
         Requester.SendAjaxGet("/Api/Chemistry/Tasks/GetAll", null, (resp: Array<{Id: string, Title: string}>) => {
 
+            let idOfExp = window.location.href.split("/").reverse()[0];
+
+            idOfExp = idOfExp === "Create" ? null : idOfExp;
+
             const selList: Array<SelectListItem> = resp.map(t => {
                 return {
                     Value: t.Id,
                     Text: t.Title,
-                    Selected: false
+                    Selected: t.Id === idOfExp
                 }
             });
 

@@ -15,11 +15,13 @@
     };
     CreateExperiment.AfterDrawHandler = function () {
         Requester.SendAjaxGet("/Api/Chemistry/Tasks/GetAll", null, function (resp) {
+            var idOfExp = window.location.href.split("/").reverse()[0];
+            idOfExp = idOfExp === "Create" ? null : idOfExp;
             var selList = resp.map(function (t) {
                 return {
                     Value: t.Id,
                     Text: t.Title,
-                    Selected: false
+                    Selected: t.Id === idOfExp
                 };
             });
             var taskIdPropName = "TaskId";
