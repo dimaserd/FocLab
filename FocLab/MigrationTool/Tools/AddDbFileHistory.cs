@@ -19,7 +19,7 @@ namespace MigrationTool.Tools
 
         public async Task<BaseApiResponse> Execute()
         {
-            int count = 10;
+            var count = 10;
 
             var doneBatchesCount = await ExecuteBatch(count);
 

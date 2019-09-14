@@ -33,5 +33,12 @@ namespace FocLab.Api.Controllers.Api.FocLab
         {
             return AddDbFileHistory.GetCountLeftAsync();
         }
+
+        [HttpPost("AddFileHistory")]
+        [ProducesDefaultResponseType(typeof(BaseApiResponse))]
+        public Task<BaseApiResponse> AddFileHistory()
+        {
+            return AddDbFileHistory.Execute();
+        }
     }
 }
