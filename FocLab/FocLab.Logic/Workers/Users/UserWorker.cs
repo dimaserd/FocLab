@@ -8,7 +8,6 @@ using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
-using FocLab.Logic.Services;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;

@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
-using Croco.Core.Extensions.Enumerations;
 using Croco.Core.Search.Extensions;
 using Croco.Core.Search.Models;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities.Users.Default;
-using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers.Users

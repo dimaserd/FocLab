@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
-using FocLab.Logic.Extensions;
+using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
 using FocLab.Logic.Settings.Statics;
@@ -36,19 +36,22 @@ namespace FocLab.Logic.Workers.Users
 
             var fileManager = new ApplicationFileManager(AmbientContext.RepositoryFactory);
 
-            var file = await fileManager.GetFilesQueryable().FirstOrDefaultAsync(x => x.Id == fileId);
+            var file = await fileManager.GetFilesQueryable().Select(x => new { x.Id, x.FileName })
+                .FirstOrDefaultAsync(x => x.Id == fileId);
 
             if (file == null)
             {
                 return new BaseApiResponse(false, DbFileValidationMessages.FileIsNotFoundById);
             }
 
-            if (!file.IsImage())
+            if (!FocLabWebApplication.IsImage(file.FileName))
             {
                 return new BaseApiResponse(false, DbFileValidationMessages.FileIsNotImage);
             }
 
             userToEditEntity.AvatarFileId = fileId;
+
+            userRepo.UpdateHandled(userToEditEntity);
 
             return await TryExecuteCodeAndReturnSuccessfulResultAsync(async () =>
             {

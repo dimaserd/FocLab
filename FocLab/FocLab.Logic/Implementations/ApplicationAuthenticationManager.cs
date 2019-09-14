@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using FocLab.Logic.Abstractions;
-using FocLab.Logic.Services;
 using FocLab.Model.Entities.Users.Default;
 using Microsoft.AspNetCore.Identity;
 

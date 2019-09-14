@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 using Croco.Core.Abstractions;
 using Croco.Core.Common.Models;
 using Croco.Core.Extensions.Enumerations;
-using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
-using FocLab.Logic.Services;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
 using Microsoft.AspNetCore.Identity;
@@ -17,12 +15,7 @@ namespace FocLab.Logic.Workers.Users
 {
     public class UserRoleWorker : BaseChemistryWorker
     {
-        public static int GetHighRoleOfUser(ApplicationUserDto user)
-        {
-            return GetHighRoleOfUser(user.Roles.Select(x => x.RoleName));
-        }
-
-        public static int GetHighRoleOfUser(IEnumerable<string> roles)
+        public static int GetHighRoleOfUser(IList<string> roles)
         {
             var rightsToCheck = new[]
             {
@@ -93,20 +86,9 @@ namespace FocLab.Logic.Workers.Users
 
             var addingToRoleResult = await userManager.AddToRoleAsync(userEditor, role.Name);
 
-            if (!addingToRoleResult.Succeeded)
-            {
-                return new BaseApiResponse(false, addingToRoleResult.Errors.First().Description);
-            }
-
-            return new BaseApiResponse(true, $"Право {userIdAndRole.Role.ToDisplayName()} добавлено пользователю {user.Name}"); ;
+            return !addingToRoleResult.Succeeded ? new BaseApiResponse(false, addingToRoleResult.Errors.First().Description) 
+                : new BaseApiResponse(true, $"Право {userIdAndRole.Role.ToDisplayName()} добавлено пользователю {user.Name}");
         }
-
-
-        public async Task<List<string>> GetRolesAsync()
-        {
-            return await Context.Roles.Select(x => x.Name).ToListAsync();
-        }
-
 
         public async Task<BaseApiResponse> RemoveRoleFromUserAsync(UserIdAndRole userIdAndRole, UserManager<ApplicationUser> userManager)
         {
@@ -160,12 +142,8 @@ namespace FocLab.Logic.Workers.Users
 
             var removingToRoleResult = await userManager.RemoveFromRoleAsync(userEditor, role.Name);
 
-            if (!removingToRoleResult.Succeeded)
-            {
-                return new BaseApiResponse(false, removingToRoleResult.Errors.First().Description);
-            }
-
-            return new BaseApiResponse(true, $"Право {userIdAndRole.Role.ToDisplayName()} удалено у пользователя {user.Name}"); ;
+            return !removingToRoleResult.Succeeded ? new BaseApiResponse(false, removingToRoleResult.Errors.First().Description) 
+                : new BaseApiResponse(true, $"Право {userIdAndRole.Role.ToDisplayName()} удалено у пользователя {user.Name}");
         }
 
         public UserRoleWorker(ICrocoAmbientContext context) : base(context)
