@@ -183,7 +183,7 @@ namespace FocLab
             });
         }
 
-        private void ConfigureJsonSerializer(JsonSerializerSettings settings)
+        private static void ConfigureJsonSerializer(JsonSerializerSettings settings)
         {
             settings.ContractResolver = new DefaultContractResolver();
             settings.Converters.Add(new StringEnumConverter());
