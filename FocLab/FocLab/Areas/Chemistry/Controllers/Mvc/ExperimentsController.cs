@@ -1,14 +1,10 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FocLab.Areas.Chemistry.Controllers.Base;
 using FocLab.Consts;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryTaskExperiments;
-using FocLab.Logic.Workers.ChemistryTasks;
 using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Zoo.GenericUserInterface.Models;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
@@ -17,13 +13,9 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     /// Контроллер содержащий методы для работы с экспериментами
     /// </summary>
     [Area(AreaConsts.Chemistry)]
-
     public class ExperimentsController : BaseFocLabController
     {
-
         private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker => new ChemistryTaskExperimentsWorker(AmbientContext);
-        
-        private ChemistryTasksWorker ChemistryTasksWorker => new ChemistryTasksWorker(AmbientContext);
 
         /// <summary>
         /// Получить эксперименты
@@ -67,9 +59,8 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         /// <summary>
         /// Создание эксперимента к заданию
         /// </summary>
-        /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult Create(string id)
+        public ActionResult Create()
         {
             return View();
         }

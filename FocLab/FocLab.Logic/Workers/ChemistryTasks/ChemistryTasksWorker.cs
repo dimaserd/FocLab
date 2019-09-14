@@ -115,7 +115,6 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// <summary>
         /// Конструктор
         /// </summary>
-        /// <param name="contextWrapper"></param>
         public ChemistryTasksWorker(ICrocoAmbientContext context) : base(context)
         {
         }
