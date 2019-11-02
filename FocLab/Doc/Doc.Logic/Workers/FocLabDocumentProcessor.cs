@@ -1,8 +1,8 @@
 ﻿using Croco.Core.Abstractions;
 using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
-using Croco.Core.Common.Models;
-using Croco.Core.Common.Utils;
+using Croco.Core.Models;
+using Croco.Core.Utils;
 using Doc.Logic.Entities;
 using Doc.Logic.Models;
 using FocLab.Logic.Models;
@@ -40,7 +40,7 @@ namespace Doc.Logic.Workers
         /// <returns></returns>
         public async Task<BaseApiResponse> RanderByTaskIdAsync(RenderChemistryTaskDocument model)
         {
-            var task = await GetRepository<ChemistryTask>().Query()
+            var task = await Query<ChemistryTask>()
                 .Include(x => x.Files)
                 .Include(x => x.PerformerUser)
                 .FirstOrDefaultAsync(x => x.Id == model.TaskId);

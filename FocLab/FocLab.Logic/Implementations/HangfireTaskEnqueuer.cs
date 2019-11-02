@@ -1,4 +1,4 @@
-﻿using Croco.Core.EventSourcing.Abstractions;
+﻿using Croco.Core.Abstractions.EventSourcing;
 using Hangfire;
 using System;
 using System.Linq.Expressions;

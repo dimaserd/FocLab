@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Croco.Core.Abstractions.Files;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Croco.Core.Abstractions;
 
 namespace FocLab.Logic.Settings.Statics
 {

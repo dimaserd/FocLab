@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Common.Models;
+using Croco.Core.Models;
 using Croco.Core.Logic.Models.Files;
 using FocLab.Api.Controllers.Base;
 using FocLab.Api.Models;
@@ -89,7 +89,7 @@ namespace FocLab.Api.Controllers.Api
         [HttpPost("Local/CopySomeFiles")]
         public Task<BaseApiResponse> CopyFilesThatAreNotOnMachine(int count)
         {
-            return FileWorker.BaseManager.MakeLocalCopies(count);
+            return FileWorker.BaseManager.LocalStorageService.MakeLocalCopies(count, true);
         }
     }
 }

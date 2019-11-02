@@ -1,6 +1,6 @@
 ﻿using Croco.Core.Abstractions;
-using Croco.Core.Common.Models;
 using Croco.Core.Logic.Workers;
+using Croco.Core.Models;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;

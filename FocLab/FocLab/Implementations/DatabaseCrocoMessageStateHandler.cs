@@ -1,7 +1,7 @@
 ﻿using Croco.Core.Abstractions;
-using Croco.Core.EventSourcing.Abstractions;
-using Croco.Core.EventSourcing.Enumerations;
-using Croco.Core.EventSourcing.Implementations;
+using Croco.Core.Abstractions.EventSourcing;
+using Croco.Core.Abstractions.EventSourcing.Enumerations;
+using Croco.Core.Abstractions.EventSourcing.Models;
 using System.Threading.Tasks;
 
 namespace FocLab.Implementations
@@ -22,6 +22,10 @@ namespace FocLab.Implementations
             return Task.FromResult(CrocoMessageState.Created);
         }
 
+        public Task<CrocoMessageState> GetMessageStateAsync(ICrocoAmbientContext ambientContext, string messageId)
+        {
+            throw new System.NotImplementedException();
+        }
 
         public Task UpdateMessageStateAsync(ICrocoAmbientContext ambientContext, CrocoIntegrationMessage message, CrocoMessageState state)
         {

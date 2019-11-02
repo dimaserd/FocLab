@@ -1,4 +1,4 @@
-﻿using Croco.Core.EventSourcing.Abstractions;
+﻿using Croco.Core.Abstractions.EventSourcing;
 using Ecc.Logic.EventHandlers;
 using FocLab.Logic.Events;
 

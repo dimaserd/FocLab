@@ -22,28 +22,22 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using FocLab.Logic.Extensions;
+using FocLab.Configuration.Hangfire;
+using FocLab.Configuration.Swagger;
+using System.Collections.Generic;
 
 namespace FocLab
 {
-    public class MyDashboardAuthorizationFilter : IDashboardAuthorizationFilter
-    {
-        public bool Authorize(DashboardContext context)
-        {
-            var httpContext = context.GetHttpContext();
-
-            var user = httpContext.User;
-
-            //Разрешаем всем пользователям с данными правами доступ к дашборду
-            return user.HasRight(UserRight.Developer) || user.IsAdmin();
-        }
-    }
-
     public class Startup
     {
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
-            Croco = new StartupCroco(configuration, env);
+            Croco = new StartupCroco(new StartUpCrocoOptions 
+            {
+                Configuration = configuration,
+                Env = env,
+            });
         }
 
         public StartupCroco Croco { get; }
@@ -89,23 +83,8 @@ namespace FocLab
                 opts.Password.RequireDigit = false;
             }).AddEntityFrameworkStores<ChemistryDbContext>();
 
-            // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c =>
+            SwaggerConfiguration.ConfigureSwagger(services, new List<string>
             {
-                c.SwaggerDoc("v1", new Info
-                {
-                    Version = "v1",
-                    Title = "FocLab API",
-                    Description = "FocLab ASP.NET Core Web API",
-                    TermsOfService = "None",
-                    Contact = new Contact
-                    {
-                        Name = "Dmitry Serdyukov",
-                        Email = "dimaserd96@yandex.ru",
-                        Url = null
-                    }
-                });
-                c.EnableAnnotations();
             });
 
             services.AddSignalR().AddJsonProtocol(options => ConfigureJsonSerializer(options.PayloadSerializerSettings));
@@ -143,9 +122,6 @@ namespace FocLab
                 app.UseHsts();
             }
 
-            app.ConfigureExceptionHandler(new ApplicationLoggerManager());
-            
-            
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -163,24 +139,18 @@ namespace FocLab
 
             app.UseAuthentication();
 
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions
-            {
-                Authorization = new IDashboardAuthorizationFilter[]
-                {
-                    new MyDashboardAuthorizationFilter()
-                }
-            });
-
-            app.UseHangfireServer();
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     "areas",
-                    "{area:exists}/{controller=Chemistry}/{action=Index}/{id?}");
+                    "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.ConfigureExceptionHandler(new ApplicationLoggerManager());
+
+            HangfireConfiguration.AddHangfire(app, false);
         }
 
         private static void ConfigureJsonSerializer(JsonSerializerSettings settings)

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Common.Models;
+using Croco.Core.Models;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Services;

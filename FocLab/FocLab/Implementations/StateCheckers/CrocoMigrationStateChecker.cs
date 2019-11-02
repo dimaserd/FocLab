@@ -1,5 +1,5 @@
 ﻿using Croco.Core.Abstractions;
-using Croco.Core.Application;
+using Croco.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -9,11 +9,11 @@ namespace FocLab.Implementations.StateCheckers
     /// <summary>
     /// Проверяет базу данных на примененность последней версии миграций
     /// </summary>
-    public class CrocoMigrationStateChecker : ICrocoApplicationStateChecker
+    public class CrocoMigrationStateChecker
     {
-        public void CheckApplicationState(CrocoApplication app)
+        public static void CheckApplicationState(ICrocoApplication app)
         {
-            var context = app.GetDbContext();
+            var context = app.GetDatabaseContext(SystemCrocoExtensions.GetRequestContext()).GetDbContext();
 
             var contextType = context.GetType();
             var modelProjectName = contextType.Assembly.ManifestModule.Name.Replace(".dll", "");

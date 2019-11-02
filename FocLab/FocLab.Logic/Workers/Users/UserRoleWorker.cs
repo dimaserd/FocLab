@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
-using Croco.Core.Common.Models;
 using Croco.Core.Extensions.Enumerations;
+using Croco.Core.Models;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
 using FocLab.Model.Entities.Users.Default;

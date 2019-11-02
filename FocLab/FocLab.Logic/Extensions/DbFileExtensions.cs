@@ -1,13 +1,13 @@
 ﻿using System.IO;
-using Croco.Core.Abstractions;
 using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
-using Croco.Core.Common.Models;
+using Croco.Core.Models;
 using Croco.Core.Logic.Models.Files;
 using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities;
+using Croco.Core.Abstractions.Files;
 
 namespace FocLab.Logic.Extensions
 {
@@ -52,7 +52,7 @@ namespace FocLab.Logic.Extensions
             return new BaseApiResponse<DbFile>(checkResult.IsSucceeded, checkResult.Message, new DbFile
             {
                 Id = 0,
-                FileData = file.Data,
+                Data = file.Data,
                 FileName = file.FileName,
                 FilePath = ""
             });

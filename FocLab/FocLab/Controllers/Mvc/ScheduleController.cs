@@ -11,6 +11,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using FocLab.Logic.Models.Users;
 using Zoo.GenericUserInterface.Models;
+using FocLab.Model.Entities.Users.Default;
 
 namespace FocLab.Controllers.Mvc
 {
@@ -51,7 +52,7 @@ namespace FocLab.Controllers.Mvc
                 Value = x.Id
             });
 
-            var history = await CrocoApp.Application.GetAuditService().GetAuditData(task, TasksWorker.DbContext);
+            var history = await CrocoApp.Application.GetAuditService(Connection).GetAuditData<ApplicationDayTask, ApplicationUser>(task);
 
             return View(model);
         }

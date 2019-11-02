@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Common.Models;
+using Croco.Core.Models;
 using FocLab.Controllers.Base;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Models.Account;
@@ -80,7 +80,7 @@ namespace FocLab.Controllers.Mvc
         #region Обычные методы
         
         [AllowAnonymous]
-        public IActionResult AccessDenied(string returnUrl)
+        public IActionResult AccessDenied()
         {
             return View();
         }

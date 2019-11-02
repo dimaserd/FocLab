@@ -1,4 +1,4 @@
-﻿using Croco.Core.Common.Models;
+﻿using Croco.Core.Models;
 using Doc.Logic.Entities;
 using System;
 using Zoo.Doc.WordGen.Abstractions;

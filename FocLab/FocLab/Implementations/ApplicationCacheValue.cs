@@ -1,5 +1,5 @@
 ﻿using System;
-using Croco.Core.Cache.Abstractions;
+using Croco.Core.Abstractions.Cache;
 
 namespace FocLab.Implementations
 {

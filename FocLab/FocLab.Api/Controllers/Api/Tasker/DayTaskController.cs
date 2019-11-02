@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Croco.Core.Common.Models;
+using Croco.Core.Models;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Services;
 using FocLab.Model.Contexts;

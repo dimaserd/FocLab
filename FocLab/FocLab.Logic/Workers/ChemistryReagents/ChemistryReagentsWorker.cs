@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Common.Models;
+using Croco.Core.Models;
 using Croco.Core.Abstractions;
-using Croco.Core.Data.Abstractions.Repository;
 using FocLab.Logic.Models.Reagents;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
+using Croco.Core.Abstractions.Data.Repository;
 
 namespace FocLab.Logic.Workers.ChemistryReagents
 {

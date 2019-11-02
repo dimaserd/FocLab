@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Croco.Core.Common.Utils;
+using Croco.Core.Utils;
 using FocLab.Logic.Models.Experiments;
 using FocLab.Logic.Models.Methods;
 using FocLab.Logic.Models.Reagents;

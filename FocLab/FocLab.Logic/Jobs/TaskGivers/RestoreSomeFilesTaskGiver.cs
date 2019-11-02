@@ -19,7 +19,7 @@ namespace FocLab.Logic.Jobs.TaskGivers
 
             var fileWorker = new DbFileWorker(ambientContext);
 
-            await fileWorker.BaseManager.MakeLocalCopies(_countSetting);
+            await fileWorker.BaseManager.LocalStorageService.MakeLocalCopies(_countSetting, true);
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
-using Croco.Core.Common.Models;
+using Croco.Core.Models;
 using Croco.Core.Logic.Models.Files;
 using Croco.Core.Logic.Workers;
 using FocLab.Logic.EntityDtos;
@@ -13,6 +13,7 @@ using FocLab.Model.Enumerations;
 using Hangfire;
 using Croco.Core.Search.Models;
 using Croco.Core.Implementations.AmbientContext;
+using Croco.Core.Abstractions.Files;
 
 namespace FocLab.Logic.Workers
 {
@@ -67,12 +68,12 @@ namespace FocLab.Logic.Workers
         {
             var wrapper = new SystemCrocoAmbientContext();
 
-            return new ApplicationFileManager(wrapper.RepositoryFactory).MakeLocalCopies(filesCount);
+            return new ApplicationFileManager(wrapper.RepositoryFactory).LocalStorageService.MakeLocalCopies(filesCount, true);
         }
 
         public Task<DbFileIntIdModelNoData[]> GetFilesThatAreNotOnLocalMachineAsync()
         {
-            return BaseManager.GetFilesThatAreNotOnLocalMachine();
+            return BaseManager.LocalStorageService.GetFilesThatAreNotOnLocalMachine();
         }
     }
 }

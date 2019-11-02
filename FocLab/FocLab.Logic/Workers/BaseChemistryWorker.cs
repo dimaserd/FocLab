@@ -18,8 +18,6 @@ namespace FocLab.Logic.Workers
 
         public ChemistryDbContext Context => DbContext as ChemistryDbContext;
 
-        protected FocLabWebApplication Application => CrocoApp.Application as FocLabWebApplication;
-
         protected T GetSetting<T>() where T : class, ICommonSetting<T>, new()
         {
             return CrocoApp.Application.SettingsFactory.GetSetting<T>();

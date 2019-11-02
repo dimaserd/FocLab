@@ -1,5 +1,6 @@
 ﻿using Croco.Core.Abstractions;
-using Croco.Core.Data.Abstractions;
+using Croco.Core.Abstractions.Data;
+using Croco.Core.Implementations;
 using Croco.Core.Implementations.AmbientContext;
 using Croco.WebApplication.Models;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +24,10 @@ namespace FocLab.Api.Controllers.Base
 
         private ICrocoRequestContext _requestContext;
 
+        private ICrocoAmbientContext _ambientContext;
+
+        private ICrocoDataConnection _dataConnection;
+
         /// <inheritdoc />
         public CrocoGenericController(TContext context, SignInManager<TUser> signInManager, UserManager<TUser> userManager, Func<IPrincipal, string> getUserIdFunc, IHttpContextAccessor httpContextAccessor)
         {
@@ -32,6 +37,8 @@ namespace FocLab.Api.Controllers.Base
             HttpContextAccessor = httpContextAccessor;
             _getUserIdFunc = getUserIdFunc;
         }
+
+
 
         #region Свойства
 
@@ -51,24 +58,50 @@ namespace FocLab.Api.Controllers.Base
         /// <summary>
         /// Контекст текущего запроса
         /// </summary>
-        protected ICrocoRequestContext RequestContext 
+        protected ICrocoRequestContext RequestContext
         {
             get
             {
-                if(_requestContext == null)
+                if (_requestContext == null)
                 {
                     _requestContext = new WebAppCrocoRequestContext(CrocoPrincipal, Request.GetDisplayUrl());
                 }
 
                 return _requestContext;
             }
-        } 
+        }
 
         /// <summary>
         /// Обёртка для контекста окружения
         /// </summary>
-        public ICrocoAmbientContext AmbientContext => new CrocoAmbientContext(Context, RequestContext);
+        public ICrocoAmbientContext AmbientContext
+        {
+            get
+            {
+                if (_ambientContext == null)
+                {
+                    _ambientContext = new CrocoAmbientContext(Connection);
+                }
 
+                return _ambientContext;
+            }
+        }
+
+        /// <summary>
+        /// Соединение к удалённому источнику данных
+        /// </summary>
+        public ICrocoDataConnection Connection
+        {
+            get
+            {
+                if (_dataConnection == null)
+                {
+                    _dataConnection = new EntityFrameworkDataConnection(Context, RequestContext);
+                }
+
+                return _dataConnection;
+            }
+        }
 
         /// <summary>
         /// Менеджер авторизации
@@ -102,11 +135,14 @@ namespace FocLab.Api.Controllers.Base
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
+            //Закрываю транзакцию, чтобы выполнились отложенные действия
+            Connection.OnTransactionClosed().GetAwaiter().GetResult();
+
             if (disposing)
             {
                 var toDisposes = new IDisposable[]
                 {
-                    UserManager, Context
+                    _dataConnection, UserManager
                 };
 
                 for (var i = 0; i < toDisposes.Length; i++)

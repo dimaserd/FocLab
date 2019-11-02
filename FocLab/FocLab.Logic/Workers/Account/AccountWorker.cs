@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
-using Croco.Core.Common.Models;
+using Croco.Core.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Models.Account;

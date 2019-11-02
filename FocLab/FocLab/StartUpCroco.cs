@@ -1,11 +1,10 @@
-﻿using Croco.Core.Application;
+﻿using Croco.Core.Abstractions;
+using Croco.Core.Application;
 using Croco.Core.Application.Options;
 using Croco.Core.Common.Enumerations;
-using Croco.Core.EventSourcing.Abstractions;
-using Croco.Core.EventSourcing.Implementations;
+using Croco.Core.Hangfire.Extensions;
 using Croco.Core.Logic.Models.Files;
 using Croco.WebApplication.Application;
-using Ecc.Logic.RegistrationModule;
 using FocLab.Implementations;
 using FocLab.Implementations.StateCheckers;
 using FocLab.Logic.Implementations;
@@ -14,45 +13,32 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 
 namespace FocLab
 {
+    public class StartUpCrocoOptions
+    {
+        public IConfiguration Configuration { get; set; }
+
+        public IHostingEnvironment Env { get; set; }
+
+        public List<Action<ICrocoApplication>> ApplicationActions { get; set; } = new List<Action<ICrocoApplication>>();
+    }
+
     public class StartupCroco
     {
         public IConfiguration Configuration { get; }
         public IHostingEnvironment Env { get; }
 
-        public StartupCroco(IConfiguration configuration, IHostingEnvironment env)
+        public List<Action<ICrocoApplication>> ApplicationActions { get; }
+
+        public StartupCroco(StartUpCrocoOptions options)
         {
-            Configuration = configuration;
-            Env = env;
-        }
-
-        private ICrocoEventSourcer GetEventSourcer()
-        {
-            return new ApplicationCrocoEventSourcer(GetMessagePublisher());
-        }
-
-        private ICrocoMessagePublisher GetMessagePublisher()
-        {
-            var options = new CrocoMessageListenerOptions
-            {
-                TaskEnqueuer = new HangfireTaskEnqueuer(),
-            };
-
-            var evListener = new CrocoMessageListener(options);
-
-            //Подписка обработчиками на события
-            EccEventsSubscription.Subscribe(evListener);
-
-            var publisher = new CrocoMessagePublisher(new CrocoMessagePublisherOptions
-            {
-                EventListener = evListener,
-                StateHandler = new DatabaseCrocoMessageStateHandler()
-            });
-
-            return publisher;
+            Configuration = options.Configuration;
+            Env = options.Env;
+            ApplicationActions = options.ApplicationActions;
         }
 
         public void SetCrocoApplication(IServiceCollection services)
@@ -61,17 +47,16 @@ namespace FocLab
 
             services.AddSingleton<IMemoryCache, MemoryCache>(s => memCache);
 
-            var appOptions = new CrocoWebApplicationOptions(new ApplicationServerVirtualPathMapper(Env))
+            //Добавляю проверщика состояния миграций
+            ApplicationActions.Add(CrocoMigrationStateChecker.CheckApplicationState);
+
+            var appOptions = new CrocoWebApplicationOptions
             {
-                EventSourcer = GetEventSourcer(),
+                ApplicationUrl = "https://foc-lab.com",
+                VirtualPathMapper = new ApplicationServerVirtualPathMapper(Env),
                 CacheManager = new ApplicationCacheManager(memCache),
                 GetDbContext = () => ChemistryDbContext.Create(Configuration),
                 RequestContextLogger = new CrocoWebAppRequestContextLogger(),
-                //Устнавливаю проверщики состояния приложения
-                StateCheckers = new[]
-                {
-                    new CrocoMigrationStateChecker()
-                },
                 FileOptions = new CrocoFileOptions
                 {
                     SourceDirectory = Env.WebRootPath,
@@ -97,13 +82,14 @@ namespace FocLab
                             MaxHeight = 500,
                             MaxWidth = 500
                         }
-                    }
-                }
-            };
+                    },
+                },
+                AfterInitActions = ApplicationActions
+            }.AddHangfireEventSourcerAndJobManager();
 
             var application = new FocLabWebApplication(appOptions)
             {
-                IsDevelopment = Env.IsDevelopment(),
+                IsDevelopment = Env.IsDevelopment()
             };
 
             CrocoApp.Application = application;

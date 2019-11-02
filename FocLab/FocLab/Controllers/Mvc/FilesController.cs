@@ -77,7 +77,7 @@ namespace FocLab.Controllers.Mvc
         {
             if (file != null)
             {
-                return File(file.FileData, FocLabWebApplication.GetMimeMapping(file.FileName), file.FileName);
+                return File(file.Data, FocLabWebApplication.GetMimeMapping(file.FileName), file.FileName);
             }
 
             return HttpNotFound();

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Croco.Core.Cache.Abstractions;
+using Croco.Core.Abstractions.Cache;
 using Croco.Core.Application;
 
 namespace FocLab.Logic.Extensions

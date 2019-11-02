@@ -1,5 +1,5 @@
 ﻿using Croco.Core.Abstractions;
-using Croco.Core.Common.Models;
+using Croco.Core.Models;
 using FocLab.Model.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -42,7 +42,7 @@ namespace MigrationTool.Tools
             var histories = filesWithNoHistory.Select(x => new ApplicationDbFileHistory
             {
                 Id = Guid.NewGuid().ToString(),
-                FileData = x.FileData,
+                Data = x.Data,
                 FileName = x.FileName,
                 FilePath = x.FilePath,
                 ParentId = x.Id

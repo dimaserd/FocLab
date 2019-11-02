@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
-using Croco.Core.Common.Models;
+using Croco.Core.Models;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
@@ -36,7 +36,7 @@ namespace FocLab.Logic.Workers.Users
 
             var fileManager = new ApplicationFileManager(AmbientContext.RepositoryFactory);
 
-            var file = await fileManager.GetFilesQueryable().Select(x => new { x.Id, x.FileName })
+            var file = await fileManager.LocalStorageService.GetFilesQueryable().Select(x => new { x.Id, x.FileName })
                 .FirstOrDefaultAsync(x => x.Id == fileId);
 
             if (file == null)
