@@ -1,4 +1,4 @@
-﻿using Doc.Logic.Entities;
+﻿using Zoo.Doc.WordGen.Models;
 
 namespace Zoo.Doc.WordGen.Abstractions
 {

@@ -1,7 +1,7 @@
 ﻿using Croco.Core.Models;
-using Doc.Logic.Entities;
 using System;
 using Zoo.Doc.WordGen.Abstractions;
+using Zoo.Doc.WordGen.Models;
 
 namespace Zoo.Doc.WordGen.Workers
 {
@@ -32,5 +32,4 @@ namespace Zoo.Doc.WordGen.Workers
             }
         }
     }
-
 }

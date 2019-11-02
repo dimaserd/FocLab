@@ -5,10 +5,39 @@ using Zoo.Doc.WordGen.Models;
 
 namespace Zoo.Doc.WordGen.Implementations
 {
+    public class DocTableSettings
+    {
+        public string BorderColor { get; set; }
+
+        public uint BorderSize { get; set; }
+
+
+        public int HeaderFontSize { get; set; }
+
+        public bool BoldHeader { get; set; }
+
+        public int TableRowFontSize { get; set; }
+
+        public bool BoldTableRow { get; set; }
+    }
+
+
     public static class DocTableCreator
     {
-
         const int WidthForTable = 9026;
+
+        public static DocTableSettings GetDefaultSettings()
+        {
+            return new DocTableSettings
+            {
+                BorderColor = "bdd6ee",
+                BorderSize = 4,
+                HeaderFontSize = 12,
+                BoldHeader = false,
+                TableRowFontSize = 12,
+                BoldTableRow = false
+            };
+        }
 
         public static Table GetTable(DocumentTable model)
         {
@@ -20,7 +49,9 @@ namespace Zoo.Doc.WordGen.Implementations
 
             var borderType = new EnumValue<BorderValues>(BorderValues.Single);
 
-            var color = "bdd6ee";
+            var settings = GetDefaultSettings();
+
+            var color = settings.BorderColor;
 
             // Create a TableProperties object and specify its border information.
             TableProperties tblProp = new TableProperties(
@@ -29,7 +60,7 @@ namespace Zoo.Doc.WordGen.Implementations
                     new TopBorder()
                     {
                         Val = borderType,
-                        Size = 4,
+                        Size = settings.BorderSize,
                         Color = new StringValue
                         {
                             Value = color
@@ -38,7 +69,7 @@ namespace Zoo.Doc.WordGen.Implementations
                     new BottomBorder
                     {
                         Val = borderType,
-                        Size = 4,
+                        Size = settings.BorderSize,
                         Color = new StringValue
                         {
                             Value = color
@@ -47,7 +78,7 @@ namespace Zoo.Doc.WordGen.Implementations
                     new LeftBorder
                     {
                         Val = borderType,
-                        Size = 4,
+                        Size = settings.BorderSize,
                         Color = new StringValue
                         {
                             Value = color
@@ -56,7 +87,7 @@ namespace Zoo.Doc.WordGen.Implementations
                     new RightBorder
                     {
                         Val = borderType,
-                        Size = 4,
+                        Size = settings.BorderSize,
                         Color = new StringValue
                         {
                             Value = color
@@ -65,7 +96,7 @@ namespace Zoo.Doc.WordGen.Implementations
                     new InsideHorizontalBorder
                     {
                         Val = borderType,
-                        Size = 4,
+                        Size = settings.BorderSize,
                         Color = new StringValue
                         {
                             Value = color
@@ -74,7 +105,7 @@ namespace Zoo.Doc.WordGen.Implementations
                     new InsideVerticalBorder
                     {
                         Val = borderType,
-                        Size = 4,
+                        Size = settings.BorderSize,
                         Color = new StringValue
                         {
                             Value = color
@@ -91,24 +122,23 @@ namespace Zoo.Doc.WordGen.Implementations
             // Append the TableProperties object to the empty table.
             table.AppendChild(tblProp);
 
-            table.Append(AppendHeader(model));
+            table.Append(AppendHeader(model, settings));
 
             foreach (var tr in model.Data)
             {
-                table.Append(CreateTableRowWithSomeStyles(tr, 14, false));
+                table.Append(CreateTableRowWithSomeStyles(tr, settings.TableRowFontSize, settings.BoldTableRow));
             }
 
             return table;
         }
 
-        public static TableRow AppendHeader(DocumentTable model)
+        public static TableRow AppendHeader(DocumentTable model, DocTableSettings settings)
         {
-            return CreateTableRowWithSomeStyles(model.Header, 14, true, JustificationValues.Center);
+            return CreateTableRowWithSomeStyles(model.Header, settings.HeaderFontSize, settings.BoldHeader, JustificationValues.Center);
         }
 
         public static TableRow CreateTableRowWithSomeStyles(List<string> values, int fontSize, bool isBold, JustificationValues justification = JustificationValues.Left)
         {
-
             TableRow tr = new TableRow();
 
             var count = values.Count;

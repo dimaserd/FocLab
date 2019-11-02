@@ -21,9 +21,7 @@ namespace Zoo.Doc.WordGen.Implementations
 
             foreach (var child in body.ChildElements)
             {
-                var asP = child as Paragraph;
-
-                if (asP != null)
+                if (child is Paragraph asP)
                 {
                     try
                     {
