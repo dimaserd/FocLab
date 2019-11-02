@@ -41,7 +41,7 @@ namespace FocLab.Controllers.Mvc
         {
             var model = await TasksWorker.GetDayTaskByIdAsync(id);
 
-            var task = await TasksWorker.DbContext.Set<ApplicationDayTask>().FirstOrDefaultAsync(x => x.Id == id);
+            var task = await AmbientContext.RepositoryFactory.Query<ApplicationDayTask>().FirstOrDefaultAsync(x => x.Id == id);
 
             var users = await UserSearcher.GetUsersAsync(UserSearch.GetAllUsers);
 

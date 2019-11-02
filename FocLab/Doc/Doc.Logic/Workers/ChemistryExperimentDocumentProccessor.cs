@@ -1,12 +1,11 @@
 ﻿using Croco.Core.Abstractions;
-using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
+using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using Croco.Core.Utils;
 using Doc.Logic.Entities;
 using Doc.Logic.Models;
 using FocLab.Logic.Models;
-using FocLab.Logic.Workers;
 using FocLab.Model.Entities.Chemistry;
 using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
@@ -19,18 +18,15 @@ using Zoo.Doc.WordGen.Workers;
 
 namespace Doc.Logic.Workers
 {
-    /// <summary>
-    /// Класс для процессинга документов
-    /// </summary>
-    public class FocLabDocumentProcessor : BaseChemistryWorker
+    public class ChemistryExperimentDocumentProccessor : BaseCrocoWorker
     {
-        public FocLabDocumentProcessor(ICrocoAmbientContext context) : base(context)
+        public ChemistryExperimentDocumentProccessor(ICrocoAmbientContext context) : base(context)
         {
         }
 
         private string GetDocTemplateFilePath()
         {
-            return CrocoApp.Application.MapPath("~/wwwroot/DocTemplates/Document.docx").Replace("/", "\\");
+            return Application.MapPath("~/wwwroot/DocTemplates/Document.docx");
         }
 
         /// <summary>
@@ -57,14 +53,15 @@ namespace Doc.Logic.Workers
         /// Тест
         /// </summary>
         /// <param name="model"></param>
-        private static BaseApiResponse RenderInner(ChemistryTask model, string docTemplateFileName, string docSaveFileName)
+        private BaseApiResponse RenderInner(ChemistryTask model, string docTemplateFileName, string docSaveFileName)
         {
             var file = model.Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage);
 
             var docModel = GetDocumentObjectModel(docTemplateFileName, docSaveFileName,
                 model.SubstanceCounterJson, GetDocumentReplacesDicitonaryByTask(model), file);
 
-            var proccessor = new WordDocumentProcessor(new WordDocumentProcessorOptions {
+            var proccessor = new WordDocumentProcessor(new WordDocumentProcessorOptions
+            {
                 Engine = new DocOpenFormatWordEngine()
             });
 
@@ -72,9 +69,9 @@ namespace Doc.Logic.Workers
         }
 
 
-        private static DocXDocumentObjectModel GetDocumentObjectModel(string docTemplateFileName, string docSaveFileName, string substanceCounterJson, Dictionary<string, string> replaceDict, ChemistryTaskDbFile file)
+        private DocXDocumentObjectModel GetDocumentObjectModel(string docTemplateFileName, string docSaveFileName, string substanceCounterJson, Dictionary<string, string> replaceDict, ChemistryTaskDbFile file)
         {
-            var res = new  DocXDocumentObjectModel
+            var res = new DocXDocumentObjectModel
             {
                 Replaces = replaceDict,
 
@@ -90,7 +87,7 @@ namespace Doc.Logic.Workers
                     new DocxImageReplace
                     {
                         TextToReplace = "{PicturePlace}",
-                        ImageFilePath = CrocoApp.Application.FileCopyWorker.GetResizedImageLocalPath(file.FileId, ImageSizeType.Original),
+                        ImageFilePath = Application.FileCopyWorker.GetResizedImageLocalPath(file.FileId, ImageSizeType.Original),
                     }
                 } : new List<DocxImageReplace>(),
 

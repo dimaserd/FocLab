@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
+using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Resources;
-using FocLab.Logic.Workers;
 using FocLab.Model.Entities.Tasker;
 using FocLab.Model.Entities.Users.Default;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +17,7 @@ namespace Tms.Logic.Workers.Tasker
     /// <summary>
     /// Класс для работы с заданиями на день 
     /// </summary>
-    public class DayTasksWorker : BaseChemistryWorker
+    public class DayTasksWorker : BaseCrocoWorker
     {
         /// <summary>
         /// Задания можно создавать и редактировать за один прошедший день

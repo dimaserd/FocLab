@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
 using Croco.Core.Application;
+using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Implementations;
@@ -9,6 +10,7 @@ using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Logic.Workers.Users;
 using FocLab.Model.Entities.Chemistry;
+using FocLab.Model.Entities.Users.Default;
 using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers.ChemistryTasks
@@ -16,7 +18,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
     /// <summary>
     /// Методы исполнителя для работы с химическими заданиями
     /// </summary>
-    public class PerformerChemistryTasksWorker : BaseChemistryWorker
+    public class PerformerChemistryTasksWorker : BaseCrocoWorker
     {
         /// <summary>
         /// Обновить задание
@@ -102,16 +104,16 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 return new BaseApiResponse(false, "Задание уже является отмененным");
             }
 
-            Context.Entry(task).State = EntityState.Modified;
-
+            
             if (!task.PerformedDate.HasValue)
             {
-                
                 task.PerformedDate = DateTime.Now;
 
-                await Context.SaveChangesAsync();
-                
-                var domainName = ((FocLabWebApplication)CrocoApp.Application).DomainName;
+                repo.UpdateHandled(task);
+
+                await SaveChangesAsync();
+
+                var domainName = CrocoApp.Application.As<FocLabWebApplication>().DomainName;
 
                 var searcher = new UserSearcher(AmbientContext);
 
@@ -119,7 +121,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
 
                 var myId = UserId;
 
-                var meUser = await Context.Users.FirstOrDefaultAsync(x => x.Id == myId);
+                var meUser = await Query<ApplicationUser>().FirstOrDefaultAsync(x => x.Id == myId);
 
                 await mailSender.SendMailUnSafeAsync(new SendMailMessage
                 {
@@ -133,9 +135,9 @@ namespace FocLab.Logic.Workers.ChemistryTasks
 
             task.PerformedDate = null;
 
-            await Context.SaveChangesAsync();
+            repo.UpdateHandled(task);
 
-            return new BaseApiResponse(true, "Вы пометили данное задание как не выполненное");
+            return await TrySaveChangesAndReturnResultAsync("Вы пометили данное задание как не выполненное");
         }
 
         /// <summary>

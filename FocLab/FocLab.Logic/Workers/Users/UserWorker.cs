@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
+using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using Croco.WebApplication.Entities;
 using FocLab.Logic.Extensions;
@@ -16,7 +17,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers.Users
 {
-    public class UserWorker : BaseChemistryWorker
+    public class UserWorker : BaseCrocoWorker
     {
         
         #region Изменение пароля
@@ -119,16 +120,9 @@ namespace FocLab.Logic.Workers.Users
 
             var userId = model.Id;
 
-            var db = Context;
-
-            db.Set<PageLogAction>().RemoveRange(db.Set<PageLogAction>().Where(x => x.UserId == userId));
-
+            GetRepository<PageLogAction>().DeleteHandled(Query<PageLogAction>().Where(x => x.UserId == userId).ToList());
+            GetRepository<ApplicationUser>().DeleteHandled(Query<ApplicationUser>().Where(x => x.Id == userId).ToList());
             
-
-            db.UserTokens.RemoveRange(db.UserTokens.Where(x => x.UserId == userId));
-
-            db.Users.RemoveRange(db.Users.Where(x => x.Id == userId));
-
             return await TrySaveChangesAndReturnResultAsync($"Пользователь {userToRemove.Email} удален");
         }
 

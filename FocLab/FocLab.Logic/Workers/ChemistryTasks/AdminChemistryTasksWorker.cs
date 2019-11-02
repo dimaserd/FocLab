@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
+using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models;
@@ -19,7 +20,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
     /// <summary>
     /// Класс работающий с химическими заданиями
     /// </summary>
-    public class AdminChemistryTasksWorker : BaseChemistryWorker
+    public class AdminChemistryTasksWorker : BaseCrocoWorker
     {
         /// <summary>
         /// Получить список файлов как методы решений
@@ -27,7 +28,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// <returns></returns>
         public Task<List<FileMethodModel>> GetFileMethodsAsync()
         {
-            return GetRepository<ChemistryMethodFile>().Query()
+            return Query<ChemistryMethodFile>()
                 .Select(FileMethodModel.SelectExpression).ToListAsync();
         }
 
@@ -40,7 +41,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         {
             var isNull = string.IsNullOrEmpty(model.FileMethodId);
 
-            var method = !isNull ? await Context.ChemistryMethodFiles.FirstOrDefaultAsync(x => x.Id == model.FileMethodId.ToString()) : null;
+            var method = !isNull ? await Query<ChemistryMethodFile>().FirstOrDefaultAsync(x => x.Id == model.FileMethodId.ToString()) : null;
 
             if(method == null && !isNull)
             {

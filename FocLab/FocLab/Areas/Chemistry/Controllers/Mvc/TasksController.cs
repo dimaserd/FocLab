@@ -38,7 +38,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
 
         private ChemistryTasksHtmlHelper ChemistryTasksHtmlHelper => new ChemistryTasksHtmlHelper(ChemistryMethodsWorker);
 
-        private FocLabDocumentProcessor FocLabDocumentProcessor => new FocLabDocumentProcessor(AmbientContext);
+        private ChemistryTaskDocumentProccessor FocLabDocumentProcessor => new ChemistryTaskDocumentProccessor(AmbientContext);
 
         public async Task<FileResult> Print(string id)
         {

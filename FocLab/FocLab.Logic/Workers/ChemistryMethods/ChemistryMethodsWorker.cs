@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
+using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Methods;
@@ -15,7 +16,7 @@ namespace FocLab.Logic.Workers.ChemistryMethods
     /// <summary>
     /// Рабочий класс для методов решения химических задач
     /// </summary>
-    public class ChemistryMethodsWorker : BaseChemistryWorker
+    public class ChemistryMethodsWorker : BaseCrocoWorker
     {
         /// <summary>
         /// Получить метод по идентификатору
@@ -24,7 +25,7 @@ namespace FocLab.Logic.Workers.ChemistryMethods
         /// <returns></returns>
         public Task<ChemistryMethodFileModel> GetMethodAsync(string id)
         {
-            return GetRepository<ChemistryMethodFile>().Query().Select(ChemistryMethodFileModel.SelectExpression).FirstOrDefaultAsync(x => x.Id == id);
+            return Query<ChemistryMethodFile>().Select(ChemistryMethodFileModel.SelectExpression).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         /// <summary>

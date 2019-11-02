@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
+using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using Croco.Core.Utils;
 using FocLab.Logic.Events;
@@ -17,7 +18,7 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
     /// <summary>
     /// Статический класс предоставляющий методы для работы с экспериментами
     /// </summary>
-    public class ChemistryTaskExperimentsWorker : BaseChemistryWorker
+    public class ChemistryTaskExperimentsWorker : BaseCrocoWorker
     {
         /// <summary>
         /// Завершение эксперимента
@@ -186,7 +187,7 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
                 return new BaseApiResponse(false, "Вы не авторизованы");
             }
 
-            if(!await Context.ChemistryTasks.AnyAsync(x => x.Id == model.TaskId))
+            if(!await Query<ChemistryTask>().AnyAsync(x => x.Id == model.TaskId))
             {
                 return new BaseApiResponse(false, "Задача к которой создается эксперимент не найдена по указанному идентификатору");
             }

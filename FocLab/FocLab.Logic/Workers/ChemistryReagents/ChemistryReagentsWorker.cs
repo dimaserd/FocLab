@@ -7,13 +7,14 @@ using FocLab.Logic.Models.Reagents;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
 using Croco.Core.Abstractions.Data.Repository;
+using Croco.Core.Logic.Workers;
 
 namespace FocLab.Logic.Workers.ChemistryReagents
 {
     /// <summary>
     /// Класс обеспечивающий взаимодействие с сущностью реагенты
     /// </summary>
-    public class ChemistryReagentsWorker : BaseChemistryWorker
+    public class ChemistryReagentsWorker : BaseCrocoWorker
     {
         /// <summary>
         /// Получить реагенты
@@ -21,7 +22,7 @@ namespace FocLab.Logic.Workers.ChemistryReagents
         /// <returns></returns>
         public Task<List<ChemistryReagentNameAndIdModel>> GetReagentsAsync()
         {
-            return GetRepository<ChemistryReagent>().Query()
+            return Query<ChemistryReagent>()
                 .Select(ChemistryReagentNameAndIdModel.SelectExpression)
                 .ToListAsync();
         }
@@ -33,7 +34,7 @@ namespace FocLab.Logic.Workers.ChemistryReagents
         /// <returns></returns>
         public Task<ChemistryReagentModel> GetReagentAsync(string id)
         {
-            return GetRepository<ChemistryReagent>().Query()
+            return Query<ChemistryReagent>()
                 .Select(ChemistryReagentModel.SelectExpression)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }

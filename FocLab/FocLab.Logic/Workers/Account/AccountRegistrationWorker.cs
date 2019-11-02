@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
+using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Extensions;
@@ -15,7 +16,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers.Account
 {
-    public class AccountRegistrationWorker : BaseChemistryWorker
+    public class AccountRegistrationWorker : BaseCrocoWorker
     {
         #region Методы регистрации
         

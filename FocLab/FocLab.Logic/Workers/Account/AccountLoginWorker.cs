@@ -2,6 +2,7 @@
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
+using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
@@ -15,7 +16,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FocLab.Logic.Workers.Account
 {
-    public class AccountLoginWorker : BaseChemistryWorker
+    public class AccountLoginWorker : BaseCrocoWorker
     {
         #region Методы логинирования
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
+using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.EntityDtos.Users.Default;
@@ -14,7 +15,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FocLab.Logic.Workers.Account
 {
-    public class AccountManager : BaseChemistryWorker
+    public class AccountManager : BaseCrocoWorker
     {
         private async Task<BaseApiResponse> CreateRolesAsync(RoleManager<ApplicationRole> roleManager)
         {

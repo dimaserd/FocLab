@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
 using Croco.Core.Extensions.Enumerations;
+using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
@@ -13,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers.Users
 {
-    public class UserRoleWorker : BaseChemistryWorker
+    public class UserRoleWorker : BaseCrocoWorker
     {
         public static int GetHighRoleOfUser(IList<string> roles)
         {
@@ -41,7 +42,7 @@ namespace FocLab.Logic.Workers.Users
             {
                 return new BaseApiResponse(false, "Вы не авторизованы");
             }
-            var role = await Context.Roles.FirstOrDefaultAsync(x => x.Name == userIdAndRole.Role.ToString());
+            var role = await Query<ApplicationRole>().FirstOrDefaultAsync(x => x.Name == userIdAndRole.Role.ToString());
 
             if (role == null)
             {
@@ -97,7 +98,7 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(false, ValidationMessages.YouAreNotAuthorized);
             }
 
-            var role = await Context.Roles.FirstOrDefaultAsync(x => x.Name == userIdAndRole.Role.ToString());
+            var role = await Query<ApplicationRole>().FirstOrDefaultAsync(x => x.Name == userIdAndRole.Role.ToString());
 
             if (role == null)
             {
