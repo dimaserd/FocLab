@@ -35,7 +35,6 @@ namespace FocLab.Model.Entities.Chemistry
         /// </summary>
         public DateTime CreationDate { get; set; }
 
-        
         #region Свойства отношений
         /// <summary>
         /// Тот кто дал задание (StringProperty1)
@@ -93,8 +92,9 @@ namespace FocLab.Model.Entities.Chemistry
         [JsonIgnore]
         public virtual ICollection<ChemistryTaskReagent> Reagents { get; set; }
         #endregion
+        
         /// <summary>
-        /// Колличество установленное администратором
+        /// Количество установленное администратором
         /// </summary>
         public string AdminQuantity { get; set; }
 
@@ -104,7 +104,7 @@ namespace FocLab.Model.Entities.Chemistry
         public string AdminQuality { get; set; }
 
         /// <summary>
-        /// Колличество установленное исполнителем
+        /// Количество установленное исполнителем
         /// </summary>
         public string PerformerQuantity { get; set; }
 

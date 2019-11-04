@@ -2,7 +2,6 @@
 using Croco.Core.Common.Enumerations;
 using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
-using Croco.Core.Utils;
 using Doc.Logic.Entities;
 using Doc.Logic.Models;
 using FocLab.Logic.Models;
@@ -26,7 +25,7 @@ namespace Doc.Logic.Workers
 
         private string GetDocTemplateFilePath()
         {
-            return Application.MapPath("~/wwwroot/DocTemplates/Document.docx");
+            return Application.MapPath("~/wwwroot/DocTemplates/ExperimentTemplate.docx");
         }
 
         /// <summary>
@@ -34,31 +33,32 @@ namespace Doc.Logic.Workers
         /// </summary>
         /// <param name="id">Идентификатор задания</param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> RanderByTaskIdAsync(RenderChemistryTaskDocument model)
+        public async Task<BaseApiResponse> RanderExperimentByIdAsync(RenderChemistryExperimentDocument model)
         {
-            var task = await Query<ChemistryTask>()
+            var task = await Query<ChemistryTaskExperiment>()
                 .Include(x => x.Files)
-                .Include(x => x.PerformerUser)
-                .FirstOrDefaultAsync(x => x.Id == model.TaskId);
+                .Include(x => x.Performer)
+                .Include(x => x.ChemistryTask)
+                .FirstOrDefaultAsync(x => x.Id == model.ExperimentId);
 
             if (task == null)
             {
-                return new BaseApiResponse(false, "Задание не найдено по указанному идентификатору");
+                return new BaseApiResponse(false, "Эксперимент не найден по указанному идентификатору");
             }
 
-            return RenderInner(task, GetDocTemplateFilePath(), model.DocSaveFileName);
+            return RenderInner(task, model.DocSaveFileName);
         }
 
         /// <summary>
         /// Тест
         /// </summary>
         /// <param name="model"></param>
-        private BaseApiResponse RenderInner(ChemistryTask model, string docTemplateFileName, string docSaveFileName)
+        private BaseApiResponse RenderInner(ChemistryTaskExperiment model, string docSaveFileName)
         {
             var file = model.Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage);
 
-            var docModel = GetDocumentObjectModel(docTemplateFileName, docSaveFileName,
-                model.SubstanceCounterJson, GetDocumentReplacesDicitonaryByTask(model), file);
+            var docModel = GetDocumentObjectModel(docSaveFileName,
+                model.SubstanceCounterJson, GetDocumentReplacesDicitonaryByExperiment(model), file);
 
             var proccessor = new WordDocumentProcessor(new WordDocumentProcessorOptions
             {
@@ -69,7 +69,7 @@ namespace Doc.Logic.Workers
         }
 
 
-        private DocXDocumentObjectModel GetDocumentObjectModel(string docTemplateFileName, string docSaveFileName, string substanceCounterJson, Dictionary<string, string> replaceDict, ChemistryTaskDbFile file)
+        private DocXDocumentObjectModel GetDocumentObjectModel(string docSaveFileName, string substanceCounterJson, Dictionary<string, string> replaceDict, ChemistryTaskExperimentFile file)
         {
             var res = new DocXDocumentObjectModel
             {
@@ -77,10 +77,10 @@ namespace Doc.Logic.Workers
 
                 Tables = new List<DocumentTable>
                 {
-                    GetSubstanceDocumentTable(substanceCounterJson)
+                    Chemistry_SubstanceCounter.GetSubstanceDocumentTable(substanceCounterJson),
                 },
 
-                DocumentTemplateFileName = docTemplateFileName,
+                DocumentTemplateFileName = GetDocTemplateFilePath(),
 
                 ToReplaceImages = file != null ? new List<DocxImageReplace>
                 {
@@ -102,72 +102,13 @@ namespace Doc.Logic.Workers
             return res;
         }
 
-        private static DocumentTable GetSubstanceDocumentTable(string substanceJson)
-        {
-            var substanceCounter = Tool.JsonConverter.Deserialize<Chemistry_SubstanceCounter>(substanceJson);
-
-            if (substanceCounter == null)
-            {
-                substanceCounter = Chemistry_SubstanceCounter.GetDefaultCounter();
-            }
-
-            substanceCounter.Substances.Insert(0, substanceCounter.Etalon);
-
-            substanceCounter.Substances.ForEach(x =>
-            {
-                if (x.Koef == null)
-                {
-                    x.Koef = "";
-                }
-
-                if (x.Name == null)
-                {
-                    x.Name = "";
-                }
-
-                if (x.MolarMassa == null)
-                {
-                    x.MolarMassa = "";
-                }
-
-                if (x.Massa == null)
-                {
-                    x.Massa = "";
-                }
-            });
-
-            return new DocumentTable
-            {
-                PlacingText = "{SubstancesTablePlace}",
-
-                Header = new List<string>
-                {
-                    "Название вещества",
-                    "Масса вещества (г)",
-                    "Молярная масса (г / моль)",
-                    "Коэфициент"
-                },
-
-                Data = substanceCounter.Substances.Select(x => new List<string>
-                {
-                    x.Name,
-                    x.Massa,
-                    x.MolarMassa,
-                    x.Koef
-                }).ToList()
-            };
-        }
-
-        private static Dictionary<string, string> GetDocumentReplacesDicitonaryByTask(ChemistryTask model)
+        private static Dictionary<string, string> GetDocumentReplacesDicitonaryByExperiment(ChemistryTaskExperiment model)
         {
             return new Dictionary<string, string>
             {
-                ["{Title}"] = model.Title,
-                ["{PerformerQuality}"] = model.PerformerQuality,
-                ["{PerformerQuantity}"] = model.PerformerQuantity,
-                ["{AdminQuality}"] = model.AdminQuality,
-                ["{AdminQuantity}"] = model.AdminQuantity,
-                ["{PerformerName}"] = model.PerformerUser.Name,
+                ["{Title}"] = model.Title ?? "[Без названия]",
+                ["{TaskTitle}"] = model.ChemistryTask.Title,
+                ["{PerformerName}"] = model.Performer.Name,
                 ["{PerformerText}"] = model.PerformerText
             };
         }

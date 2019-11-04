@@ -10,23 +10,14 @@ namespace Zoo.Doc.WordGen.Implementations
 {
     public class DocOpenFormatWordEngine : IWordProccessorEngine
     {
+        static readonly object _locker = new object();
+
         /// <summary>
         /// УБрать из шаблона документа тексты, которые являются разбитыми по нескольким элементам
         /// </summary>
         /// <param name="model"></param>
-        public void ProcessTemplate(DocXDocumentObjectModel model)
+        public static void ProcessTemplate(DocXDocumentObjectModel model)
         {
-            if (File.Exists(model.DocumentSaveFileName))
-            {
-                File.Delete(model.DocumentSaveFileName);
-            }
-            else
-            {
-                var dir = Path.GetDirectoryName(model.DocumentSaveFileName);
-
-                Directory.CreateDirectory(dir);
-            }
-
             using (var memStream = new MemoryStream())
             {
                 var bytes = File.ReadAllBytes(model.DocumentTemplateFileName);
@@ -67,21 +58,37 @@ namespace Zoo.Doc.WordGen.Implementations
             }
         }
 
-        public void Create(DocXDocumentObjectModel model)
+        private  static void CheckAndDeleteDestinationFile(string documentSaveFileName)
         {
-            //Преподготовка шаблона удаление 
-            ProcessTemplate(model);
-
-            if (File.Exists(model.DocumentSaveFileName))
+            if (File.Exists(documentSaveFileName))
             {
-                File.Delete(model.DocumentSaveFileName);
+                File.Delete(documentSaveFileName);
             }
             else
             {
-                var dir = Path.GetDirectoryName(model.DocumentSaveFileName);
+                var dir = Path.GetDirectoryName(documentSaveFileName);
 
                 Directory.CreateDirectory(dir);
             }
+        }
+
+        public void Create(DocXDocumentObjectModel model)
+        {
+            lock(_locker)
+            {
+                CreateInnerMethod(model);
+            }
+
+        }
+
+        private static void CreateInnerMethod(DocXDocumentObjectModel model)
+        {
+
+            //Преподготовка шаблона (удаление не нужных разделений внутри документа)
+            ProcessTemplate(model);
+            //Удаление основного файла
+            CheckAndDeleteDestinationFile(model.DocumentSaveFileName);
+
 
             using (var memStream = new MemoryStream())
             {

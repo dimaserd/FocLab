@@ -8,7 +8,6 @@ using FocLab.Areas.Chemistry.Controllers.Base;
 using FocLab.Consts;
 using FocLab.Helpers;
 using FocLab.Logic.Extensions;
-using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Services;
@@ -42,7 +41,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
 
         public async Task<FileResult> Print(string id)
         {
-            var fileName = $"Filename.docx";
+            var fileName = $"Task.docx";
 
             var filePath = CrocoApp.Application.MapPath($"~/wwwroot/Docs/{fileName}");
 
@@ -57,9 +56,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
                 throw new ApplicationException(t.Message);
             }
 
-            var mime = FocLabWebApplication.GetMimeMapping(fileName);
-
-            return PhysicalFile(filePath, mime, fileName);
+            return PhysicalFileWithMimeType(filePath, fileName);
         }
 
         /// <summary>

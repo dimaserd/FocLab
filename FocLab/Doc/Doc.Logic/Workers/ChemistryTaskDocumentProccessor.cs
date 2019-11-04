@@ -1,8 +1,6 @@
 ﻿using Croco.Core.Abstractions;
 using Croco.Core.Common.Enumerations;
-using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
-using Croco.Core.Utils;
 using Doc.Logic.Entities;
 using Doc.Logic.Models;
 using FocLab.Logic.Models;
@@ -12,13 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Zoo.Doc.WordGen.Implementations;
 using Zoo.Doc.WordGen.Models;
-using Zoo.Doc.WordGen.Workers;
 
 namespace Doc.Logic.Workers
 {
-    public class ChemistryTaskDocumentProccessor : BaseCrocoWorker
+    public class ChemistryTaskDocumentProccessor : DocumentProccessorBase
     {
         public ChemistryTaskDocumentProccessor(ICrocoAmbientContext context) : base(context)
         {
@@ -26,7 +22,7 @@ namespace Doc.Logic.Workers
 
         private string GetDocTemplateFilePath()
         {
-            return Application.MapPath("~/wwwroot/DocTemplates/Document.docx");
+            return Application.MapPath("~/wwwroot/DocTemplates/TaskTemplate.docx");
         }
 
         /// <summary>
@@ -46,30 +42,25 @@ namespace Doc.Logic.Workers
                 return new BaseApiResponse(false, "Задание не найдено по указанному идентификатору");
             }
 
-            return RenderInner(task, GetDocTemplateFilePath(), model.DocSaveFileName);
+            return RenderInner(task, model.DocSaveFileName);
         }
 
         /// <summary>
         /// Тест
         /// </summary>
         /// <param name="model"></param>
-        private BaseApiResponse RenderInner(ChemistryTask model, string docTemplateFileName, string docSaveFileName)
+        private BaseApiResponse RenderInner(ChemistryTask model, string docSaveFileName)
         {
             var file = model.Files.FirstOrDefault(x => x.Type == ChemistryTaskDbFileType.ReactionSchemaImage);
 
-            var docModel = GetDocumentObjectModel(docTemplateFileName, docSaveFileName,
+            var docModel = GetDocumentObjectModel(docSaveFileName,
                 model.SubstanceCounterJson, GetDocumentReplacesDicitonaryByTask(model), file);
 
-            var proccessor = new WordDocumentProcessor(new WordDocumentProcessorOptions
-            {
-                Engine = new DocOpenFormatWordEngine()
-            });
-
-            return proccessor.RenderDocument(docModel);
+            return RenderDocument(docModel);
         }
 
 
-        private DocXDocumentObjectModel GetDocumentObjectModel(string docTemplateFileName, string docSaveFileName, string substanceCounterJson, Dictionary<string, string> replaceDict, ChemistryTaskDbFile file)
+        private DocXDocumentObjectModel GetDocumentObjectModel(string docSaveFileName, string substanceCounterJson, Dictionary<string, string> replaceDict, ChemistryTaskDbFile file)
         {
             var res = new DocXDocumentObjectModel
             {
@@ -77,10 +68,10 @@ namespace Doc.Logic.Workers
 
                 Tables = new List<DocumentTable>
                 {
-                    GetSubstanceDocumentTable(substanceCounterJson)
+                    Chemistry_SubstanceCounter.GetSubstanceDocumentTable(substanceCounterJson)
                 },
 
-                DocumentTemplateFileName = docTemplateFileName,
+                DocumentTemplateFileName = GetDocTemplateFilePath(),
 
                 ToReplaceImages = file != null ? new List<DocxImageReplace>
                 {
@@ -100,62 +91,6 @@ namespace Doc.Logic.Workers
             }
 
             return res;
-        }
-
-        private static DocumentTable GetSubstanceDocumentTable(string substanceJson)
-        {
-            var substanceCounter = Tool.JsonConverter.Deserialize<Chemistry_SubstanceCounter>(substanceJson);
-
-            if (substanceCounter == null)
-            {
-                substanceCounter = Chemistry_SubstanceCounter.GetDefaultCounter();
-            }
-
-            substanceCounter.Substances.Insert(0, substanceCounter.Etalon);
-
-            substanceCounter.Substances.ForEach(x =>
-            {
-                if (x.Koef == null)
-                {
-                    x.Koef = "";
-                }
-
-                if (x.Name == null)
-                {
-                    x.Name = "";
-                }
-
-                if (x.MolarMassa == null)
-                {
-                    x.MolarMassa = "";
-                }
-
-                if (x.Massa == null)
-                {
-                    x.Massa = "";
-                }
-            });
-
-            return new DocumentTable
-            {
-                PlacingText = "{SubstancesTablePlace}",
-
-                Header = new List<string>
-                {
-                    "Название вещества",
-                    "Масса вещества (г)",
-                    "Молярная масса (г / моль)",
-                    "Коэфициент"
-                },
-
-                Data = substanceCounter.Substances.Select(x => new List<string>
-                {
-                    x.Name,
-                    x.Massa,
-                    x.MolarMassa,
-                    x.Koef
-                }).ToList()
-            };
         }
 
         private static Dictionary<string, string> GetDocumentReplacesDicitonaryByTask(ChemistryTask model)

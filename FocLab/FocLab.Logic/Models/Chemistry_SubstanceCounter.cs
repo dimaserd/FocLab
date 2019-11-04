@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Croco.Core.Utils;
+using System.Collections.Generic;
+using System.Linq;
+using Zoo.Doc.WordGen.Models;
 
 namespace FocLab.Logic.Models
 {
@@ -26,6 +29,63 @@ namespace FocLab.Logic.Models
                 Substances = new List<Chemistry_Substance>()
             };
         }
+
+        public static DocumentTable GetSubstanceDocumentTable(string substanceJson)
+        {
+            var substanceCounter = Tool.JsonConverter.Deserialize<Chemistry_SubstanceCounter>(substanceJson);
+
+            if (substanceCounter == null)
+            {
+                substanceCounter = GetDefaultCounter();
+            }
+
+            substanceCounter.Substances.Insert(0, substanceCounter.Etalon);
+
+            substanceCounter.Substances.ForEach(x =>
+            {
+                if (x.Koef == null)
+                {
+                    x.Koef = "";
+                }
+
+                if (x.Name == null)
+                {
+                    x.Name = "";
+                }
+
+                if (x.MolarMassa == null)
+                {
+                    x.MolarMassa = "";
+                }
+
+                if (x.Massa == null)
+                {
+                    x.Massa = "";
+                }
+            });
+
+            return new DocumentTable
+            {
+                PlacingText = "{SubstancesTablePlace}",
+
+                Header = new List<string>
+                {
+                    "Название вещества",
+                    "Масса вещества (г)",
+                    "Молярная масса (г / моль)",
+                    "Коэфициент"
+                },
+
+                Data = substanceCounter.Substances.Select(x => new List<string>
+                {
+                    x.Name,
+                    x.Massa,
+                    x.MolarMassa,
+                    x.Koef
+                }).ToList()
+            };
+        }
+
 
         /// <summary>
         /// Эталонное вещество

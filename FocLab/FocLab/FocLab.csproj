@@ -83,7 +83,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\DocTemplates\Document.docx" />
+    <None Include="wwwroot\DocTemplates\TaskTemplate.docx" />
     <None Include="wwwroot\js\Task.min.js" />
     <None Include="wwwroot\src\Core\AccountWorker.d.ts" />
     <None Include="wwwroot\src\Core\AccountWorker.js" />

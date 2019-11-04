@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Security.Principal;
@@ -125,6 +126,24 @@ namespace FocLab.Api.Controllers.Base
         /// Контекст доступа к запросу
         /// </summary>
         public IHttpContextAccessor HttpContextAccessor { get; }
+
+        public static string GetMimeMapping(string fileName)
+        {
+            new FileExtensionContentTypeProvider().TryGetContentType(fileName, out var contentType);
+
+            return contentType ?? "application/octet-stream";
+        }
+
+        /// <summary>
+        /// Возвращает физический файл по пути и имени файла, из имени файла берется Mime тип
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        protected PhysicalFileResult PhysicalFileWithMimeType(string filePath, string fileName)
+        {
+            return PhysicalFile(filePath, GetMimeMapping(fileName), fileName);
+        }
 
         #endregion
 

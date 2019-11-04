@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Croco.Core.Application;
+using Doc.Logic.Models;
+using Doc.Logic.Workers;
 using FocLab.Areas.Chemistry.Controllers.Base;
 using FocLab.Consts;
 using FocLab.Logic.Services;
@@ -16,6 +20,8 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     public class ExperimentsController : BaseFocLabController
     {
         private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker => new ChemistryTaskExperimentsWorker(AmbientContext);
+
+        ChemistryExperimentDocumentProccessor DocumentProccessor => new ChemistryExperimentDocumentProccessor(AmbientContext);
 
         /// <summary>
         /// Получить эксперименты
@@ -63,6 +69,26 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         public ActionResult Create()
         {
             return View();
+        }
+
+        public async Task<FileResult> Print(string id)
+        {
+            var fileName = $"Experiment.docx";
+
+            var filePath = CrocoApp.Application.MapPath($"~/wwwroot/Docs/{fileName}");
+
+            var t = await DocumentProccessor.RanderExperimentByIdAsync(new RenderChemistryExperimentDocument
+            {
+                ExperimentId = id,
+                DocSaveFileName = filePath
+            });
+
+            if (!t.IsSucceeded)
+            {
+                throw new ApplicationException(t.Message);
+            }
+
+            return PhysicalFileWithMimeType(filePath, fileName);
         }
 
         public ExperimentsController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)

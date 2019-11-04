@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FocLab.Consts;
 using FocLab.Controllers.Base;
 using FocLab.Extensions;
-using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers.Users;
