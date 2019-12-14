@@ -21,8 +21,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
-    [Area(AreaConsts.Chemistry)]
-    [Authorize]
+    [Area(AreaConsts.Chemistry), Authorize]
     public class TasksController : BaseFocLabController
     {
         public TasksController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)

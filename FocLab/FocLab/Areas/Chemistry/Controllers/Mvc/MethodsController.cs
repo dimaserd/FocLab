@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
-    [Area(AreaConsts.Chemistry)]
+    [Area(AreaConsts.Chemistry), Authorize]
     public class MethodsController : BaseFocLabController
     {
         public MethodsController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)

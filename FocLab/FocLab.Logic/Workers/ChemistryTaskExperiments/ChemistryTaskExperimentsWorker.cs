@@ -214,13 +214,13 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
         /// </summary>
         /// <param name="experimentId"></param>
         /// <returns></returns>
-        public async Task<ChemistryTaskExperimentModel> GetExperimentAsync(string experimentId)
+        public Task<ChemistryTaskExperimentModel> GetExperimentAsync(string experimentId)
         {
             if (!IsAuthenticated)
             {
-                return null;
+                return Task.FromResult((ChemistryTaskExperimentModel)null);
             }
-            return await GetRepository<ChemistryTaskExperiment>().Query()
+            return Query<ChemistryTaskExperiment>()
                 .Select(ChemistryTaskExperimentModel.SelectExpression)
                 .FirstOrDefaultAsync(x => x.Id == experimentId);
         }
@@ -231,14 +231,14 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
         /// </summary>
         /// <param name="Context"></param>
         /// <returns></returns>
-        public async Task<List<ChemistryTaskExperimentModel>> GetAllExperimentsAsync()
+        public Task<List<ChemistryTaskExperimentModel>> GetAllExperimentsAsync()
         {
             if (!IsAuthenticated)
             {
-                return null;
+                return Task.FromResult(new List<ChemistryTaskExperimentModel>());
             }
             
-            return await GetRepository<ChemistryTaskExperiment>().Query()
+            return Query<ChemistryTaskExperiment>()
                 .Select(ChemistryTaskExperimentModel.SelectExpression)
                 .ToListAsync();
         }
@@ -247,16 +247,16 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
         /// Получить мои эксперименты
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ChemistryTaskExperimentModel>> GetMyExperimentsAsync()
+        public Task<List<ChemistryTaskExperimentModel>> GetMyExperimentsAsync()
         {
             if (!IsAuthenticated)
             {
-                return null;
+                return Task.FromResult(new List<ChemistryTaskExperimentModel>());
             }
 
             var userId = UserId;
 
-            return await GetRepository<ChemistryTaskExperiment>().Query()
+            return Query<ChemistryTaskExperiment>()
                 .Where(x => x.PerformerId == userId)
                 .Select(ChemistryTaskExperimentModel.SelectExpression).ToListAsync();
         }

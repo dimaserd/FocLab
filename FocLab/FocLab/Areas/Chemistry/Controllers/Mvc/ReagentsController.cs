@@ -4,6 +4,7 @@ using FocLab.Consts;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryReagents;
 using FocLab.Model.Contexts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
@@ -12,7 +13,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     /// <summary>
     /// Контроллер для реагентов
     /// </summary>
-    [Area(AreaConsts.Chemistry)]
+    [Area(AreaConsts.Chemistry), Authorize]
     public class ReagentsController : BaseFocLabController
     {
         private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(AmbientContext);

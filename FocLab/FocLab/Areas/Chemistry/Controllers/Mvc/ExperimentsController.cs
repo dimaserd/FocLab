@@ -8,6 +8,7 @@ using FocLab.Consts;
 using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryTaskExperiments;
 using FocLab.Model.Contexts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
@@ -16,7 +17,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     /// <summary>
     /// Контроллер содержащий методы для работы с экспериментами
     /// </summary>
-    [Area(AreaConsts.Chemistry)]
+    [Area(AreaConsts.Chemistry), Authorize]
     public class ExperimentsController : BaseFocLabController
     {
         private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker => new ChemistryTaskExperimentsWorker(AmbientContext);

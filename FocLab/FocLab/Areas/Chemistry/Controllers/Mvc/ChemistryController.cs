@@ -13,8 +13,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     /// <summary>
     /// Контроллер для работы с химическими заданиями
     /// </summary>
-    [Area(AreaConsts.Chemistry)]
-    [Authorize]
+    [Area(AreaConsts.Chemistry), Authorize]
     public class ChemistryController : BaseFocLabController
     {
         #region Документы
