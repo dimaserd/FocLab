@@ -1,5 +1,4 @@
-﻿using Croco.WebApplication.Abstractions;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 
 namespace FocLab.Implementations
 {

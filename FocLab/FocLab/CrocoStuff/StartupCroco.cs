@@ -1,7 +1,8 @@
-﻿using Croco.Core.Abstractions;
+﻿using Croco.Core.Abstractions.Application;
 using Croco.Core.Application;
 using Croco.Core.Application.Options;
 using Croco.Core.Common.Enumerations;
+using Croco.Core.Extensions.Implementations;
 using Croco.Core.Hangfire.Extensions;
 using Croco.Core.Logic.Models.Files;
 using Croco.WebApplication.Application;
@@ -16,21 +17,12 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 
-namespace FocLab
+namespace CrocoShop.CrocoStuff
 {
-    public class StartUpCrocoOptions
-    {
-        public IConfiguration Configuration { get; set; }
-
-        public IHostingEnvironment Env { get; set; }
-
-        public List<Action<ICrocoApplication>> ApplicationActions { get; set; } = new List<Action<ICrocoApplication>>();
-    }
-
     public class StartupCroco
     {
         public IConfiguration Configuration { get; }
-        public IHostingEnvironment Env { get; }
+        public IWebHostEnvironment Env { get; }
 
         public List<Action<ICrocoApplication>> ApplicationActions { get; }
 
@@ -50,10 +42,8 @@ namespace FocLab
             //Добавляю проверщика состояния миграций
             ApplicationActions.Add(CrocoMigrationStateChecker.CheckApplicationState);
 
-            var appOptions = new CrocoWebApplicationOptions
+            var baseOptions = new EFCrocoApplicationOptions
             {
-                ApplicationUrl = "https://foc-lab.com",
-                VirtualPathMapper = new ApplicationServerVirtualPathMapper(Env),
                 CacheManager = new ApplicationCacheManager(memCache),
                 GetDbContext = () => ChemistryDbContext.Create(Configuration),
                 RequestContextLogger = new CrocoWebAppRequestContextLogger(),
@@ -84,12 +74,23 @@ namespace FocLab
                         }
                     },
                 },
+                RootPath = Env.ContentRootPath,
                 AfterInitActions = ApplicationActions
-            }.AddHangfireEventSourcerAndJobManager();
+            }.GetApplicationOptions();
 
-            var application = new FocLabWebApplication(appOptions)
+
+            baseOptions.AddDelayedApplicationLogger()
+                .AddHangfireEventSourcerAndJobManager();
+
+            var options = new CrocoWebApplicationOptions()
             {
-                IsDevelopment = Env.IsDevelopment()
+                ApplicationUrl = "https://foclab.com",
+                CrocoOptions = baseOptions,
+            };
+
+            var application = new FocLabWebApplication(options)
+            {
+                IsDevelopment = Env.EnvironmentName == "Development"
             };
 
             CrocoApp.Application = application;

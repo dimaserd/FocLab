@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using FocLab.Logic.Models.Users;
 using Zoo.GenericUserInterface.Models;
 using FocLab.Model.Entities.Users.Default;
+using FocLab.Logic.Implementations;
 
 namespace FocLab.Controllers.Mvc
 {
@@ -21,7 +22,7 @@ namespace FocLab.Controllers.Mvc
         {
         }
 
-        private DayTasksWorker TasksWorker => new DayTasksWorker(AmbientContext);
+        private DayTasksWorker<FocLabWebApplication> TasksWorker => new DayTasksWorker<FocLabWebApplication>(AmbientContext);
 
         /// <summary>
         /// Показать задания пользователей

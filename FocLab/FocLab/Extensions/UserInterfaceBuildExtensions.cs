@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
-using Zoo.GenericUserInterface.Abstractions;
 using Zoo.GenericUserInterface.Models;
 
 namespace FocLab.Extensions

@@ -1,5 +1,4 @@
-﻿using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
+﻿using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections;
 using System.Collections.Generic;

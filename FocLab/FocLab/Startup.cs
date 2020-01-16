@@ -9,25 +9,23 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
-using FocLab.Logic.Extensions;
 using FocLab.Configuration.Hangfire;
 using FocLab.Configuration.Swagger;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using CrocoShop.CrocoStuff;
 
 namespace FocLab
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             Croco = new StartupCroco(new StartUpCrocoOptions 
@@ -84,7 +82,7 @@ namespace FocLab
             {
             });
 
-            services.AddSignalR().AddJsonProtocol(options => ConfigureJsonSerializer(options.PayloadSerializerSettings));
+            services.AddSignalR().AddJsonProtocol(options => ConfigureJsonSerializer(options.PayloadSerializerOptions));
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -95,29 +93,24 @@ namespace FocLab
                 options.LogoutPath = "/Account/Logout";
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(options => ConfigureJsonSerializer(options.SerializerSettings));
-
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.EnvironmentName == "Development")
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-                app.UseExceptionHandler("/Error");
             }
             else
             {
-                //TODO Удалить когда будут убраны все баги
                 app.UseDeveloperExceptionPage();
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+
 
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -136,13 +129,18 @@ namespace FocLab
 
             app.UseAuthentication();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    "areas",
-                    "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapAreaControllerRoute(
+                    "admin",
+                    "admin",
+                    "Admin/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapAreaControllerRoute(
+                    "chemistry",
+                    "chemistry",
+                    "Chemistry/{controller=Home}/{action=Index}/{id?}");
 
-                routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
 
             app.ConfigureExceptionHandler(new ApplicationLoggerManager());
@@ -150,10 +148,11 @@ namespace FocLab
             HangfireConfiguration.AddHangfire(app, false);
         }
 
-        private static void ConfigureJsonSerializer(JsonSerializerSettings settings)
+        private static void ConfigureJsonSerializer(JsonSerializerOptions settings)
         {
-            settings.ContractResolver = new DefaultContractResolver();
-            settings.Converters.Add(new StringEnumConverter());
+            settings.PropertyNameCaseInsensitive = true;
+            settings.PropertyNamingPolicy = null;
+            settings.Converters.Add(new JsonStringEnumConverter());
         }
     }
 }
