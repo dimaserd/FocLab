@@ -1,4 +1,4 @@
-﻿using Croco.Core.Abstractions;
+﻿using Croco.Core.Abstractions.Application;
 using Croco.Core.Extensions;
 using Doc.Contract.Services;
 

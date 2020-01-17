@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
 using Croco.Core.Application;
-using Croco.Core.Logic.Workers;
+using Croco.Core.Extensions;
 using Croco.Core.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Implementations;
@@ -18,7 +18,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
     /// <summary>
     /// Методы исполнителя для работы с химическими заданиями
     /// </summary>
-    public class PerformerChemistryTasksWorker : BaseCrocoWorker
+    public class PerformerChemistryTasksWorker : FocLabWorker
     {
         /// <summary>
         /// Обновить задание
@@ -113,7 +113,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
 
                 await SaveChangesAsync();
 
-                var domainName = CrocoApp.Application.As<FocLabWebApplication>().DomainName;
+                var domainName = Application.DomainName;
 
                 var searcher = new UserSearcher(AmbientContext);
 

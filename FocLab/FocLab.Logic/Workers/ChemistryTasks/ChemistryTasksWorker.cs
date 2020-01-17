@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
-using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using FocLab.Logic.Extensions;
+using FocLab.Logic.Implementations;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Model.Entities.Chemistry;
@@ -16,7 +16,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
     /// <summary>
     /// Класс для работы с химическими заданиями
     /// </summary>
-    public class ChemistryTasksWorker : BaseCrocoWorker
+    public class ChemistryTasksWorker : FocLabWorker
     {
         /// <summary>
         /// 

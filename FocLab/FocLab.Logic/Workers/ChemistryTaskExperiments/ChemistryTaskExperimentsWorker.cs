@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
-using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using Croco.Core.Utils;
 using FocLab.Logic.Events;
 using FocLab.Logic.Extensions;
+using FocLab.Logic.Implementations;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.Experiments;
 using FocLab.Model.Entities.Chemistry;
@@ -18,7 +18,7 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
     /// <summary>
     /// Статический класс предоставляющий методы для работы с экспериментами
     /// </summary>
-    public class ChemistryTaskExperimentsWorker : BaseCrocoWorker
+    public class ChemistryTaskExperimentsWorker : FocLabWorker
     {
         /// <summary>
         /// Завершение эксперимента

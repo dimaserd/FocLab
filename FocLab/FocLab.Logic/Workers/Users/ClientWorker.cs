@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
-using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Users;
@@ -13,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers.Users
 {
-    public class ClientWorker : BaseCrocoWorker
+    public class ClientWorker : FocLabWorker
     {
         private readonly Func<ApplicationUser, Task> _refreshUserDataFunc;
 

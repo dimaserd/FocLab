@@ -2,10 +2,10 @@
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
-using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
+using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Settings.Statics;
@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FocLab.Logic.Workers.Account
 {
-    public class AccountLoginWorker : BaseCrocoWorker
+    public class AccountLoginWorker : FocLabWorker
     {
         #region Методы логинирования
 

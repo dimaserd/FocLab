@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace FocLab.Logic.Services
 {
+
     // Настройка диспетчера пользователей приложения. UserManager определяется в ASP.NET Identity и используется приложением.
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
@@ -20,14 +21,14 @@ namespace FocLab.Logic.Services
 
         public ApplicationUser GetCachedUser(ClaimsPrincipal claimsPrincipal)
         {
-            var userId = claimsPrincipal.GetUserId();
-
-            if (SourceSettings.UseInternalCaching)
+            if (!claimsPrincipal.Identity.IsAuthenticated)
             {
-                return Users.Cached().FirstOrDefault(x => x.Id == userId);
+                return null;
             }
 
-            return Store.FindByIdAsync(userId, CancellationToken).GetAwaiter().GetResult();
+            var userId = claimsPrincipal.GetUserId();
+
+            return SourceSettings.UseInternalCaching ? Users.Cached().FirstOrDefault(x => x.Id == userId) : Users.FirstOrDefault(x => x.Id == userId);
         }
     }
 }

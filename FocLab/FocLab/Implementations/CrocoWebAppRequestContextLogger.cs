@@ -22,10 +22,10 @@ namespace FocLab.Implementations
 
     public class CrocoWebAppRequestContextLogger : ICrocoRequestContextLogger
     {
-        public void LogRequestContextAsync(ICrocoAmbientContext ambientContext)
+        public void LogRequestContext(ICrocoAmbientContext ambientContext)
         {
-            
         }
+
 
         private void LogRequestToDatabase(ICrocoAmbientContext ambientContext)
         {

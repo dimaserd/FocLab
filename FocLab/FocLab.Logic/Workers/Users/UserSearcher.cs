@@ -3,10 +3,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
-using Croco.Core.Logic.Workers;
 using Croco.Core.Search.Extensions;
 using Croco.Core.Search.Models;
 using FocLab.Logic.EntityDtos.Users.Default;
+using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities.Users.Default;
@@ -17,7 +17,7 @@ namespace FocLab.Logic.Workers.Users
     /// <summary>
     /// Класс предоставляющий методы для поиска пользователей
     /// </summary>
-    public class UserSearcher : BaseCrocoWorker
+    public class UserSearcher : FocLabWorker
     {
         #region Методы получения одного пользователя
 

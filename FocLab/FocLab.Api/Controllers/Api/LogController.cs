@@ -5,6 +5,7 @@ using Croco.WebApplication.Models.Exceptions;
 using Croco.WebApplication.Models.Log;
 using Croco.WebApplication.Workers.Log;
 using FocLab.Api.Controllers.Base;
+using FocLab.Logic.Implementations;
 using FocLab.Logic.Services;
 using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +25,7 @@ namespace FocLab.Api.Controllers.Api
         {
         }
 
-        private ExceptionWorker ExceptionWorker => new ExceptionWorker(AmbientContext);
+        private ExceptionWorker<FocLabWebApplication> ExceptionWorker => new ExceptionWorker<FocLabWebApplication>(AmbientContext);
 
         /// <summary>
         /// Залогировать исключения
@@ -49,20 +50,5 @@ namespace FocLab.Api.Controllers.Api
         {
             return ExceptionWorker.LogUserInterfaceExceptionAsync(model);
         }
-
-        /// <summary>
-        /// Залогировать одно событие или действие
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        [HttpPost("Action")]
-        public Task<BaseApiResponse> LogAction([FromForm]LoggedUserInterfaceActionModel model)
-        {
-            var worker = new ActionLogWorker(AmbientContext);
-
-            return worker.LogActionAsync(model);
-        }
-
     }
 }

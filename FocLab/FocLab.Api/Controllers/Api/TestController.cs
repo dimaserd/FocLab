@@ -37,14 +37,5 @@ namespace FocLab.Api.Controllers.Api
 
             return list;
         }
-
-        [ProducesDefaultResponseType(typeof(bool))]
-        [HttpPost("WriteLog")]
-        public bool WriteLog(string message)
-        {
-            AmbientContext.Logger.LogInfo(message);
-
-            return true;
-        }
     }
 }

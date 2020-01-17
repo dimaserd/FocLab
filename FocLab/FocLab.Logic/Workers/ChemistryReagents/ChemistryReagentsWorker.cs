@@ -7,14 +7,14 @@ using FocLab.Logic.Models.Reagents;
 using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
 using Croco.Core.Abstractions.Data.Repository;
-using Croco.Core.Logic.Workers;
+using FocLab.Logic.Implementations;
 
 namespace FocLab.Logic.Workers.ChemistryReagents
 {
     /// <summary>
     /// Класс обеспечивающий взаимодействие с сущностью реагенты
     /// </summary>
-    public class ChemistryReagentsWorker : BaseCrocoWorker
+    public class ChemistryReagentsWorker : FocLabWorker
     {
         /// <summary>
         /// Получить реагенты
@@ -152,7 +152,7 @@ namespace FocLab.Logic.Workers.ChemistryReagents
                 return new BaseApiResponse(false, "Вы не являетесь исполнителем задания");
             }
 
-            if(!await GetRepository<ChemistryReagent>().Query().AnyAsync(x => x.Id == model.ReagentId))
+            if(!await Query<ChemistryReagent>().AnyAsync(x => x.Id == model.ReagentId))
             {
                 return new BaseApiResponse(false, "Реагент не найден по указанному идентификатору");
             }

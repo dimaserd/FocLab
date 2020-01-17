@@ -22,7 +22,7 @@ namespace FocLab.Controllers.Mvc
         {
         }
 
-        private DayTasksWorker<FocLabWebApplication> TasksWorker => new DayTasksWorker<FocLabWebApplication>(AmbientContext);
+        private DayTasksWorker TasksWorker => new DayTasksWorker(AmbientContext);
 
         /// <summary>
         /// Показать задания пользователей

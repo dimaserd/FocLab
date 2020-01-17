@@ -1,9 +1,9 @@
 ﻿using Croco.Core.Abstractions;
 using Croco.Core.Common.Enumerations;
-using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using Doc.Logic.Entities;
 using Doc.Logic.Models;
+using FocLab.Logic.Implementations;
 using FocLab.Logic.Models;
 using FocLab.Model.Entities.Chemistry;
 using FocLab.Model.Enumerations;
@@ -17,7 +17,7 @@ using Zoo.Doc.WordGen.Workers;
 
 namespace Doc.Logic.Workers
 {
-    public class ChemistryExperimentDocumentProccessor : BaseCrocoWorker
+    public class ChemistryExperimentDocumentProccessor : FocLabWorker
     {
         public ChemistryExperimentDocumentProccessor(ICrocoAmbientContext context) : base(context)
         {

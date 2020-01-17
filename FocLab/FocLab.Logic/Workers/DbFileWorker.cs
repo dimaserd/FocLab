@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Croco.Core.Abstractions;
 using Croco.Core.Models;
 using Croco.Core.Logic.Models.Files;
-using Croco.Core.Logic.Workers;
 using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Settings.Statics;
@@ -14,10 +13,11 @@ using Hangfire;
 using Croco.Core.Search.Models;
 using Croco.Core.Implementations.AmbientContext;
 using Croco.Core.Abstractions.Files;
+using FocLab.Logic.Implementations;
 
 namespace FocLab.Logic.Workers
 {
-    public class DbFileWorker : BaseCrocoWorker
+    public class DbFileWorker : FocLabWorker
     {
         public ApplicationFileManager BaseManager => new ApplicationFileManager(AmbientContext.RepositoryFactory);
 

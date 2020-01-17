@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Abstractions;
-using Croco.Core.Logic.Workers;
 using Croco.Core.Models;
 using Croco.WebApplication.Entities;
 using FocLab.Logic.Extensions;
+using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
@@ -17,7 +17,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers.Users
 {
-    public class UserWorker : BaseCrocoWorker
+    public class UserWorker : FocLabWorker
     {
         
         #region Изменение пароля

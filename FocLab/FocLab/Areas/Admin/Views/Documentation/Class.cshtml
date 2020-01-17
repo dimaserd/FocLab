@@ -4,24 +4,17 @@
     Layout = ChemistrySettings.LayoutPath;
 }
 
-    <div class="input-group mb-3">
-        <input id="newModelInput" class="form-control m-input" placeholder="Найти другую модель..">
-        
-        <button class="btn btn-outline-success w-25" onclick="SearchModelApply()">Найти</button>
-    </div>
+<div class="input-group mb-3">
+    <input id="newModelInput" class="form-control m-input" placeholder="Найти другую модель..">
+
+    <button class="btn btn-outline-success w-25" onclick="SearchModelApply()">Найти</button>
+</div>
 
 <h2>Описание модели @Model.TypeName</h2>
 
 <p>
     Тип модели: @Model.FullTypeName
 </p>
-
-<div class="row">
-    <div class="col-12">
-        <textarea style="width: 500px;">@Model.JsonExample</textarea>
-    </div>
-
-</div>
 
 <div style="height:20px">
 
@@ -48,13 +41,11 @@
                     <strong>
                         Значение как строка
                     </strong>
-                    
                 </th>
                 <th>
                     <strong>
                         Значение как число
                     </strong>
-                    
                 </th>
                 <th>
                     <strong>
@@ -63,22 +54,20 @@
                 </th>
             </tr>
 
-            @foreach (var enumDescription in Model.EnumValues)
+            @foreach (var enumDescription in Model.EnumDescription.EnumValues)
             {
                 <tr>
                     <td>
                         @enumDescription.StringRepresentation
                     </td>
-                    
+
                     <td>
                         @enumDescription.IntRepresentation
                     </td>
                     <td>
                         @enumDescription.Description
                     </td>
-
                 </tr>
-
             }
 
         </table>
@@ -117,9 +106,9 @@
             {
                 <tr>
                     <td>
-                        @prop.PropertyName
+                        @prop.PropertyDescription.PropertyName
                     </td>
-                    
+
                     @if (prop.IsEnumerable)
                     {
                         <td>
@@ -133,16 +122,15 @@
                         </td>
                     }
 
-                    
-                    
                     <td>
                         @prop.IsNullable
                     </td>
+
                     <td>
 
                         <table class="table table-bordered table-hover">
                             <tbody>
-                                @foreach (var description in prop.Descriptions)
+                                @foreach (var description in prop.PropertyDescription.Descriptions)
                                 {
                                     <tr>
                                         <td>

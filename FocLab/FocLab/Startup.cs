@@ -32,6 +32,10 @@ namespace FocLab
             {
                 Configuration = configuration,
                 Env = env,
+                ApplicationActions = new List<Action<Croco.Core.Abstractions.Application.ICrocoApplication>>
+                {
+                    ApplicationServiceRegistrator.Register
+                }
             });
         }
 

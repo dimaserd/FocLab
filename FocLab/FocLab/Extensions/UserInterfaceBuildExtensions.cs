@@ -19,10 +19,5 @@ namespace FocLab.Extensions
             htmlHelper.ViewData["formDrawKey"] = formDrawKey;
             return htmlHelper.PartialAsync("~/Views/Components/GenericUserInterface.cshtml", model);
         }
-
-        public static Task<IHtmlContent> RenderGenericUserInterfaceAsync(this IHtmlHelper htmlHelper, IHaveGenericUserInterface model, string modelPrefix, GenericUserInterfaceValueProvider valueProvider)
-        {
-            return RenderGenericUserInterfaceAsync(htmlHelper, GenerateGenericUserInterfaceModel.Create(model, valueProvider, modelPrefix));
-        }
     }
 }

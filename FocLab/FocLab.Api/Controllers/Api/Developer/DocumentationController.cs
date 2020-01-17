@@ -35,37 +35,14 @@ namespace FocLab.Api.Controllers.Api.Developer
                 return null;
             }
 
-            var types = CrocoTypeDescriptor.SearchClassTypes(typeName);
+            var type = CrocoTypeSearcher.FindType(typeName);
 
-            if (types.Count == 0)
+            if (type == null)
             {
                 return null;
             }
 
-            return CrocoTypeDescriptor.GetDocumentationForClass(types.First());
-        }
-
-        /// <summary>
-        /// Получить документацию по SignalR хабам
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost("JsonExample")]
-        [ProducesDefaultResponseType(typeof(string))]
-        public string GetJson(string typeName)
-        {
-            return CrocoTypeDescriptor.GetJsonExample(typeName);
-        }
-
-        /// <summary>
-        /// Поиск типов
-        /// </summary>
-        /// <param name="typeName"></param>
-        /// <returns></returns>
-        [HttpPost("SearchTypes")]
-        [ProducesDefaultResponseType(typeof(List<string>))]
-        public List<string> SearchTypes(string typeName)
-        {
-            return CrocoTypeDescriptor.SearchClassTypes(typeName);
+            return CrocoTypeDescription.GetDescription(type);
         }
     }
 }
