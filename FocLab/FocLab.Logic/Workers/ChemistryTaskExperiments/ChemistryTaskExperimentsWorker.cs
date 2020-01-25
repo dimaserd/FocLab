@@ -64,7 +64,7 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
 
                 await SaveChangesAsync();
 
-                await Application.EventSourcer.Publisher.PublishAsync(AmbientContext, new ExperimentPerformedEvent
+                await PublishMessageAsync(new ExperimentPerformedEvent
                 {
                     Id = experiment.Id
                 });

@@ -1,20 +1,18 @@
 ﻿using Croco.Core.Abstractions;
 using Croco.Core.Abstractions.Data;
 using Croco.Core.Application;
+using Croco.Core.Extensions;
 using System;
 
 namespace Zoo.Core
 {
     public class CrocoWebAppRequestContextLogger : ICrocoRequestContextLogger
     {
-        public void LogRequestContext(ICrocoAmbientContext ambientContext)
+        public void LogRequestContext(ICrocoRequestContext requestContext)
         {
-            var log = GetLog(ambientContext.RequestContext);
+            var log = GetLog(requestContext);
 
-            ambientContext.RepositoryFactory
-                .GetRepository<WebAppRequestContextLog>().CreateHandled(log);
-
-            ambientContext.RepositoryFactory.SaveChangesAsync<WebAppRequestContextLog>().GetAwaiter().GetResult();
+            CrocoApp.Application.PublishMessageAsync(SystemCrocoExtensions.GetRequestContext(), log);
         }
 
         private WebAppRequestContextLog GetLog(ICrocoRequestContext requestContext)
