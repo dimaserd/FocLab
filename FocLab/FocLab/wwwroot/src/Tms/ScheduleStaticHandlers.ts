@@ -143,11 +143,11 @@ class ScheduleStaticHandlers {
 
         ScheduleStaticHandlers.InitUserSelect("#usersSelect2");
         
-        FormDataHelper.FillDataByPrefix(data, "create.");
+        CrocoAppCore.Application.FormDataHelper.FillDataByPrefix(data, "create.");
 
         Utils.SetDatePicker("input[name='create.TaskDate']", '0');
 
-        ModalWorker.ShowModal("createDayTaskModal");
+        CrocoAppCore.Application.ModalWorker.ShowModal("createDayTaskModal");
     }
 
     static InitUserSelect(selector: string) : void {
@@ -179,19 +179,19 @@ class ScheduleStaticHandlers {
         var data = {
             Comment: ""
         }
-        data = FormDataHelper.CollectDataByPrefix(data, "edit.") as { Comment: string };
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "edit.");
 
         var m: UpdateDayTaskComment = {
             Comment: data.Comment,
             DayTaskCommentId: commentId
         }
 
-        Requester.SendAjaxPost("/Api/DayTask/Comments/Update", m, resp => {
+        CrocoAppCore.Application.Requester.Post<IGenericBaseApiResponse<DayTaskModel>>("/Api/DayTask/Comments/Update", m, resp => {
             if (resp.IsSucceeded) {
                 TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
-        }, null, false);
+        }, null);
     }
 
     static addComment() : void {
@@ -199,20 +199,20 @@ class ScheduleStaticHandlers {
             DayTaskId: "",
             Comment: ""
         }
-        data = FormDataHelper.CollectData(data) as AddComment;
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "");
 
-        Requester.SendAjaxPost("/Api/DayTask/Comments/Add", data, resp => {
+        CrocoAppCore.Application.Requester.Post<IGenericBaseApiResponse<DayTaskModel>>("/Api/DayTask/Comments/Add", data, resp => {
             if (resp.IsSucceeded) {
                 TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
-        }, null, false);
+        }, null);
     }
 
     static redirectToFullVersion(): void {
         let data = { Id: "" };
 
-        data = FormDataHelper.CollectDataByPrefix(data, "task.") as { Id: string };
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "task.");
 
         window.open(`${window.location.origin}/Schedule/Task/${data.Id}`, '_blank');
     }
@@ -229,14 +229,14 @@ class ScheduleStaticHandlers {
             TaskReview: "",
             TaskTarget: ""
         };
-        data = FormDataHelper.CollectDataByPrefix(data, "task.") as CreateOrUpdateDayTask;
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "task.");
         data.TaskDate = Utils.GetDateFromDatePicker("TaskDate") as Date;
 
-        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, resp => {
+        CrocoAppCore.Application.Requester.Post<IBaseApiResponse>("/Api/DayTask/CreateOrUpdate", data, resp => {
             if (resp.IsSucceeded) {
                 DayTasksWorker.GetTasks()
             }
-        }, null, false);
+        }, null);
     }
 
     static createDayTask(): void {
@@ -252,16 +252,16 @@ class ScheduleStaticHandlers {
             TaskTarget: ""
         };
 
-        data = FormDataHelper.CollectDataByPrefix(data, "create.") as CreateOrUpdateDayTask;
-        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate1") as Date;
-        
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "create.");
 
-        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, resp => {
-            ToastrWorker.HandleBaseApiResponse(resp);
+        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate1") as Date;
+
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation<IBaseApiResponse>("/Api/DayTask/CreateOrUpdate", data, resp => {
+            
             if (resp.IsSucceeded) {
                 ScheduleStaticHandlers.hideCreateModal();
             }
-        }, null, false);
+        }, null);
     }
 
     static hideCreateModal() : void {

@@ -7,7 +7,7 @@ class TaskModalWorker {
     public static ShowDayTaskModal(task: DayTaskModel) {
         TaskModalWorker.InitTask(task);
 
-        FormDataHelper.FillDataByPrefix(task, "task.");
+        CrocoAppCore.Application.FormDataHelper.FillDataByPrefix(task, "task.");
 
         Utils.SetDatePicker("input[name='task.TaskDate']");
 
@@ -16,7 +16,7 @@ class TaskModalWorker {
         ScheduleStaticHandlers.InitUserSelect(selector);
         $(selector).val(task.AssigneeUser.Id).trigger('change');
 
-        ModalWorker.ShowModal("dayTaskModal");
+        CrocoAppCore.Application.ModalWorker.ShowModal("dayTaskModal");
     }
 
     public static InitTask(task: DayTaskModel) {

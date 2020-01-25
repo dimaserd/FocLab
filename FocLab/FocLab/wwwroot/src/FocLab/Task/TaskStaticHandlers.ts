@@ -13,7 +13,7 @@
             PerformerText: (document.getElementsByName("Text")[0] as HTMLInputElement).value,
             SubstanceCounterJSON: JSON.stringify(SubstanceStaticHandlers.substance.getJSON()),
         };
-        Requester.SendPostRequestWithAnimation('/Api/Chemistry/Tasks/Performer/Update', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Api/Chemistry/Tasks/Performer/Update', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     }
 
     static UpdateFileByType(fileType: string) : void {
@@ -26,13 +26,13 @@
 
         var data = { Id: id, Flag: false };
 
-        Requester.SendPostRequestWithAnimation('/Chemistry/Chemistry/RemoveOrCancelRemoving', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Chemistry/Chemistry/RemoveOrCancelRemoving', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     }
 
     static CancelRemoving(id) {
 
         var data = { Id: id, Flag: true };
 
-        Requester.SendPostRequestWithAnimation('/Chemistry/Chemistry/RemoveOrCancelRemoving', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Chemistry/Chemistry/RemoveOrCancelRemoving', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     }
 }

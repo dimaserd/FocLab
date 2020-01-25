@@ -11,18 +11,18 @@
         var file_data = $('#' + fileType).prop('files');
 
         if (file_data == null || file_data.length == 0) {
-            ToastrWorker.ShowError("Файл для загрузки не выбран");
+            CrocoAppCore.ToastrWorker.ShowError("Файл для загрузки не выбран");
             return;
         }
 
-        Requester.UploadFilesToServer(fileType, x => {
+        CrocoAppCore.Application.Requester.UploadFilesToServer<IGenericBaseApiResponse<number[]>>(fileType, "/Api/FilesDirectory/UploadFiles", x => {
             var fileId: number = x.ResponseObject[0];
 
             var data = {
                 
             };
 
-            Requester.SendPostRequestWithAnimation('/Chemistry/Chemistry/UploadTaskFile', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+            CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Chemistry/Chemistry/UploadTaskFile', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
 
         }, null);
     }

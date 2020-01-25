@@ -6,13 +6,11 @@
         var file_data = $(`#${fileInputId}`).prop('files');
 
         if (file_data == null || file_data.length == 0) {
-            ToastrWorker.ShowError("Файл для загрузки не выбран")
+            CrocoAppCore.ToastrWorker.ShowError("Файл для загрузки не выбран")
             return;
         }
 
-        Requester.UploadFilesToServer(fileInputId, x => {
-
-            var t = x as GenericBaseApiResponse<Array<number>>;
+        CrocoAppCore.Application.Requester.UploadFilesToServer(fileInputId, "/Api/FilesDirectory/UploadFiles", (t : IGenericBaseApiResponse<number[]>) => {
 
             if (t.IsSucceeded) {
 
@@ -20,10 +18,10 @@
                 preData["FileId"] = t.ResponseObject[0];
                 preData["FileType"] = fileType
 
-                Requester.SendPostRequestWithAnimation(link, data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+                CrocoAppCore.Application.Requester.SendPostRequestWithAnimation(link, data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
             }
             else {
-                ToastrWorker.ShowError(t.Message);
+                CrocoAppCore.ToastrWorker.ShowError(t.Message);
             }
         }, null);
     }

@@ -1,40 +1,11 @@
-﻿var TSClassTypeMapper = (function () {
-    function TSClassTypeMapper() {
-    }
-    TSClassTypeMapper.GetPropertyType = function (typeDescription) {
-        return this.typesDictionary[typeDescription.TypeName];
-    };
-    TSClassTypeMapper.typesDictionary = new Dictionary([
-        { key: "String", value: "string" },
-        { key: "Int32", value: "number" },
-        { key: "Decimal", value: "number" },
-        { key: "Boolean", value: "boolean" },
-        { key: "DateTime", value: "Date" }
-    ]);
-    return TSClassTypeMapper;
-}());
-var TSClassGenerator = (function () {
+﻿var TSClassGenerator = (function () {
     function TSClassGenerator() {
     }
     TSClassGenerator.GetDescription = function (typeDescription) {
-        if (typeDescription.Descriptions.length > 0) {
-            return "\t/**\n\t* " + typeDescription.Descriptions[0] + "\n \t*/\n";
+        if (typeDescription.PropertyDescription != null && typeDescription.PropertyDescription.Descriptions.length > 0) {
+            return "\t/**\n\t* " + typeDescription.PropertyDescription.Descriptions[0] + "\n \t*/\n";
         }
         return "";
-    };
-    TSClassGenerator.GetEnum = function (typeDescription) {
-        if (!typeDescription.IsEnumeration) {
-            throw new DOMException("Данный тип не является перечислением");
-        }
-        var html = "";
-        html += "enum " + typeDescription.PropertyName + " {\n";
-        for (var i = 0; i < typeDescription.EnumValues.length; i++) {
-            var enumValue = typeDescription.EnumValues[i];
-            var comma = (i === typeDescription.EnumValues.length - 1) ? "" : ",";
-            html += "\t" + enumValue.StringRepresentation + " = <any> '" + enumValue.StringRepresentation + "'" + comma + "\n";
-        }
-        html += "}\n";
-        return html;
     };
     TSClassGenerator.prototype.GetUniqueTypes = function (typeDescription) {
         if (typeDescription == null) {
@@ -58,24 +29,46 @@ var TSClassGenerator = (function () {
         }
         return [];
     };
-    TSClassGenerator.GenerateClass = function (typeDescription) {
+    TSClassGenerator.GetTypeDisplayName = function (typeDescription, isDeclaration, useGenerics) {
+        if (!useGenerics) {
+            return typeDescription.TypeDisplayName;
+        }
+        if (isDeclaration) {
+            if (!typeDescription.IsGeneric) {
+                return typeDescription.TypeDisplayName;
+            }
+            return typeDescription.GenericDescription.GenericTypeNameWithUndefinedArgs;
+        }
+        if (typeDescription.IsGeneric) {
+            var genDescr = typeDescription.GenericDescription;
+            var genTypeTsNames = genDescr.GenericArgumentTypeNames.map(function (x) {
+                if (TsSimpleTypeMapper.simpleTypes.indexOf(x) >= 0) {
+                    return TsSimpleTypeMapper.GetPropertyTypeByTypeDisplayName(x);
+                }
+                return x;
+            });
+            return genDescr.TypeNameWithoutGenericArgs + "<" + genTypeTsNames.join(',') + ">";
+        }
+        return typeDescription.TypeDisplayName;
+    };
+    TSClassGenerator.GenerateClass = function (typeDescription, useGenerics) {
         var result = "";
         if (typeDescription.IsEnumeration) {
-            result += this.GetEnum(typeDescription);
+            result += TsEnumTypeDescriptor.GetEnum(typeDescription);
         }
         if (typeDescription.IsClass) {
-            result += "interface " + typeDescription.TypeName + " {\n";
+            result += "interface " + this.GetTypeDisplayName(typeDescription, true, useGenerics) + " {\n";
             for (var i = 0; i < typeDescription.Properties.length; i++) {
                 var prop = typeDescription.Properties[i];
                 if (prop.IsEnumerable) {
-                    result += TSClassGenerator.GetDescription(prop) + "\t " + prop.PropertyName + ": Array<" + this.GetEnumeratedDisplayTypeName(prop.EnumeratedType) + ">; \n";
+                    result += TSClassGenerator.GetDescription(prop) + "\t " + prop.PropertyDescription.PropertyName + ": Array<" + this.GetEnumeratedDisplayTypeName(prop.EnumeratedType) + ">; \n";
                     continue;
                 }
                 if (prop.IsClass || prop.IsEnumeration) {
-                    result += TSClassGenerator.GetDescription(prop) + "\t " + prop.PropertyName + ": " + prop.TypeName + "; \n";
+                    result += TSClassGenerator.GetDescription(prop) + "\t " + prop.PropertyDescription.PropertyName + ": " + this.GetTypeDisplayName(prop, false, useGenerics) + "; \n";
                     continue;
                 }
-                result += TSClassGenerator.GetDescription(prop) + "\t " + prop.PropertyName + ": " + TSClassTypeMapper.GetPropertyType(prop) + "; \n";
+                result += TSClassGenerator.GetDescription(prop) + "\t " + prop.PropertyDescription.PropertyName + ": " + TsSimpleTypeMapper.GetPropertyType(prop) + "; \n";
             }
             result += "}";
         }
@@ -85,11 +78,12 @@ var TSClassGenerator = (function () {
         if (typeDescription.IsClass || typeDescription.IsEnumeration) {
             return typeDescription.TypeName;
         }
-        return TSClassTypeMapper.GetPropertyType(typeDescription);
+        return TsSimpleTypeMapper.GetPropertyType(typeDescription);
     };
-    TSClassGenerator.prototype.GenerateClassesForType = function (typeDescription) {
+    TSClassGenerator.prototype.GenerateClassesForType = function (typeDescription, useGenerics) {
+        console.log("GenerateClassesForType", typeDescription, useGenerics);
         var uniqueTypes = TSClassGenerator.RemoveDuplicates(this.GetUniqueTypes(typeDescription));
-        return uniqueTypes.map(function (x) { return TSClassGenerator.GenerateClass(x); }).join("\n\n\n");
+        return uniqueTypes.map(function (x) { return TSClassGenerator.GenerateClass(x, useGenerics); }).join("\n\n\n");
     };
     TSClassGenerator.RemoveDuplicates = function (array) {
         var _loop_1 = function (i) {

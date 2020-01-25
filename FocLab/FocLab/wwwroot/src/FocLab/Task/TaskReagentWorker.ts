@@ -19,7 +19,7 @@
             ReagentId: this.GetValueByName("Create.ReagentId")
         };
 
-        Requester.SendPostRequestWithAnimation('/Api/Chemistry/Reagents/ForTask/CreateOrUpdate', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null)
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Api/Chemistry/Reagents/ForTask/CreateOrUpdate', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null)
     }    
 
     public EditTaskReagent(reagentId: string) {
@@ -33,7 +33,7 @@
             ReagentId: reagentId
         };
 
-        Requester.SendPostRequestWithAnimation('/Api/Chemistry/Reagents/ForTask/CreateOrUpdate', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null)
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Api/Chemistry/Reagents/ForTask/CreateOrUpdate', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null)
     }    
 
     public RemoveTaskReagent(reagentId: string) {
@@ -45,6 +45,6 @@
             ReagentId: reagentId
         };
 
-        Requester.SendPostRequestWithAnimation('/Api/Chemistry/Reagents/ForTask/Remove', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null)
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Api/Chemistry/Reagents/ForTask/Remove', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null)
     }    
 }

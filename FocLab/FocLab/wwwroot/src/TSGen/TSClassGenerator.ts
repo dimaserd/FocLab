@@ -1,62 +1,14 @@
-﻿///<reference path="Models/crocoTypeDescription.ts"/>
+﻿class TSClassGenerator {
 
-class TSClassTypeMapper {
-
-    private static typesDictionary = new Dictionary<string>([
-
-        { key: "String", value: "string" },
-
-        { key: "Int32", value: "number" },
-
-        { key: "Decimal", value: "number" },
-
-        { key: "Boolean", value: "boolean" },
-
-        { key: "DateTime", value: "Date" }
-    ]);
-
-    static GetPropertyType(typeDescription: CrocoTypeDescription): string {
-        return this.typesDictionary[typeDescription.TypeName];
-    }
-}
-
-
-class TSClassGenerator {
-
-    constructor() {
-    }
-
-    public static GetDescription(typeDescription: CrocoTypeDescription) : string {   
-        if (typeDescription.Descriptions.length > 0) {
-            return `\t/**\n\t* ${typeDescription.Descriptions[0]}\n \t*/\n`;
+    public static GetDescription(typeDescription: CrocoTypeDescription): string {
+        if (typeDescription.PropertyDescription != null && typeDescription.PropertyDescription.Descriptions.length > 0) {
+            return `\t/**\n\t* ${typeDescription.PropertyDescription.Descriptions[0]}\n \t*/\n`;
         }
 
         return "";
     }
 
-
-    public static GetEnum(typeDescription: CrocoTypeDescription): string {
-        if (!typeDescription.IsEnumeration) {
-            throw new DOMException("Данный тип не является перечислением");
-        }
-        let html = "";
-
-        html += `enum ${typeDescription.PropertyName} {\n`;
-
-        for (let i = 0; i < typeDescription.EnumValues.length; i++) {
-
-            const enumValue = typeDescription.EnumValues[i];
-
-            const comma = (i === typeDescription.EnumValues.length - 1) ? "" : ",";
-
-            html += `\t${enumValue.StringRepresentation} = <any> '${enumValue.StringRepresentation}'${comma}\n`;
-        }
-
-        html += `}\n`;
-
-        return html;
-    }
-
+    
     public GetUniqueTypes(typeDescription: CrocoTypeDescription): Array<CrocoTypeDescription> {
 
         if (typeDescription == null) {
@@ -93,17 +45,49 @@ class TSClassGenerator {
         return [];
     }
 
-    public static GenerateClass(typeDescription: CrocoTypeDescription): string {
+    static GetTypeDisplayName(typeDescription: CrocoTypeDescription, isDeclaration: boolean, useGenerics: boolean): string {
+
+        if (!useGenerics) {
+            return typeDescription.TypeDisplayName;
+        }
+
+        if (isDeclaration) {
+            if (!typeDescription.IsGeneric) {
+                return typeDescription.TypeDisplayName;
+            }
+
+            return typeDescription.GenericDescription.GenericTypeNameWithUndefinedArgs;
+        }
+
+        if (typeDescription.IsGeneric) {
+
+            let genDescr = typeDescription.GenericDescription;
+
+            let genTypeTsNames = genDescr.GenericArgumentTypeNames.map(x => {
+                if (TsSimpleTypeMapper.simpleTypes.indexOf(x) >= 0) {
+                    return TsSimpleTypeMapper.GetPropertyTypeByTypeDisplayName(x);
+                }
+
+                return x;
+            });
+
+            return `${genDescr.TypeNameWithoutGenericArgs}<${genTypeTsNames.join(',')}>`;
+        }
+
+        return typeDescription.TypeDisplayName;
+    }
+
+    public static GenerateClass(typeDescription: CrocoTypeDescription, useGenerics: boolean): string {
 
         let result: string = "";
 
         if (typeDescription.IsEnumeration) {
-            result += this.GetEnum(typeDescription);
+            result += TsEnumTypeDescriptor.GetEnum(typeDescription);
         }
 
         if (typeDescription.IsClass) {
 
-            result += `interface ${typeDescription.TypeName} {\n`;
+            result += `interface ${this.GetTypeDisplayName(typeDescription, true, useGenerics)} {\n`;
 
             for (let i = 0; i < typeDescription.Properties.length; i++) {
 
@@ -111,18 +95,18 @@ class TSClassGenerator {
 
                 if (prop.IsEnumerable) {
 
-                    result += `${TSClassGenerator.GetDescription(prop)}\t ${prop.PropertyName}: Array<${this.GetEnumeratedDisplayTypeName(prop.EnumeratedType)}>; \n`;
+                    result += `${TSClassGenerator.GetDescription(prop)}\t ${prop.PropertyDescription.PropertyName}: Array<${this.GetEnumeratedDisplayTypeName(prop.EnumeratedType)}>; \n`;
 
                     continue;
                 }
 
                 if (prop.IsClass || prop.IsEnumeration) {
-                    result += `${TSClassGenerator.GetDescription(prop)}\t ${prop.PropertyName}: ${prop.TypeName}; \n`;
+                    result += `${TSClassGenerator.GetDescription(prop)}\t ${prop.PropertyDescription.PropertyName}: ${this.GetTypeDisplayName(prop, false, useGenerics)}; \n`;
 
                     continue;
                 }
 
-                result += `${TSClassGenerator.GetDescription(prop)}\t ${prop.PropertyName}: ${TSClassTypeMapper.GetPropertyType(prop)}; \n`;
+                result += `${TSClassGenerator.GetDescription(prop)}\t ${prop.PropertyDescription.PropertyName}: ${TsSimpleTypeMapper.GetPropertyType(prop)}; \n`;
             }
 
             result += "}";
@@ -136,14 +120,16 @@ class TSClassGenerator {
             return typeDescription.TypeName;
         }
 
-        return TSClassTypeMapper.GetPropertyType(typeDescription);
+        return TsSimpleTypeMapper.GetPropertyType(typeDescription);
     }
 
-    public GenerateClassesForType(typeDescription: CrocoTypeDescription): string {
+    public GenerateClassesForType(typeDescription: CrocoTypeDescription, useGenerics: boolean): string {
+
+        console.log("GenerateClassesForType", typeDescription, useGenerics);
 
         const uniqueTypes = TSClassGenerator.RemoveDuplicates(this.GetUniqueTypes(typeDescription));
 
-        return uniqueTypes.map(x => TSClassGenerator.GenerateClass(x)).join("\n\n\n");
+        return uniqueTypes.map(x => TSClassGenerator.GenerateClass(x, useGenerics)).join("\n\n\n");
     }
 
     /*

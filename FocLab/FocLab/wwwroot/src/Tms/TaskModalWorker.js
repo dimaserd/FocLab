@@ -9,12 +9,12 @@ var TaskModalWorker = (function () {
     }
     TaskModalWorker.ShowDayTaskModal = function (task) {
         TaskModalWorker.InitTask(task);
-        FormDataHelper.FillDataByPrefix(task, "task.");
+        CrocoAppCore.Application.FormDataHelper.FillDataByPrefix(task, "task.");
         Utils.SetDatePicker("input[name='task.TaskDate']");
         var selector = "#" + TaskModalConsts.UserSelectId;
         ScheduleStaticHandlers.InitUserSelect(selector);
         $(selector).val(task.AssigneeUser.Id).trigger('change');
-        ModalWorker.ShowModal("dayTaskModal");
+        CrocoAppCore.Application.ModalWorker.ShowModal("dayTaskModal");
     };
     TaskModalWorker.InitTask = function (task) {
         task.TaskDate = moment(new Date(task.TaskDate)).format("DD/MM/YYYY");

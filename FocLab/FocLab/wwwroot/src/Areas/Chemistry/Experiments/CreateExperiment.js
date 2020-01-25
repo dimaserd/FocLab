@@ -4,7 +4,7 @@
     CreateExperiment.Create = function () {
         console.log("CreateExperiment.Click");
         var data = TryForm.GetDataForFormByModelPrefix(CreateExperiment._modelPrefix);
-        Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Create', data, function (x) {
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Create', data, function (x) {
             if (x.IsSucceeded) {
                 setTimeout(function () { location.href = "/Chemistry/Experiments/Index"; }, 1500);
             }
@@ -15,7 +15,7 @@
         CreateExperiment.AfterDrawHandler();
     };
     CreateExperiment.AfterDrawHandler = function () {
-        Requester.SendAjaxGet("/Api/Chemistry/Tasks/GetAll", null, function (resp) {
+        CrocoAppCore.Application.Requester.Get("/Api/Chemistry/Tasks/GetAll", null, function (resp) {
             var idOfExp = window.location.href.split("/").reverse()[0];
             idOfExp = idOfExp === "Create" ? null : idOfExp;
             var selList = resp.map(function (t) {

@@ -1,8 +1,5 @@
 ﻿class ExperimentIndexHandlers {
 
-    
-    
-
     static PerformExperiment(id: string, flag: boolean): void {
 
         var data = {
@@ -10,15 +7,15 @@
             Performed: flag
         };
 
-        Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Perform', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Perform', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     }
 
-    static RemoveExperiment(id: string) : void {
-        Requester.SendPostRequestWithAnimation(`/Api/Chemistry/Experiments/Remove?id=${id}`, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+    static RemoveExperiment(id: string): void {
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation(`/Api/Chemistry/Experiments/Remove?id=${id}`, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     }
 
     static CancelRemoveExperiment(id: string) : void {
-        Requester.SendPostRequestWithAnimation(`/Api/Chemistry/Experiments/CancelRemove?id=${id}`, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation(`/Api/Chemistry/Experiments/CancelRemove?id=${id}`, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     }
 
     static SetHandlers() {

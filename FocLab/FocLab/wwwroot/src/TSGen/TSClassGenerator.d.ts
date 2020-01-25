@@ -1,15 +1,9 @@
-﻿/// <reference types="tsgen/models/crocotypedescription" />
-declare class TSClassTypeMapper {
-    private static typesDictionary;
-    static GetPropertyType(typeDescription: CrocoTypeDescription): string;
-}
-declare class TSClassGenerator {
-    constructor();
+﻿declare class TSClassGenerator {
     static GetDescription(typeDescription: CrocoTypeDescription): string;
-    static GetEnum(typeDescription: CrocoTypeDescription): string;
     GetUniqueTypes(typeDescription: CrocoTypeDescription): Array<CrocoTypeDescription>;
-    static GenerateClass(typeDescription: CrocoTypeDescription): string;
+    static GetTypeDisplayName(typeDescription: CrocoTypeDescription, isDeclaration: boolean, useGenerics: boolean): string;
+    static GenerateClass(typeDescription: CrocoTypeDescription, useGenerics: boolean): string;
     private static GetEnumeratedDisplayTypeName;
-    GenerateClassesForType(typeDescription: CrocoTypeDescription): string;
+    GenerateClassesForType(typeDescription: CrocoTypeDescription, useGenerics: boolean): string;
     static RemoveDuplicates(array: Array<CrocoTypeDescription>): Array<CrocoTypeDescription>;
 }

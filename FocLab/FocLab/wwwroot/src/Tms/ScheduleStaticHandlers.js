@@ -67,9 +67,9 @@ var ScheduleStaticHandlers = (function () {
             TaskTitle: ""
         };
         ScheduleStaticHandlers.InitUserSelect("#usersSelect2");
-        FormDataHelper.FillDataByPrefix(data, "create.");
+        CrocoAppCore.Application.FormDataHelper.FillDataByPrefix(data, "create.");
         Utils.SetDatePicker("input[name='create.TaskDate']", '0');
-        ModalWorker.ShowModal("createDayTaskModal");
+        CrocoAppCore.Application.ModalWorker.ShowModal("createDayTaskModal");
     };
     ScheduleStaticHandlers.InitUserSelect = function (selector) {
         $(selector).select2({
@@ -95,34 +95,34 @@ var ScheduleStaticHandlers = (function () {
         var data = {
             Comment: ""
         };
-        data = FormDataHelper.CollectDataByPrefix(data, "edit.");
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "edit.");
         var m = {
             Comment: data.Comment,
             DayTaskCommentId: commentId
         };
-        Requester.SendAjaxPost("/Api/DayTask/Comments/Update", m, function (resp) {
+        CrocoAppCore.Application.Requester.Post("/Api/DayTask/Comments/Update", m, function (resp) {
             if (resp.IsSucceeded) {
                 TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
-        }, null, false);
+        }, null);
     };
     ScheduleStaticHandlers.addComment = function () {
         var data = {
             DayTaskId: "",
             Comment: ""
         };
-        data = FormDataHelper.CollectData(data);
-        Requester.SendAjaxPost("/Api/DayTask/Comments/Add", data, function (resp) {
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "");
+        CrocoAppCore.Application.Requester.Post("/Api/DayTask/Comments/Add", data, function (resp) {
             if (resp.IsSucceeded) {
                 TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
-        }, null, false);
+        }, null);
     };
     ScheduleStaticHandlers.redirectToFullVersion = function () {
         var data = { Id: "" };
-        data = FormDataHelper.CollectDataByPrefix(data, "task.");
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "task.");
         window.open(window.location.origin + "/Schedule/Task/" + data.Id, '_blank');
     };
     ScheduleStaticHandlers.updateDayTask = function () {
@@ -136,13 +136,13 @@ var ScheduleStaticHandlers = (function () {
             TaskReview: "",
             TaskTarget: ""
         };
-        data = FormDataHelper.CollectDataByPrefix(data, "task.");
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "task.");
         data.TaskDate = Utils.GetDateFromDatePicker("TaskDate");
-        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, function (resp) {
+        CrocoAppCore.Application.Requester.Post("/Api/DayTask/CreateOrUpdate", data, function (resp) {
             if (resp.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
-        }, null, false);
+        }, null);
     };
     ScheduleStaticHandlers.createDayTask = function () {
         var data = {
@@ -155,14 +155,13 @@ var ScheduleStaticHandlers = (function () {
             TaskReview: "",
             TaskTarget: ""
         };
-        data = FormDataHelper.CollectDataByPrefix(data, "create.");
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "create.");
         data.TaskDate = Utils.GetDateFromDatePicker("TaskDate1");
-        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, function (resp) {
-            ToastrWorker.HandleBaseApiResponse(resp);
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (resp) {
             if (resp.IsSucceeded) {
                 ScheduleStaticHandlers.hideCreateModal();
             }
-        }, null, false);
+        }, null);
     };
     ScheduleStaticHandlers.hideCreateModal = function () {
         $("#createDayTaskModal").modal("hide");

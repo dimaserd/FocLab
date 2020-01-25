@@ -8,7 +8,7 @@
 
         const data = TryForm.GetDataForFormByModelPrefix(CreateExperiment._modelPrefix);
 
-        Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Create', data, (x: BaseApiResponse) => {
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Create', data, (x: IBaseApiResponse) => {
             if (x.IsSucceeded) {
                 setTimeout(() => { location.href = "/Chemistry/Experiments/Index" }, 1500);
             }
@@ -22,7 +22,7 @@
 
     static AfterDrawHandler(): void {
 
-        Requester.SendAjaxGet("/Api/Chemistry/Tasks/GetAll", null, (resp: Array<{Id: string, Title: string}>) => {
+        CrocoAppCore.Application.Requester.Get("/Api/Chemistry/Tasks/GetAll", null, (resp: Array<{ Id: string, Title: string }>) => {
 
             let idOfExp = window.location.href.split("/").reverse()[0];
 
