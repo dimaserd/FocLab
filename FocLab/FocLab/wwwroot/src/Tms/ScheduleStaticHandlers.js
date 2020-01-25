@@ -21,7 +21,7 @@ var ScheduleStaticHandlers = (function () {
         });
         EventSetter.SetHandlerForClass("tms-update-task-btn", "click", function () {
             ScheduleStaticHandlers.updateDayTask();
-            ModalWorker.HideModals();
+            CrocoAppCore.Application.ModalWorker.HideModals();
         });
         EventSetter.SetHandlerForClass("tms-redirect-to-full", "click", function () { return ScheduleStaticHandlers.redirectToFullVersion(); });
         EventSetter.SetHandlerForClass("tms-create-task-btn", "click", function () { return ScheduleStaticHandlers.createDayTask(); });
@@ -35,9 +35,12 @@ var ScheduleStaticHandlers = (function () {
         var data = {
             UserIds: []
         };
-        var dataFilter = FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
-        dataFilter.MonthShift = isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1;
-        return Requester.GetParams(data);
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
+        var dataFilter = {
+            UserIds: data.UserIds,
+            MonthShift: isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1
+        };
+        return CrocoAppCore.Application.Requester.GetParams(dataFilter);
     };
     ScheduleStaticHandlers.ApplyFilter = function (isNextMonth) {
         location.href = "/Schedule/Index?" + ScheduleStaticHandlers.GetQueryParams(isNextMonth);
@@ -52,8 +55,8 @@ var ScheduleStaticHandlers = (function () {
         var data = {
             UserIds: []
         };
-        var t = FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
-        location.href = "/Schedule/Index?" + Requester.GetParams(t);
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
+        location.href = "/Schedule/Index?" + CrocoAppCore.Application.Requester.GetParams(data);
     };
     ScheduleStaticHandlers.ShowDayTaskModal = function (taskId) {
         DayTasksWorker.SetCurrentTaskId(taskId);

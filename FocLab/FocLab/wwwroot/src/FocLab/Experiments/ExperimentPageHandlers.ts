@@ -28,10 +28,7 @@ class ExperimentPageHandlers {
             PerformerText: "",
         };
 
-        toCollect = FormDataHelper.CollectDataByPrefix(toCollect, "Experiment.") as {
-            Title: string;
-            PerformerText: string;
-        };
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(toCollect, "Experiment.");
 
         var data: UpdateExperiment = {
             Id: ExperimentPageHandlers.ExperimentId,
@@ -40,11 +37,10 @@ class ExperimentPageHandlers {
             SubstanceCounterJson: JSON.stringify(SubstanceStaticHandlers.substance.getJSON())
         }
 
-        Requester.SendPostRequestWithAnimation("/Api/Chemistry/Experiments/Update", data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/Chemistry/Experiments/Update", data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     }
 
     static SetHandlers(): void {
-        var btn = document.getElementById("exp-update-btn");
         EventSetter.SetHandlerForClass("exp-update-btn", "click", () => ExperimentPageHandlers.UpdateExperiment());
     }
 }

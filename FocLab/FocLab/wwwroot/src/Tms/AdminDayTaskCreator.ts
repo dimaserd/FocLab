@@ -33,7 +33,7 @@ class AdminDayTaskCreator {
 
         data = this.ProccessData(data);
 
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, x => {
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation<IBaseApiResponse>("/Api/DayTask/CreateOrUpdate", data, x => {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
@@ -42,7 +42,7 @@ class AdminDayTaskCreator {
 
     EditDayTask(data): void {
 
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, x => {
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation<IBaseApiResponse>("/Api/DayTask/CreateOrUpdate", data, x => {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }

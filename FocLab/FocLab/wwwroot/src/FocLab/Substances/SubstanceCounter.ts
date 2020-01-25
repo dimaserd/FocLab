@@ -73,7 +73,7 @@
     }
     DrawTable(): void {
         if (this.Etalon == null) {
-            ToastrWorker.ShowError("Не указано эталонное вещество");
+            CrocoAppCore.ToastrWorker.ShowError("Не указано эталонное вещество");
             this.Etalon = { Name: "", Koef: 1, Massa: 1, MolarMassa: 1 };
         }
         this.DrawEtalon();

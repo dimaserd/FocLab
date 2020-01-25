@@ -62,8 +62,8 @@ class ScheduleWorker {
 
     static SetUsersSelect() {
 
-        Requester.SendAjaxPost("/Api/User/Get", { Count: null, OffSet: 0 },
-            x => {
+        CrocoAppCore.Application.Requester.Post("/Api/User/Get", { Count: null, OffSet: 0 },
+            (x : any) => {
                 
                 ScheduleWorker.Users = x.List as Array<ApplicationUserModel>;
 
@@ -90,14 +90,14 @@ class ScheduleWorker {
                     }
                 });
 
-                FormDataHelper.FillDataByPrefix({
+                CrocoAppCore.Application.FormDataHelper.FillDataByPrefix({
                     UserIds: ScheduleWorker.filter.UserIds
                 }, "filter.");
 
                 $("#usersSelect").val(this.filter.UserIds).trigger('change.select2');
                 $('.select2-selection__rendered img').addClass('m--img-rounded m--marginless m--img-centered');
 
-            }, null, false);
+            }, null);
     }
     
 }

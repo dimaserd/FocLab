@@ -33,7 +33,6 @@ interface CreateDayTask {
 interface UserScheduleSearchModel {
     MonthShift: number;
     UserIds: Array<string>;
-    ShowTasksWithNoAssignee: boolean;
 }
 declare class ScheduleConsts {
     static FilterPrefix: string;

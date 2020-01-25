@@ -56,18 +56,18 @@ class DayTasksWorker {
 
     static SendNotificationToAdmin() {
 
-        ModalWorker.ShowModal("loadingModal");
+        CrocoAppCore.Application.ModalWorker.ShowModal("loadingModal");
 
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: DayTasksWorker.CurrentTaskId }, x => alert(x), null);
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: DayTasksWorker.CurrentTaskId }, x => alert(x), null);
     }
 
     static GetTasks(): void {
 
-        Requester.SendAjaxPost("/Api/DayTask/GetTasks", this.SearchModel, x => {
-            this.Tasks = x as Array<DayTaskModel>;
-            this.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
-            this.OpenTaskById();
-        }, null, false);
+        CrocoAppCore.Application.Requester.Post("/Api/DayTask/GetTasks", this.SearchModel, x => {
+            DayTasksWorker.Tasks = x as Array<DayTaskModel>;
+            DayTasksWorker.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
+            DayTasksWorker.OpenTaskById();
+        }, null);
     }
 
     static GetTaskById(taskId: string): DayTaskModel {

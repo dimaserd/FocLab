@@ -9,7 +9,7 @@ var UserCreatePage = (function () {
     UserCreatePage.SetHandlers = function (modelPrefix) {
         $(".action-btn").on("click", function () {
             var data = TryForm.GetDataForFormByModelPrefix(modelPrefix);
-            Requester.SendPostRequestWithAnimation("/Api/User/Create", data, function (resp) {
+            CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/User/Create", data, function (resp) {
                 if (resp.IsSucceeded) {
                     setTimeout(function () { location.href = '/Admin/Users/Index'; }, 1000);
                 }

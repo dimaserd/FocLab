@@ -1,9 +1,9 @@
 class DayTaskEditor {
     static UpdateHtmlProperties(data) {
 
-        ModalWorker.ShowModal("loadingModal");
+        CrocoAppCore.Application.ModalWorker.ShowModal("loadingModal");
 
-        Requester.SendPostRequestWithAnimation('/Api/DayTask/CreateOrUpdate', data, x => {
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation<IBaseApiResponse>('/Api/DayTask/CreateOrUpdate', data, x => {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }

@@ -19,7 +19,7 @@ class UserCreatePage {
 
             const data = TryForm.GetDataForFormByModelPrefix(modelPrefix);
 
-            Requester.SendPostRequestWithAnimation("/Api/User/Create", data, resp => {
+            CrocoAppCore.Application.Requester.SendPostRequestWithAnimation<IBaseApiResponse>("/Api/User/Create", data, resp => {
                 if (resp.IsSucceeded) {
                     setTimeout(() => { location.href = '/Admin/Users/Index' }, 1000)
                 }

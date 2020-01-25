@@ -41,8 +41,6 @@ interface UserScheduleSearchModel {
     MonthShift: number;
 
     UserIds: Array<string>;
-
-    ShowTasksWithNoAssignee: boolean;
 }
 
 class ScheduleConsts {
@@ -76,7 +74,7 @@ class ScheduleStaticHandlers {
 
         EventSetter.SetHandlerForClass("tms-update-task-btn", "click", () => {
             ScheduleStaticHandlers.updateDayTask();
-            ModalWorker.HideModals();
+            CrocoAppCore.Application.ModalWorker.HideModals();
         });
 
         EventSetter.SetHandlerForClass("tms-redirect-to-full", "click", () => ScheduleStaticHandlers.redirectToFullVersion());
@@ -94,10 +92,15 @@ class ScheduleStaticHandlers {
             UserIds: []
         };
 
-        var dataFilter = FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix) as UserScheduleSearchModel;
-        dataFilter.MonthShift = isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1;
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
 
-        return Requester.GetParams(data);
+        var dataFilter: UserScheduleSearchModel = {
+            UserIds: data.UserIds,
+            MonthShift: isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1
+        };
+
+
+        return CrocoAppCore.Application.Requester.GetParams(dataFilter);
     }
 
     static ApplyFilter(isNextMonth: boolean) {
@@ -120,9 +123,9 @@ class ScheduleStaticHandlers {
             UserIds: []
         };
 
-        var t = FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix) as ShowUserSchedule;
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
 
-        location.href = `/Schedule/Index?${Requester.GetParams(t)}`;
+        location.href = `/Schedule/Index?${CrocoAppCore.Application.Requester.GetParams(data)}`;
     }
 
 

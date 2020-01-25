@@ -15,14 +15,14 @@
     };
     AdminDayTaskCreator.prototype.CreateDayTask = function (data) {
         data = this.ProccessData(data);
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
         }, null);
     };
     AdminDayTaskCreator.prototype.EditDayTask = function (data) {
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }

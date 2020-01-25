@@ -24,16 +24,15 @@
         this.CurrentTask = DayTasksWorker.Tasks.find(function (x) { return x.Id === taskId; });
     };
     DayTasksWorker.SendNotificationToAdmin = function () {
-        ModalWorker.ShowModal("loadingModal");
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: DayTasksWorker.CurrentTaskId }, function (x) { return alert(x); }, null);
+        CrocoAppCore.Application.ModalWorker.ShowModal("loadingModal");
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: DayTasksWorker.CurrentTaskId }, function (x) { return alert(x); }, null);
     };
     DayTasksWorker.GetTasks = function () {
-        var _this = this;
-        Requester.SendAjaxPost("/Api/DayTask/GetTasks", this.SearchModel, function (x) {
-            _this.Tasks = x;
-            _this.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
-            _this.OpenTaskById();
-        }, null, false);
+        CrocoAppCore.Application.Requester.Post("/Api/DayTask/GetTasks", this.SearchModel, function (x) {
+            DayTasksWorker.Tasks = x;
+            DayTasksWorker.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
+            DayTasksWorker.OpenTaskById();
+        }, null);
     };
     DayTasksWorker.GetTaskById = function (taskId) {
         return DayTasksWorker.Tasks.find(function (x) { return x.Id === taskId; });
