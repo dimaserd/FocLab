@@ -17,7 +17,11 @@ class UserCreatePage {
     static SetHandlers(modelPrefix: string): void {
         $(".action-btn").on("click", () => {
 
-            const data = TryForm.GetDataForFormByModelPrefix(modelPrefix);
+            const renderModel = CrocoAppCore.GenericInterfaceHelper
+                .FormHelper._genericInterfaces.find(x => x.FormModel.Prefix === modelPrefix).FormModel;
+
+            const data = CrocoAppCore.Application.FormDataHelper
+                .CollectDataByPrefixWithTypeMatching(renderModel.Prefix, renderModel.TypeDescription);
 
             CrocoAppCore.Application.Requester.SendPostRequestWithAnimation<IBaseApiResponse>("/Api/User/Create", data, resp => {
                 if (resp.IsSucceeded) {

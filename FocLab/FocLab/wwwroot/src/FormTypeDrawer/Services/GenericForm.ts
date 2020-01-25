@@ -15,7 +15,7 @@ class GenericForm {
         this._formDrawFactory = opts.FormDrawFactory;
     }
 
-    _genericInterfaces: Array<RenderGenericInterface> = [];
+    public _genericInterfaces: Array<RenderGenericInterface> = [];
 
     static UnWrapModel(model: GenerateGenericUserInterfaceModel, drawer: FormTypeDrawer) : string {
 

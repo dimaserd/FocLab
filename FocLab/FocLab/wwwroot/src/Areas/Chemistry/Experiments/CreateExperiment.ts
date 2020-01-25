@@ -6,7 +6,9 @@
 
         console.log("CreateExperiment.Click");
 
-        const data = TryForm.GetDataForFormByModelPrefix(CreateExperiment._modelPrefix);
+        const data = CrocoAppCore.GenericInterfaceHelper
+            .FormHelper._genericInterfaces
+            .find(x => x.FormModel.Prefix === CreateExperiment._modelPrefix);
 
         CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Create', data, (x: IBaseApiResponse) => {
             if (x.IsSucceeded) {

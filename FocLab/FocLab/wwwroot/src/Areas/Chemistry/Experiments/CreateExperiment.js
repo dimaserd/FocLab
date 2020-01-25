@@ -3,7 +3,9 @@
     }
     CreateExperiment.Create = function () {
         console.log("CreateExperiment.Click");
-        var data = TryForm.GetDataForFormByModelPrefix(CreateExperiment._modelPrefix);
+        var data = CrocoAppCore.GenericInterfaceHelper
+            .FormHelper._genericInterfaces
+            .find(function (x) { return x.FormModel.Prefix === CreateExperiment._modelPrefix; });
         CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Create', data, function (x) {
             if (x.IsSucceeded) {
                 setTimeout(function () { location.href = "/Chemistry/Experiments/Index"; }, 1500);
