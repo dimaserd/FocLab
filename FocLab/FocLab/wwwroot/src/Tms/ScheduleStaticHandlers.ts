@@ -148,7 +148,7 @@ class ScheduleStaticHandlers {
         
         CrocoAppCore.Application.FormDataHelper.FillDataByPrefix(data, "create.");
 
-        Utils.SetDatePicker("input[name='create.TaskDate']", '0');
+        DatePickerUtils.SetDatePicker("TaskDate1", 'RealTaskDate1');
 
         CrocoAppCore.Application.ModalWorker.ShowModal("createDayTaskModal");
     }
@@ -233,7 +233,7 @@ class ScheduleStaticHandlers {
             TaskTarget: ""
         };
         CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "task.");
-        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate") as Date;
+        data.TaskDate = DatePickerUtils.GetDateFromDatePicker("TaskDate");
 
         CrocoAppCore.Application.Requester.Post<IBaseApiResponse>("/Api/DayTask/CreateOrUpdate", data, resp => {
             if (resp.IsSucceeded) {
@@ -257,7 +257,7 @@ class ScheduleStaticHandlers {
 
         CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "create.");
 
-        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate1") as Date;
+        data.TaskDate = DatePickerUtils.GetDateFromDatePicker("TaskDate1");
 
         CrocoAppCore.Application.Requester.SendPostRequestWithAnimation<IBaseApiResponse>("/Api/DayTask/CreateOrUpdate", data, resp => {
             

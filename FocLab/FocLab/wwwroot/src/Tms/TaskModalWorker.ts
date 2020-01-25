@@ -9,7 +9,7 @@ class TaskModalWorker {
 
         CrocoAppCore.Application.FormDataHelper.FillDataByPrefix(task, "task.");
 
-        Utils.SetDatePicker("input[name='task.TaskDate']");
+        DatePickerUtils.SetDatePicker("TaskDate", "RealTaskDate");
 
         let selector = `#${TaskModalConsts.UserSelectId}`;
 

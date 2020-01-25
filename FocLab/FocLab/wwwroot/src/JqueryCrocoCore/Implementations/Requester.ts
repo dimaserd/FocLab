@@ -10,6 +10,10 @@ class Requester implements ICrocoRequester {
 
     static GoingRequests = new Array<string>();
 
+    GetParams(data: object): string {
+        return $.param(data);
+    }
+
     DeleteCompletedRequest(link: string): void {
         Requester.GoingRequests = Requester.GoingRequests.filter(x => x !== link);
     }

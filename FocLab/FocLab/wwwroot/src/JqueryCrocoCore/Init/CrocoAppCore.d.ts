@@ -1,4 +1,4 @@
-declare class CrocoAppCore {
+﻿declare class CrocoAppCore {
     static Application: MyCrocoJsApplication;
     static AjaxLoader: AjaxLoader;
     static ToastrWorker: ToastrWorker;

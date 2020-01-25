@@ -10,7 +10,7 @@ var TaskModalWorker = (function () {
     TaskModalWorker.ShowDayTaskModal = function (task) {
         TaskModalWorker.InitTask(task);
         CrocoAppCore.Application.FormDataHelper.FillDataByPrefix(task, "task.");
-        Utils.SetDatePicker("input[name='task.TaskDate']");
+        DatePickerUtils.SetDatePicker("TaskDate", "RealTaskDate");
         var selector = "#" + TaskModalConsts.UserSelectId;
         ScheduleStaticHandlers.InitUserSelect(selector);
         $(selector).val(task.AssigneeUser.Id).trigger('change');

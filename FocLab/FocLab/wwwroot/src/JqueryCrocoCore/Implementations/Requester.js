@@ -9,6 +9,9 @@
 var Requester = (function () {
     function Requester() {
     }
+    Requester.prototype.GetParams = function (data) {
+        return $.param(data);
+    };
     Requester.prototype.DeleteCompletedRequest = function (link) {
         Requester.GoingRequests = Requester.GoingRequests.filter(function (x) { return x !== link; });
     };
