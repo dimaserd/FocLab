@@ -121,7 +121,7 @@ namespace FocLab.Logic.Models.Tasks
         }
 
         [JsonIgnore]
-        internal static Expression<Func<ChemistryTask, ChemistryTaskModel>> SelectExpression = a => new ChemistryTaskModel
+        internal static Expression<Func<ChemistryTask, ChemistryTaskModel>> NoUsersSelectExpression = a => new ChemistryTaskModel
         {
             Id = a.Id,
             Files = a.Files.Select(t => new ChemistryTaskFileModel
@@ -129,20 +129,16 @@ namespace FocLab.Logic.Models.Tasks
                 FileId = t.FileId,
                 Type = t.Type
             }).ToList(),
-            AdminQuality = a.AdminQuality,
-            AdminQuantity = a.AdminQuantity,
             AdminUser = new UserModelBase
             {
-                Email = a.AdminUser.Email,
-                Name = a.AdminUser.Name,
-                Id = a.AdminUser.Id
+                Id = a.AdminUserId
             },
             PerformerUser = new UserModelBase
             {
-                Id = a.PerformerUser.Id,
-                Name = a.PerformerUser.Name,
-                Email = a.PerformerUser.Email
+                Id = a.PerformerUserId
             },
+            AdminQuality = a.AdminQuality,
+            AdminQuantity = a.AdminQuantity,
             ChemistryMethodFile = a.MethodFileId != null ? new ChemistryMethodFileModel
             {
                 Id = a.ChemistryMethodFile.Id,

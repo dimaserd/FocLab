@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -8,7 +9,6 @@ using Croco.Core.Search.Models;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Users;
-using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities.Users.Default;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +31,11 @@ namespace FocLab.Logic.Workers.Users
             return GetUserByPredicateExpression(x => x.Id == userId);
         }
 
+        public Task<List<ApplicationUserDto>> GetUsersByIdsAsync(List<string> userIds)
+        {
+            return GetUsersByPredicateExpression(x => userIds.Contains(x.Id));
+        }
+
         public Task<ApplicationUserDto> GetUserByEmailAsync(string email)
         {
             return GetUserByPredicateExpression(x => x.Email == email);
@@ -38,9 +43,17 @@ namespace FocLab.Logic.Workers.Users
 
         private Task<ApplicationUserDto> GetUserByPredicateExpression(Expression<Func<ApplicationUserDto, bool>> predicate)
         {
-            var usersRepo = GetRepository<ApplicationUser>();
+            return Query<ApplicationUser>()
+                .Select(ApplicationUserDto.SelectExpression)
+                .FirstOrDefaultAsync(predicate);
+        }
 
-            return usersRepo.Query().Select(ApplicationUserDto.SelectExpression).FirstOrDefaultAsync(predicate);
+        private Task<List<ApplicationUserDto>> GetUsersByPredicateExpression(Expression<Func<ApplicationUserDto, bool>> predicate)
+        {
+            return Query<ApplicationUser>()
+                .Select(ApplicationUserDto.SelectExpression)
+                .Where(predicate)
+                .ToListAsync();
         }
 
         #endregion
@@ -49,9 +62,7 @@ namespace FocLab.Logic.Workers.Users
 
         public Task<GetListResult<ApplicationUserBaseModel>> GetUsersAsync(UserSearch model)
         {
-            var userRepo = GetRepository<ApplicationUser>();
-
-            var query = userRepo.Query().Where(x => x.Email != RightsSettings.RootEmail)
+            var query = Query<ApplicationUser>()
                 .BuildQuery(model.GetCriterias())
                 .OrderByDescending(x => x.CreatedOn);
 
@@ -60,14 +71,11 @@ namespace FocLab.Logic.Workers.Users
 
         public Task<GetListResult<ApplicationUserDto>> SearchUsersAsync(UserSearch model)
         {
-            var userRepo = GetRepository<ApplicationUser>();
+            var initQuery = Query<ApplicationUser>()
+                .BuildQuery(model.GetCriterias())
+                .OrderByDescending(x => x.CreatedOn);
 
-            var initQuery = userRepo.Query()
-                .Where(x => x.Email != RightsSettings.RootEmail);
-            
-            initQuery = initQuery.BuildQuery(model.GetCriterias());
-
-            return GetListResult<ApplicationUserDto>.GetAsync(model, initQuery.OrderByDescending(x => x.CreatedOn), ApplicationUserDto.SelectExpression);
+            return GetListResult<ApplicationUserDto>.GetAsync(model, initQuery, ApplicationUserDto.SelectExpression);
         }
 
         #endregion

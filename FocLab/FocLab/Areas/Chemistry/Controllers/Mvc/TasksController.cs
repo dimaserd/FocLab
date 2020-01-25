@@ -82,7 +82,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
 
             ViewData["User"] = user;
 
-            var model = await ChemistryTasksWorker.GetNotDeletedTasksAsync();
+            var model = await ChemistryTasksWorker.GetNotDeletedTasksAsync(usersList.List);
 
             var tasksSelectList = model.Select(x => new SelectListItem { Text = x.Title, Value = x.Title }).ToList();
 
