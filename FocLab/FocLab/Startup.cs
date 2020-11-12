@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CrocoShop.CrocoStuff;
+using Microsoft.Extensions.Hosting;
 
 namespace FocLab
 {
@@ -109,7 +110,7 @@ namespace FocLab
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.EnvironmentName == "Development")
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -119,8 +120,6 @@ namespace FocLab
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-
-
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
