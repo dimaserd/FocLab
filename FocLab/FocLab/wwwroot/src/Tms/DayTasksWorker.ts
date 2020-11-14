@@ -63,10 +63,10 @@ class DayTasksWorker {
 
     static GetTasks(): void {
 
-        Requester.SendAjaxPost("/Api/DayTask/GetTasks", this.SearchModel, x => {
-            this.Tasks = x as Array<DayTaskModel>;
-            this.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
-            this.OpenTaskById();
+        Requester.SendAjaxPost("/Api/DayTask/GetTasks", this.SearchModel, (x : DayTaskModel[]) => {
+            DayTasksWorker.Tasks = x;
+            DayTasksWorker.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
+            DayTasksWorker.OpenTaskById();
         }, null, false);
     }
 

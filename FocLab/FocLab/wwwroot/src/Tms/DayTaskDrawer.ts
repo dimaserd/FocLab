@@ -10,13 +10,11 @@ class DayTaskDrawer {
             const task = tasks[i];
 
             this.AddTaskToDate(task);
-
         }
 
         if (isAdmin) {
             this.AddAdminActions();
         }
-
 
         ScheduleStaticHandlers.SetHandlers();
     }       

@@ -79,14 +79,34 @@ class ScheduleStaticHandlers {
             ModalWorker.HideModals();
         });
 
+        EventSetter.SetHandlerForClass("tms-show-more-tasks-btn", "click", x => {
+
+            var date = $(x.currentTarget).attr("day-task-date");
+
+            var tasks = DayTasksWorker.Tasks.filter(e => e.TaskDate === date);
+
+            if (tasks.length === 0) {
+                return;
+            }
+
+            AllTasksForSingleDayModalService.DrawTasksOnModal(tasks);
+
+            EventSetter.SetHandlerForClass("tms-show-task-modal-big", "click", ScheduleStaticHandlers.ShowTaskHandler);
+
+            ModalWorker.ShowModal("showDayTasksModal");
+        });
+
         EventSetter.SetHandlerForClass("tms-redirect-to-full", "click", () => ScheduleStaticHandlers.redirectToFullVersion());
         EventSetter.SetHandlerForClass("tms-create-task-btn", "click", () => ScheduleStaticHandlers.createDayTask());
         EventSetter.SetHandlerForClass("tms-btn-create-task", "click", () => ScheduleStaticHandlers.ShowCreateTaskModal());
-        EventSetter.SetHandlerForClass("tms-show-task-modal", "click", x =>
-        {
-            var taskId = $(x.target).data("task-id") as string;
-            ScheduleStaticHandlers.ShowDayTaskModal(taskId);
-        })
+
+        EventSetter.SetHandlerForClass("tms-show-task-modal", "click", ScheduleStaticHandlers.ShowTaskHandler)
+    }
+
+    static ShowTaskHandler(e: Event):void {
+        var taskId = $(e.target).data("task-id") as string;
+        ModalWorker.HideModals();
+        ScheduleStaticHandlers.ShowDayTaskModal(taskId);
     }
 
     static GetQueryParams(isNextMonth: boolean) : string {
@@ -125,11 +145,10 @@ class ScheduleStaticHandlers {
         location.href = `/Schedule/Index?${Requester.GetParams(t)}`;
     }
 
-
     static ShowDayTaskModal(taskId: string) {
 
         DayTasksWorker.SetCurrentTaskId(taskId);
-        let task = DayTasksWorker.GetTaskById(taskId);
+        let task = JSON.parse(JSON.stringify(DayTasksWorker.GetTaskById(taskId)));
 
         TaskModalWorker.ShowDayTaskModal(task);
     }
@@ -255,7 +274,6 @@ class ScheduleStaticHandlers {
         data = FormDataHelper.CollectDataByPrefix(data, "create.") as CreateOrUpdateDayTask;
         data.TaskDate = Utils.GetDateFromDatePicker("TaskDate1") as Date;
         
-
         Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, resp => {
             ToastrWorker.HandleBaseApiResponse(resp);
             if (resp.IsSucceeded) {

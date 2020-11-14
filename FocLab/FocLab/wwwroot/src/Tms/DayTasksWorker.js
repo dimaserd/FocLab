@@ -28,11 +28,10 @@
         Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: DayTasksWorker.CurrentTaskId }, function (x) { return alert(x); }, null);
     };
     DayTasksWorker.GetTasks = function () {
-        var _this = this;
         Requester.SendAjaxPost("/Api/DayTask/GetTasks", this.SearchModel, function (x) {
-            _this.Tasks = x;
-            _this.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
-            _this.OpenTaskById();
+            DayTasksWorker.Tasks = x;
+            DayTasksWorker.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
+            DayTasksWorker.OpenTaskById();
         }, null, false);
     };
     DayTasksWorker.GetTaskById = function (taskId) {

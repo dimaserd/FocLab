@@ -42,6 +42,7 @@ declare class ScheduleStaticHandlers {
     static Filter: UserScheduleSearchModel;
     static _countOfChanges: number;
     static SetHandlers(): void;
+    static ShowTaskHandler(e: Event): void;
     static GetQueryParams(isNextMonth: boolean): string;
     static ApplyFilter(isNextMonth: boolean): void;
     static OnUsersSelectChanged(): void;

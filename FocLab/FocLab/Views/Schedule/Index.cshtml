@@ -13,6 +13,8 @@
 
     var linkFormat = baseLinkFormat.Replace("{1}", "");
 
+    var dateNow = DateTime.Now;
+
     var isAdmin = User.IsAdmin();
 }
 
@@ -95,15 +97,16 @@
 
         @foreach (var dateP in Model.DaysInThisMonth)
         {
-
+            var isTodayClassName = dateP.Date == dateNow.Date ? "to-day-date" : "";
             var dayOfWeek = dateP.DayOfWeek;
 
-            <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate">
-                <h5 class="row align-items-center">
-                    <span class="date col-1">@dateP.Day</span>
+            <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate @isTodayClassName">
+                <div day-task-date="@Croco.Core.Utils.Tool.JsonConverter.Serialize(dateP).Replace("\"", "")" style="cursor:pointer" class="row align-items-center tms-show-more-tasks-btn">
+                    <div class="col-1">
+                        <span class="h5">@dateP.Day</span>
+                    </div>
                     <small class="col d-sm-none text-center text-muted">@DayOfWeekToString(dateP.DayOfWeek)</small>
-                    <span class="col-1"></span>
-                </h5>
+                </div>
 
                 <div class="m-scrollable m-scrollable--track m-scroller" data-scrollable="true" data-date="@dateP.ToString("dd.MM.yyyy")" data-full-date="@dateP">
                     <p class="no-tasks-text d-sm-none">Нет задач</p>
@@ -147,9 +150,13 @@
 
 </div>
 
+<style>
+    .to-day-date {
+        background-color: aliceblue;
+    }
+</style>
+
 @await Html.PartialAsync("~/Views/Schedule/Partials/Modals.cshtml")
-
-
 
 @section Scripts{
     <script src="~/js/Tms.min.js"></script>

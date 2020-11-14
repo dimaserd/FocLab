@@ -4,6 +4,7 @@
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+    <TypeScriptToolsVersion>3.9</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -53,6 +54,7 @@
     <Content Remove="wwwroot\src\FocLab\TaskReagentWorker.ts" />
     <Content Remove="wwwroot\src\FocLab\TaskSearch\AdminTasksIndexHandlers.ts" />
     <Content Remove="wwwroot\src\Tms\AdminDayTaskCreator.ts" />
+    <Content Remove="wwwroot\src\Tms\AllTasksForSingleDayModalService.ts" />
     <Content Remove="wwwroot\src\Tms\DayTaskDrawer.ts" />
     <Content Remove="wwwroot\src\Tms\DayTaskEditor.ts" />
     <Content Remove="wwwroot\src\Tms\DayTasksWorker.ts" />
@@ -140,6 +142,7 @@
     <TypeScriptCompile Include="wwwroot\src\FocLab\Task\TaskDrawer.ts" />
     <TypeScriptCompile Include="wwwroot\src\FocLab\Task\TaskReagentWorker.ts" />
     <TypeScriptCompile Include="wwwroot\src\Tms\AdminDayTaskCreator.ts" />
+    <TypeScriptCompile Include="wwwroot\src\Tms\AllTasksForSingleDayModalService.ts" />
     <TypeScriptCompile Include="wwwroot\src\Tms\DayTaskDrawer.ts" />
     <TypeScriptCompile Include="wwwroot\src\Tms\DayTaskEditor.ts" />
     <TypeScriptCompile Include="wwwroot\src\Tms\DayTasksWorker.ts" />

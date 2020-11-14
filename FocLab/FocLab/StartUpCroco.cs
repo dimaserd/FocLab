@@ -50,12 +50,14 @@ namespace FocLab
             //Добавляю проверщика состояния миграций
             ApplicationActions.Add(CrocoMigrationStateChecker.CheckApplicationState);
 
+            var conString = Configuration.GetConnectionString(ChemistryDbContext.ConnectionString);
+
             var appOptions = new CrocoWebApplicationOptions
             {
                 ApplicationUrl = "https://foc-lab.com",
                 VirtualPathMapper = new ApplicationServerVirtualPathMapper(Env),
                 CacheManager = new ApplicationCacheManager(memCache),
-                GetDbContext = () => ChemistryDbContext.Create(Configuration),
+                GetDbContext = () => ChemistryDbContext.Create(conString),
                 RequestContextLogger = new CrocoWebAppRequestContextLogger(),
                 FileOptions = new CrocoFileOptions
                 {

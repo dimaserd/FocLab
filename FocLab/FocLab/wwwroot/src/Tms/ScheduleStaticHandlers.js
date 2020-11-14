@@ -23,13 +23,25 @@ var ScheduleStaticHandlers = (function () {
             ScheduleStaticHandlers.updateDayTask();
             ModalWorker.HideModals();
         });
+        EventSetter.SetHandlerForClass("tms-show-more-tasks-btn", "click", function (x) {
+            var date = $(x.currentTarget).attr("day-task-date");
+            var tasks = DayTasksWorker.Tasks.filter(function (e) { return e.TaskDate === date; });
+            if (tasks.length === 0) {
+                return;
+            }
+            AllTasksForSingleDayModalService.DrawTasksOnModal(tasks);
+            EventSetter.SetHandlerForClass("tms-show-task-modal-big", "click", ScheduleStaticHandlers.ShowTaskHandler);
+            ModalWorker.ShowModal("showDayTasksModal");
+        });
         EventSetter.SetHandlerForClass("tms-redirect-to-full", "click", function () { return ScheduleStaticHandlers.redirectToFullVersion(); });
         EventSetter.SetHandlerForClass("tms-create-task-btn", "click", function () { return ScheduleStaticHandlers.createDayTask(); });
         EventSetter.SetHandlerForClass("tms-btn-create-task", "click", function () { return ScheduleStaticHandlers.ShowCreateTaskModal(); });
-        EventSetter.SetHandlerForClass("tms-show-task-modal", "click", function (x) {
-            var taskId = $(x.target).data("task-id");
-            ScheduleStaticHandlers.ShowDayTaskModal(taskId);
-        });
+        EventSetter.SetHandlerForClass("tms-show-task-modal", "click", ScheduleStaticHandlers.ShowTaskHandler);
+    };
+    ScheduleStaticHandlers.ShowTaskHandler = function (e) {
+        var taskId = $(e.target).data("task-id");
+        ModalWorker.HideModals();
+        ScheduleStaticHandlers.ShowDayTaskModal(taskId);
     };
     ScheduleStaticHandlers.GetQueryParams = function (isNextMonth) {
         var data = {
@@ -57,7 +69,7 @@ var ScheduleStaticHandlers = (function () {
     };
     ScheduleStaticHandlers.ShowDayTaskModal = function (taskId) {
         DayTasksWorker.SetCurrentTaskId(taskId);
-        var task = DayTasksWorker.GetTaskById(taskId);
+        var task = JSON.parse(JSON.stringify(DayTasksWorker.GetTaskById(taskId)));
         TaskModalWorker.ShowDayTaskModal(task);
     };
     ScheduleStaticHandlers.ShowCreateTaskModal = function () {

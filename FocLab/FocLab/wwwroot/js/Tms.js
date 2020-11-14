@@ -31,6 +31,24 @@ var AdminDayTaskCreator = (function () {
     return AdminDayTaskCreator;
 }());
 
+var AllTasksForSingleDayModalService = (function () {
+    function AllTasksForSingleDayModalService() {
+    }
+    AllTasksForSingleDayModalService.DrawTasksOnModal = function (tasks) {
+        var html = "";
+        html += '<div class="container">';
+        for (var i = 0; i < tasks.length; i++) {
+            var task = tasks[i];
+            html +=
+                "<div class=\"row bg-primary rounded text-white\">\n                <a style=\"cursor:pointer\" class=\"col-md-12 tms-show-task-modal-big\" data-task-id=\"" + task.Id + "\" title=\"" + task.TaskTitle + "\">\n                    " + task.TaskTitle + "\n                    <span class=\"float-right\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"" + task.AssigneeUser.Email + "\">\n                        " + ColorAvatarInitor.InitColorForAvatar(task) + "\n                    </span>\n                </a>\n            </div>";
+            html += "<div class=\"row\" style=\"height:5px\"></div>";
+        }
+        html += '</div>';
+        document.getElementById("show-day-tasks-modal-body").innerHTML = html;
+    };
+    return AllTasksForSingleDayModalService;
+}());
+
 var ColorAvatarInitor = (function () {
     function ColorAvatarInitor() {
     }
@@ -157,11 +175,10 @@ var DayTasksWorker = (function () {
         Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: DayTasksWorker.CurrentTaskId }, function (x) { return alert(x); }, null);
     };
     DayTasksWorker.GetTasks = function () {
-        var _this = this;
         Requester.SendAjaxPost("/Api/DayTask/GetTasks", this.SearchModel, function (x) {
-            _this.Tasks = x;
-            _this.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
-            _this.OpenTaskById();
+            DayTasksWorker.Tasks = x;
+            DayTasksWorker.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
+            DayTasksWorker.OpenTaskById();
         }, null, false);
     };
     DayTasksWorker.GetTaskById = function (taskId) {
@@ -196,13 +213,25 @@ var ScheduleStaticHandlers = (function () {
             ScheduleStaticHandlers.updateDayTask();
             ModalWorker.HideModals();
         });
+        EventSetter.SetHandlerForClass("tms-show-more-tasks-btn", "click", function (x) {
+            var date = $(x.currentTarget).attr("day-task-date");
+            var tasks = DayTasksWorker.Tasks.filter(function (e) { return e.TaskDate === date; });
+            if (tasks.length === 0) {
+                return;
+            }
+            AllTasksForSingleDayModalService.DrawTasksOnModal(tasks);
+            EventSetter.SetHandlerForClass("tms-show-task-modal-big", "click", ScheduleStaticHandlers.ShowTaskHandler);
+            ModalWorker.ShowModal("showDayTasksModal");
+        });
         EventSetter.SetHandlerForClass("tms-redirect-to-full", "click", function () { return ScheduleStaticHandlers.redirectToFullVersion(); });
         EventSetter.SetHandlerForClass("tms-create-task-btn", "click", function () { return ScheduleStaticHandlers.createDayTask(); });
         EventSetter.SetHandlerForClass("tms-btn-create-task", "click", function () { return ScheduleStaticHandlers.ShowCreateTaskModal(); });
-        EventSetter.SetHandlerForClass("tms-show-task-modal", "click", function (x) {
-            var taskId = $(x.target).data("task-id");
-            ScheduleStaticHandlers.ShowDayTaskModal(taskId);
-        });
+        EventSetter.SetHandlerForClass("tms-show-task-modal", "click", ScheduleStaticHandlers.ShowTaskHandler);
+    };
+    ScheduleStaticHandlers.ShowTaskHandler = function (e) {
+        var taskId = $(e.target).data("task-id");
+        ModalWorker.HideModals();
+        ScheduleStaticHandlers.ShowDayTaskModal(taskId);
     };
     ScheduleStaticHandlers.GetQueryParams = function (isNextMonth) {
         var data = {
@@ -230,7 +259,7 @@ var ScheduleStaticHandlers = (function () {
     };
     ScheduleStaticHandlers.ShowDayTaskModal = function (taskId) {
         DayTasksWorker.SetCurrentTaskId(taskId);
-        var task = DayTasksWorker.GetTaskById(taskId);
+        var task = JSON.parse(JSON.stringify(DayTasksWorker.GetTaskById(taskId)));
         TaskModalWorker.ShowDayTaskModal(task);
     };
     ScheduleStaticHandlers.ShowCreateTaskModal = function () {

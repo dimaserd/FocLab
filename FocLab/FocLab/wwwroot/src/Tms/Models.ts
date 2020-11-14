@@ -10,7 +10,7 @@ interface UserFullNameEmailAndAvatarModel {
 
 interface DayTaskModel {
     Id: string;
-    TaskDate: Date;
+    TaskDate: string;
     TaskText: string;
     TaskTitle: string;
     FinishDate: Date;
