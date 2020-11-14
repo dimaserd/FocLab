@@ -21,7 +21,6 @@ namespace FocLab.Extensions
             return htmlHelper.PartialAsync("~/Views/Components/Pagination.cshtml", PagerModel.ToPagerModel(model, linkFormat));
         }
 
-
         public static Task<IHtmlContent> RenderApplicationFilesAsync(this IHtmlHelper htmlHelper, string applicationName)
         {
             if (CrocoApp.Application.IsDevelopment())

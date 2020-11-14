@@ -28,9 +28,7 @@ namespace FocLab.Controllers.Mvc.Content
                 return Redirect(WebAppSettings.RedirectUri);
             }
 
-
             return View();
-            
         } 
     }
 }

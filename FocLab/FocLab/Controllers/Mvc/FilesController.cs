@@ -23,7 +23,6 @@ namespace FocLab.Controllers.Mvc
         {
         }
 
-
         /// <summary>
         /// Возвращает файл по указанному идентификатору
         /// </summary>
@@ -68,8 +67,6 @@ namespace FocLab.Controllers.Mvc
 
             return await GetResizedLocalImageFileById(id, type);
         }
-
-        
 
         #region Вспомогательные методы
 

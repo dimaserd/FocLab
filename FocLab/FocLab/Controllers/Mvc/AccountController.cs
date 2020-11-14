@@ -167,8 +167,6 @@ namespace FocLab.Controllers.Mvc
             return RedirectToAction("Index", "Home");
         }
 
-
-
         /// <summary>
         /// Разлогинить в системе
         /// </summary>
@@ -191,7 +189,6 @@ namespace FocLab.Controllers.Mvc
         }
 
         #endregion
-
 
         #region Вспомогательные приложения
         public AccountController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
