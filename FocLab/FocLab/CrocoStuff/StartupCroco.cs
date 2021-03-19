@@ -1,10 +1,9 @@
-﻿using Croco.Core.Abstractions.Application;
-using Croco.Core.Application;
-using Croco.Core.Application.Options;
+﻿using Croco.Core.Application;
+using Croco.Core.Application.Registrators;
 using Croco.Core.Common.Enumerations;
-using Croco.Core.Extensions.Implementations;
-using Croco.Core.Hangfire.Extensions;
-using Croco.Core.Logic.Models.Files;
+using Croco.Core.Contract.Application.Common;
+using Croco.Core.Contract.Cache;
+using Croco.Core.Contract.Files;
 using Croco.WebApplication.Application;
 using FocLab.Implementations;
 using FocLab.Implementations.StateCheckers;
@@ -14,9 +13,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using Zoo.Core;
 
 namespace CrocoShop.CrocoStuff
 {
@@ -25,13 +21,10 @@ namespace CrocoShop.CrocoStuff
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Env { get; }
 
-        public List<Action<ICrocoApplication>> ApplicationActions { get; }
-
-        public StartupCroco(StartUpCrocoOptions options)
+        public StartupCroco(IConfiguration configuration, IWebHostEnvironment env)
         {
-            Configuration = options.Configuration;
-            Env = options.Env;
-            ApplicationActions = options.ApplicationActions;
+            Configuration = configuration;
+            Env = env;
         }
 
         public void SetCrocoApplication(IServiceCollection services)
@@ -39,64 +32,45 @@ namespace CrocoShop.CrocoStuff
             var memCache = new MemoryCache(new MemoryCacheOptions());
 
             services.AddSingleton<IMemoryCache, MemoryCache>(s => memCache);
+            services.AddSingleton<ICrocoCacheManager, ApplicationCacheManager>();
 
-            //Добавляю проверщика состояния миграций
-            ApplicationActions.Add(CrocoMigrationStateChecker.CheckApplicationState);
-
-            var baseOptions = new EFCrocoApplicationOptions
+            var appBuilder = new CrocoApplicationBuilder(services);
+            appBuilder.AddAfterInitAction(CrocoMigrationStateChecker.CheckApplicationState);
+            appBuilder.RegisterFileStorage(new CrocoFileOptions
             {
-                CacheManager = new ApplicationCacheManager(memCache),
-                GetDbContext = () => ChemistryDbContext.Create(Configuration),
-                RequestContextLogger = new CrocoWebAppRequestContextLogger(),
-                FileOptions = new CrocoFileOptions
+                SourceDirectory = Env.WebRootPath,
+                ImgFileResizeSettings = new ImgFileResizeSetting[]
                 {
-                    SourceDirectory = Env.WebRootPath,
-                    ImgFileResizeSettings = new List<ImgFileResizeSetting>
+                    new ImgFileResizeSetting
                     {
-                        new ImgFileResizeSetting
-                        {
-                            ImageSizeName = ImageSizeType.Icon.ToString(),
-                            MaxHeight = 50,
-                            MaxWidth = 50
-                        },
-
-                        new ImgFileResizeSetting
-                        {
-                            ImageSizeName = ImageSizeType.Small.ToString(),
-                            MaxHeight = 200,
-                            MaxWidth = 200
-                        },
-
-                        new ImgFileResizeSetting
-                        {
-                            ImageSizeName = ImageSizeType.Medium.ToString(),
-                            MaxHeight = 500,
-                            MaxWidth = 500
-                        }
+                        ImageSizeName = ImageSizeType.Icon.ToString(),
+                        MaxHeight = 50,
+                        MaxWidth = 50
                     },
-                },
-                RootPath = Env.ContentRootPath,
-                AfterInitActions = ApplicationActions
-            }.GetApplicationOptions();
+                    new ImgFileResizeSetting
+                    {
+                        ImageSizeName = ImageSizeType.Small.ToString(),
+                        MaxHeight = 200,
+                        MaxWidth = 200
+                    },
+                    new ImgFileResizeSetting
+                    {
+                        ImageSizeName = ImageSizeType.Medium.ToString(),
+                        MaxHeight = 500,
+                        MaxWidth = 500
+                    }
+                }
+            });
+            appBuilder.RegisterVirtualPathMapper(Env.ContentRootPath);
 
+            new EFCrocoApplicationRegistrator(appBuilder)
+                .AddEntityFrameworkDataConnection(() => ChemistryDbContext.Create(Configuration));
 
-            baseOptions.AddDelayedApplicationLogger()
-                .AddHangfireEventSourcerAndJobManager();
+            var options = Configuration.GetSection("FocLabOptions").Get<CrocoWebApplicationOptions>();
 
-            var options = new CrocoWebApplicationOptions()
-            {
-                ApplicationUrl = "https://foclab.com",
-                CrocoOptions = baseOptions,
-            };
+            services.AddSingleton(options);
 
-            var application = new FocLabWebApplication(options)
-            {
-                IsDevelopment = Env.EnvironmentName == "Development"
-            };
-
-            CrocoApp.Application = application;
-
-            services.AddSingleton(CrocoApp.Application);
+            appBuilder.CheckAndRegisterApplication<FocLabWebApplication>();
         }
     }
 }

@@ -64,17 +64,15 @@ namespace FocLab
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            Croco.SetCrocoApplication(services);
+            var conString = Configuration.GetConnectionString(ChemistryDbContext.ConnectionString);
 
-            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString(ChemistryDbContext.ConnectionString)));
+            services.AddHangfire(x => x.UseSqlServerStorage(conString));
 
             services.AddTransient<ApplicationUserManager>();
             services.AddTransient<ApplicationSignInManager>();
 
             services.AddDbContext<ChemistryDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString(ChemistryDbContext.ConnectionString)));
-
+                options.UseSqlServer(conString));
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(opts =>
             {
@@ -155,6 +153,7 @@ namespace FocLab
 
             });
 
+            Croco.SetCrocoApplication(services);
             app.ConfigureExceptionHandler(new ApplicationLoggerManager());
 
             HangfireConfiguration.AddHangfire(app, false);

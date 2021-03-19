@@ -5,11 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Workers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\FocLab.Logic\FocLab.Logic.csproj" />
     <ProjectReference Include="..\..\FocLab.Model\FocLab.Model.csproj" />
   </ItemGroup>

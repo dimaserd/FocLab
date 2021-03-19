@@ -1,11 +1,14 @@
-﻿using Croco.Core.Abstractions;
+﻿using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
 using Croco.Core.Logic.Workers;
+using FocLab.Model.Contexts;
 
 namespace FocLab.Logic.Implementations
 {
-    public class FocLabWorker : BaseCrocoWorker<FocLabWebApplication>
+    public class FocLabWorker : BaseCrocoWorker<ChemistryDbContext>
     {
-        public FocLabWorker(ICrocoAmbientContext context) : base(context)
+        public FocLabWorker(ICrocoAmbientContextAccessor context, ICrocoApplication application) 
+            : base(context, application)
         {
         }
     }

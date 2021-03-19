@@ -1,5 +1,6 @@
-﻿using Croco.Core.Abstractions.Application;
+﻿using Croco.Core.Contract.Application;
 using Croco.Core.Extensions;
+using FocLab.Model.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -13,7 +14,10 @@ namespace FocLab.Implementations.StateCheckers
     {
         public static void CheckApplicationState(ICrocoApplication app)
         {
-            var context = app.GetDatabaseContext(SystemCrocoExtensions.GetRequestContext()).GetDbContext();
+            var reqContext = SystemCrocoExtensions.GetRequestContext();
+
+            var context = app.GetAmbientContext<ChemistryDbContext>(reqContext)
+                .DataConnection.ConnectionContext;
 
             var contextType = context.GetType();
             var modelProjectName = contextType.Assembly.ManifestModule.Name.Replace(".dll", "");
