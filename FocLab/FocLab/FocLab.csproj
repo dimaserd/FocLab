@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\js\Task.min.js" />
+    <Content Remove="wwwroot\src\App\NotificationWorker.ts" />
     <Content Remove="wwwroot\src\Areas\Admin\UserCreatePage.ts" />
     <Content Remove="wwwroot\src\Areas\Chemistry\Experiments\CreateExperiment.ts" />
     <Content Remove="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />
@@ -54,6 +55,10 @@
     <Content Remove="wwwroot\src\Tms\Models.ts" />
     <Content Remove="wwwroot\src\Tms\ScheduleStaticHandlers.ts" />
     <Content Remove="wwwroot\src\Tms\ScheduleWorker.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="readme.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -99,6 +104,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="readme.txt" />
     <TypeScriptCompile Include="wwwroot\src\Areas\Admin\UserCreatePage.ts" />
     <TypeScriptCompile Include="wwwroot\src\Areas\Chemistry\Experiments\CreateExperiment.ts" />
     <TypeScriptCompile Include="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />

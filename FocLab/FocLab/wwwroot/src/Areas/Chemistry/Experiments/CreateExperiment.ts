@@ -40,20 +40,20 @@
 
             const taskIdPropName = "TaskId";
 
-            FormTypeAfterDrawnDrawer.SetSelectListForProperty(taskIdPropName, CreateExperiment._modelPrefix, selList);
+            //FormTypeAfterDrawnDrawer.SetSelectListForProperty(taskIdPropName, CreateExperiment._modelPrefix, selList);
 
-            $(FormDrawHelper.GetPropertySelector(taskIdPropName, CreateExperiment._modelPrefix)).select2({
-                placeholder: "Выберите задачу",
+            //$(FormDrawHelper.GetPropertySelector(taskIdPropName, CreateExperiment._modelPrefix)).select2({
+            //    placeholder: "Выберите задачу",
 
-                language: {
-                    "noResults"() {
-                        return "Задача не найдена.";
-                    }
-                },
-                escapeMarkup(markup) {
-                    return markup;
-                }
-            });
+            //    language: {
+            //        "noResults"() {
+            //            return "Задача не найдена.";
+            //        }
+            //    },
+            //    escapeMarkup(markup) {
+            //        return markup;
+            //    }
+            //});
 
         }, null);
     }

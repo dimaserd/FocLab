@@ -28,18 +28,6 @@
                 };
             });
             var taskIdPropName = "TaskId";
-            FormTypeAfterDrawnDrawer.SetSelectListForProperty(taskIdPropName, CreateExperiment._modelPrefix, selList);
-            $(FormDrawHelper.GetPropertySelector(taskIdPropName, CreateExperiment._modelPrefix)).select2({
-                placeholder: "Выберите задачу",
-                language: {
-                    "noResults": function () {
-                        return "Задача не найдена.";
-                    }
-                },
-                escapeMarkup: function (markup) {
-                    return markup;
-                }
-            });
         }, null);
     };
     CreateExperiment._modelPrefix = "create.";

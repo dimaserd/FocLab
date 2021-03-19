@@ -22,12 +22,10 @@ namespace FocLab.Controllers.Mvc.Content
         /// <returns></returns>
         public IActionResult Index()
         {
-
             if (WebAppSettings.UseMainRedirect)
             {
                 return Redirect(WebAppSettings.RedirectUri);
             }
-
 
             return View();
             
