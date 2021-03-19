@@ -28,7 +28,6 @@ namespace FocLab.Controllers.Mvc.Content
             }
 
             return View();
-            
         } 
     }
 }
