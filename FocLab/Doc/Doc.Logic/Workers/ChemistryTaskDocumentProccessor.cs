@@ -1,5 +1,8 @@
 ﻿using Croco.Core.Abstractions;
 using Croco.Core.Common.Enumerations;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
 using Croco.Core.Models;
 using Doc.Logic.Entities;
 using Doc.Logic.Models;
@@ -16,7 +19,8 @@ namespace Doc.Logic.Workers
 {
     public class ChemistryTaskDocumentProccessor : DocumentProccessorBase
     {
-        public ChemistryTaskDocumentProccessor(ICrocoAmbientContext context) : base(context)
+        public ChemistryTaskDocumentProccessor(ICrocoAmbientContextAccessor context, 
+            ICrocoApplication app) : base(context, app)
         {
         }
 

@@ -1,4 +1,5 @@
-﻿using FocLab.Abstractions;
+﻿using System.Threading.Tasks;
+using FocLab.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 
@@ -10,13 +11,14 @@ namespace FocLab.Extensions
         {
             app.UseExceptionHandler(appError =>
             {
-                appError.Run(async context =>
+                appError.Run(context =>
                 {
                     var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
                     if (contextFeature != null)
                     {
-                        await logger.LogExceptionAsync(contextFeature.Error);
+                        logger.LogException(contextFeature.Error);
                     }
+                    return Task.CompletedTask;
                 });
             });
         }

@@ -54,7 +54,7 @@ namespace FocLab.Controllers.Mvc
 
             try
             {
-                var copyResult = CrocoApp.Application.FileCopyWorker.MakeLocalFileCopy(file);
+                var copyResult = await CrocoApp.Application.FileCopyWorker.MakeLocalFileCopy(file);
 
                 if (!copyResult.IsSucceeded && copyResult.Message == "webp")
                 {
@@ -77,7 +77,7 @@ namespace FocLab.Controllers.Mvc
         {
             if (file != null)
             {
-                return File(file.Data, FocLabWebApplication.GetMimeMapping(file.FileName), file.FileName);
+                return File(file.FileData, FocLabWebApplication.GetMimeMapping(file.FileName), file.FileName);
             }
 
             return HttpNotFound();

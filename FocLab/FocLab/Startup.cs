@@ -21,6 +21,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using CrocoShop.CrocoStuff;
 using Microsoft.Extensions.Hosting;
+using FocLab.Api;
+using FocLab.Logic.Extensions;
 
 namespace FocLab
 {
@@ -94,6 +96,10 @@ namespace FocLab
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new CrocoContextSetterFilter(x => x.GetUserId()));
+            });
             Croco.SetCrocoApplication(services);
         }
 

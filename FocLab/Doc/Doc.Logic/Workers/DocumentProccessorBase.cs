@@ -1,5 +1,6 @@
-﻿using Croco.Core.Abstractions;
-using Croco.Core.Models;
+﻿using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
 using FocLab.Logic.Implementations;
 using Zoo.Doc.WordGen.Implementations;
 using Zoo.Doc.WordGen.Models;
@@ -9,7 +10,8 @@ namespace Doc.Logic.Workers
 {
     public class DocumentProccessorBase : FocLabWorker
     {
-        public DocumentProccessorBase(ICrocoAmbientContext context) : base(context)
+        public DocumentProccessorBase(ICrocoAmbientContextAccessor context, ICrocoApplication application)
+            : base(context, application)
         {
         }
 
