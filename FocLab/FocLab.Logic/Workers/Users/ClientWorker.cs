@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Abstractions;
-using Croco.Core.Models;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Models;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
@@ -153,7 +153,7 @@ namespace FocLab.Logic.Workers.Users
             });
         }
 
-        public ClientWorker(ICrocoAmbientContext context, Func<ApplicationUser, Task> refreshUserDataFunc) : base(context)
+        public ClientWorker(ICrocoAmbientContextAccessor context, Func<ApplicationUser, Task> refreshUserDataFunc) : base(context)
         {
             _refreshUserDataFunc = refreshUserDataFunc;
         }

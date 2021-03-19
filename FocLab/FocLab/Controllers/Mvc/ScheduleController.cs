@@ -5,24 +5,23 @@ using Microsoft.AspNetCore.Mvc;
 using Tms.Logic.Models.Tasker;
 using Tms.Logic.Workers.Tasker;
 using System.Threading.Tasks;
-using Croco.Core.Application;
-using FocLab.Model.Entities.Tasker;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using FocLab.Logic.Models.Users;
 using Zoo.GenericUserInterface.Models;
-using FocLab.Model.Entities.Users.Default;
-using FocLab.Logic.Implementations;
 
 namespace FocLab.Controllers.Mvc
 {
     public class ScheduleController : BaseController
     {
-        public ScheduleController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
+        public ScheduleController(ChemistryDbContext context, 
+            ApplicationUserManager userManager, 
+            ApplicationSignInManager signInManager,
+            DayTasksWorker dayTasksWorker) : base(context, userManager, signInManager)
         {
+            TasksWorker = dayTasksWorker;
         }
 
-        private DayTasksWorker TasksWorker => new DayTasksWorker(AmbientContext);
+        private DayTasksWorker TasksWorker { get; }
 
         /// <summary>
         /// Показать задания пользователей
@@ -42,18 +41,18 @@ namespace FocLab.Controllers.Mvc
         {
             var model = await TasksWorker.GetDayTaskByIdAsync(id);
 
-            var task = await AmbientContext.RepositoryFactory.Query<ApplicationDayTask>().FirstOrDefaultAsync(x => x.Id == id);
+            //var task = await AmbientContext.RepositoryFactory.Query<ApplicationDayTask>().FirstOrDefaultAsync(x => x.Id == id);
 
             var users = await UserSearcher.GetUsersAsync(UserSearch.GetAllUsers);
 
-            var userSelectList = users.List.Select(x => new MySelectListItem
+            var userSelectList = users.List.Select(x => new SelectListItem
             {
-                Selected = x.Id == task.AssigneeUserId,
+                //Selected = x.Id == task.AssigneeUserId,
                 Text = x.Email,
                 Value = x.Id
             });
 
-            var history = await CrocoApp.Application.GetAuditService(Connection).GetAuditData<ApplicationDayTask, ApplicationUser>(task);
+            //var history = await CrocoApp.Application.GetAuditService(Connection).GetAuditData<ApplicationDayTask, ApplicationUser>(task);
 
             return View(model);
         }

@@ -1,7 +1,6 @@
-﻿using Croco.Core.Data.Implementations.DbAudit.Models;
+﻿using Croco.Core.Audit.Models;
 using Croco.Core.EventSourcing.Implementations.StatusLog.Models;
 using Croco.Core.Model.Entities;
-using Croco.Core.Model.Entities.Store;
 using FocLab.Model.Abstractions;
 using FocLab.Model.Entities;
 using FocLab.Model.Entities.Chemistry;
@@ -35,10 +34,6 @@ namespace FocLab.Model.Contexts
 
         #region IStore
         public DbSet<RobotTask> RobotTasks { get; set; }
-
-        public DbSet<LoggedUserInterfaceAction> LoggedUserInterfaceActions { get; set; }
-
-        public DbSet<LoggedApplicationAction> LoggedApplicationActions { get; set; }
 
         public DbSet<AuditLog> AuditLogs { get; set; }
 

@@ -26,24 +26,16 @@ namespace FocLab
 {
     public class Startup
     {
+        StartupCroco Croco { get; }
+        IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
-            Croco = new StartupCroco(new StartUpCrocoOptions 
-            {
-                Configuration = configuration,
-                Env = env,
-                ApplicationActions = new List<Action<Croco.Core.Abstractions.Application.ICrocoApplication>>
-                {
-                    ApplicationServiceRegistrator.Register
-                }
-            });
+            Croco = new StartupCroco(configuration, env);
         }
 
-        public StartupCroco Croco { get; }
-
-        public IConfiguration Configuration { get; }
-
+        
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
@@ -65,8 +57,6 @@ namespace FocLab
             });
 
             var conString = Configuration.GetConnectionString(ChemistryDbContext.ConnectionString);
-
-            services.AddHangfire(x => x.UseSqlServerStorage(conString));
 
             services.AddTransient<ApplicationUserManager>();
             services.AddTransient<ApplicationSignInManager>();
@@ -103,6 +93,8 @@ namespace FocLab
 
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            Croco.SetCrocoApplication(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -153,7 +145,6 @@ namespace FocLab
 
             });
 
-            Croco.SetCrocoApplication(services);
             app.ConfigureExceptionHandler(new ApplicationLoggerManager());
 
             HangfireConfiguration.AddHangfire(app, false);

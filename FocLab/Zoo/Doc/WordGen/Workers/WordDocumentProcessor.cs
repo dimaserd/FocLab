@@ -1,5 +1,5 @@
-﻿using Croco.Core.Models;
-using System;
+﻿using System;
+using Croco.Core.Contract.Models;
 using Zoo.Doc.WordGen.Abstractions;
 using Zoo.Doc.WordGen.Models;
 

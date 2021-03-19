@@ -1,4 +1,4 @@
-﻿using Croco.Core.Abstractions.Application;
+﻿using Croco.Core.Contract.Application;
 
 namespace CrocoShop.CrocoStuff
 {

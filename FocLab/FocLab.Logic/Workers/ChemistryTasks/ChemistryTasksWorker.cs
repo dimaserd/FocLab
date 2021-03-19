@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Abstractions;
-using Croco.Core.Models;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;
@@ -11,7 +12,6 @@ using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Workers.Users;
 using FocLab.Model.Entities.Chemistry;
-using FocLab.Model.Entities.Users.Default;
 using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers.ChemistryTasks
@@ -22,6 +22,20 @@ namespace FocLab.Logic.Workers.ChemistryTasks
     /// </summary>
     public class ChemistryTasksWorker : FocLabWorker
     {
+        UserSearcher UserSearcher { get; }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        public ChemistryTasksWorker(ICrocoAmbientContextAccessor context,
+            ICrocoApplication application,
+            UserSearcher userSearcher)
+            : base(context, application)
+        {
+            UserSearcher = userSearcher;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -147,7 +161,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         {
             var task = await GetNoUsersInitQuery().FirstOrDefaultAsync(x => x.Id == id);
 
-            var users = await new UserSearcher(AmbientContext).GetUsersByIdsAsync(new List<string>
+            var users = await UserSearcher.GetUsersByIdsAsync(new List<string>
             {
                 task.AdminUser.Id,
                 task.PerformerUser.Id
@@ -175,7 +189,7 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// <returns></returns>
         public async Task<List<ChemistryTaskModel>> GetAllTasksAsync()
         {
-            var users = await new UserSearcher(AmbientContext).SearchUsersAsync(UserSearch.GetAllUsers);
+            var users = await UserSearcher.SearchUsersAsync(UserSearch.GetAllUsers);
 
             var tasks = await GetNoUsersInitQuery()
                 .ToListAsync();
@@ -197,14 +211,6 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 .ToListAsync();
 
             return JoinUsersInMemory(tasks, users);
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// Конструктор
-        /// </summary>
-        public ChemistryTasksWorker(ICrocoAmbientContext context) : base(context)
-        {
         }
     }
 }

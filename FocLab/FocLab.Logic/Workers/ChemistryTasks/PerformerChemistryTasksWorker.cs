@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Croco.Core.Abstractions;
-using Croco.Core.Application;
-using Croco.Core.Extensions;
-using Croco.Core.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Tasks;

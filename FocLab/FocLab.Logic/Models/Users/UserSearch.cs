@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Croco.Core.Contract.Models.Search;
 using Croco.Core.Search.Extensions;
-using Croco.Core.Search.Models;
 using FocLab.Model.Entities.Users.Default;
 
 namespace FocLab.Logic.Models.Users

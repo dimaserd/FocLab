@@ -1,19 +1,20 @@
-﻿using Croco.Core.Abstractions;
-using Croco.Core.Abstractions.Application;
+﻿using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models.Search;
 using Croco.Core.Logic.Models.Users;
 using Croco.Core.Logic.Workers;
 using Croco.Core.Model.Abstractions.Entity;
 using Croco.Core.Search.Extensions;
-using Croco.Core.Search.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Zoo.Core
 {
-    public class WebAppRequestContextSearcher<TApplication> : BaseCrocoWorker<TApplication> where TApplication : class, ICrocoApplication
+    public class WebAppRequestContextSearcher<TDbContext> : BaseCrocoWorker<TDbContext> where TDbContext : DbContext
     {
-        public WebAppRequestContextSearcher(ICrocoAmbientContext context) : base(context)
+        public WebAppRequestContextSearcher(ICrocoAmbientContextAccessor context, ICrocoApplication application) : base(context, application)
         {
         }
 
@@ -36,7 +37,7 @@ namespace Zoo.Core
                                   UserOrEmpty = userOrEmpty,
                               };
 
-            var res = await GetListResult<WebAppRequestContextLogWithUserModel>.GetAsync(model, joinedQuery.OrderBy(x => x.Log.StartedOn), a => new WebAppRequestContextLogWithUserModel
+            var res = await EFCoreExtensions.GetAsync(model, joinedQuery.OrderBy(x => x.Log.StartedOn), a => new WebAppRequestContextLogWithUserModel
             {
                 Log = new WebAppRequestContextLogModel
                 {

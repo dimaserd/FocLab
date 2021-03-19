@@ -1,6 +1,4 @@
-﻿using Croco.Core.Abstractions.Settings;
-
-namespace FocLab.Logic.Settings.Models
+﻿namespace FocLab.Logic.Settings.Models
 {
     /// <summary>
     /// Класс настроек для веб-приложения

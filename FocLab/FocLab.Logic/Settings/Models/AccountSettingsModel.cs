@@ -1,5 +1,4 @@
-﻿using Croco.Core.Abstractions.Settings;
-using FocLab.Logic.Settings.Statics;
+﻿using FocLab.Logic.Settings.Statics;
 
 namespace FocLab.Logic.Settings.Models
 {

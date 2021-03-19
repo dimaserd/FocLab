@@ -1,18 +1,22 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Croco.Core.Implementations.AmbientContext;
 using FocLab.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace FocLab.Implementations
 {
     public class ApplicationLoggerManager : ILoggerManager
     {
-        public Task LogExceptionAsync(Exception ex)
-        {
-            var context = new SystemCrocoAmbientContext();
+        ILogger<ApplicationLoggerManager> Logger { get; }
 
-            context.Logger.LogException(ex);
-            return Task.CompletedTask;
+        public ApplicationLoggerManager(ILogger<ApplicationLoggerManager> logger)
+        {
+            Logger = logger;
+        }
+
+        
+        public void LogException(Exception ex)
+        {
+            Logger.LogError(ex, "Global error");
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Croco.Core.Implementations.AmbientContext;
-using FocLab.Logic.Workers;
+﻿using FocLab.Logic.Workers;
 using System.Threading.Tasks;
 
 namespace FocLab.Logic.Jobs.TaskGivers

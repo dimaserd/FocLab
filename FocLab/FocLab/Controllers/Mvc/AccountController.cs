@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Models;
+using Croco.Core.Contract.Models;
 using FocLab.Controllers.Base;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Models.Account;
@@ -19,9 +19,21 @@ namespace FocLab.Controllers.Mvc
     [Authorize]
     public class AccountController : BaseController
     {
-        
-        private AccountLoginWorker AccountLoginWorker => new AccountLoginWorker(AmbientContext);
+        private AccountLoginWorker AccountLoginWorker { get; }
+        private AccountManager AccountManager { get; }
 
+
+        public AccountController(ChemistryDbContext context, 
+            ApplicationUserManager userManager, 
+            ApplicationSignInManager signInManager,
+            AccountLoginWorker accountLoginWorker,
+            AccountManager accountManager) : base(context, userManager, signInManager)
+        {
+            AccountLoginWorker = accountLoginWorker;
+            AccountManager = accountManager;
+        }
+
+        
         #region Dev Methods
 
         /// <summary>
@@ -31,9 +43,7 @@ namespace FocLab.Controllers.Mvc
         [AllowAnonymous]
         public async Task<string> Dev()
         {
-            var manager = new AccountManager(AmbientContext);
-
-            var result = await manager.InitAsync(RoleManager, UserManager as ApplicationUserManager);
+            var result = await AccountManager.InitAsync();
 
             return result.Message;
         }
@@ -161,8 +171,7 @@ namespace FocLab.Controllers.Mvc
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult LogOff()
-        {
-            
+        {   
             AccountLoginWorker.LogOut(User, AuthenticationManager);
             return RedirectToAction("Index", "Home");
         }
@@ -194,9 +203,6 @@ namespace FocLab.Controllers.Mvc
 
 
         #region Вспомогательные приложения
-        public AccountController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
-        {
-        }
 
         private IActionResult RedirectToLocal(string returnUrl)
         {

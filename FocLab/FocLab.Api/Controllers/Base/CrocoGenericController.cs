@@ -1,5 +1,8 @@
 ﻿using Croco.Core.Abstractions;
 using Croco.Core.Abstractions.Data;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Data;
+using Croco.Core.Data.Models;
 using Croco.Core.Implementations;
 using Croco.Core.Implementations.AmbientContext;
 using Croco.WebApplication.Models;
@@ -7,13 +10,45 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Security.Principal;
 
 namespace FocLab.Api.Controllers.Base
 {
+    public class FooActionFilter : IActionFilter, IOrderedFilter
+    {
+        private readonly Func<IPrincipal, string> _getUserIdFunc;
+
+        public FooActionFilter(Func<IPrincipal, string> getUserIdFunc)
+        {
+            _getUserIdFunc = getUserIdFunc;
+        }
+
+        // Setting the order to 0, using IOrderedFilter, to attempt executing
+        // this filter *before* the BaseController's OnActionExecuting.
+        public int Order => 0;
+
+        public void OnActionExecuting(ActionExecutingContext context)
+        {
+            var httpContext = context.HttpContext;
+
+            var principal = new WebAppCrocoPrincipal(httpContext.User, _getUserIdFunc);
+            var requestContext = new CrocoRequestContext(principal);
+
+            context.HttpContext.RequestServices
+                .GetRequiredService<ICrocoRequestContextAccessor>()
+                .SetRequestContext(requestContext);
+        }
+
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
+        }
+    }
+
     /// <summary>
     /// Обобщенный веб-контроллер с основной логикой
     /// </summary>
@@ -23,20 +58,13 @@ namespace FocLab.Api.Controllers.Base
     {
         private readonly Func<IPrincipal, string> _getUserIdFunc;
 
-        private ICrocoRequestContext _requestContext;
-
-        private ICrocoAmbientContext _ambientContext;
-
-        private ICrocoDataConnection _dataConnection;
-
         /// <inheritdoc />
-        public CrocoGenericController(TContext context, SignInManager<TUser> signInManager, UserManager<TUser> userManager, Func<IPrincipal, string> getUserIdFunc, IHttpContextAccessor httpContextAccessor)
+        public CrocoGenericController(ICrocoAmbientContextAccessor ambientContextAccessor)
         {
             Context = context;
-            UserManager = userManager;
-            SignInManager = signInManager;
             HttpContextAccessor = httpContextAccessor;
             _getUserIdFunc = getUserIdFunc;
+            RequestContextAccessor = requestContextAccessor;
         }
 
 
@@ -50,82 +78,12 @@ namespace FocLab.Api.Controllers.Base
         {
             get;
         }
-
+        
         /// <summary>
         /// Контекст текущего пользователя
         /// </summary>
-        protected ICrocoPrincipal CrocoPrincipal => new WebAppCrocoPrincipal(User, _getUserIdFunc);
+        protected ICrocoPrincipal CrocoPrincipal => ;
 
-        /// <summary>
-        /// Контекст текущего запроса
-        /// </summary>
-        protected ICrocoRequestContext RequestContext
-        {
-            get
-            {
-                if (_requestContext == null)
-                {
-                    _requestContext = new WebAppCrocoRequestContext(CrocoPrincipal, Request.GetDisplayUrl());
-                }
-
-                return _requestContext;
-            }
-        }
-
-        /// <summary>
-        /// Обёртка для контекста окружения
-        /// </summary>
-        public ICrocoAmbientContext AmbientContext
-        {
-            get
-            {
-                if (_ambientContext == null)
-                {
-                    _ambientContext = new CrocoAmbientContext(Connection);
-                }
-
-                return _ambientContext;
-            }
-        }
-
-        /// <summary>
-        /// Соединение к удалённому источнику данных
-        /// </summary>
-        public ICrocoDataConnection Connection
-        {
-            get
-            {
-                if (_dataConnection == null)
-                {
-                    _dataConnection = new EntityFrameworkDataConnection(Context, RequestContext);
-                }
-
-                return _dataConnection;
-            }
-        }
-
-        /// <summary>
-        /// Менеджер авторизации
-        /// </summary>
-        public SignInManager<TUser> SignInManager
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Менеджер для работы с пользователями
-        /// </summary>
-        public UserManager<TUser> UserManager
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Контекст доступа к запросу
-        /// </summary>
-        public IHttpContextAccessor HttpContextAccessor { get; }
 
         public static string GetMimeMapping(string fileName)
         {
@@ -146,37 +104,5 @@ namespace FocLab.Api.Controllers.Base
         }
 
         #endregion
-
-        /// <inheritdoc />
-        /// <summary>
-        /// Удаление объекта из памяти
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        {
-            //Закрываю транзакцию, чтобы выполнились отложенные действия
-            Connection.OnTransactionClosed().GetAwaiter().GetResult();
-
-            if (disposing)
-            {
-                var toDisposes = new IDisposable[]
-                {
-                    _dataConnection, UserManager
-                };
-
-                for (var i = 0; i < toDisposes.Length; i++)
-                {
-                    if (toDisposes[i] == null)
-                    {
-                        continue;
-                    }
-
-                    toDisposes[i].Dispose();
-                    toDisposes[i] = null;
-                }
-            }
-
-            base.Dispose(disposing);
-        }
     }
 }

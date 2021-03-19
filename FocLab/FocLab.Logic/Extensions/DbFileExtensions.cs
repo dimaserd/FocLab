@@ -1,13 +1,10 @@
 ﻿using System.IO;
 using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
-using Croco.Core.Models;
-using Croco.Core.Logic.Models.Files;
 using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities;
-using Croco.Core.Abstractions.Files;
 
 namespace FocLab.Logic.Extensions
 {

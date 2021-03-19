@@ -1,5 +1,4 @@
-﻿using Croco.Core.Abstractions.Application;
-using FocLab.Logic.Implementations;
+﻿using FocLab.Logic.Implementations;
 
 namespace FocLab.Logic.Extensions
 {

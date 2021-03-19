@@ -3,7 +3,6 @@ using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;
-using FocLab.Logic.Workers.Users;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +17,9 @@ namespace FocLab.Controllers.Base
     /// </summary>
     public class BaseController : CrocoGenericController<ChemistryDbContext, ApplicationUser>
     {
-        public BaseController(ChemistryDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) : base(context, signInManager, userManager, x => x.GetUserId(), null)
+        public BaseController(ChemistryDbContext context, 
+            UserManager<ApplicationUser> userManager, 
+            SignInManager<ApplicationUser> signInManager) : base(context, signInManager, userManager, x => x.GetUserId(), null)
         {
         }
 
@@ -30,17 +31,6 @@ namespace FocLab.Controllers.Base
         #region Свойства
         
         /// <summary>
-        /// Класс предоставляющий методы для поиска пользователей
-        /// </summary>
-        protected UserSearcher UserSearcher => new UserSearcher(AmbientContext);
-
-
-        /// <summary>
-        /// Отправитель почты
-        /// </summary>
-        protected IUserMailSender MailSender => null;
-
-        /// <summary>
         /// Менеджер авторизации
         /// </summary>
         protected IApplicationAuthenticationManager AuthenticationManager => new ApplicationAuthenticationManager(SignInManager);
@@ -48,8 +38,7 @@ namespace FocLab.Controllers.Base
         /// <summary>
         /// Менеджер для работы с ролями пользователей
         /// </summary>
-        protected RoleManager<ApplicationRole> RoleManager => _roleManager ??
-                                                           (_roleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(Context), null, null, null, null));
+        protected RoleManager<ApplicationRole> RoleManager => _roleManager ??= new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(Context), null, null, null, null);
 
         
         private ApplicationUser _currentUser;

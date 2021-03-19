@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Croco.Core.Abstractions;
-using Croco.Core.Models;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;
@@ -13,11 +14,24 @@ using FocLab.Logic.Workers.Users;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace FocLab.Logic.Workers.Account
 {
     public class AccountLoginWorker : FocLabWorker
     {
+        UserSearcher UserSearcher { get; }
+        UserWorker UserWorker { get; }
+
+        public AccountLoginWorker(ICrocoAmbientContextAccessor context,
+            ICrocoApplication application,
+            UserSearcher userSearcher,
+            UserWorker userWorker) : base(context, application)
+        {
+            UserSearcher = userSearcher;
+            UserWorker = userWorker;
+        }
+
         #region Методы логинирования
 
         public async Task<BaseApiResponse<LoginResultModel>> LoginByPhoneNumberAsync(LoginByPhoneNumberModel model, SignInManager<ApplicationUser> signInManager)
@@ -29,9 +43,7 @@ namespace FocLab.Logic.Workers.Account
                 return new BaseApiResponse<LoginResultModel>(validation);
             }
 
-            var searcher = new UserSearcher(AmbientContext);
-
-            var user = await searcher.GetUserByPhoneNumberAsync(model.PhoneNumber);
+            var user = await UserSearcher.GetUserByPhoneNumberAsync(model.PhoneNumber);
 
             if (user == null)
             {
@@ -77,13 +89,10 @@ namespace FocLab.Logic.Workers.Account
                 return new BaseApiResponse<LoginResultModel>(false, "Ваш Email не подтверждён", new LoginResultModel { Result = LoginResult.EmailNotConfirmed });
             }
 
-            
             try
             {
-                var userWorker = new UserWorker(AmbientContext);
-
                 //проверяю пароль
-                var passCheckResult = await userWorker.CheckUserNameAndPasswordAsync(user.Id, user.UserName, model.Password);
+                var passCheckResult = await UserWorker.CheckUserNameAndPasswordAsync(user.Id, user.UserName, model.Password);
 
                 //если пароль не подходит выдаю ответ
                 if (!passCheckResult.IsSucceeded)
@@ -109,7 +118,7 @@ namespace FocLab.Logic.Workers.Account
             }
             catch (Exception ex)
             {
-                Logger.LogException(ex);
+                Logger.LogError(ex, "");
 
                 return new BaseApiResponse<LoginResultModel>(false, ex.Message);
             }
@@ -166,10 +175,6 @@ namespace FocLab.Logic.Workers.Account
             authenticationManager.SignOut();
 
             return new BaseApiResponse(true, "Вы успешно разлогинены в системе");
-        }
-
-        public AccountLoginWorker(ICrocoAmbientContext context) : base(context)
-        {
         }
     }
 }

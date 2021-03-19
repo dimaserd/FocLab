@@ -1,7 +1,5 @@
-﻿using Croco.Core.Data.Implementations.DbAudit.Models;
-using Croco.Core.EventSourcing.Implementations.StatusLog.Models;
+﻿using Croco.Core.EventSourcing.Implementations.StatusLog.Models;
 using Croco.Core.Model.Entities;
-using Croco.Core.Model.Entities.Store;
 using Microsoft.EntityFrameworkCore;
 using Zoo.Core;
 

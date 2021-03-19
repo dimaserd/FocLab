@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Abstractions;
-using Croco.Core.Models;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Implementations;
@@ -17,15 +18,29 @@ namespace FocLab.Logic.Workers.Account
 {
     public class AccountManager : FocLabWorker
     {
-        private async Task<BaseApiResponse> CreateRolesAsync(RoleManager<ApplicationRole> roleManager)
+        RoleManager<ApplicationRole> RoleManager { get; }
+        UserManager<ApplicationUser> UserManager { get; }
+
+        public AccountManager(ICrocoAmbientContextAccessor contextAccessor, 
+            ICrocoApplication application,
+            RoleManager<ApplicationRole> roleManager,
+            UserManager<ApplicationUser> userManager
+            )
+            : base(contextAccessor, application)
+        {
+            RoleManager = roleManager;
+            UserManager = userManager;
+        }
+
+        private async Task<BaseApiResponse> CreateRolesAsync()
         {
             var roles = Enum.GetValues(typeof(UserRight)).Cast<UserRight>().Select(x => x.ToString()).ToArray();
 
             foreach (var role in roles)
             {
-                if (!await roleManager.RoleExistsAsync(role))
+                if (!await RoleManager.RoleExistsAsync(role))
                 {
-                    await roleManager.CreateAsync(new ApplicationRole { Name = role, ConcurrencyStamp = Guid.NewGuid().ToString() });
+                    await RoleManager.CreateAsync(new ApplicationRole { Name = role, ConcurrencyStamp = Guid.NewGuid().ToString() });
                 }
             }
 
@@ -38,23 +53,23 @@ namespace FocLab.Logic.Workers.Account
         /// <param name="roleManager"></param>
         /// <param name="userManager"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> InitAsync(RoleManager<ApplicationRole> roleManager, ApplicationUserManager userManager)
+        public async Task<BaseApiResponse> InitAsync()
         {
-            await CreateRolesAsync(roleManager);
+            await CreateRolesAsync();
             
-            var maybeRoot = await CreateOrUpdateRoot(userManager);
+            var maybeRoot = await CreateOrUpdateRoot();
 
             foreach (UserRight right in Enum.GetValues(typeof(UserRight)))
             {
-                userManager.AddRight(maybeRoot, right);
+                UserManager.AddRight(maybeRoot, right);
             }
 
             return new BaseApiResponse(true, "Пользователь root создан");
         }
 
-        private async Task<ApplicationUser> CreateOrUpdateRoot(UserManager<ApplicationUser> userManager)
+        private async Task<ApplicationUser> CreateOrUpdateRoot()
         {
-            var maybeRoot = await userManager.FindByEmailAsync(RightsSettings.RootEmail);
+            var maybeRoot = await UserManager.FindByEmailAsync(RightsSettings.RootEmail);
 
             if (maybeRoot == null)
             {
@@ -68,7 +83,7 @@ namespace FocLab.Logic.Workers.Account
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
 
-                await userManager.CreateAsync(maybeRoot, RightsSettings.RootPassword);
+                await UserManager.CreateAsync(maybeRoot, RightsSettings.RootPassword);
                 return maybeRoot;
             }
 
@@ -136,9 +151,5 @@ namespace FocLab.Logic.Workers.Account
             return new BaseApiResponse(true, "Ваш пароль изменен");
         }
         #endregion
-
-        public AccountManager(ICrocoAmbientContext context) : base(context)
-        {
-        }
     }
 }

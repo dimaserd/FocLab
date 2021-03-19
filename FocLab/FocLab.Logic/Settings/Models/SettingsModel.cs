@@ -1,6 +1,4 @@
-﻿using Croco.Core.Abstractions.Settings;
-
-namespace FocLab.Logic.Settings.Models
+﻿namespace FocLab.Logic.Settings.Models
 {
     public class SettingsModel : ICommonSetting<SettingsModel>
     {

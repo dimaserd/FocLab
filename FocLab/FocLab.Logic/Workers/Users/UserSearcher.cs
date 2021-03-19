@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Croco.Core.Abstractions;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models.Search;
 using Croco.Core.Search.Extensions;
-using Croco.Core.Search.Models;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Users;
@@ -66,7 +67,7 @@ namespace FocLab.Logic.Workers.Users
                 .BuildQuery(model.GetCriterias())
                 .OrderByDescending(x => x.CreatedOn);
 
-            return GetListResult<ApplicationUserBaseModel>.GetAsync(model, query, ApplicationUserBaseModel.SelectExpression);
+            return EFCoreExtensions.GetAsync(model, query, ApplicationUserBaseModel.SelectExpression);
         }
 
         public Task<GetListResult<ApplicationUserDto>> SearchUsersAsync(UserSearch model)
@@ -75,12 +76,12 @@ namespace FocLab.Logic.Workers.Users
                 .BuildQuery(model.GetCriterias())
                 .OrderByDescending(x => x.CreatedOn);
 
-            return GetListResult<ApplicationUserDto>.GetAsync(model, initQuery, ApplicationUserDto.SelectExpression);
+            return EFCoreExtensions.GetAsync(model, initQuery, ApplicationUserDto.SelectExpression);
         }
 
         #endregion
 
-        public UserSearcher(ICrocoAmbientContext context) : base(context)
+        public UserSearcher(ICrocoAmbientContextAccessor context, ICrocoApplication application) : base(context, application)
         {
         }
     }

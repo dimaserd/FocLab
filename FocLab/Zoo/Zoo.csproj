@@ -7,8 +7,9 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.94.2" />
     <PackageReference Include="Jint" Version="2.11.58" />
-    <PackageReference Include="NeCroco.Core.Documentation" Version="1.1.46" />
-    <PackageReference Include="NetCroco.WebApplication" Version="2.0.17" />
+    <PackageReference Include="NetCroco.Core.Documentation" Version="1.1.46" />
+    <PackageReference Include="Croco.WebApplication" Version="2.0.17" />
+    <PackageReference Include="Croco.Core.Logic" Version="1.0.8" />
   </ItemGroup>
 
   <ItemGroup>

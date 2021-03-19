@@ -1,4 +1,4 @@
-﻿using Croco.Core.Abstractions.Data.Entities.HaveId;
+﻿using Croco.Core.Contract.Data.Entities.HaveId;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;

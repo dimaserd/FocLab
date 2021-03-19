@@ -1,5 +1,5 @@
-﻿using Croco.Core.Abstractions.Data;
-using Croco.Core.Application;
+﻿using Croco.Core.Application;
+using Croco.Core.Contract.Data;
 using Croco.WebApplication.Models;
 using System;
 

@@ -1,6 +1,4 @@
-﻿using Croco.Core.Logic.Models.Users;
-
-namespace Zoo.Core
+﻿namespace Zoo.Core
 {
     public class WebAppRequestContextLogWithUserModel
     {
