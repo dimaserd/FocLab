@@ -171,14 +171,14 @@ namespace FocLab.Logic.Workers.Account
         /// <param name="user"></param>
         /// <param name="authenticationManager"></param>
         /// <returns></returns>
-        public BaseApiResponse LogOut(IPrincipal user)
+        public async Task<BaseApiResponse> LogOut(IPrincipal user)
         {
             if(!user.Identity.IsAuthenticated)
             {
                 return new BaseApiResponse(false, "Вы и так не авторизованы");
             }
 
-            AuthenticationManager.SignOut();
+            await AuthenticationManager.SignOutAsync();
 
             return new BaseApiResponse(true, "Вы успешно разлогинены в системе");
         }

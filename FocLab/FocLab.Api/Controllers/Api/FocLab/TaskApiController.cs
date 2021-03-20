@@ -1,15 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Croco.Core.Models;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Models;
 using FocLab.Api.Controllers.Base;
-using FocLab.Logic.Abstractions;
-using FocLab.Logic.Implementations;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.Tasks;
-using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryTasks;
-using FocLab.Model.Contexts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api.FocLab
@@ -21,18 +17,22 @@ namespace FocLab.Api.Controllers.Api.FocLab
     [Route("Api/Chemistry/Tasks")]
     public class TaskApiController : BaseApiController
     {
-        public TaskApiController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, httpContextAccessor)
+        private AdminChemistryTasksWorker AdminChemistryTasksWorker { get; }
+
+        private PerformerChemistryTasksWorker PerformerChemistryTasksWorker { get; }
+
+        private ChemistryTasksWorker ChemistryTasksWorker { get; }
+
+        public TaskApiController(ICrocoRequestContextAccessor requestContextAccessor,
+            AdminChemistryTasksWorker adminChemistryTasksWorker,
+            PerformerChemistryTasksWorker performerChemistryTasksWorker,
+            ChemistryTasksWorker chemistryTasksWorker)
+            : base(requestContextAccessor)
         {
+            AdminChemistryTasksWorker = adminChemistryTasksWorker;
+            PerformerChemistryTasksWorker = performerChemistryTasksWorker;
+            ChemistryTasksWorker = chemistryTasksWorker;
         }
-
-        private AdminChemistryTasksWorker AdminChemistryTasksWorker => new AdminChemistryTasksWorker(AmbientContext);
-
-        private PerformerChemistryTasksWorker PerformerChemistryTasksWorker => new PerformerChemistryTasksWorker(AmbientContext);
-
-        private ChemistryTasksWorker ChemistryTasksWorker => new ChemistryTasksWorker(AmbientContext);
-
-
-        private readonly IUserMailSender MailSender = new FocLabEmailSender();
 
         [HttpGet("GetAll")]
         public Task<List<ChemistryTaskModel>> GetTasks()
@@ -70,7 +70,7 @@ namespace FocLab.Api.Controllers.Api.FocLab
         [HttpPost("Performer/Perform")]
         public Task<BaseApiResponse> PerformerPerformTask(PerformTaskModel model)
         {
-            return PerformerChemistryTasksWorker.PerformTaskAsync(model, MailSender);
+            return PerformerChemistryTasksWorker.PerformTaskAsync(model);
         }
 
         /// <summary>

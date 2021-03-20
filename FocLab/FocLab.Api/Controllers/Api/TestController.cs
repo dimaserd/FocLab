@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Croco.Core.Contract;
 using FocLab.Api.Controllers.Base;
-using FocLab.Logic.Services;
-using FocLab.Model.Contexts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api
@@ -16,10 +14,9 @@ namespace FocLab.Api.Controllers.Api
     public class TestController : BaseApiController
     {
         /// <inheritdoc />
-        public TestController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, httpContextAccessor)
+        public TestController(ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
         {
         }
-
 
         /// <summary>
         /// Метод прокси тест

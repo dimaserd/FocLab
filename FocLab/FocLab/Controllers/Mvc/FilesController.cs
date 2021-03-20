@@ -1,15 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Files;
+using Croco.Core.Logic.Files.Abstractions;
 using Croco.Core.Model.Entities.Application;
 using FocLab.Controllers.Base;
 using FocLab.Logic.Implementations;
-using FocLab.Logic.Services;
-using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Controllers.Mvc
 {
@@ -19,10 +18,16 @@ namespace FocLab.Controllers.Mvc
     /// </summary>
     public class FilesController : BaseController
     {
-        public FilesController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
-        {
-        }
+        IDbFileManager FileManager { get; }
+        ICrocoFileCopyWorker FileCopyWorker { get; }
 
+        public FilesController(IDbFileManager fileManager,
+            ICrocoFileCopyWorker fileCopyWorker,
+            ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
+        {
+            FileManager = fileManager;
+            FileCopyWorker = fileCopyWorker;
+        }
 
         /// <summary>
         /// Возвращает файл по указанному идентификатору
@@ -30,9 +35,9 @@ namespace FocLab.Controllers.Mvc
         /// <param name="id"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public async Task<IActionResult> GetDbFileById(int id, ImageSizeType type = ImageSizeType.Original)
+        public Task<IActionResult> GetDbFileById(int id, ImageSizeType type = ImageSizeType.Original)
         {
-            return await GetResizedLocalImageFileById(id, type);
+            return GetResizedLocalImageFileById(id, type);
         }
 
         /// <summary>
@@ -43,18 +48,23 @@ namespace FocLab.Controllers.Mvc
         /// <returns></returns>
         public async Task<IActionResult> GetResizedLocalImageFileById(int id, ImageSizeType type = ImageSizeType.Original)
         {
-            var filePath = CrocoApp.Application.FileCopyWorker.GetResizedImageLocalPath(id, type);
+            var filePath = FileCopyWorker.GetResizedImageLocalPath(id, type);
 
             if (System.IO.File.Exists(filePath))
             {
                 return File(System.IO.File.ReadAllBytes(filePath), FocLabWebApplication.GetMimeMapping(filePath), Path.GetFileName(filePath));
             }
 
-            var file = await Context.DbFiles.FirstOrDefaultAsync(x => x.Id == id);
+            var file = await FileManager.GetFileDataById(id);
 
             try
             {
-                var copyResult = await CrocoApp.Application.FileCopyWorker.MakeLocalFileCopy(file);
+                var copyResult = await FileCopyWorker.MakeLocalFileCopy(new DbFileIntId 
+                {
+                    Id = id,
+                    FileData = file.FileData,
+                    FileName = file.FileName
+                });
 
                 if (!copyResult.IsSucceeded && copyResult.Message == "webp")
                 {
@@ -73,7 +83,7 @@ namespace FocLab.Controllers.Mvc
 
         #region Вспомогательные методы
 
-        private IActionResult ReturnDbFileOrNotFound(DbFileBase file)
+        private IActionResult ReturnDbFileOrNotFound(IFileData file)
         {
             if (file != null)
             {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Croco.Core.Contract.Files;
+using Microsoft.AspNetCore.Http;
 using System.IO;
 
 namespace FocLab.Logic.Extensions
@@ -21,7 +22,7 @@ namespace FocLab.Logic.Extensions
             /// <summary>
             /// Данные в файле
             /// </summary>
-            public byte[] Data { get; set; }
+            public byte[] FileData { get; set; }
         }
 
         /// <summary>
@@ -31,18 +32,15 @@ namespace FocLab.Logic.Extensions
         /// <returns></returns>
         public static IFileData ToFileData(this IFormFile file)
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            file.CopyTo(ms);
+            var fileBytes = ms.ToArray();
+
+            return new TempFileData
             {
-                file.CopyTo(ms);
-                var fileBytes = ms.ToArray();
-
-                return new TempFileData
-                {
-                    FileName = file.FileName,
-                    Data = fileBytes
-                };
-            }
-
+                FileName = file.FileName,
+                FileData = fileBytes
+            };
         }
     }
 }

@@ -1,6 +1,7 @@
-﻿using Croco.Core.Abstractions;
-using Croco.Core.Common.Enumerations;
-using Croco.Core.Models;
+﻿using Croco.Core.Common.Enumerations;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
 using Doc.Logic.Entities;
 using Doc.Logic.Models;
 using FocLab.Logic.Implementations;
@@ -19,7 +20,8 @@ namespace Doc.Logic.Workers
 {
     public class ChemistryExperimentDocumentProccessor : FocLabWorker
     {
-        public ChemistryExperimentDocumentProccessor(ICrocoAmbientContext context) : base(context)
+        public ChemistryExperimentDocumentProccessor(ICrocoAmbientContextAccessor context,
+            ICrocoApplication application) : base(context, application)
         {
         }
 

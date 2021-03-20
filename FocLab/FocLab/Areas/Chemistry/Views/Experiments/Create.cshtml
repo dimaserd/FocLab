@@ -1,12 +1,7 @@
-﻿@using FocLab.Logic.Models.Experiments
-@model CreateExperiment
+﻿@model GenerateGenericUserInterfaceModel
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Создать эксперимент";
-
-    var modelPrefix = "create.";
-
-    var builder = new GenericUserInterfaceModelBuilder<CreateExperiment>(modelPrefix);
 }
 
 <div class="form-group m-form__group m--margin-top-10">
@@ -15,7 +10,7 @@
     </div>
 </div>  
 
-@await Html.RenderGenericUserInterfaceAsync(builder.Result)
+@await Html.RenderGenericUserInterfaceAsync(Model)
 
 <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions m-form__actions">
@@ -27,7 +22,6 @@
         </div>
     </div>
 </div>
-
 
 @section Scripts{
     <script src="~/js/Experiments.min.js"></script>

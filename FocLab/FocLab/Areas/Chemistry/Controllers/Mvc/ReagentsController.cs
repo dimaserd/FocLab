@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
-using FocLab.Areas.Chemistry.Controllers.Base;
+using Croco.Core.Contract;
 using FocLab.Consts;
-using FocLab.Logic.Services;
+using FocLab.Controllers.Base;
+using FocLab.Logic.Models.Reagents;
 using FocLab.Logic.Workers.ChemistryReagents;
-using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Zoo.GenericUserInterface.Services;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
@@ -14,9 +15,18 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     /// Контроллер для реагентов
     /// </summary>
     [Area(AreaConsts.Chemistry), Authorize]
-    public class ReagentsController : BaseFocLabController
+    public class ReagentsController : BaseController
     {
-        private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(AmbientContext);
+        private ChemistryReagentsWorker ChemistryReagentsWorker { get; }
+        private GenericUserInterfaceBag InterfaceBag { get; }
+
+        public ReagentsController(ICrocoRequestContextAccessor requestContextAccessor,
+            ChemistryReagentsWorker chemistryReagentsWorker,
+            GenericUserInterfaceBag interfaceBag) : base(requestContextAccessor)
+        {
+            ChemistryReagentsWorker = chemistryReagentsWorker;
+            InterfaceBag = interfaceBag;
+        }
 
         /// <summary>
         /// Список реагентов
@@ -38,6 +48,11 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         {
             var model = await ChemistryReagentsWorker.GetReagentAsync(id);
 
+            var interfaceDefinition = await InterfaceBag.GetDefaultInterface<ChemistryReagentNameAndIdModel>();
+            interfaceDefinition.Interface.Prefix = "update.";
+
+            ViewData["interfaceDefinition"] = interfaceDefinition;
+
             return View(model);
         }
 
@@ -46,13 +61,11 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         /// Создание
         /// </summary>
         /// <returns></returns>
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
-        }
-
-        public ReagentsController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
-        {
+            var model = await InterfaceBag.GetDefaultInterface<ChemistryReagentNameAndIdModel>();
+            model.Interface.Prefix = "create.";
+            return View(model);
         }
     }
 }

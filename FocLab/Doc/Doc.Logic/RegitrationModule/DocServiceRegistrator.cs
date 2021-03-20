@@ -1,14 +1,16 @@
-﻿using Croco.Core.Abstractions.Application;
-using Croco.Core.Extensions;
+﻿using Croco.Core.Application;
 using Doc.Contract.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Doc.Logic.RegistrationModule
 {
     public static class DocServiceRegistrator
     {
-        public static void Register(ICrocoApplication application)
+        public static void Register(CrocoApplicationBuilder applicationBuilder)
         {
-            application.RegisterService<IDocumentService, DocumentService>(x => new DocumentService(x));
+            applicationBuilder
+                .Services
+                .AddScoped<IDocumentService, DocumentService>();
         }
     }
 }

@@ -96,8 +96,6 @@ namespace FocLab.Model.Contexts
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            LoggedApplicationAction.OnModelCreating(builder);
-
             builder.Entity<AuditLog>().Property(x => x.Id).ValueGeneratedOnAdd();
 
             WebAppRequestContextLog.OnModelCreating(builder);

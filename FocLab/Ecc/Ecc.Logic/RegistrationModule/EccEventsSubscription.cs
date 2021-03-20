@@ -1,4 +1,4 @@
-﻿using Croco.Core.Abstractions.EventSourcing;
+﻿using Croco.Core.Application;
 using Ecc.Logic.EventHandlers;
 using FocLab.Logic.Events;
 
@@ -6,10 +6,11 @@ namespace Ecc.Logic.RegistrationModule
 {
     public static class EccEventsSubscription
     {
-        public static void Subscribe(ICrocoMessageListener evListener)
+        public static void Subscribe(CrocoApplicationBuilder builder)
         {
             //Подписка обработчиками событий на события
-            evListener.AddMessageHandler<ExperimentPerformedEvent, ExperimentPerformedEventHandler>();
+            builder.EventSourceOptions
+                .AddMessageHandler<ExperimentPerformedEvent, ExperimentPerformedEventHandler>();
         }
     }
 }

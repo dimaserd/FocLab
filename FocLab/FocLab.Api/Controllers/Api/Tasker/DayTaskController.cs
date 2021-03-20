@@ -2,11 +2,7 @@
 using System.Threading.Tasks;
 using Croco.Core.Contract;
 using Croco.Core.Contract.Models;
-using Croco.Core.Models;
 using FocLab.Api.Controllers.Base;
-using FocLab.Logic.Services;
-using FocLab.Model.Contexts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tms.Logic.Models.Tasker;
 using Tms.Logic.Workers.Tasker;

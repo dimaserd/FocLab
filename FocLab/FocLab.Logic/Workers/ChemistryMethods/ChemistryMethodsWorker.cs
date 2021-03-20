@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Methods;
@@ -23,7 +26,9 @@ namespace FocLab.Logic.Workers.ChemistryMethods
         /// <returns></returns>
         public Task<ChemistryMethodFileModel> GetMethodAsync(string id)
         {
-            return Query<ChemistryMethodFile>().Select(ChemistryMethodFileModel.SelectExpression).FirstOrDefaultAsync(x => x.Id == id);
+            return Query<ChemistryMethodFile>()
+                .Select(ChemistryMethodFileModel.SelectExpression)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         /// <summary>
@@ -115,7 +120,8 @@ namespace FocLab.Logic.Workers.ChemistryMethods
         /// Конструктор
         /// </summary>
         /// <param name="contextWrapper"></param>
-        public ChemistryMethodsWorker(ICrocoAmbientContext context) : base(context)
+        public ChemistryMethodsWorker(ICrocoAmbientContextAccessor context, 
+            ICrocoApplication application) : base(context, application)
         {
         }
     }

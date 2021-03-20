@@ -1,23 +1,13 @@
 ﻿@using System.Globalization
-@using FocLab.Logic.Models.Users
 @model FocLab.Logic.EntityDtos.Users.Default.ApplicationUserDto
 @{
     ViewData["Title"] = "Редактирование пользователя";
 
     Layout = ChemistrySettings.LayoutPath;
 
-    var sexes = (ViewData["sexes"] as IEnumerable<MySelectListItem>).ToList();
-
     var birthDate = Model.BirthDate.HasValue ? Model.BirthDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "";
 
-    var modelPrefix = "update.";
-
-    var builder = new GenericUserInterfaceModelBuilder<EditApplicationUser>(modelPrefix, GenericUserInterfaceValueProvider.Create(Model));
-
-    builder
-        .HiddenFor(x => x.Id)
-        .HiddenFor(x => x.ObjectJson)
-        .DropDownListFor(x => x.Sex, sexes);
+    var interfaceModel = ViewData["interfaceModel"] as GenerateGenericUserInterfaceModel;
 }
 
 
@@ -41,7 +31,7 @@
         </div>
     </div>
 
-    @await Html.RenderGenericUserInterfaceAsync(builder.Result)
+    @await Html.RenderGenericUserInterfaceAsync(interfaceModel)
 
     <div class="m-portlet__foot m-portlet__foot--fit">
         <div class="m-form__actions">
@@ -64,7 +54,7 @@
 @section Scripts{
     <script>
         $(".action-btn").on("click", () => {
-            const data = TryForm.GetDataForFormByModelPrefix("@modelPrefix");;
+            const data = TryForm.GetDataForFormByModelPrefix("@interfaceModel.Interface.Prefix");;
 
             Requester.SendPostRequestWithAnimation("/Api/User/Edit", data, resp => {
                 if (resp.IsSucceeded) {

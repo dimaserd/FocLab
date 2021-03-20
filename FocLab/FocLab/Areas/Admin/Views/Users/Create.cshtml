@@ -1,18 +1,8 @@
-﻿@using FocLab.Logic.Models.Users
+﻿@model GenerateGenericUserInterfaceModel
 @{
     ViewBag.Title = "Создание пользователя";
 
     Layout = ChemistrySettings.LayoutPath;
-
-    var list = ViewBag.Rights as List<MySelectListItem>;
-
-    var modelPrefix = "create.";
-
-    var builder = new GenericUserInterfaceModelBuilder<CreateUserModel>(modelPrefix);
-
-    builder
-        .HiddenFor(x => x.ConfirmPassword)
-        .HiddenFor(x => x.Rights);
 }
 
 
@@ -37,7 +27,7 @@
     </div>
 </div>
 
-@await Html.RenderGenericUserInterfaceAsync(builder.Result)
+@await Html.RenderGenericUserInterfaceAsync(Model)
 
 <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions">

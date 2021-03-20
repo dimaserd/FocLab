@@ -1,13 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Models;
-using FocLab.Api.Controllers.Base;
+using Croco.Core.Contract.Models;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Models.Users;
-using FocLab.Logic.Services;
 using FocLab.Logic.Workers.Account;
-using FocLab.Model.Contexts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api
@@ -17,16 +13,17 @@ namespace FocLab.Api.Controllers.Api
     /// Предоставляет методы для работы с учетной записью а также логгинирование
     /// </summary>
     [Route("Api/Account")]
-    public class AccountController : BaseApiController
+    public class AccountController : Controller
     {
+        private AccountManager AccountManager { get; }
+        private AccountLoginWorker AccountLoginWorker { get; }
+
         /// <inheritdoc />
-        public AccountController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, httpContextAccessor)
+        public AccountController(AccountManager accountManager, AccountLoginWorker accountLoginWorker)
         {
+            AccountManager = accountManager;
+            AccountLoginWorker = accountLoginWorker;
         }
-
-        private AccountManager AccountManager => new AccountManager(AmbientContext);
-
-        private AccountLoginWorker AccountLoginWorker => new AccountLoginWorker(AmbientContext);
 
         #region Методы логинирования
 
@@ -39,7 +36,7 @@ namespace FocLab.Api.Controllers.Api
         [ProducesDefaultResponseType(typeof(BaseApiResponse<LoginResultModel>))]
         public Task<BaseApiResponse<LoginResultModel>> Login([FromForm]LoginModel model)
         {
-            return AccountLoginWorker.LoginAsync(model, SignInManager);
+            return AccountLoginWorker.LoginAsync(model);
         }
 
         /// <summary>
@@ -51,7 +48,7 @@ namespace FocLab.Api.Controllers.Api
         [ProducesDefaultResponseType(typeof(BaseApiResponse<LoginResultModel>))]
         public Task<BaseApiResponse<LoginResultModel>> LoginByPhone([FromForm]LoginByPhoneNumberModel model)
         {
-            return AccountLoginWorker.LoginByPhoneNumberAsync(model, SignInManager);
+            return AccountLoginWorker.LoginByPhoneNumberAsync(model);
         }
 
         /// <summary>
@@ -63,7 +60,7 @@ namespace FocLab.Api.Controllers.Api
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         public Task<BaseApiResponse> LoginAsUser([FromForm]UserIdModel model)
         {
-            return AccountLoginWorker.LoginAsUserAsync(model, SignInManager);
+            return AccountLoginWorker.LoginAsUserAsync(model);
         }
         
         #endregion
@@ -78,7 +75,7 @@ namespace FocLab.Api.Controllers.Api
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         public Task<BaseApiResponse> ChangePassword([FromForm]ChangeUserPasswordModel model)
         {
-            return AccountManager.ChangePasswordAsync(model, UserManager, SignInManager);
+            return AccountManager.ChangePasswordAsync(model);
         }
         #endregion
 
@@ -92,7 +89,7 @@ namespace FocLab.Api.Controllers.Api
         [ProducesDefaultResponseType(typeof(BaseApiResponse<ApplicationUserDto>))]
         public BaseApiResponse<ApplicationUserDto> CheckUserChanges()
         {
-            return AccountManager.CheckUserChanges(AuthenticationManager, SignInManager);
+            return AccountManager.CheckUserChanges();
         }
 
         /// <summary>
@@ -101,9 +98,9 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [HttpPost("LogOut")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public BaseApiResponse LogOut()
+        public Task<BaseApiResponse> LogOut()
         {
-            return AccountLoginWorker.LogOut(User, AuthenticationManager);
+            return AccountLoginWorker.LogOut(User);
         }
     }
 }

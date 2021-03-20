@@ -3,7 +3,6 @@ using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Implementations;
 using FocLab.Model.Entities.Chemistry;
 
-
 namespace FocLab.Logic.Helpers
 {
     /// <summary>
@@ -20,7 +19,7 @@ namespace FocLab.Logic.Helpers
         /// <returns></returns>
         public static object GetMailMessage(ChemistryDayTask dayTask, ApplicationUserDto user, ApplicationUserDto adminUser)
         {
-            var domainName = ((FocLabWebApplication) CrocoApp.Application).DomainName;
+            var domainName = ((FocLabWebApplication) CrocoApp.Application).ApplicationUrl;
 
             var link = $"{domainName}/Schedule/Index?DayTaskId={dayTask.Id}&UserId={user.Id}";
 

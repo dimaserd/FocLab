@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Croco.Core.Application;
+using Croco.Core.Contract.Models.Cache;
 
 namespace FocLab.Logic.Extensions
 {
-    public class CrocoCacheValue : ICrocoCacheValue
-    {
-        public string Key { get; set; }
-        public object Value { get; set; }
-        public DateTime? AbsoluteExpiration { get; set; }
-    }
-
     public static class QueryableCacheExtensions
     {
         public static IEnumerable<T> Cached<T>(this IQueryable<T> source) where T : class
@@ -20,20 +13,21 @@ namespace FocLab.Logic.Extensions
 
             var cacheValue = CrocoApp.Application.CacheManager.GetValue<List<T>>(key);
 
-            if (cacheValue != null)
+            if (cacheValue.IsSucceeded)
             {
-                return cacheValue;
+                return cacheValue.Value;
             }
 
-            cacheValue = source.ToList();
+            var result = source.ToList();
+
             CrocoApp.Application.CacheManager.AddValue(new CrocoCacheValue
             {
                 Key = key,
-                Value = cacheValue,
+                Value = result,
                 AbsoluteExpiration = CrocoApp.Application.DateTimeProvider.Now.AddHours(1)
             });
 
-            return cacheValue;
+            return result;
         }
     }
 }

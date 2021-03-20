@@ -1,11 +1,11 @@
 ﻿@model FocLab.Logic.Models.Tasks.EditChemistryTask
 @{
-    Layout = ChemistrySettings.LayoutPath;
+    Layout = FocLab.Logic.ChemistrySettings.LayoutPath;
     ViewBag.Title = "Редактирование задания";
 
-    var fileMethodsSelectList = ViewData["fileMethodsSelectList"] as List<SelectListItem>;
+    var fileMethodsSelectList = ViewData["fileMethodsSelectList"] as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>;
 
-    var usersSelectList = ViewData["usersSelectList"] as List<SelectListItem>;
+    var usersSelectList = ViewData["usersSelectList"] as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>;
 }
 
 <div class="row">
@@ -29,8 +29,6 @@
         @ViewBag.Title
     </div>
 </div>
-
-
 
 
 

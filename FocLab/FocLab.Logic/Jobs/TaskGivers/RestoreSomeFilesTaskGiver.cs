@@ -1,24 +1,22 @@
-﻿using FocLab.Logic.Workers;
+﻿using Croco.Core.Logic.Files.Abstractions;
 using System.Threading.Tasks;
 
 namespace FocLab.Logic.Jobs.TaskGivers
 {
-    public class RestoreSomeFilesTaskGiver : BaseTaskGiver
+    public class RestoreSomeFilesTaskGiver
     {
-        int _countSetting = 15;
+        readonly int _countSetting = 15;
 
-        public override void ExecuteTask()
+        IDbFileManager FileManager { get; }
+
+        public RestoreSomeFilesTaskGiver(IDbFileManager fileManager)
         {
-            GetTask().GetAwaiter().GetResult();
+            FileManager = fileManager;
         }
-
-        public async Task GetTask()
+        
+        public Task GetTask()
         {
-            var ambientContext = new SystemCrocoAmbientContext();
-
-            var fileWorker = new DbFileWorker(ambientContext);
-
-            await fileWorker.BaseManager.LocalStorageService.MakeLocalCopies(_countSetting, true);
+            return FileManager.LocalStorageService.MakeLocalCopies(_countSetting, true);
         }
     }
 }

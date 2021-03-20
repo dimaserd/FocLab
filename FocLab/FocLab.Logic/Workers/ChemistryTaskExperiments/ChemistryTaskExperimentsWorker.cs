@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
 using Croco.Core.Utils;
 using FocLab.Logic.Events;
 using FocLab.Logic.Extensions;
@@ -18,6 +21,15 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
     /// </summary>
     public class ChemistryTaskExperimentsWorker : FocLabWorker
     {
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="contextWrapper"></param>
+        public ChemistryTaskExperimentsWorker(ICrocoAmbientContextAccessor context,
+            ICrocoApplication application) : base(context, application)
+        {
+        }
+
         /// <summary>
         /// Завершение эксперимента
         /// </summary>
@@ -326,14 +338,6 @@ namespace FocLab.Logic.Workers.ChemistryTaskExperiments
             repo.UpdateHandled(experiment);
             
             return await TrySaveChangesAndReturnResultAsync("Эксперимент востановлен");
-        }
-
-        /// <summary>
-        /// Конструктор
-        /// </summary>
-        /// <param name="contextWrapper"></param>
-        public ChemistryTaskExperimentsWorker(ICrocoAmbientContext context) : base(context)
-        {
         }
     }
 }

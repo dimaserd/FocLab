@@ -3,7 +3,7 @@
     /// <summary>
     /// Класс настроек для веб-приложения
     /// </summary>
-    public class WebAppSettingsModel : ICommonSetting<WebAppSettingsModel>
+    public class WebAppSettingsModel
     {
         /// <summary>
         /// Использовать редирект на главной странице 
@@ -20,14 +20,11 @@
         /// </summary>
         public string TemplateName { get; set; }
 
-        public WebAppSettingsModel GetDefault()
+        public WebAppSettingsModel()
         {
-            return new WebAppSettingsModel
-            {
-                RedirectUri = "",
-                UseMainRedirect = false,
-                TemplateName = "Standard"
-            };
+            RedirectUri = "";
+            UseMainRedirect = false;
+            TemplateName = "Standard";
         }
     }
 }

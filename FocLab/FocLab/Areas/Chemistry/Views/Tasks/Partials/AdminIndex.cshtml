@@ -1,4 +1,5 @@
 ﻿@using FocLab.Logic.EntityDtos.Users.Default
+@using Microsoft.AspNetCore.Mvc.Rendering  
 @model List<FocLab.Logic.Models.Tasks.ChemistryTaskModel>
 @{
     Layout = null;
@@ -11,50 +12,50 @@
 
     var tasks = isEmailSet ? Model.Where(x => x.PerformerUser.Id == user.Id).ToList() : Model;
 
-    var sortSelect = new List<SelectListItem>
-    {
-        new SelectListItem
+    var sortSelect = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
+{
+        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
         {
             Text = "Не сортировать",
             Value = "0"
         },
 
-        new SelectListItem
+        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
         {
             Text = "По дате выполнения",
             Value = "1",
         },
 
-        new SelectListItem
+        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
         {
             Text = "По имени исполнителя",
             Value = "2",
         }
     };
 
-    var statusSelect = new List<SelectListItem>
-    {
-        new SelectListItem
+    var statusSelect = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
+{
+        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
         {
             Selected = true,
             Text = "Все",
             Value = ""
         },
-        new SelectListItem
+        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
         {
             Text = "Выполненные",
             Value = true.ToString()
         },
-        new SelectListItem
+        new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
         {
             Text = "Не выполненные",
             Value = false.ToString()
         }
     };
 
-    var usersSelectList = ViewData["usersSelectList"] as List<SelectListItem>;
+    var usersSelectList = ViewData["usersSelectList"] as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>;
 
-    var tasksSelectList = ViewData["tasksSelectList"] as List<SelectListItem>;
+    var tasksSelectList = ViewData["tasksSelectList"] as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>;
 }
 
 <style>
@@ -131,7 +132,7 @@
 <div class="form-group m-form__group m--margin-top-10">
     <div class="alert m-alert m-alert--default" role="alert">
         <h4>
-            Выполненные задания 
+            Выполненные задания
             <span class="m-menu__link-badge">
                 <span class="m-badge m-badge--success">@tasks.Count(x => x.IsPerformed)</span>
             </span>
@@ -213,7 +214,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        
+
         <h2>
             <span class="pull-right btn" onclick="$('#notPerformedBody').fadeToggle()">[Показать/Скрыть]</span>
         </h2>

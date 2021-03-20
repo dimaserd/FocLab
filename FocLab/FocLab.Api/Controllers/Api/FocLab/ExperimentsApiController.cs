@@ -1,12 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Models;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Models;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.Experiments;
-using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryTaskExperiments;
-using FocLab.Model.Contexts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api.FocLab
@@ -17,13 +15,13 @@ namespace FocLab.Api.Controllers.Api.FocLab
     [Route("Api/Chemistry/Experiments")]
     public class ExperimentsApiController : BaseApiController
     {
-        public ExperimentsApiController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, httpContextAccessor)
+        private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker { get; }
+
+        public ExperimentsApiController(ICrocoRequestContextAccessor requestContextAccessor,
+            ChemistryTaskExperimentsWorker chemistryTaskExperimentsWorker) : base(requestContextAccessor)
         {
+            ChemistryTaskExperimentsWorker = chemistryTaskExperimentsWorker;
         }
-
-        private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker =>
-            new ChemistryTaskExperimentsWorker(AmbientContext);
-
 
         /// <summary>
         /// Создать эксперимент

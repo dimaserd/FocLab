@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Models;
-using FocLab.Logic.Abstractions;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Account;
@@ -19,16 +18,19 @@ namespace FocLab.Logic.Workers.Account
     public class AccountManager : FocLabWorker
     {
         RoleManager<ApplicationRole> RoleManager { get; }
-        UserManager<ApplicationUser> UserManager { get; }
+        SignInManager<ApplicationUser> SignInManager { get; }
+        ApplicationUserManager UserManager { get; }
 
         public AccountManager(ICrocoAmbientContextAccessor contextAccessor, 
             ICrocoApplication application,
             RoleManager<ApplicationRole> roleManager,
-            UserManager<ApplicationUser> userManager
+            SignInManager<ApplicationUser> signInManager,
+            ApplicationUserManager userManager
             )
             : base(contextAccessor, application)
         {
             RoleManager = roleManager;
+            SignInManager = signInManager;
             UserManager = userManager;
         }
 
@@ -103,7 +105,7 @@ namespace FocLab.Logic.Workers.Account
             return maybeRoot;
         }
 
-        public BaseApiResponse<ApplicationUserDto> CheckUserChanges(IApplicationAuthenticationManager authenticationManager, SignInManager<ApplicationUser> signInManager)
+        public BaseApiResponse<ApplicationUserDto> CheckUserChanges()
         {
             if(!IsAuthenticated)
             {
@@ -115,7 +117,7 @@ namespace FocLab.Logic.Workers.Account
 
         #region Методы изменения
 
-        public async Task<BaseApiResponse> ChangePasswordAsync(ChangeUserPasswordModel model, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public async Task<BaseApiResponse> ChangePasswordAsync(ChangeUserPasswordModel model)
         {
             if(model == null)
             {
@@ -134,9 +136,9 @@ namespace FocLab.Logic.Workers.Account
 
             var userId = UserId;
 
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await UserManager.FindByIdAsync(userId);
 
-            var result = await userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            var result = await UserManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 
             if (!result.Succeeded)
             {
@@ -145,7 +147,7 @@ namespace FocLab.Logic.Workers.Account
 
             if (user != null)
             {
-                await signInManager.SignInAsync(user, true);
+                await SignInManager.SignInAsync(user, true);
             }
 
             return new BaseApiResponse(true, "Ваш пароль изменен");

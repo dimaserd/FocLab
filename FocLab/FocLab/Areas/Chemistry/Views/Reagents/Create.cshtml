@@ -1,14 +1,8 @@
-﻿@using FocLab.Logic
-@using FocLab.Logic.Models.Reagents
+﻿@model GenerateGenericUserInterfaceModel
+@using FocLab.Logic
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Создание реагента";
-
-    var modelPrefix = "create.";
-
-    var builder = new GenericUserInterfaceModelBuilder<ChemistryReagentNameAndIdModel>(modelPrefix)
-        .HiddenFor(x => x.Id);
-
 }
 
 <div class="form-group m-form__group m--margin-top-10">
@@ -17,7 +11,7 @@
     </div>
 </div>
 
-@await Html.RenderGenericUserInterfaceAsync(builder.Result)
+@await Html.RenderGenericUserInterfaceAsync(Model)
 
 <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions m-form__actions">
@@ -34,8 +28,8 @@
     <script>
 
         $(".btn-reagent-create").on("click", () => {
-            
-            const data = TryForm.GetDataForFormByModelPrefix("@modelPrefix");
+
+            const data = TryForm.GetDataForFormByModelPrefix("@Model.Interface.Prefix");
 
             Requester.SendPostRequestWithAnimation("/Api/Chemistry/Reagents/CreateOrUpdate", data, x => {
                 if (x.IsSucceeded) {

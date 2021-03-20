@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
+using Croco.Core.Logic.Extensions;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
@@ -13,6 +17,14 @@ namespace FocLab.Logic.Workers.Users
 {
     public class UserRoleWorker : FocLabWorker
     {
+        UserManager<ApplicationUser> UserManager { get; }
+
+        public UserRoleWorker(ICrocoAmbientContextAccessor context, ICrocoApplication application,
+            UserManager<ApplicationUser> userManager) : base(context, application)
+        {
+            UserManager = userManager;
+        }
+
         public static int GetHighRoleOfUser(IList<string> roles)
         {
             var rightsToCheck = new[]
@@ -33,7 +45,7 @@ namespace FocLab.Logic.Workers.Users
             return int.MaxValue;
         }
 
-        public async Task<BaseApiResponse> AddUserToRoleAsync(UserIdAndRole userIdAndRole, UserManager<ApplicationUser> userManager)
+        public async Task<BaseApiResponse> AddUserToRoleAsync(UserIdAndRole userIdAndRole)
         {
             if (!IsAuthenticated)
             {
@@ -61,8 +73,8 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(false, "Пользователь не найден");
             }
             
-            var rolesOfEditUser= await userManager.GetRolesAsync(userEditor);
-            var rolesOfUserEditor= await userManager.GetRolesAsync(userEditor);
+            var rolesOfEditUser= await UserManager.GetRolesAsync(userEditor);
+            var rolesOfUserEditor= await UserManager.GetRolesAsync(userEditor);
 
             var roleOfEditUser = GetHighRoleOfUser(rolesOfEditUser);
             var roleOfUserEditor = GetHighRoleOfUser(rolesOfUserEditor);
@@ -82,13 +94,13 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(false, "У пользователя уже есть данное право");
             }
 
-            var addingToRoleResult = await userManager.AddToRoleAsync(userEditor, role.Name);
+            var addingToRoleResult = await UserManager.AddToRoleAsync(userEditor, role.Name);
 
             return !addingToRoleResult.Succeeded ? new BaseApiResponse(false, addingToRoleResult.Errors.First().Description) 
                 : new BaseApiResponse(true, $"Право {userIdAndRole.Role.ToDisplayName()} добавлено пользователю {user.Name}");
         }
 
-        public async Task<BaseApiResponse> RemoveRoleFromUserAsync(UserIdAndRole userIdAndRole, UserManager<ApplicationUser> userManager)
+        public async Task<BaseApiResponse> RemoveRoleFromUserAsync(UserIdAndRole userIdAndRole)
         {
             if (!IsAuthenticated)
             {
@@ -117,8 +129,8 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(false, "Пользователь не найден");
             }
 
-            var rolesOfEditUser = await userManager.GetRolesAsync(user);
-            var rolesOfUserEditor = await userManager.GetRolesAsync(userEditor);
+            var rolesOfEditUser = await UserManager.GetRolesAsync(user);
+            var rolesOfUserEditor = await UserManager.GetRolesAsync(userEditor);
 
             var roleOfEditUser = GetHighRoleOfUser(rolesOfEditUser);
             var roleOfUserEditor = GetHighRoleOfUser(rolesOfUserEditor);
@@ -138,14 +150,10 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(false, "У пользователя уже отсутствует данное право");
             }
 
-            var removingToRoleResult = await userManager.RemoveFromRoleAsync(userEditor, role.Name);
+            var removingToRoleResult = await UserManager.RemoveFromRoleAsync(userEditor, role.Name);
 
             return !removingToRoleResult.Succeeded ? new BaseApiResponse(false, removingToRoleResult.Errors.First().Description) 
                 : new BaseApiResponse(true, $"Право {userIdAndRole.Role.ToDisplayName()} удалено у пользователя {user.Name}");
-        }
-
-        public UserRoleWorker(ICrocoAmbientContext context) : base(context)
-        {
         }
     }
 }

@@ -14,11 +14,6 @@ namespace FocLab.Logic.Implementations
             _signInManager = signInManager;
         }
 
-        public void SignOut()
-        {
-            SignOutAsync().GetAwaiter().GetResult();
-        }
-
         public Task SignOutAsync()
         {
             return _signInManager.SignOutAsync();

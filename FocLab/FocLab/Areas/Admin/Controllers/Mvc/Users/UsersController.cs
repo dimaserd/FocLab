@@ -1,14 +1,13 @@
 ﻿using System.Threading.Tasks;
+using Croco.Core.Contract;
 using FocLab.Consts;
 using FocLab.Controllers.Base;
 using FocLab.Extensions;
 using FocLab.Logic.Models.Users;
-using FocLab.Logic.Services;
 using FocLab.Logic.Workers.Users;
-using FocLab.Model.Contexts;
-using FocLab.Model.Enumerations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Zoo.GenericUserInterface.Services;
 
 namespace FocLab.Areas.Admin.Controllers.Mvc.Users
 {
@@ -20,8 +19,15 @@ namespace FocLab.Areas.Admin.Controllers.Mvc.Users
     [Area(AreaConsts.Admin)]
     public class UsersController : BaseController
     {
-        public UsersController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
+        UserSearcher UserSearcher { get; }
+        GenericUserInterfaceBag GenericUserInterfaceBag { get; }
+
+        public UsersController(UserSearcher userSearcher, 
+            ICrocoRequestContextAccessor requestContextAccessor,
+            GenericUserInterfaceBag genericUserInterfaceBag) : base(requestContextAccessor)
         {
+            UserSearcher = userSearcher;
+            GenericUserInterfaceBag = genericUserInterfaceBag;
         }
 
 
@@ -66,11 +72,13 @@ namespace FocLab.Areas.Admin.Controllers.Mvc.Users
         /// Создание пользователя
         /// </summary>
         /// <returns></returns>
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.Rights = MvcExtensions.GetEnumDropdownList(typeof(UserRight));
+            var interfaceModel = await GenericUserInterfaceBag.GetDefaultInterface<CreateUserModel>();
 
-            return View();
+            interfaceModel.Interface.Prefix = "create.";
+
+            return View(interfaceModel);
         }
 
         
@@ -92,8 +100,11 @@ namespace FocLab.Areas.Admin.Controllers.Mvc.Users
             {
                 return RedirectToAction("Index");
             }
-            
-            ViewData["sexes"] = MvcExtensions.GetSexesSelectList(applicationUser);
+
+            var interfaceModel = await GenericUserInterfaceBag.GetDefaultInterface<CreateUserModel>();
+            interfaceModel.Interface.Prefix = "update.";
+
+            ViewData["interfaceModel"] = interfaceModel;
 
             return View(applicationUser);
         }
@@ -114,6 +125,5 @@ namespace FocLab.Areas.Admin.Controllers.Mvc.Users
 
             return View(applicationUser);
         }
-        
     }
 }

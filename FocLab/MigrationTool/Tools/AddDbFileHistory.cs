@@ -1,5 +1,6 @@
-﻿using Croco.Core.Abstractions;
-using Croco.Core.Models;
+﻿using Croco.Core.Contract;
+using Croco.Core.Contract.Models;
+using FocLab.Model.Contexts;
 using FocLab.Model.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,12 +11,12 @@ namespace MigrationTool.Tools
 {
     public class AddDbFileHistory
     {
-        public AddDbFileHistory(ICrocoAmbientContext context)
+        public AddDbFileHistory(ICrocoAmbientContextAccessor contextAccessor)
         {
-            Context = context;
+            Context = contextAccessor.GetAmbientContext<ChemistryDbContext>();
         }
 
-        public ICrocoAmbientContext Context { get; }
+        public ICrocoAmbientContext<ChemistryDbContext> Context { get; }
 
         public async Task<BaseApiResponse> Execute()
         {
@@ -28,30 +29,35 @@ namespace MigrationTool.Tools
 
         public Task<int> GetCountLeftAsync()
         {
-            return Context.RepositoryFactory
+            return Context.DataConnection
+                .GetRepositoryFactory()
                 .GetRepository<DbFile>().Query()
                 .Where(x => !x.History.Any()).CountAsync();
         }
 
         public async Task<int> ExecuteBatch(int count)
         {
-            var filesWithNoHistory = Context.RepositoryFactory.GetRepository<DbFile>().Query().Where(x => !x.History.Any())
+            var repoFactory = Context
+                .DataConnection
+                .GetRepositoryFactory();
+
+            var filesWithNoHistory = repoFactory
+                .GetRepository<DbFile>().Query().Where(x => !x.History.Any())
                 .OrderBy(x => x.Id)
                 .Take(count);
             
             var histories = filesWithNoHistory.Select(x => new ApplicationDbFileHistory
             {
                 Id = Guid.NewGuid().ToString(),
-                Data = x.Data,
+                FileData = x.FileData,
                 FileName = x.FileName,
-                FilePath = x.FilePath,
                 ParentId = x.Id
             }).ToList();
 
-            var repo = Context.RepositoryFactory.GetRepository<ApplicationDbFileHistory>();
+            var repo = repoFactory.GetRepository<ApplicationDbFileHistory>();
 
             repo.CreateHandled(histories);
-            await Context.RepositoryFactory.SaveChangesAsync();
+            await repoFactory.SaveChangesAsync();
 
             return histories.Count;
         }

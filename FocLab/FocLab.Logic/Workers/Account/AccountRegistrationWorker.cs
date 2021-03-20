@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;
@@ -9,15 +12,23 @@ using FocLab.Logic.Models.Account;
 using FocLab.Logic.Services;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers.Account
 {
     public class AccountRegistrationWorker : FocLabWorker
     {
+        ApplicationUserManager UserManager { get; }
+
+        public AccountRegistrationWorker(ICrocoAmbientContextAccessor context,
+            ICrocoApplication application,
+            ApplicationUserManager userManager) : base(context, application)
+        {
+            UserManager = userManager;
+        }
+
         #region Методы регистрации
-        
+
         /// <summary>
         /// Метод регистрирующий пользователя администратором
         /// </summary>
@@ -25,7 +36,7 @@ namespace FocLab.Logic.Workers.Account
         /// <param name="userManager"></param>
         /// <param name="userRights"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse<ApplicationUserDto>> RegisterUserByAdminAsync(RegisterModel model, UserManager<ApplicationUser> userManager, List<UserRight> userRights)
+        public async Task<BaseApiResponse<ApplicationUserDto>> RegisterUserByAdminAsync(RegisterModel model, List<UserRight> userRights)
         {
             var validation = ValidateModel(model);
             
@@ -44,7 +55,7 @@ namespace FocLab.Logic.Workers.Account
                 return new BaseApiResponse<ApplicationUserDto>(false, "Вы не можете регистрировать пользователей так, как вы не являетесь администратором");
             }
 
-            var result = await RegisterHelpMethodAsync(model, userManager as ApplicationUserManager, userRights);
+            var result = await RegisterHelpMethodAsync(model, userRights);
 
             if (!result.IsSucceeded)
             {
@@ -59,7 +70,7 @@ namespace FocLab.Logic.Workers.Account
             return new BaseApiResponse<ApplicationUserDto>(true, message, user);
         }
 
-        private async Task<BaseApiResponse<ApplicationUserDto>> RegisterHelpMethodAsync(RegisterModel model, ApplicationUserManager userManager, IReadOnlyCollection<UserRight> userRights)
+        private async Task<BaseApiResponse<ApplicationUserDto>> RegisterHelpMethodAsync(RegisterModel model, IReadOnlyCollection<UserRight> userRights)
         {
             var user = new ApplicationUser
             {
@@ -79,14 +90,14 @@ namespace FocLab.Logic.Workers.Account
                 return new BaseApiResponse<ApplicationUserDto>(checkResult.IsSucceeded, checkResult.Message);
             }
 
-            var result = await userManager.CreateAsync(user, model.Password);
+            var result = await UserManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
             {
                 return new BaseApiResponse<ApplicationUserDto>(false, result.Errors.ToList().First().Description);
             }
 
-            userManager.AddRight(user, UserRight.Customer);
+            UserManager.AddRight(user, UserRight.Customer);
 
             if (userRights == null)
             {
@@ -95,7 +106,7 @@ namespace FocLab.Logic.Workers.Account
                 
             foreach (var right in userRights.Where(x => x != UserRight.SuperAdmin && x != UserRight.Admin && x != UserRight.Root && x != UserRight.Seller))
             {
-                userManager.AddRight(user, right);
+                UserManager.AddRight(user, right);
             }
 
             return new BaseApiResponse<ApplicationUserDto>(true, "Пользователь создан", user.ToDto());
@@ -133,10 +144,6 @@ namespace FocLab.Logic.Workers.Account
             }
 
             return new BaseApiResponse(true, "");
-        }
-
-        public AccountRegistrationWorker(ICrocoAmbientContext context) : base(context)
-        {
         }
     }
 }

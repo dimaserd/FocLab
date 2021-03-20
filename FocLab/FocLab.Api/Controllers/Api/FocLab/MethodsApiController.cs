@@ -1,10 +1,8 @@
-﻿using Croco.Core.Models;
+﻿using Croco.Core.Contract;
+using Croco.Core.Contract.Models;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Models.Methods;
-using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryMethods;
-using FocLab.Model.Contexts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -13,11 +11,13 @@ namespace FocLab.Api.Controllers.Api.FocLab
     [Route("Api/Chemistry/Methods")]
     public class MethodsApiController : BaseApiController
     {
-        public MethodsApiController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, httpContextAccessor)
-        {
-        }
+        private ChemistryMethodsWorker ChemistryMethodsWorker { get; }
 
-        private ChemistryMethodsWorker ChemistryMethodsWorker => new ChemistryMethodsWorker(AmbientContext);
+        public MethodsApiController(ICrocoRequestContextAccessor requestContextAccessor,
+            ChemistryMethodsWorker chemistryMethodsWorker) : base(requestContextAccessor)
+        {
+            ChemistryMethodsWorker = chemistryMethodsWorker;
+        }
 
         /// <summary>
         /// Создать задание

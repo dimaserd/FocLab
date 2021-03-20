@@ -2,7 +2,7 @@
 
 namespace FocLab.Logic.Settings.Models
 {
-    public class AccountSettingsModel : ICommonSetting<AccountSettingsModel>
+    public class AccountSettingsModel
     {
         public bool IsLoginEnabledForUsersWhoDidNotConfirmEmail { get; set; }
 
@@ -12,16 +12,12 @@ namespace FocLab.Logic.Settings.Models
 
         public ConfirmLoginType ConfirmLogin { get; set; }
 
-        public AccountSettingsModel GetDefault()
+        public AccountSettingsModel()
         {
-            return new AccountSettingsModel
-            {
-                IsLoginEnabledForUsersWhoDidNotConfirmEmail = true,
-                ShouldUsersConfirmEmail = false,
-                RegistrationEnabled = true,
-                ConfirmLogin = ConfirmLoginType.None
-            };
+            IsLoginEnabledForUsersWhoDidNotConfirmEmail = true;
+            ShouldUsersConfirmEmail = false;
+            RegistrationEnabled = true;
+            ConfirmLogin = ConfirmLoginType.None;
         }
-
     }
 }

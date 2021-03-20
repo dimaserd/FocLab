@@ -3,12 +3,7 @@
 @{
     ViewBag.Title = "Редактирование задания";
 
-    var modelPrefix = "create.";
-
-    var builder = new GenericUserInterfaceModelBuilder<CreateOrUpdateDayTask>(modelPrefix, GenericUserInterfaceValueProvider.Create(Model));
-
-    builder
-        .HiddenFor(x => x.Id);
+    var interfaceModel = ViewData["interfaceModel"] as GenerateGenericUserInterfaceModel;
 }
 
 
@@ -38,7 +33,7 @@
     </div>
 </div>
 
-@await Html.RenderGenericUserInterfaceAsync(builder.Result)
+@await Html.RenderGenericUserInterfaceAsync(interfaceModel)
 
 <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions">
@@ -51,7 +46,7 @@
 
     <script>
         $(".action-btn").on("click", () => {
-            const data = TryForm.GetDataForFormByModelPrefix("@modelPrefix");;
+            const data = TryForm.GetDataForFormByModelPrefix("@interfaceModel.Interface.Prefix");;
 
             Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, resp => {
                 if (resp.IsSucceeded) {

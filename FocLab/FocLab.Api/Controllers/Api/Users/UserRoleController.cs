@@ -1,11 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Models;
-using FocLab.Api.Controllers.Base;
+using Croco.Core.Contract.Models;
 using FocLab.Logic.Models.Users;
-using FocLab.Logic.Services;
 using FocLab.Logic.Workers.Users;
-using FocLab.Model.Contexts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api.Users
@@ -15,14 +11,15 @@ namespace FocLab.Api.Controllers.Api.Users
     /// Контроллер предоставляющий методы для работы c ролями пользователей 
     /// </summary>
     [Route("Api/User/Role")]
-    public class UserRoleController: BaseApiController
+    public class UserRoleController: Controller
     {
-        /// <inheritdoc />
-        public UserRoleController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, httpContextAccessor)
-        {
-        }
+        private UserRoleWorker UserRoleWorker { get; }
 
-        private UserRoleWorker UserRoleWorker => new UserRoleWorker(AmbientContext);
+        /// <inheritdoc />
+        public UserRoleController(UserRoleWorker userRoleWorker)
+        {
+            UserRoleWorker = userRoleWorker;
+        }
 
         /// <summary>
         /// Добавление роли
@@ -31,7 +28,7 @@ namespace FocLab.Api.Controllers.Api.Users
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         public Task<BaseApiResponse> Add([FromForm]UserIdAndRole model)
         {
-            return UserRoleWorker.AddUserToRoleAsync(model, UserManager);
+            return UserRoleWorker.AddUserToRoleAsync(model);
         }
 
         /// <summary>
@@ -41,7 +38,7 @@ namespace FocLab.Api.Controllers.Api.Users
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         public Task<BaseApiResponse> Remove([FromForm]UserIdAndRole model)
         {
-            return UserRoleWorker.RemoveRoleFromUserAsync(model, UserManager);
+            return UserRoleWorker.RemoveRoleFromUserAsync(model);
         }
     }
 }

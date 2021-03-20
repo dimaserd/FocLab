@@ -1,15 +1,12 @@
 ﻿namespace FocLab.Logic.Settings.Models
 {
-    public class SettingsModel : ICommonSetting<SettingsModel>
+    public class SettingsModel
     {
         public string ApplicationName { get; set; }
 
-        public SettingsModel GetDefault()
+        public SettingsModel()
         {
-            return new SettingsModel
-            {
-                ApplicationName = "Название приложения не установлено"
-            };
+            ApplicationName = "Название приложения не установлено";
         }
     }
 }

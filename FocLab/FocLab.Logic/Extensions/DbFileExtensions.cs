@@ -1,6 +1,9 @@
 ﻿using System.IO;
 using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
+using Croco.Core.Contract.Files;
+using Croco.Core.Contract.Models;
+using Croco.Core.Logic.Files.Models;
 using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Settings.Statics;
@@ -49,9 +52,8 @@ namespace FocLab.Logic.Extensions
             return new BaseApiResponse<DbFile>(checkResult.IsSucceeded, checkResult.Message, new DbFile
             {
                 Id = 0,
-                Data = file.Data,
-                FileName = file.FileName,
-                FilePath = ""
+                FileData = file.FileData,
+                FileName = file.FileName
             });
         }
 

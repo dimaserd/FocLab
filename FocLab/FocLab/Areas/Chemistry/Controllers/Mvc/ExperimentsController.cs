@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Croco.Core.Application;
+using Croco.Core.Contract;
 using Doc.Logic.Models;
 using Doc.Logic.Workers;
-using FocLab.Areas.Chemistry.Controllers.Base;
 using FocLab.Consts;
-using FocLab.Logic.Services;
+using FocLab.Controllers.Base;
+using FocLab.Logic.Models.Experiments;
 using FocLab.Logic.Workers.ChemistryTaskExperiments;
-using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Zoo.GenericUserInterface.Services;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
@@ -18,11 +19,22 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     /// Контроллер содержащий методы для работы с экспериментами
     /// </summary>
     [Area(AreaConsts.Chemistry), Authorize]
-    public class ExperimentsController : BaseFocLabController
+    public class ExperimentsController : BaseController
     {
-        private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker => new ChemistryTaskExperimentsWorker(AmbientContext);
+        ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker { get; }
 
-        ChemistryExperimentDocumentProccessor DocumentProccessor => new ChemistryExperimentDocumentProccessor(AmbientContext);
+        ChemistryExperimentDocumentProccessor DocumentProccessor { get; }
+        GenericUserInterfaceBag InterfacesBag { get; }
+
+        public ExperimentsController(ChemistryTaskExperimentsWorker chemistryTaskExperimentsWorker,
+            ChemistryExperimentDocumentProccessor documentProccessor,
+            GenericUserInterfaceBag interfacesBag,
+            ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
+        {
+            ChemistryTaskExperimentsWorker = chemistryTaskExperimentsWorker;
+            DocumentProccessor = documentProccessor;
+            InterfacesBag = interfacesBag;
+        }
 
         /// <summary>
         /// Получить эксперименты
@@ -67,9 +79,11 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         /// Создание эксперимента к заданию
         /// </summary>
         /// <returns></returns>
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            var model = await InterfacesBag.GetDefaultInterface<CreateExperiment>();
+            model.Interface.Prefix = "create.";
+            return View(model);
         }
 
         public async Task<FileResult> Print(string id)
@@ -90,10 +104,6 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
             }
 
             return PhysicalFileWithMimeType(filePath, fileName);
-        }
-
-        public ExperimentsController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
-        {
         }
     }
 }

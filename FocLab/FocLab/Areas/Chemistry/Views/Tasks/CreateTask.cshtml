@@ -4,22 +4,15 @@
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Создать задание";
 
-    var fileMethodsSelectList = ViewData["fileMethodsSelectList"] as List<SelectListItem>;
+    var fileMethodsSelectList = ViewData["fileMethodsSelectList"] as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>;
 
-    var usersSelectList = ViewData["usersSelectList"] as List<SelectListItem>;
+    var usersSelectList = ViewData["usersSelectList"] as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>;
 
     const string NotSelectedValue = "[Not_Selected]";
 
     var s = fileMethodsSelectList.FirstOrDefault(x => string.IsNullOrWhiteSpace(x.Value));
 
     s.Value = NotSelectedValue;
-
-    var modelPrefix = "create.";
-
-    var builder = new GenericUserInterfaceModelBuilder<ChemistryCreateTask>(modelPrefix);
-
-    builder
-        .HiddenFor(x => x.AdminId);
 }
 
 <div style="height:20px">

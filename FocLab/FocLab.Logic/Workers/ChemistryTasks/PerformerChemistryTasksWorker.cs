@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
 using FocLab.Logic.Abstractions;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Tasks;
@@ -16,6 +19,23 @@ namespace FocLab.Logic.Workers.ChemistryTasks
     /// </summary>
     public class PerformerChemistryTasksWorker : FocLabWorker
     {
+        IUserMailSender MailSender { get; }
+        UserSearcher UserSearcher { get; }
+
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="application"></param>
+        public PerformerChemistryTasksWorker(ICrocoAmbientContextAccessor context,
+            ICrocoApplication application,
+            IUserMailSender mailSender,
+            UserSearcher userSearcher) : base(context, application)
+        {
+            MailSender = mailSender;
+            UserSearcher = userSearcher;
+        }
+
         /// <summary>
         /// Обновить задание
         /// </summary>
@@ -65,9 +85,8 @@ namespace FocLab.Logic.Workers.ChemistryTasks
         /// Выполнить задание
         /// </summary>
         /// <param name="model"></param>
-        /// <param name="mailSender"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> PerformTaskAsync(PerformTaskModel model, IUserMailSender mailSender)
+        public async Task<BaseApiResponse> PerformTaskAsync(PerformTaskModel model)
         {
             if(model == null)
             {
@@ -100,7 +119,6 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 return new BaseApiResponse(false, "Задание уже является отмененным");
             }
 
-            
             if (!task.PerformedDate.HasValue)
             {
                 task.PerformedDate = DateTime.Now;
@@ -109,17 +127,13 @@ namespace FocLab.Logic.Workers.ChemistryTasks
 
                 await SaveChangesAsync();
 
-                var domainName = Application.DomainName;
+                var domainName = (Application as FocLabWebApplication).ApplicationUrl;
 
-                var searcher = new UserSearcher(AmbientContext);
+                var user = await UserSearcher.GetUserByEmailAsync(ChemistryAdminSettings.AdminEmail);
 
-                var user = await searcher.GetUserByEmailAsync(ChemistryAdminSettings.AdminEmail);
+                var meUser = await Query<ApplicationUser>().FirstOrDefaultAsync(x => x.Id == UserId);
 
-                var myId = UserId;
-
-                var meUser = await Query<ApplicationUser>().FirstOrDefaultAsync(x => x.Id == myId);
-
-                await mailSender.SendMailUnSafeAsync(new SendMailMessage
+                await MailSender.SendMailUnSafeAsync(new SendMailMessage
                 {
                     Body = $"<p>Пользователь {meUser.Email} завершил <a href='{domainName}/Chemistry/Chemistry/Task/{task.Id}'>задание</a>.</p>",
                     UserId = user.Id,
@@ -134,14 +148,6 @@ namespace FocLab.Logic.Workers.ChemistryTasks
             repo.UpdateHandled(task);
 
             return await TrySaveChangesAndReturnResultAsync("Вы пометили данное задание как не выполненное");
-        }
-
-        /// <summary>
-        /// Конструктор
-        /// </summary>
-        /// <param name="contextWrapper"></param>
-        public PerformerChemistryTasksWorker(ICrocoAmbientContext context) : base(context)
-        {
         }
     }
 }

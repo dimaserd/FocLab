@@ -1,7 +1,6 @@
-﻿using FocLab.Controllers.Base;
-using FocLab.Logic.Services;
+﻿using Croco.Core.Contract;
+using FocLab.Controllers.Base;
 using FocLab.Logic.Settings.Statics;
-using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Controllers.Mvc.Content
@@ -12,7 +11,7 @@ namespace FocLab.Controllers.Mvc.Content
     /// </summary>
     public class HomeController : BaseController
     {
-        public HomeController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
+        public HomeController(ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
         {
         }
 

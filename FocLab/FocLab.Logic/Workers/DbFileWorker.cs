@@ -54,7 +54,7 @@ namespace FocLab.Logic.Workers
         public async Task<BaseApiResponse<int[]>> UploadFilesAsync(IEnumerable<IFileData> httpFiles)
         {
             //Добавляем функцию отложенной загрузки файлов
-            var arrayOfIds = await FileManager.UploadFilesAsync(httpFiles.Where(x => x.IsGoodFile()), x => Task.CompletedTask);
+            var arrayOfIds = await FileManager.UploadFilesAsync(httpFiles.Where(x => x.IsGoodFile()));
 
             if (arrayOfIds.Length == 0)
             {
@@ -62,11 +62,6 @@ namespace FocLab.Logic.Workers
             }
 
             return new BaseApiResponse<int[]>(true, "Файлы загружены на сервер", arrayOfIds);
-        }
-
-        public Task<DbFileIntIdModelNoData[]> GetFilesThatAreNotOnLocalMachineAsync()
-        {
-            return FileManager.LocalStorageService.GetFilesThatAreNotOnLocalMachine();
         }
     }
 }

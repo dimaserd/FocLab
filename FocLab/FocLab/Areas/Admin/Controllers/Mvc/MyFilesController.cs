@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Models.Search;
 using FocLab.Controllers.Base;
-using FocLab.Logic.Services;
 using FocLab.Logic.Workers;
 using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Authorization;
@@ -17,14 +18,16 @@ namespace FocLab.Areas.Admin.Controllers.Mvc
     [Area("Admin")]
     public class MyFilesController : BaseController
     {
-        public MyFilesController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
+        private DbFileWorker DbFileWorker { get; }
+        private ChemistryDbContext DbContext { get; }
+
+        public MyFilesController(DbFileWorker dbFileWorker, 
+            ICrocoRequestContextAccessor requestContextAccessor,
+            ChemistryDbContext dbContext) : base(requestContextAccessor)
         {
+            DbFileWorker = dbFileWorker;
+            DbContext = dbContext;
         }
-
-        private DbFileWorker DbFileWorker => new DbFileWorker(AmbientContext);
-
-
-
 
         /// <summary>
         /// Возвращает список файлов
@@ -61,7 +64,7 @@ namespace FocLab.Areas.Admin.Controllers.Mvc
         [HttpGet]
         public async Task<IActionResult> ReloadFile(int id)
         {
-            var file = await Context.DbFiles.FirstOrDefaultAsync(x => x.Id == id);
+            var file = await DbContext.DbFiles.FirstOrDefaultAsync(x => x.Id == id);
 
             if(file == null)
             {
@@ -70,6 +73,5 @@ namespace FocLab.Areas.Admin.Controllers.Mvc
 
             return View(file);
         }
-
     }
 }

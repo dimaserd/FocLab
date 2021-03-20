@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Models;
-using Croco.Core.Logic.Models.Files;
-using FocLab.Api.Controllers.Base;
 using FocLab.Api.Models;
 using FocLab.Logic.Extensions;
-using FocLab.Logic.Services;
 using FocLab.Logic.Workers;
-using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Croco.Core.Contract.Models;
+using Croco.Core.Logic.Files.Models;
+using Croco.Core.Logic.Files.Abstractions;
 
 namespace FocLab.Api.Controllers.Api
 {
@@ -20,15 +18,17 @@ namespace FocLab.Api.Controllers.Api
     /// Апи-контроллер предоставляющий методы для работы с локальными файлами
     /// </summary>
     [Route("Api/FilesDirectory")]
-    public class FilesController : BaseApiController
+    public class FilesController : ControllerBase
     {
+        DbFileWorker FileWorker { get; }
+        ILocalFileCopyService LocalFileCopyService { get; }
+
         /// <inheritdoc />
-        public FilesController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, httpContextAccessor)
+        public FilesController(DbFileWorker dbFileWorker, ILocalFileCopyService localFileCopyService)
         {
+            FileWorker = dbFileWorker;
+            LocalFileCopyService = localFileCopyService;
         }
-
-        private DbFileWorker FileWorker => new DbFileWorker(AmbientContext);
-
 
         /// <summary>
         /// Перезагрузить содержимое файла
@@ -78,7 +78,7 @@ namespace FocLab.Api.Controllers.Api
         [HttpPost("Local/GetThatAreNotOnMachine")]
         public Task<DbFileIntIdModelNoData[]> GetNotCopiedFileIds()
         {
-            return FileWorker.GetFilesThatAreNotOnLocalMachineAsync();
+            return LocalFileCopyService.GetFilesThatAreNotOnLocalMachine();
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace FocLab.Api.Controllers.Api
         [HttpPost("Local/CopySomeFiles")]
         public Task<BaseApiResponse> CopyFilesThatAreNotOnMachine(int count)
         {
-            return FileWorker.BaseManager.LocalStorageService.MakeLocalCopies(count, true);
+            return LocalFileCopyService.MakeLocalCopies(count, true);
         }
     }
 }

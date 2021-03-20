@@ -1,15 +1,13 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Models;
-using Croco.Core.Search.Models;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Models;
+using Croco.Core.Contract.Models.Search;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Models.Users;
-using FocLab.Logic.Services;
 using FocLab.Logic.Workers.Account;
 using FocLab.Logic.Workers.Users;
-using FocLab.Model.Contexts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api.Users
@@ -21,17 +19,25 @@ namespace FocLab.Api.Controllers.Api.Users
     [Route("Api/User")]
     public class UserController : BaseApiController
     {
+        private UserSearcher UserSearcher { get; }
+
+        private UserWorker UserWorker { get; }
+        private AccountRegistrationWorker AccountRegistrationWorker { get; }
+
+
         /// <inheritdoc />
-        public UserController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, httpContextAccessor)
+        public UserController(ICrocoRequestContextAccessor requestContextAccessor,
+            UserSearcher userSearcher,
+            UserWorker userWorker,
+            AccountRegistrationWorker accountRegistrationWorker) : base(requestContextAccessor)
         {
+            UserSearcher = userSearcher;
+            UserWorker = userWorker;
+            AccountRegistrationWorker = accountRegistrationWorker;
         }
 
-        private UserSearcher UserSearcher => new UserSearcher(AmbientContext);
 
-        private UserWorker UserWorker => new UserWorker(AmbientContext);
-
-        private AccountRegistrationWorker AccountRegistrationWorker => new AccountRegistrationWorker(AmbientContext);
-
+        
         /// <summary>
         /// Получает список всех пользователей
         /// </summary>
@@ -99,10 +105,8 @@ namespace FocLab.Api.Controllers.Api.Users
         [HttpPost("Create")]
         public Task<BaseApiResponse<ApplicationUserDto>> Create([FromForm]CreateUserModel model)
         {
-            return AccountRegistrationWorker.RegisterUserByAdminAsync(model, UserManager, model.Rights);
+            return AccountRegistrationWorker.RegisterUserByAdminAsync(model, model.Rights);
         }
-
-
 
         /// <summary>
         /// Изменение пользователя администратором
@@ -113,7 +117,7 @@ namespace FocLab.Api.Controllers.Api.Users
         [HttpPost("ChangePassword")]
         public Task<BaseApiResponse> ChangePassword([FromForm]ResetPasswordByAdminModel model)
         {
-            return UserWorker.ChangePasswordAsync(model, UserManager);
+            return UserWorker.ChangePasswordAsync(model);
         }
 
         /// <summary>

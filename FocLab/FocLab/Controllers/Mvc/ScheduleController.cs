@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Tms.Logic.Models.Tasker;
 using Tms.Logic.Workers.Tasker;
 using Zoo.GenericUserInterface.Models;
+using Zoo.GenericUserInterface.Services;
 
 namespace FocLab.Controllers.Mvc
 {
@@ -15,13 +16,16 @@ namespace FocLab.Controllers.Mvc
     {
         private UserSearcher UserSearcher { get; }
         private DayTasksWorker TasksWorker { get; }
+        private GenericUserInterfaceBag InterfacesBag { get; }
 
         public ScheduleController(UserSearcher userSearcher,
             DayTasksWorker dayTasksWorker, 
+            GenericUserInterfaceBag interfacesBag,
             ICrocoRequestContextAccessor requestContextAccessor)
             : base(requestContextAccessor)
         {
             TasksWorker = dayTasksWorker;
+            InterfacesBag = interfacesBag;
             UserSearcher = userSearcher;
         }
 
@@ -55,8 +59,10 @@ namespace FocLab.Controllers.Mvc
                 Value = x.Id
             });
 
-            //var history = await CrocoApp.Application.GetAuditService(Connection).GetAuditData<ApplicationDayTask, ApplicationUser>(task);
-
+            var interfaceModel = await InterfacesBag.GetDefaultInterface<CreateOrUpdateDayTask>();
+            interfaceModel.Interface.Prefix = "update.";
+            ViewData["interfaceModel"] = interfaceModel;
+            
             return View(model);
         }
     }

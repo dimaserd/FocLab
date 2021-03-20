@@ -1,4 +1,5 @@
-﻿using Croco.Core.EventSourcing.Implementations.StatusLog.Models;
+﻿using Croco.Core.Audit.Models;
+using Croco.Core.EventSourcing.Implementations.StatusLog.Models;
 using Croco.Core.Model.Entities;
 using Microsoft.EntityFrameworkCore;
 using Zoo.Core;
@@ -12,10 +13,6 @@ namespace FocLab.Model.Abstractions
         DbSet<IntegrationMessageLog> IntegrationMessageLogs { get; set; }
 
         DbSet<IntegrationMessageStatusLog> IntegrationMessageStatusLogs { get; set; }
-
-        DbSet<LoggedApplicationAction> LoggedApplicationActions { get; set; }
-
-        DbSet<LoggedUserInterfaceAction> LoggedUserInterfaceActions { get; set; }
 
         DbSet<RobotTask> RobotTasks { get; set; }
 

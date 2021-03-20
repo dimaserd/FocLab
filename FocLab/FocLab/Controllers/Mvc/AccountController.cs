@@ -4,10 +4,8 @@ using Croco.Core.Contract.Models;
 using FocLab.Controllers.Base;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Models.Account;
-using FocLab.Logic.Services;
 using FocLab.Logic.Workers.Account;
 using FocLab.Logic.Workers.Users;
-using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -172,9 +170,9 @@ namespace FocLab.Controllers.Mvc
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult LogOff()
+        public async Task<IActionResult> LogOff()
         {   
-            AccountLoginWorker.LogOut(User);
+            await AccountLoginWorker.LogOut(User);
             return RedirectToAction("Index", "Home");
         }
 
@@ -184,9 +182,9 @@ namespace FocLab.Controllers.Mvc
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult LogOut()
+        public async Task<IActionResult> LogOut()
         {
-            AccountLoginWorker.LogOut(User);
+            await AccountLoginWorker.LogOut(User);
             return RedirectToAction("Index", "Home");
         }
         
@@ -202,9 +200,6 @@ namespace FocLab.Controllers.Mvc
 
         #endregion
 
-
-        #region Вспомогательные приложения
-
         private IActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
@@ -213,8 +208,5 @@ namespace FocLab.Controllers.Mvc
             }
             return RedirectToAction("Index", "Home");
         }
-
-        
-        #endregion
     }
 }

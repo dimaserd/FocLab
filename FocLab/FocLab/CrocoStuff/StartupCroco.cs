@@ -27,7 +27,7 @@ namespace CrocoShop.CrocoStuff
             Env = env;
         }
 
-        public void SetCrocoApplication(IServiceCollection services)
+        public CrocoApplicationBuilder SetCrocoApplication(IServiceCollection services)
         {
             var memCache = new MemoryCache(new MemoryCacheOptions());
 
@@ -71,6 +71,8 @@ namespace CrocoShop.CrocoStuff
             services.AddSingleton(options);
 
             appBuilder.CheckAndRegisterApplication<FocLabWebApplication>();
+
+            return appBuilder;
         }
     }
 }

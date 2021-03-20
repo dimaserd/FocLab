@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models;
@@ -20,6 +23,21 @@ namespace FocLab.Logic.Workers.ChemistryTasks
     /// </summary>
     public class AdminChemistryTasksWorker : FocLabWorker
     {
+        UserSearcher UserSearcher { get; }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="contextWrapper"></param>
+        public AdminChemistryTasksWorker(ICrocoAmbientContextAccessor context,
+            ICrocoApplication application,
+            UserSearcher userSearcher)
+            : base(context, application)
+        {
+            UserSearcher = userSearcher;
+        }
+
         /// <summary>
         /// Получить список файлов как методы решений
         /// </summary>
@@ -85,10 +103,8 @@ namespace FocLab.Logic.Workers.ChemistryTasks
                 return new BaseApiResponse(false, "У вас недостаточно прав для редактирования задания");
             }
 
-            var searcher = new UserSearcher(AmbientContext);
-
             //нахожу исполнителя
-            var user = await searcher.GetUserByIdAsync(model.PerformerUserId);
+            var user = await UserSearcher.GetUserByIdAsync(model.PerformerUserId);
 
             if (user == null)
             {
@@ -176,15 +192,6 @@ namespace FocLab.Logic.Workers.ChemistryTasks
             repo.UpdateHandled(task);
 
             return await TrySaveChangesAndReturnResultAsync("Задание востановлено");
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// Конструктор
-        /// </summary>
-        /// <param name="contextWrapper"></param>
-        public AdminChemistryTasksWorker(ICrocoAmbientContext context) : base(context)
-        {
         }
     }
 }

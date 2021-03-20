@@ -4,14 +4,9 @@
 @{
     Layout = ChemistrySettings.LayoutPath;
 
-
     ViewBag.Title = "Редактирование реагента";
 
-    var modelPrefix = "updateReagent.";
-
-    var builder = new GenericUserInterfaceModelBuilder<ChemistryReagentNameAndIdModel>(modelPrefix, GenericUserInterfaceValueProvider.Create(Model));
-        
-    builder = builder.HiddenFor(x => x.Id);
+    var interfaceDefinition = ViewData["interfaceDefinition"] as GenerateGenericUserInterfaceModel;
 }
 
 <div class="form-group m-form__group m--margin-top-10">
@@ -20,7 +15,7 @@
     </div>
 </div>
 
-@await Html.RenderGenericUserInterfaceAsync(builder.Result)
+@await Html.RenderGenericUserInterfaceAsync(interfaceDefinition)
 
 <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions m-form__actions">
@@ -110,8 +105,8 @@
 @section Scripts {
     <script>
         $(".btn-reagent-create").on("click", () => {
-            
-            const data = TryForm.GetDataForFormByModelPrefix("@modelPrefix");
+
+            const data = TryForm.GetDataForFormByModelPrefix("@interfaceDefinition.Interface.Prefix");
 
             Requester.SendPostRequestWithAnimation("/Api/Chemistry/Reagents/CreateOrUpdate", data, x => {
                 if (x.IsSucceeded) {

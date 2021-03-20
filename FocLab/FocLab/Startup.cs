@@ -13,22 +13,26 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using FocLab.Configuration.Hangfire;
 using FocLab.Configuration.Swagger;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CrocoShop.CrocoStuff;
-using Microsoft.Extensions.Hosting;
 using FocLab.Api;
 using FocLab.Logic.Extensions;
 using FocLab.Abstractions;
+using FocLab.Logic.Implementations;
+using FocLab.Logic.Abstractions;
+using Croco.Core.Application;
+using Zoo.GenericUserInterface.Models.Overridings;
+using FocLab.InterfaceDefinitions;
 
 namespace FocLab
 {
     public class Startup
     {
         StartupCroco Croco { get; }
+        CrocoApplicationBuilder ApplicationBuilder { get; set; }
         IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
@@ -96,18 +100,26 @@ namespace FocLab
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<ILoggerManager, ApplicationLoggerManager>();
+            services.AddSingleton<IUserMailSender, FocLabEmailSender>();
 
             services.AddMvc(options =>
             {
                 options.Filters.Add(new CrocoContextSetterFilter(x => x.GetUserId()));
             });
-            Croco.SetCrocoApplication(services);
+            ApplicationBuilder = Croco.SetCrocoApplication(services);
+
+            new GenericUserInterfaceBagBuilder(services)
+                .AddDefaultDefinition<CreateUserModelUserInterfaceDefinition>()
+                .AddDefaultDefinition<EditApplicationUserInterfaceDefinition>()
+                .AddDefaultDefinition<CreateOrUpdateDayTaskInterfaceDefinition>()
+                .AddDefaultDefinition<CreateExperimentInterfaceDefinition>()
+                .Build();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.EnvironmentName == "Development")
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -153,8 +165,7 @@ namespace FocLab
             });
 
             app.ConfigureExceptionHandler();
-
-            HangfireConfiguration.AddHangfire(app, false);
+            ApplicationBuilder.SetAppAndActivator(app.ApplicationServices);
         }
 
         private static void ConfigureJsonSerializer(JsonSerializerOptions settings)
