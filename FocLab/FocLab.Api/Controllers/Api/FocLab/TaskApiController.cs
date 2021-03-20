@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Croco.Core.Contract;
 using Croco.Core.Contract.Models;
-using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Workers.ChemistryTasks;
@@ -15,7 +13,7 @@ namespace FocLab.Api.Controllers.Api.FocLab
     /// Апи контроллер предоставляющий методы для работы с химическими заданиями
     /// </summary>
     [Route("Api/Chemistry/Tasks")]
-    public class TaskApiController : BaseApiController
+    public class TaskApiController : Controller
     {
         private AdminChemistryTasksWorker AdminChemistryTasksWorker { get; }
 
@@ -23,11 +21,10 @@ namespace FocLab.Api.Controllers.Api.FocLab
 
         private ChemistryTasksWorker ChemistryTasksWorker { get; }
 
-        public TaskApiController(ICrocoRequestContextAccessor requestContextAccessor,
+        public TaskApiController(
             AdminChemistryTasksWorker adminChemistryTasksWorker,
             PerformerChemistryTasksWorker performerChemistryTasksWorker,
             ChemistryTasksWorker chemistryTasksWorker)
-            : base(requestContextAccessor)
         {
             AdminChemistryTasksWorker = adminChemistryTasksWorker;
             PerformerChemistryTasksWorker = performerChemistryTasksWorker;

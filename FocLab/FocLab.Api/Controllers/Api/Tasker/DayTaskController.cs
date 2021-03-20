@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Croco.Core.Contract;
 using Croco.Core.Contract.Models;
-using FocLab.Api.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using Tms.Logic.Models.Tasker;
 using Tms.Logic.Workers.Tasker;
@@ -14,13 +12,12 @@ namespace FocLab.Api.Controllers.Api.Tasker
     /// Предоставляет методы для создания и редактирования заданий
     /// </summary>
     [Route("Api/DayTask")]
-    public class DayTaskController : BaseApiController
+    public class DayTaskController : Controller
     {
         private DayTasksWorker DayTaskWorker { get; }
 
         /// <inheritdoc />
-        public DayTaskController(DayTasksWorker dayTasksWorker,
-            ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
+        public DayTaskController(DayTasksWorker dayTasksWorker)
         {
             DayTaskWorker = dayTasksWorker;
         }

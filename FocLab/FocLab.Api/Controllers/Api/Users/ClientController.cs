@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Contract;
 using Croco.Core.Contract.Models;
-using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Workers.Users;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +11,12 @@ namespace FocLab.Api.Controllers.Api.Users
     /// Контроллер предоставляющий методы для работы c пользователем 
     /// </summary>
     [Route("Api/Client")]
-    public class ClientController : BaseApiController
+    public class ClientController : Controller
     {
         private ClientWorker ClientWorker { get; }
 
-        public ClientController(ICrocoRequestContextAccessor requestContextAccessor,
-            ClientWorker clientWorker) : base(requestContextAccessor)
+        public ClientController(
+            ClientWorker clientWorker)
         {
             ClientWorker = clientWorker;
         }
@@ -29,7 +27,7 @@ namespace FocLab.Api.Controllers.Api.Users
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost(nameof(Update))]
+        [HttpPost("Update")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         public Task<BaseApiResponse> Update([FromForm]EditClient model)
         {

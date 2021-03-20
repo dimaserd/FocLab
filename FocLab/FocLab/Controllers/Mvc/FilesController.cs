@@ -9,6 +9,7 @@ using Croco.Core.Model.Entities.Application;
 using FocLab.Controllers.Base;
 using FocLab.Logic.Implementations;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace FocLab.Controllers.Mvc
 {
@@ -23,7 +24,8 @@ namespace FocLab.Controllers.Mvc
 
         public FilesController(IDbFileManager fileManager,
             ICrocoFileCopyWorker fileCopyWorker,
-            ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
+            ICrocoRequestContextAccessor requestContextAccessor,
+            IActionContextAccessor contextAccessor) : base(requestContextAccessor, contextAccessor)
         {
             FileManager = fileManager;
             FileCopyWorker = fileCopyWorker;

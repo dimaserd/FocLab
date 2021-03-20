@@ -15,14 +15,14 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
     /// Контроллер для реагентов
     /// </summary>
     [Area(AreaConsts.Chemistry), Authorize]
-    public class ReagentsController : BaseController
+    public class ReagentsController : Controller
     {
         private ChemistryReagentsWorker ChemistryReagentsWorker { get; }
         private GenericUserInterfaceBag InterfaceBag { get; }
 
-        public ReagentsController(ICrocoRequestContextAccessor requestContextAccessor,
+        public ReagentsController(
             ChemistryReagentsWorker chemistryReagentsWorker,
-            GenericUserInterfaceBag interfaceBag) : base(requestContextAccessor)
+            GenericUserInterfaceBag interfaceBag)
         {
             ChemistryReagentsWorker = chemistryReagentsWorker;
             InterfaceBag = interfaceBag;

@@ -1,6 +1,4 @@
-﻿using Croco.Core.Contract;
-using Croco.Core.Contract.Models;
-using FocLab.Api.Controllers.Base;
+﻿using Croco.Core.Contract.Models;
 using FocLab.Logic.Models.Methods;
 using FocLab.Logic.Workers.ChemistryMethods;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +7,11 @@ using System.Threading.Tasks;
 namespace FocLab.Api.Controllers.Api.FocLab
 {
     [Route("Api/Chemistry/Methods")]
-    public class MethodsApiController : BaseApiController
+    public class MethodsApiController : Controller
     {
         private ChemistryMethodsWorker ChemistryMethodsWorker { get; }
 
-        public MethodsApiController(ICrocoRequestContextAccessor requestContextAccessor,
-            ChemistryMethodsWorker chemistryMethodsWorker) : base(requestContextAccessor)
+        public MethodsApiController(ChemistryMethodsWorker chemistryMethodsWorker)
         {
             ChemistryMethodsWorker = chemistryMethodsWorker;
         }

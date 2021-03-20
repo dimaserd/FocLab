@@ -1,6 +1,7 @@
 ﻿using Croco.Core.Contract;
 using FocLab.Api.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace FocLab.Controllers.Base
 {
@@ -10,7 +11,9 @@ namespace FocLab.Controllers.Base
     /// </summary>
     public class BaseController : BaseApiController
     {
-        public BaseController(ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
+        public BaseController(ICrocoRequestContextAccessor requestContextAccessor,
+            IActionContextAccessor actionContextAccessor) : 
+            base(requestContextAccessor, actionContextAccessor)
         {
         }
 

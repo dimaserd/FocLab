@@ -26,6 +26,7 @@ using FocLab.Logic.Abstractions;
 using Croco.Core.Application;
 using Zoo.GenericUserInterface.Models.Overridings;
 using FocLab.InterfaceDefinitions;
+using FocLab.Logic;
 
 namespace FocLab
 {
@@ -104,9 +105,11 @@ namespace FocLab
 
             services.AddMvc(options =>
             {
-                options.Filters.Add(new CrocoContextSetterFilter(x => x.GetUserId()));
+                options.Filters.Add<CrocoContextSetterFilter>(int.MinValue);
             });
             ApplicationBuilder = Croco.SetCrocoApplication(services);
+
+            LogicRegistrator.Register(services);
 
             new GenericUserInterfaceBagBuilder(services)
                 .AddDefaultDefinition<CreateUserModelUserInterfaceDefinition>()

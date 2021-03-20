@@ -16,7 +16,7 @@ namespace FocLab.Controllers.Mvc
     /// </summary>
 
     [Authorize]
-    public class AccountController : BaseController
+    public class AccountController : Controller
     {
         AccountLoginWorker AccountLoginWorker { get; }
         AccountManager AccountManager { get; }
@@ -26,8 +26,7 @@ namespace FocLab.Controllers.Mvc
         public AccountController(AccountLoginWorker accountLoginWorker,
             AccountManager accountManager,
             UserSearcher userSearcher,
-            ICrocoRequestContextAccessor requestContextAccessor,
-            UserWorker userWorker) : base(requestContextAccessor)
+            UserWorker userWorker)
         {
             AccountLoginWorker = accountLoginWorker;
             AccountManager = accountManager;

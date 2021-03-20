@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Contract;
 using Croco.Core.Contract.Models;
 using Croco.Core.Contract.Models.Search;
-using FocLab.Api.Controllers.Base;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Models.Users;
@@ -17,7 +15,7 @@ namespace FocLab.Api.Controllers.Api.Users
     /// Предоставляет методы для работы с пользователями
     /// </summary>s
     [Route("Api/User")]
-    public class UserController : BaseApiController
+    public class UserController : Controller
     {
         private UserSearcher UserSearcher { get; }
 
@@ -26,10 +24,10 @@ namespace FocLab.Api.Controllers.Api.Users
 
 
         /// <inheritdoc />
-        public UserController(ICrocoRequestContextAccessor requestContextAccessor,
+        public UserController(
             UserSearcher userSearcher,
             UserWorker userWorker,
-            AccountRegistrationWorker accountRegistrationWorker) : base(requestContextAccessor)
+            AccountRegistrationWorker accountRegistrationWorker)
         {
             UserSearcher = userSearcher;
             UserWorker = userWorker;

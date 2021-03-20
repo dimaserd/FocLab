@@ -3,6 +3,7 @@ using Croco.Core.Contract;
 using FocLab.Controllers.Base;
 using FocLab.Logic.Workers.Users;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace FocLab.Controllers.Mvc
 {
@@ -15,7 +16,8 @@ namespace FocLab.Controllers.Mvc
         ClientWorker ClientWorker { get; }
 
         public ClientController(ICrocoRequestContextAccessor requestContextAccessor,
-            ClientWorker clientWorker) : base(requestContextAccessor)
+            IActionContextAccessor actionContextAccessor,
+            ClientWorker clientWorker) : base(requestContextAccessor, actionContextAccessor)
         {
             ClientWorker = clientWorker;
         }

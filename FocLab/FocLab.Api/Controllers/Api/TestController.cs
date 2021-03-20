@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Croco.Core.Contract;
-using FocLab.Api.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api
@@ -11,13 +9,8 @@ namespace FocLab.Api.Controllers.Api
     /// Тестовый апи-контроллер для интеграционного тестирования методов
     /// </summary>
     [Route("Api/Test")]
-    public class TestController : BaseApiController
+    public class TestController : Controller
     {
-        /// <inheritdoc />
-        public TestController(ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
-        {
-        }
-
         /// <summary>
         /// Метод прокси тест
         /// </summary>

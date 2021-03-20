@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Contract;
 using Croco.Core.Contract.Models;
-using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.Experiments;
 using FocLab.Logic.Workers.ChemistryTaskExperiments;
@@ -13,12 +11,12 @@ namespace FocLab.Api.Controllers.Api.FocLab
     /// Апи контроллер содержащий методы для работы с экспериментами
     /// </summary>
     [Route("Api/Chemistry/Experiments")]
-    public class ExperimentsApiController : BaseApiController
+    public class ExperimentsApiController : Controller
     {
         private ChemistryTaskExperimentsWorker ChemistryTaskExperimentsWorker { get; }
 
-        public ExperimentsApiController(ICrocoRequestContextAccessor requestContextAccessor,
-            ChemistryTaskExperimentsWorker chemistryTaskExperimentsWorker) : base(requestContextAccessor)
+        public ExperimentsApiController(
+            ChemistryTaskExperimentsWorker chemistryTaskExperimentsWorker)
         {
             ChemistryTaskExperimentsWorker = chemistryTaskExperimentsWorker;
         }

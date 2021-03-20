@@ -1,6 +1,7 @@
 ﻿using Croco.Core.Contract;
 using Croco.Core.Contract.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.StaticFiles;
 
 namespace FocLab.Api.Controllers.Base
@@ -13,14 +14,16 @@ namespace FocLab.Api.Controllers.Base
     {
         ICrocoRequestContext RequestContext { get; }
 
-        public BaseApiController(ICrocoRequestContextAccessor requestContextAccessor)
+        public BaseApiController(ICrocoRequestContextAccessor requestContextAccessor, IActionContextAccessor actionContextAccessor)
         {
             RequestContext = requestContextAccessor.GetRequestContext();
             UserId = RequestContext.UserPrincipal.UserId;
+            var actionContext = actionContextAccessor.ActionContext;
         }
 
         public string UserId { get; }
-        
+        public IActionContextAccessor ActionContextAccessor { get; }
+
         public static string GetMimeMapping(string fileName)
         {
             new FileExtensionContentTypeProvider().TryGetContentType(fileName, out var contentType);

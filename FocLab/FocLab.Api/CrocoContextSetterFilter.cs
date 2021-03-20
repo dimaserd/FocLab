@@ -1,22 +1,14 @@
 ﻿using Croco.Core.Contract;
 using Croco.Core.Data.Models;
 using Croco.WebApplication.Models;
+using FocLab.Logic.Extensions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Security.Principal;
 
 namespace FocLab.Api
 {
     public class CrocoContextSetterFilter : IActionFilter, IOrderedFilter
     {
-        private readonly Func<IPrincipal, string> _getUserIdFunc;
-
-        public CrocoContextSetterFilter(Func<IPrincipal, string> getUserIdFunc)
-        {
-            _getUserIdFunc = getUserIdFunc;
-        }
-
         // Setting the order to 0, using IOrderedFilter, to attempt executing
         // this filter *before* the BaseController's OnActionExecuting.
         public int Order => int.MinValue;
@@ -25,7 +17,7 @@ namespace FocLab.Api
         {
             var httpContext = context.HttpContext;
 
-            var principal = new WebAppCrocoPrincipal(httpContext.User, _getUserIdFunc);
+            var principal = new WebAppCrocoPrincipal(httpContext.User, x => x.GetUserId());
             var requestContext = new CrocoRequestContext(principal);
 
             context.HttpContext.RequestServices

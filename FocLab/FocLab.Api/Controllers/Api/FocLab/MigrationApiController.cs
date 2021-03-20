@@ -1,6 +1,4 @@
-﻿using Croco.Core.Contract;
-using Croco.Core.Contract.Models;
-using FocLab.Api.Controllers.Base;
+﻿using Croco.Core.Contract.Models;
 using Microsoft.AspNetCore.Mvc;
 using MigrationTool.Tools;
 using System.Threading.Tasks;
@@ -8,28 +6,24 @@ using System.Threading.Tasks;
 namespace FocLab.Api.Controllers.Api.FocLab
 {
     [Route("Api/Migration")]
-    public class MigrationApiController : BaseApiController
+    public class MigrationApiController : Controller
     {
         AddSnaphotsForEntities AddSnaphotsForEntities { get; }
 
         AddDbFileHistory AddDbFileHistory { get; }
 
-
         public MigrationApiController(AddSnaphotsForEntities addSnaphotsForEntities,
-            AddDbFileHistory addDbFileHistory, ICrocoRequestContextAccessor requestContextAccessor)
-            : base(requestContextAccessor)
+            AddDbFileHistory addDbFileHistory)
         {
             AddSnaphotsForEntities = addSnaphotsForEntities;
             AddDbFileHistory = addDbFileHistory;
         }
-
         
         [HttpPost("MakeSnapshots")]
         public Task<BaseApiResponse> MakeSnapshots()
         {
             return AddSnaphotsForEntities.Execute();
         }
-
 
         [HttpPost("CheckFileHistoryCount")]
         [ProducesDefaultResponseType(typeof(int))]

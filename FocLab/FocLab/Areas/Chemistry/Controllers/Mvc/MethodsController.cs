@@ -1,6 +1,4 @@
-﻿using Croco.Core.Contract;
-using FocLab.Consts;
-using FocLab.Controllers.Base;
+﻿using FocLab.Consts;
 using FocLab.Logic.Workers.ChemistryMethods;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +7,11 @@ using System.Threading.Tasks;
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
     [Area(AreaConsts.Chemistry), Authorize]
-    public class MethodsController : BaseController
+    public class MethodsController : Controller
     {
         private ChemistryMethodsWorker ChemistryMethodsWorker { get; }
 
-        public MethodsController(ChemistryMethodsWorker chemistryMethodsWorker, 
-            ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
+        public MethodsController(ChemistryMethodsWorker chemistryMethodsWorker)
         {
             ChemistryMethodsWorker = chemistryMethodsWorker;
         }

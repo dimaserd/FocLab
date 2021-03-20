@@ -7,6 +7,7 @@ using FocLab.Logic.Models.Users;
 using FocLab.Logic.Workers.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Zoo.GenericUserInterface.Services;
 
 namespace FocLab.Areas.Admin.Controllers.Mvc.Users
@@ -24,7 +25,8 @@ namespace FocLab.Areas.Admin.Controllers.Mvc.Users
 
         public UsersController(UserSearcher userSearcher, 
             ICrocoRequestContextAccessor requestContextAccessor,
-            GenericUserInterfaceBag genericUserInterfaceBag) : base(requestContextAccessor)
+            IActionContextAccessor actionContextAccessor,
+            GenericUserInterfaceBag genericUserInterfaceBag) : base(requestContextAccessor, actionContextAccessor)
         {
             UserSearcher = userSearcher;
             GenericUserInterfaceBag = genericUserInterfaceBag;
@@ -102,6 +104,7 @@ namespace FocLab.Areas.Admin.Controllers.Mvc.Users
             }
 
             var interfaceModel = await GenericUserInterfaceBag.GetDefaultInterface<CreateUserModel>();
+
             interfaceModel.Interface.Prefix = "update.";
 
             ViewData["interfaceModel"] = interfaceModel;

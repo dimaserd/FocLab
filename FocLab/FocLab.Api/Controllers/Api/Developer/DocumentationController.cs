@@ -1,7 +1,5 @@
-﻿using Croco.Core.Contract;
-using Croco.Core.Documentation.Models;
+﻿using Croco.Core.Documentation.Models;
 using Croco.Core.Documentation.Services;
-using FocLab.Api.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api.Developer
@@ -11,12 +9,8 @@ namespace FocLab.Api.Controllers.Api.Developer
     /// Предоставляет автогенерируемую документацию
     /// </summary>
     [Route("Api/Documentation")]
-    public class DocumentationController : BaseApiController
+    public class DocumentationController : Controller
     {
-        public DocumentationController(ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
-        {
-        }
-
         /// <summary>
         /// Получить документацию по классу
         /// </summary>
