@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Croco.Core.Contract;
 using FocLab.Controllers.Base;
-using FocLab.Logic.Services;
 using FocLab.Logic.Workers.Users;
-using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Controllers.Mvc
@@ -13,11 +12,13 @@ namespace FocLab.Controllers.Mvc
     /// </summary>
     public class ClientController : BaseController
     {
-        public ClientController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
-        {
-        }
+        ClientWorker ClientWorker { get; }
 
-        private ClientWorker Worker => new ClientWorker(AmbientContext, x => SignInManager.SignInAsync(x, true));
+        public ClientController(ICrocoRequestContextAccessor requestContextAccessor,
+            ClientWorker clientWorker) : base(requestContextAccessor)
+        {
+            ClientWorker = clientWorker;
+        }
 
         /// <summary>
         /// 
@@ -25,7 +26,7 @@ namespace FocLab.Controllers.Mvc
         /// <returns></returns>
         public async Task<IActionResult> Index()
         {
-            var response = await Worker.GetUserAsync();
+            var response = await ClientWorker.GetUserAsync();
 
             if (!response.IsSucceeded)
             {
@@ -38,7 +39,7 @@ namespace FocLab.Controllers.Mvc
 
         public async Task<IActionResult> Details(string id)
         {
-            var resp = await Worker.GetClientByIdAsync(id);
+            var resp = await ClientWorker.GetClientByIdAsync(id);
 
             return View(resp);
         }

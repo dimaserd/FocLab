@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Croco.Core.Abstractions;
-using Croco.Core.Models;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Resources;
@@ -285,8 +286,9 @@ namespace Tms.Logic.Workers.Tasker
         /// <summary>
         /// Конструктор
         /// </summary>
-        /// <param name="contextWrapper"></param>
-        public DayTasksWorker(ICrocoAmbientContext contextWrapper) : base(contextWrapper)
+        /// <param name="contextAccessor"></param>
+        /// <param name="application"></param>
+        public DayTasksWorker(ICrocoAmbientContextAccessor contextAccessor, ICrocoApplication application) : base(contextAccessor, application)
         {
         }
     }

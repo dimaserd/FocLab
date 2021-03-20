@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
+using Croco.Core.Contract.Models;
 using Croco.WebApplication.Entities;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;
@@ -12,25 +15,35 @@ using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace FocLab.Logic.Workers.Users
 {
     public class UserWorker : FocLabWorker
     {
-        
-        #region Изменение пароля
-        public async Task<BaseApiResponse> ChangePasswordAsync(ResetPasswordByAdminModel model, UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> UserManager { get; }
+        UserSearcher UserSearcher { get; }
+
+        public UserWorker(ICrocoAmbientContextAccessor context,
+            ICrocoApplication application,
+            UserManager<ApplicationUser> userManager,
+            UserSearcher userSearcher) : base(context, application)
         {
-            var user = await userManager.FindByNameAsync(model.Email);
+            UserManager = userManager;
+            UserSearcher = userSearcher;
+        }
+
+        #region Изменение пароля
+        public async Task<BaseApiResponse> ChangePasswordAsync(ResetPasswordByAdminModel model)
+        {
+            var user = await UserManager.FindByNameAsync(model.Email);
 
             if (user == null)
             {
                 return new BaseApiResponse(false, "Пользователь не найден");
             }
 
-            var searcher = new UserSearcher(AmbientContext);
-
-            var userDto = await searcher.GetUserByIdAsync(user.Id);
+            var userDto = await UserSearcher.GetUserByIdAsync(user.Id);
 
             var result = UserRightsWorker.HasRightToEditUser(userDto, User);
 
@@ -39,7 +52,7 @@ namespace FocLab.Logic.Workers.Users
                 return result;
             }
 
-            return await ChangePasswordBaseAsync(model, userManager);
+            return await ChangePasswordBaseAsync(model);
         }
 
         /// <summary>
@@ -48,18 +61,18 @@ namespace FocLab.Logic.Workers.Users
         /// <param name="model"></param>
         /// <param name="userManager"></param>
         /// <returns></returns>
-        public async Task<BaseApiResponse> ChangePasswordBaseAsync(ResetPasswordByAdminModel model, UserManager<ApplicationUser> userManager)
+        public async Task<BaseApiResponse> ChangePasswordBaseAsync(ResetPasswordByAdminModel model)
         {
-            var user = await userManager.FindByNameAsync(model.Email);
+            var user = await UserManager.FindByNameAsync(model.Email);
 
             if (user == null)
             {
                 return new BaseApiResponse(false, "Пользователь не найден");
             }
 
-            var code = await userManager.GeneratePasswordResetTokenAsync(user);
+            var code = await UserManager.GeneratePasswordResetTokenAsync(user);
 
-            var resetResult = await userManager.ResetPasswordAsync(user, code, model.Password);
+            var resetResult = await UserManager.ResetPasswordAsync(user, code, model.Password);
 
             if (!resetResult.Succeeded)
             {
@@ -102,9 +115,7 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(false, "Вы не имеете прав для удаления пользователя");
             }
 
-            var searcher = new UserSearcher(AmbientContext);
-
-            var userToRemove = await searcher.GetUserByIdAsync(model.Id);
+            var userToRemove = await UserSearcher.GetUserByIdAsync(model.Id);
 
             if(userToRemove == null)
             {
@@ -147,9 +158,7 @@ namespace FocLab.Logic.Workers.Users
 
             var userRepo = GetRepository<ApplicationUser>();
 
-            var searcher = new UserSearcher(AmbientContext);
-
-            var userDto = await searcher.GetUserByIdAsync(model.Id);
+            var userDto = await UserSearcher.GetUserByIdAsync(model.Id);
             
             if (userDto == null)
             {
@@ -191,11 +200,10 @@ namespace FocLab.Logic.Workers.Users
 
             if (userToEditEntity == null)
             {
-                Logger.LogException(new Exception("Ужасная ошибка"));
+                Logger.LogError(new Exception("Пользователь не найден"), "Пользователь не найден");
 
                 return new BaseApiResponse(false, "Ужасная ошибка");
             }
-
             
             userToEditEntity.Email = model.Email;
             userToEditEntity.Name = model.Name;
@@ -214,9 +222,7 @@ namespace FocLab.Logic.Workers.Users
         
         public async Task<BaseApiResponse> ActivateOrDeActivateUserAsync(UserActivation model)
         {
-            var searcher = new UserSearcher(AmbientContext);
-
-            var userDto = await searcher.GetUserByIdAsync(model.Id);
+            var userDto = await UserSearcher.GetUserByIdAsync(model.Id);
 
             if(userDto == null)
             {
@@ -245,7 +251,6 @@ namespace FocLab.Logic.Workers.Users
                 {
                     return new BaseApiResponse(false, "Пользователь уже является деактивированным");
                 }
-
                 
                 user.DeActivated = true;
 
@@ -265,10 +270,6 @@ namespace FocLab.Logic.Workers.Users
             userRepo.UpdateHandled(user);
 
             return await TrySaveChangesAndReturnResultAsync("Пользователь активирован");
-        }
-
-        public UserWorker(ICrocoAmbientContext context) : base(context)
-        {
         }
     }
 }

@@ -40,8 +40,6 @@ namespace FocLab.Logic.Workers.ChemistryReagents
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-
-
         /// <summary>
         /// Создание реагента
         /// </summary>
@@ -225,7 +223,7 @@ namespace FocLab.Logic.Workers.ChemistryReagents
         /// Конструктор
         /// </summary>
         /// <param name="contextWrapper"></param>
-        public ChemistryReagentsWorker(ICrocoAmbientContextAccessor context, ICrocoApplication application) : base(context)
+        public ChemistryReagentsWorker(ICrocoAmbientContextAccessor context, ICrocoApplication application) : base(context, application)
         {
         }
     }

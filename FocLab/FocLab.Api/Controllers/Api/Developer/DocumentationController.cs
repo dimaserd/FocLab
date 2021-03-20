@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Croco.Core.Contract;
 using Croco.Core.Documentation.Models;
 using Croco.Core.Documentation.Services;
 using FocLab.Api.Controllers.Base;
-using FocLab.Logic.Services;
-using FocLab.Model.Contexts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api.Developer
@@ -17,25 +13,24 @@ namespace FocLab.Api.Controllers.Api.Developer
     [Route("Api/Documentation")]
     public class DocumentationController : BaseApiController
     {
-        /// <inheritdoc />
-        public DocumentationController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, httpContextAccessor)
+        public DocumentationController(ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
         {
         }
 
         /// <summary>
-        /// Получить документацию по SignalR хабам
+        /// Получить документацию по классу
         /// </summary>
         /// <returns></returns>
         [HttpPost("Class")]
-        [ProducesDefaultResponseType(typeof(CrocoTypeDescription))]
-        public CrocoTypeDescription GetTypeDocumentation(string typeName)
+        [ProducesDefaultResponseType(typeof(CrocoTypeDescriptionResult))]
+        public CrocoTypeDescriptionResult GetTypeDocumentation(string typeName)
         {
             if (typeName == null)
             {
                 return null;
             }
 
-            var type = CrocoTypeSearcher.FindType(typeName);
+            var type = CrocoTypeSearcher.FindFirstTypeByName(typeName);
 
             if (type == null)
             {

@@ -2,7 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Contract;
+using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Models;
+using Croco.Core.Logic.Files.Abstractions;
+using FocLab.Logic.Abstractions;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Resources;
@@ -14,7 +17,17 @@ namespace FocLab.Logic.Workers.Users
 {
     public class ClientWorker : FocLabWorker
     {
-        private readonly Func<ApplicationUser, Task> _refreshUserDataFunc;
+        IDbFileManager FileManager { get; }
+        IClientDataRefresher ClientDataRefresher { get; }
+
+        public ClientWorker(ICrocoAmbientContextAccessor context, 
+            ICrocoApplication application, 
+            IDbFileManager fileManager,
+            IClientDataRefresher clientDataRefresher) : base(context, application)
+        {
+            FileManager = fileManager;
+            ClientDataRefresher = clientDataRefresher;
+        }
 
         public async Task<BaseApiResponse> UpdateClientPhotoAsync(int fileId)
         {
@@ -34,10 +47,7 @@ namespace FocLab.Logic.Workers.Users
                 return new BaseApiResponse(false, ValidationMessages.UserNotFound);
             }
 
-            var fileManager = new ApplicationFileManager(AmbientContext.RepositoryFactory);
-
-            var file = await fileManager.LocalStorageService.GetFilesQueryable().Select(x => new { x.Id, x.FileName })
-                .FirstOrDefaultAsync(x => x.Id == fileId);
+            var file = await FileManager.LocalStorageService.GetFileById(fileId);
 
             if (file == null)
             {
@@ -56,7 +66,7 @@ namespace FocLab.Logic.Workers.Users
             return await TryExecuteCodeAndReturnSuccessfulResultAsync(async () =>
             {
                 await RepositoryFactory.SaveChangesAsync();
-                await _refreshUserDataFunc(userToEditEntity);
+                await ClientDataRefresher.RefreshUserData(userToEditEntity);
 
                 return new BaseApiResponse(true, ClientResource.ClientAvatarUpdated);
             });
@@ -113,7 +123,7 @@ namespace FocLab.Logic.Workers.Users
             {
                 await SaveChangesAsync();
 
-                await _refreshUserDataFunc(userToEditEntity);
+                await ClientDataRefresher.RefreshUserData(userToEditEntity);
 
                 return new BaseApiResponse(true, ClientResource.ClientDataRenewed);
             });
@@ -151,11 +161,6 @@ namespace FocLab.Logic.Workers.Users
                 BirthDate = model.BirthDate,
                 AvatarFileId = model.AvatarFileId
             });
-        }
-
-        public ClientWorker(ICrocoAmbientContextAccessor context, Func<ApplicationUser, Task> refreshUserDataFunc) : base(context)
-        {
-            _refreshUserDataFunc = refreshUserDataFunc;
         }
     }
 }

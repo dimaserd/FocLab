@@ -1,9 +1,7 @@
-﻿using Croco.Core.Abstractions;
-using Croco.Core.Common.Enumerations;
+﻿using Croco.Core.Common.Enumerations;
 using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Models;
-using Croco.Core.Models;
 using Doc.Logic.Entities;
 using Doc.Logic.Models;
 using FocLab.Logic.Models;

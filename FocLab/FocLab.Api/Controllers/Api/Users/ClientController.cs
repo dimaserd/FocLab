@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Models;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Models;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Models.Users;
-using FocLab.Logic.Services;
 using FocLab.Logic.Workers.Users;
-using FocLab.Model.Contexts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api.Users
@@ -17,13 +15,14 @@ namespace FocLab.Api.Controllers.Api.Users
     [Route("Api/Client")]
     public class ClientController : BaseApiController
     {
-        /// <inheritdoc />
-        public ClientController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, httpContextAccessor)
+        private ClientWorker ClientWorker { get; }
+
+        public ClientController(ICrocoRequestContextAccessor requestContextAccessor,
+            ClientWorker clientWorker) : base(requestContextAccessor)
         {
+            ClientWorker = clientWorker;
         }
 
-
-        private ClientWorker ClientWorker => new ClientWorker(AmbientContext, x => SignInManager.SignInAsync(x, true));
 
         /// <summary>
         /// Редактирование пользователя

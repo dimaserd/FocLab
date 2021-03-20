@@ -1,27 +1,30 @@
-﻿using FocLab.Controllers.Base;
-using FocLab.Logic.Services;
-using FocLab.Model.Contexts;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Croco.Core.Contract;
+using FocLab.Controllers.Base;
+using FocLab.Logic.Models.Users;
+using FocLab.Logic.Workers.Users;
 using Microsoft.AspNetCore.Mvc;
 using Tms.Logic.Models.Tasker;
 using Tms.Logic.Workers.Tasker;
-using System.Threading.Tasks;
-using System.Linq;
-using FocLab.Logic.Models.Users;
 using Zoo.GenericUserInterface.Models;
 
 namespace FocLab.Controllers.Mvc
 {
     public class ScheduleController : BaseController
     {
-        public ScheduleController(ChemistryDbContext context, 
-            ApplicationUserManager userManager, 
-            ApplicationSignInManager signInManager,
-            DayTasksWorker dayTasksWorker) : base(context, userManager, signInManager)
+        private UserSearcher UserSearcher { get; }
+        private DayTasksWorker TasksWorker { get; }
+
+        public ScheduleController(UserSearcher userSearcher,
+            DayTasksWorker dayTasksWorker, 
+            ICrocoRequestContextAccessor requestContextAccessor)
+            : base(requestContextAccessor)
         {
             TasksWorker = dayTasksWorker;
+            UserSearcher = userSearcher;
         }
 
-        private DayTasksWorker TasksWorker { get; }
 
         /// <summary>
         /// Показать задания пользователей

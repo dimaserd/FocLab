@@ -4,7 +4,6 @@ using FocLab.Implementations;
 using FocLab.Logic.Services;
 using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
-using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +22,7 @@ using CrocoShop.CrocoStuff;
 using Microsoft.Extensions.Hosting;
 using FocLab.Api;
 using FocLab.Logic.Extensions;
+using FocLab.Abstractions;
 
 namespace FocLab
 {
@@ -95,6 +95,7 @@ namespace FocLab
 
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<ILoggerManager, ApplicationLoggerManager>();
 
             services.AddMvc(options =>
             {
@@ -151,7 +152,7 @@ namespace FocLab
 
             });
 
-            app.ConfigureExceptionHandler(new ApplicationLoggerManager());
+            app.ConfigureExceptionHandler();
 
             HangfireConfiguration.AddHangfire(app, false);
         }

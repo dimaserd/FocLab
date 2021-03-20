@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Croco.Core.Contract;
+using Croco.Core.Contract.Models;
 using Croco.Core.Models;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Services;
@@ -18,13 +20,16 @@ namespace FocLab.Api.Controllers.Api.Tasker
     [Route("Api/DayTask")]
     public class DayTaskController : BaseApiController
     {
+        private DayTasksWorker DayTaskWorker { get; }
+
         /// <inheritdoc />
-        public DayTaskController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, httpContextAccessor)
+        public DayTaskController(DayTasksWorker dayTasksWorker,
+            ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
         {
+            DayTaskWorker = dayTasksWorker;
         }
 
-        private DayTasksWorker DayTaskWorker => new DayTasksWorker(AmbientContext);
-
+        
         /// <summary>
         /// Добавить коментарий к заданию
         /// </summary>
@@ -72,6 +77,5 @@ namespace FocLab.Api.Controllers.Api.Tasker
         {
             return DayTaskWorker.CreateOrUpdateDayTaskAsync(model);
         }
-
     }
 }

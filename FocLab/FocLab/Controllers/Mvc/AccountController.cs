@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Croco.Core.Contract;
 using Croco.Core.Contract.Models;
 using FocLab.Controllers.Base;
 using FocLab.Logic.EntityDtos.Users.Default;
@@ -19,18 +20,21 @@ namespace FocLab.Controllers.Mvc
     [Authorize]
     public class AccountController : BaseController
     {
-        private AccountLoginWorker AccountLoginWorker { get; }
-        private AccountManager AccountManager { get; }
+        AccountLoginWorker AccountLoginWorker { get; }
+        AccountManager AccountManager { get; }
+        UserSearcher UserSearcher { get; }
+        UserWorker UserWorker { get; }
 
-
-        public AccountController(ChemistryDbContext context, 
-            ApplicationUserManager userManager, 
-            ApplicationSignInManager signInManager,
-            AccountLoginWorker accountLoginWorker,
-            AccountManager accountManager) : base(context, userManager, signInManager)
+        public AccountController(AccountLoginWorker accountLoginWorker,
+            AccountManager accountManager,
+            UserSearcher userSearcher,
+            ICrocoRequestContextAccessor requestContextAccessor,
+            UserWorker userWorker) : base(requestContextAccessor)
         {
             AccountLoginWorker = accountLoginWorker;
             AccountManager = accountManager;
+            UserSearcher = userSearcher;
+            UserWorker = userWorker;
         }
 
         
@@ -71,13 +75,11 @@ namespace FocLab.Controllers.Mvc
                 return Json(new BaseApiResponse(false, "Произошла ошибка"));
             }
 
-            var userWorker = new UserWorker(AmbientContext);
-
-            var t = await userWorker.ChangePasswordBaseAsync(new ResetPasswordByAdminModel
+            var t = await UserWorker.ChangePasswordBaseAsync(new ResetPasswordByAdminModel
             {
                 Email = user.Email,
                 Password = user.PasswordHash
-            }, UserManager);
+            });
 
             if(!t.IsSucceeded)
             {
@@ -172,10 +174,9 @@ namespace FocLab.Controllers.Mvc
         [ValidateAntiForgeryToken]
         public IActionResult LogOff()
         {   
-            AccountLoginWorker.LogOut(User, AuthenticationManager);
+            AccountLoginWorker.LogOut(User);
             return RedirectToAction("Index", "Home");
         }
-
 
 
         /// <summary>
@@ -185,7 +186,7 @@ namespace FocLab.Controllers.Mvc
         [HttpGet]
         public IActionResult LogOut()
         {
-            AccountLoginWorker.LogOut(User, AuthenticationManager);
+            AccountLoginWorker.LogOut(User);
             return RedirectToAction("Index", "Home");
         }
         

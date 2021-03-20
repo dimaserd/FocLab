@@ -1,11 +1,17 @@
 ﻿using System.Threading.Tasks;
+using Croco.Core.Contract.Application;
 using Croco.Core.EventSourcing.Implementations;
 using FocLab.Logic.Events;
+using Microsoft.Extensions.Logging;
 
 namespace Ecc.Logic.EventHandlers
 {
     public class ExperimentPerformedEventHandler : CrocoMessageHandler<ExperimentPerformedEvent>
     {
+        public ExperimentPerformedEventHandler(ICrocoApplication application, ILogger<ExperimentPerformedEventHandler> logger) : base(application, logger)
+        {
+        }
+
         public override Task HandleMessage(ExperimentPerformedEvent model)
         {
             //await mailSender.SendMailUnSafeAsync(new SendMailMessage

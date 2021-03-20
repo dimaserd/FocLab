@@ -22,19 +22,25 @@ namespace FocLab.Logic.Workers.Account
     {
         UserSearcher UserSearcher { get; }
         UserWorker UserWorker { get; }
+        IApplicationAuthenticationManager AuthenticationManager { get; }
+        SignInManager<ApplicationUser> SignInManager { get; }
 
         public AccountLoginWorker(ICrocoAmbientContextAccessor context,
             ICrocoApplication application,
             UserSearcher userSearcher,
-            UserWorker userWorker) : base(context, application)
+            UserWorker userWorker,
+            IApplicationAuthenticationManager authenticationManager,
+            SignInManager<ApplicationUser> signInManager) : base(context, application)
         {
             UserSearcher = userSearcher;
             UserWorker = userWorker;
+            AuthenticationManager = authenticationManager;
+            SignInManager = signInManager;
         }
 
         #region Методы логинирования
 
-        public async Task<BaseApiResponse<LoginResultModel>> LoginByPhoneNumberAsync(LoginByPhoneNumberModel model, SignInManager<ApplicationUser> signInManager)
+        public async Task<BaseApiResponse<LoginResultModel>> LoginByPhoneNumberAsync(LoginByPhoneNumberModel model)
         {
             var validation = ValidateModel(model);
 
@@ -50,10 +56,10 @@ namespace FocLab.Logic.Workers.Account
                 return new BaseApiResponse<LoginResultModel>(false, "Пользователь не найден по указанному номеру телефона");
             }
 
-            return await LoginAsync(new LoginModel(model, user.Email), signInManager);
+            return await LoginAsync(new LoginModel(model, user.Email));
         }
 
-        public async Task<BaseApiResponse<LoginResultModel>> LoginAsync(LoginModel model, SignInManager<ApplicationUser> signInManager)
+        public async Task<BaseApiResponse<LoginResultModel>> LoginAsync(LoginModel model)
         {
             var validation = ValidateModel(model);
 
@@ -71,7 +77,7 @@ namespace FocLab.Logic.Workers.Account
 
             var result = false;
 
-            var user = await signInManager.UserManager.FindByEmailAsync(model.Email);
+            var user = await SignInManager.UserManager.FindByEmailAsync(model.Email);
 
             if (user == null)
             {
@@ -102,14 +108,14 @@ namespace FocLab.Logic.Workers.Account
                 
                 if (user.Email == RightsSettings.RootEmail) //root входит без подтверждений
                 {
-                    await signInManager.SignInAsync(user, model.RememberMe);
+                    await SignInManager.SignInAsync(user, model.RememberMe);
 
                     return new BaseApiResponse<LoginResultModel>(true, "Вы успешно авторизованы", new LoginResultModel { Result = LoginResult.SuccessfulLogin });
                 }
 
                 if (AccountSettings.ConfirmLogin == ConfirmLoginType.None) //не логинить пользователя если нужно подтвержать логин
                 {
-                    await signInManager.SignInAsync(user, model.RememberMe);
+                    await SignInManager.SignInAsync(user, model.RememberMe);
 
                     result = true;
                 }
@@ -132,7 +138,7 @@ namespace FocLab.Logic.Workers.Account
             return new BaseApiResponse<LoginResultModel>(false, "Неудачная попытка входа", new LoginResultModel { Result = LoginResult.UnSuccessfulAttempt, TokenId = null });
         }
 
-        public async Task<BaseApiResponse> LoginAsUserAsync(UserIdModel model, SignInManager<ApplicationUser> signInManager)
+        public async Task<BaseApiResponse> LoginAsUserAsync(UserIdModel model)
         {
             var validation = ValidateModel(model);
 
@@ -146,14 +152,14 @@ namespace FocLab.Logic.Workers.Account
                 return new BaseApiResponse(false, "У вас недостаточно прав для логинирования за другого пользователя");
             }
 
-            var user = await signInManager.UserManager.FindByIdAsync(model.Id);
+            var user = await SignInManager.UserManager.FindByIdAsync(model.Id);
 
             if(user == null)
             {
                 return new BaseApiResponse(false, "Пользователь не найден по укаанному идентификатору");
             }
 
-            await signInManager.SignInAsync(user, true);
+            await SignInManager.SignInAsync(user, true);
 
             return new BaseApiResponse(true, $"Вы залогинены как {user.Email}");
         }
@@ -165,14 +171,14 @@ namespace FocLab.Logic.Workers.Account
         /// <param name="user"></param>
         /// <param name="authenticationManager"></param>
         /// <returns></returns>
-        public BaseApiResponse LogOut(IPrincipal user, IApplicationAuthenticationManager authenticationManager)
+        public BaseApiResponse LogOut(IPrincipal user)
         {
             if(!user.Identity.IsAuthenticated)
             {
                 return new BaseApiResponse(false, "Вы и так не авторизованы");
             }
 
-            authenticationManager.SignOut();
+            AuthenticationManager.SignOut();
 
             return new BaseApiResponse(true, "Вы успешно разлогинены в системе");
         }

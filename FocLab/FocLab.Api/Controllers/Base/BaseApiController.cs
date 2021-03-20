@@ -1,11 +1,7 @@
-﻿using FocLab.Logic.Abstractions;
-using FocLab.Logic.Extensions;
-using FocLab.Logic.Implementations;
-using FocLab.Logic.Services;
-using FocLab.Model.Contexts;
-using FocLab.Model.Entities.Users.Default;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Croco.Core.Contract;
+using Croco.Core.Contract.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace FocLab.Api.Controllers.Base
 {
@@ -13,34 +9,34 @@ namespace FocLab.Api.Controllers.Base
     /// <summary>
     /// Базовый абстрактный контроллер в котором собраны общие методы и свойства
     /// </summary>
-    public class BaseApiController : CrocoGenericController<ChemistryDbContext, ApplicationUser>
+    public class BaseApiController : Controller
     {
-        /// <inheritdoc />
-        public BaseApiController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, x => x.GetUserId(), httpContextAccessor)
+        ICrocoRequestContext RequestContext { get; }
+
+        public BaseApiController(ICrocoRequestContextAccessor requestContextAccessor)
         {
+            RequestContext = requestContextAccessor.GetRequestContext();
+            UserId = RequestContext.UserPrincipal.UserId;
         }
 
-        #region Поля
+        public string UserId { get; }
+        
+        public static string GetMimeMapping(string fileName)
+        {
+            new FileExtensionContentTypeProvider().TryGetContentType(fileName, out var contentType);
 
-        //TODO Impelement RoleManager
-        /// <summary>
-        /// Менеджер ролей
-        /// </summary>
-        public RoleManager<IdentityRole> RoleManager = null;
-        #endregion
-
-        #region Свойства
+            return contentType ?? "application/octet-stream";
+        }
 
         /// <summary>
-        /// Менеджер авторизации
+        /// Возвращает физический файл по пути и имени файла, из имени файла берется Mime тип
         /// </summary>
-        protected IApplicationAuthenticationManager AuthenticationManager => new ApplicationAuthenticationManager(SignInManager);
-
-        /// <summary>
-        /// Идентификатор текущего залогиненного пользователя
-        /// </summary>
-        protected string UserId => User.Identity.GetUserId();
-
-        #endregion
-    } 
+        /// <param name="filePath"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        protected PhysicalFileResult PhysicalFileWithMimeType(string filePath, string fileName)
+        {
+            return PhysicalFile(filePath, GetMimeMapping(fileName), fileName);
+        }
+    }
 }

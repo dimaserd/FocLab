@@ -1,9 +1,7 @@
-﻿using Croco.Core.Models;
+﻿using Croco.Core.Contract;
+using Croco.Core.Contract.Models;
 using FocLab.Api.Controllers.Base;
 using FocLab.Logic.Jobs;
-using FocLab.Logic.Services;
-using FocLab.Model.Contexts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api.Developer
@@ -15,11 +13,9 @@ namespace FocLab.Api.Controllers.Api.Developer
     [Route("Api/Schedule")]
     public class ScheduleController : BaseApiController
     {
-        /// <inheritdoc />
-        public ScheduleController(ChemistryDbContext context, ApplicationSignInManager signInManager, ApplicationUserManager userManager, IHttpContextAccessor httpContextAccessor) : base(context, signInManager, userManager, httpContextAccessor)
+        public ScheduleController(ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
         {
         }
-
 
         /// <summary>
         /// Взять значение джоб по-умолчанию из кода

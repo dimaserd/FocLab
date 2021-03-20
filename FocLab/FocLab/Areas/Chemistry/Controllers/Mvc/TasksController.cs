@@ -2,19 +2,19 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Application;
+using Croco.Core.Contract;
 using Doc.Logic.Models;
 using Doc.Logic.Workers;
-using FocLab.Areas.Chemistry.Controllers.Base;
 using FocLab.Consts;
+using FocLab.Controllers.Base;
 using FocLab.Helpers;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Models.Users;
-using FocLab.Logic.Services;
 using FocLab.Logic.Workers.ChemistryMethods;
 using FocLab.Logic.Workers.ChemistryReagents;
 using FocLab.Logic.Workers.ChemistryTasks;
-using FocLab.Model.Contexts;
+using FocLab.Logic.Workers.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,21 +22,34 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
     [Area(AreaConsts.Chemistry), Authorize]
-    public class TasksController : BaseFocLabController
+    public class TasksController : BaseController
     {
-        public TasksController(ChemistryDbContext context, ApplicationUserManager userManager, ApplicationSignInManager signInManager) : base(context, userManager, signInManager)
+        private ChemistryTasksWorker ChemistryTasksWorker { get; }
+
+        private ChemistryReagentsWorker ChemistryReagentsWorker { get; }
+
+        private ChemistryMethodsWorker ChemistryMethodsWorker { get; }
+
+        private ChemistryTasksHtmlHelper ChemistryTasksHtmlHelper { get; }
+
+        private ChemistryTaskDocumentProccessor FocLabDocumentProcessor { get; }
+        private UserSearcher UserSearcher { get; }
+
+        public TasksController(ChemistryTasksWorker chemistryTasksWorker, 
+            ChemistryReagentsWorker chemistryReagentsWorker,
+            ChemistryMethodsWorker chemistryMethodsWorker,
+            ChemistryTasksHtmlHelper chemistryTasksHtmlHelper,
+            ChemistryTaskDocumentProccessor chemistryTaskDocumentProccessor,
+            UserSearcher userSearcher,
+            ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
         {
+            ChemistryTasksWorker = chemistryTasksWorker;
+            ChemistryReagentsWorker = chemistryReagentsWorker;
+            ChemistryMethodsWorker = chemistryMethodsWorker;
+            ChemistryTasksHtmlHelper = chemistryTasksHtmlHelper;
+            FocLabDocumentProcessor = chemistryTaskDocumentProccessor;
+            UserSearcher = userSearcher;
         }
-
-        private ChemistryTasksWorker ChemistryTasksWorker => new ChemistryTasksWorker(AmbientContext);
-
-        private ChemistryReagentsWorker ChemistryReagentsWorker => new ChemistryReagentsWorker(AmbientContext);
-
-        private ChemistryMethodsWorker ChemistryMethodsWorker => new ChemistryMethodsWorker(AmbientContext);
-
-        private ChemistryTasksHtmlHelper ChemistryTasksHtmlHelper => new ChemistryTasksHtmlHelper(ChemistryMethodsWorker);
-
-        private ChemistryTaskDocumentProccessor FocLabDocumentProcessor => new ChemistryTaskDocumentProccessor(AmbientContext);
 
         public async Task<FileResult> Print(string id)
         {
@@ -147,7 +160,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
             ViewData["model"] = task;
             ViewData["fileMethodsSelectList"] = await ChemistryTasksHtmlHelper.GetMethodsSelectListAsync();
 
-            ViewData["usersSelectList"] = await ChemistryTasksHtmlHelper.GetUsersSelectListAsync(AmbientContext);
+            ViewData["usersSelectList"] = await ChemistryTasksHtmlHelper.GetUsersSelectListAsync();
 
             return View(model);
         }
@@ -166,7 +179,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
             };
 
             ViewData["fileMethodsSelectList"] = await ChemistryTasksHtmlHelper.GetMethodsSelectListAsync();
-            ViewData["usersSelectList"] = await ChemistryTasksHtmlHelper.GetUsersSelectListAsync(AmbientContext);
+            ViewData["usersSelectList"] = await ChemistryTasksHtmlHelper.GetUsersSelectListAsync();
 
             return View(model);
         }
