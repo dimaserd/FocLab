@@ -15,14 +15,14 @@ var AdminDayTaskCreator = (function () {
     };
     AdminDayTaskCreator.prototype.CreateDayTask = function (data) {
         data = this.ProccessData(data);
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
         }, null);
     };
     AdminDayTaskCreator.prototype.EditDayTask = function (data) {
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
@@ -117,8 +117,8 @@ var DayTaskEditor = (function () {
     function DayTaskEditor() {
     }
     DayTaskEditor.UpdateHtmlProperties = function (data) {
-        ModalWorker.ShowModal("loadingModal");
-        Requester.SendPostRequestWithAnimation('/Api/DayTask/CreateOrUpdate', data, function (x) {
+        CrocoAppCore.Application.ModalWorker.ShowModal("loadingModal");
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Api/DayTask/CreateOrUpdate', data, function (x) {
             if (x.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
@@ -153,16 +153,15 @@ var DayTasksWorker = (function () {
         this.CurrentTask = DayTasksWorker.Tasks.find(function (x) { return x.Id === taskId; });
     };
     DayTasksWorker.SendNotificationToAdmin = function () {
-        ModalWorker.ShowModal("loadingModal");
-        Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: DayTasksWorker.CurrentTaskId }, function (x) { return alert(x); }, null);
+        CrocoAppCore.Application.ModalWorker.ShowModal("loadingModal");
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: DayTasksWorker.CurrentTaskId }, function (x) { return alert(x); }, null);
     };
     DayTasksWorker.GetTasks = function () {
-        var _this = this;
-        Requester.SendAjaxPost("/Api/DayTask/GetTasks", this.SearchModel, function (x) {
-            _this.Tasks = x;
-            _this.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
-            _this.OpenTaskById();
-        }, null, false);
+        CrocoAppCore.Application.Requester.Post("/Api/DayTask/GetTasks", this.SearchModel, function (x) {
+            DayTasksWorker.Tasks = x;
+            DayTasksWorker.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
+            DayTasksWorker.OpenTaskById();
+        }, null);
     };
     DayTasksWorker.GetTaskById = function (taskId) {
         return DayTasksWorker.Tasks.find(function (x) { return x.Id === taskId; });
@@ -194,7 +193,7 @@ var ScheduleStaticHandlers = (function () {
         });
         EventSetter.SetHandlerForClass("tms-update-task-btn", "click", function () {
             ScheduleStaticHandlers.updateDayTask();
-            ModalWorker.HideModals();
+            CrocoAppCore.Application.ModalWorker.HideModals();
         });
         EventSetter.SetHandlerForClass("tms-redirect-to-full", "click", function () { return ScheduleStaticHandlers.redirectToFullVersion(); });
         EventSetter.SetHandlerForClass("tms-create-task-btn", "click", function () { return ScheduleStaticHandlers.createDayTask(); });
@@ -208,9 +207,12 @@ var ScheduleStaticHandlers = (function () {
         var data = {
             UserIds: []
         };
-        var dataFilter = FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
-        dataFilter.MonthShift = isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1;
-        return Requester.GetParams(data);
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
+        var dataFilter = {
+            UserIds: data.UserIds,
+            MonthShift: isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1
+        };
+        return CrocoAppCore.Application.Requester.GetParams(dataFilter);
     };
     ScheduleStaticHandlers.ApplyFilter = function (isNextMonth) {
         location.href = "/Schedule/Index?" + ScheduleStaticHandlers.GetQueryParams(isNextMonth);
@@ -225,8 +227,8 @@ var ScheduleStaticHandlers = (function () {
         var data = {
             UserIds: []
         };
-        var t = FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
-        location.href = "/Schedule/Index?" + Requester.GetParams(t);
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
+        location.href = "/Schedule/Index?" + CrocoAppCore.Application.Requester.GetParams(data);
     };
     ScheduleStaticHandlers.ShowDayTaskModal = function (taskId) {
         DayTasksWorker.SetCurrentTaskId(taskId);
@@ -240,9 +242,9 @@ var ScheduleStaticHandlers = (function () {
             TaskTitle: ""
         };
         ScheduleStaticHandlers.InitUserSelect("#usersSelect2");
-        FormDataHelper.FillDataByPrefix(data, "create.");
-        Utils.SetDatePicker("input[name='create.TaskDate']", '0');
-        ModalWorker.ShowModal("createDayTaskModal");
+        CrocoAppCore.Application.FormDataHelper.FillDataByPrefix(data, "create.");
+        DatePickerUtils.SetDatePicker("TaskDate1", 'RealTaskDate1');
+        CrocoAppCore.Application.ModalWorker.ShowModal("createDayTaskModal");
     };
     ScheduleStaticHandlers.InitUserSelect = function (selector) {
         $(selector).select2({
@@ -268,34 +270,34 @@ var ScheduleStaticHandlers = (function () {
         var data = {
             Comment: ""
         };
-        data = FormDataHelper.CollectDataByPrefix(data, "edit.");
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "edit.");
         var m = {
             Comment: data.Comment,
             DayTaskCommentId: commentId
         };
-        Requester.SendAjaxPost("/Api/DayTask/Comments/Update", m, function (resp) {
+        CrocoAppCore.Application.Requester.Post("/Api/DayTask/Comments/Update", m, function (resp) {
             if (resp.IsSucceeded) {
                 TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
-        }, null, false);
+        }, null);
     };
     ScheduleStaticHandlers.addComment = function () {
         var data = {
             DayTaskId: "",
             Comment: ""
         };
-        data = FormDataHelper.CollectData(data);
-        Requester.SendAjaxPost("/Api/DayTask/Comments/Add", data, function (resp) {
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "");
+        CrocoAppCore.Application.Requester.Post("/Api/DayTask/Comments/Add", data, function (resp) {
             if (resp.IsSucceeded) {
                 TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
                 DayTasksWorker.GetTasks();
             }
-        }, null, false);
+        }, null);
     };
     ScheduleStaticHandlers.redirectToFullVersion = function () {
         var data = { Id: "" };
-        data = FormDataHelper.CollectDataByPrefix(data, "task.");
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "task.");
         window.open(window.location.origin + "/Schedule/Task/" + data.Id, '_blank');
     };
     ScheduleStaticHandlers.updateDayTask = function () {
@@ -309,13 +311,13 @@ var ScheduleStaticHandlers = (function () {
             TaskReview: "",
             TaskTarget: ""
         };
-        data = FormDataHelper.CollectDataByPrefix(data, "task.");
-        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate");
-        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, function (resp) {
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "task.");
+        data.TaskDate = DatePickerUtils.GetDateFromDatePicker("TaskDate");
+        CrocoAppCore.Application.Requester.Post("/Api/DayTask/CreateOrUpdate", data, function (resp) {
             if (resp.IsSucceeded) {
                 DayTasksWorker.GetTasks();
             }
-        }, null, false);
+        }, null);
     };
     ScheduleStaticHandlers.createDayTask = function () {
         var data = {
@@ -328,14 +330,13 @@ var ScheduleStaticHandlers = (function () {
             TaskReview: "",
             TaskTarget: ""
         };
-        data = FormDataHelper.CollectDataByPrefix(data, "create.");
-        data.TaskDate = Utils.GetDateFromDatePicker("TaskDate1");
-        Requester.SendAjaxPost("/Api/DayTask/CreateOrUpdate", data, function (resp) {
-            ToastrWorker.HandleBaseApiResponse(resp);
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "create.");
+        data.TaskDate = DatePickerUtils.GetDateFromDatePicker("TaskDate1");
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (resp) {
             if (resp.IsSucceeded) {
                 ScheduleStaticHandlers.hideCreateModal();
             }
-        }, null, false);
+        }, null);
     };
     ScheduleStaticHandlers.hideCreateModal = function () {
         $("#createDayTaskModal").modal("hide");
@@ -392,7 +393,7 @@ var ScheduleWorker = (function () {
     ;
     ScheduleWorker.SetUsersSelect = function () {
         var _this = this;
-        Requester.SendAjaxPost("/Api/User/Get", { Count: null, OffSet: 0 }, function (x) {
+        CrocoAppCore.Application.Requester.Post("/Api/User/Get", { Count: null, OffSet: 0 }, function (x) {
             ScheduleWorker.Users = x.List;
             $("#usersSelect").select2({
                 placeholder: ScheduleWorker.Resources.SelectUser,
@@ -412,12 +413,12 @@ var ScheduleWorker = (function () {
                     return markup;
                 }
             });
-            FormDataHelper.FillDataByPrefix({
+            CrocoAppCore.Application.FormDataHelper.FillDataByPrefix({
                 UserIds: ScheduleWorker.filter.UserIds
             }, "filter.");
             $("#usersSelect").val(_this.filter.UserIds).trigger('change.select2');
             $('.select2-selection__rendered img').addClass('m--img-rounded m--marginless m--img-centered');
-        }, null, false);
+        }, null);
     };
     ScheduleWorker.Users = [];
     ScheduleWorker.Resources = new ScheduleWorker_Resx();
@@ -435,12 +436,12 @@ var TaskModalWorker = (function () {
     }
     TaskModalWorker.ShowDayTaskModal = function (task) {
         TaskModalWorker.InitTask(task);
-        FormDataHelper.FillDataByPrefix(task, "task.");
-        Utils.SetDatePicker("input[name='task.TaskDate']");
+        CrocoAppCore.Application.FormDataHelper.FillDataByPrefix(task, "task.");
+        DatePickerUtils.SetDatePicker("TaskDate", "RealTaskDate");
         var selector = "#" + TaskModalConsts.UserSelectId;
         ScheduleStaticHandlers.InitUserSelect(selector);
         $(selector).val(task.AssigneeUser.Id).trigger('change');
-        ModalWorker.ShowModal("dayTaskModal");
+        CrocoAppCore.Application.ModalWorker.ShowModal("dayTaskModal");
     };
     TaskModalWorker.InitTask = function (task) {
         task.TaskDate = moment(new Date(task.TaskDate)).format("DD/MM/YYYY");

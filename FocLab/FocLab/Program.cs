@@ -15,6 +15,10 @@ namespace FocLab
                 .UseStartup<Startup>().ConfigureKestrel((context, options) =>
                 {
                     options.Limits.Http2.MaxStreamsPerConnection = 100;
+                })
+                .UseDefaultServiceProvider((context, options) =>
+                {
+                    options.ValidateOnBuild = false;
                 });
     }
 }

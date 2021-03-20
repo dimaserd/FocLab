@@ -1,10 +1,10 @@
 ﻿[
+  //Core.js = [Core + JqueryCrocoCore]
   {
-    "outputFileName": "wwwroot/js/Core.js",
+    "outputFileName": "wwwroot/src/JqueryCrocoCore/index.js",
     "inputFiles": [
-      "wwwroot/src/System/System.js",
-      "wwwroot/src/Core/*.js",
-      "wwwroot/src/Core/FormTypeDrawer/FormTypeDrawer.js"
+      "wwwroot/src/JqueryCrocoCore/Implementations/*.js",
+      "wwwroot/src/JqueryCrocoCore/Init/*.js"
     ],
 
     "minify": {
@@ -14,15 +14,44 @@
   },
 
   {
-    "outputFileName": "wwwroot/src/Core/FormTypeDrawer/FormTypeDrawer.js",
+    "outputFileName": "wwwroot/src/Core/index.js",
     "inputFiles": [
-      "wwwroot/src/Core/FormTypeDrawer/Abstractions/*.js",
-      "wwwroot/src/Core/FormTypeDrawer/Enumerations/*.js",
-      "wwwroot/src/Core/FormTypeDrawer/Implementations/*.js",
-      "wwwroot/src/Core/FormTypeDrawer/Models/*.js",
-      "wwwroot/src/Core/FormTypeDrawer/Services/Factories/*.js",
-      "wwwroot/src/Core/FormTypeDrawer/Services/Helpers/*.js",
-      "wwwroot/src/Core/FormTypeDrawer/Services/*.js"
+      "wwwroot/src/Core/Abstractions/*.js",
+      "wwwroot/src/Core/Enumerations/*.js",
+      "wwwroot/src/Core/Implementations/*.js",
+      "wwwroot/src/Core/Models/*.js",
+      "wwwroot/src/Core/Services/*.js"
+    ],
+
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+
+  {
+    "outputFileName": "wwwroot/js/Core.js",
+    "inputFiles": [
+      "wwwroot/src/FormTypeDrawer/FormTypeDrawer.js",
+      "wwwroot/src/Core/index.js",
+      "wwwroot/src/JqueryCrocoCore/index.js"
+    ],
+
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+
+  {
+    "outputFileName": "wwwroot/src/FormTypeDrawer/FormTypeDrawer.js",
+    "inputFiles": [
+      "wwwroot/src/FormTypeDrawer/Abstractions/*.js",
+      "wwwroot/src/FormTypeDrawer/Enumerations/*.js",
+      "wwwroot/src/FormTypeDrawer/Models/*.js",
+      "wwwroot/src/FormTypeDrawer/Services/Factories/*.js",
+      "wwwroot/src/FormTypeDrawer/Services/Helpers/*.js",
+      "wwwroot/src/FormTypeDrawer/Services/*.js"
     ],
     "minify": {
       "enabled": true,

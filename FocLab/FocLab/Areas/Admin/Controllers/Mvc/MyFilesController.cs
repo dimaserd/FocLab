@@ -6,7 +6,6 @@ using FocLab.Logic.Workers;
 using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Areas.Admin.Controllers.Mvc
@@ -24,9 +23,7 @@ namespace FocLab.Areas.Admin.Controllers.Mvc
 
         public MyFilesController(DbFileWorker dbFileWorker, 
             ChemistryDbContext dbContext,
-            ICrocoRequestContextAccessor requestContextAccessor,
-            IActionContextAccessor actionContextAccessor) : base(requestContextAccessor,
-                actionContextAccessor)
+            ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
         {
             DbFileWorker = dbFileWorker;
             DbContext = dbContext;

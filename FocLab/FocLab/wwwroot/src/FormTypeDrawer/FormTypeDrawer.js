@@ -16,8 +16,7 @@ var UserInterfaceType;
 
 
 
-
-var FormDrawFactory = /** @class */ (function () {
+var FormDrawFactory = (function () {
     function FormDrawFactory(opts) {
         this._defaultImplementation = opts.DefaultImplementation;
         this._implementations = opts.Implementations;
@@ -32,7 +31,7 @@ var FormDrawFactory = /** @class */ (function () {
     return FormDrawFactory;
 }());
 
-var FormDrawHelper = /** @class */ (function () {
+var FormDrawHelper = (function () {
     function FormDrawHelper() {
     }
     FormDrawHelper.GetPropertyValueName = function (propertyName, modelPrefix) {
@@ -56,7 +55,7 @@ var FormDrawHelper = /** @class */ (function () {
     return FormDrawHelper;
 }());
 
-var HtmlDrawHelper = /** @class */ (function () {
+var HtmlDrawHelper = (function () {
     function HtmlDrawHelper() {
     }
     HtmlDrawHelper.RenderInput = function (type, attrs) {
@@ -68,7 +67,6 @@ var HtmlDrawHelper = /** @class */ (function () {
         if (attrs == null) {
             return result;
         }
-        //Итерация по ключам в map
         for (var _i = 0, _a = Array.from(attrs.keys()); _i < _a.length; _i++) {
             var key = _a[_i];
             var res = attrs.get(key);
@@ -95,7 +93,7 @@ var HtmlDrawHelper = /** @class */ (function () {
     return HtmlDrawHelper;
 }());
 
-var HtmlSelectDrawHelper = /** @class */ (function () {
+var HtmlSelectDrawHelper = (function () {
     function HtmlSelectDrawHelper(nullValue) {
         this.NullValue = nullValue;
     }
@@ -108,8 +106,6 @@ var HtmlSelectDrawHelper = /** @class */ (function () {
         });
         if (rawValue != null) {
             selectList.forEach(function (x) { return x.Selected = false; });
-            //Заплатка для выпадающего списка 
-            //TODO Вылечить это
             var item = typeDescription.TypeName == CSharpType.Boolean.toString() ?
                 selectList.find(function (x) { return x.Value.toLowerCase() == rawValue.toLowerCase(); }) :
                 selectList.find(function (x) { return x.Value == rawValue; });
@@ -121,7 +117,7 @@ var HtmlSelectDrawHelper = /** @class */ (function () {
     return HtmlSelectDrawHelper;
 }());
 
-var ValueProviderHelper = /** @class */ (function () {
+var ValueProviderHelper = (function () {
     function ValueProviderHelper() {
     }
     ValueProviderHelper.GetStringValueFromValueProvider = function (prop, valueProvider) {
@@ -141,7 +137,7 @@ var ValueProviderHelper = /** @class */ (function () {
     return ValueProviderHelper;
 }());
 
-var CrocoTypeDescriptionOverrider = /** @class */ (function () {
+var CrocoTypeDescriptionOverrider = (function () {
     function CrocoTypeDescriptionOverrider() {
     }
     CrocoTypeDescriptionOverrider.FindUserInterfacePropBlockByPropertyName = function (model, propertyName) {
@@ -159,37 +155,15 @@ var CrocoTypeDescriptionOverrider = /** @class */ (function () {
     CrocoTypeDescriptionOverrider.RemoveProperty = function (model, propertyName) {
         model.Blocks = model.Blocks.filter(function (x) { return x.PropertyName !== propertyName; });
     };
-    /**
-     * Установить текстовый лейбл для имени свойста
-     * @param model модель для свойства которой нужно установить лейбл
-     * @param propertyName  название свойства
-     * @param labelText текст лейбла для заданного свойства
-     */
     CrocoTypeDescriptionOverrider.SetLabelText = function (model, propertyName, labelText) {
         CrocoTypeDescriptionOverrider.FindUserInterfacePropBlockByPropertyName(model, propertyName).LabelText = labelText;
     };
-    /**
-     * Установить для свойства модели тип пользовательского интрефейса скрытый инпут
-     * @param model модель для которой нужно поменять тип интерфейса для свойства
-     * @param propertyName имя свойства
-     */
     CrocoTypeDescriptionOverrider.SetHidden = function (model, propertyName) {
         CrocoTypeDescriptionOverrider.SetUserInterfaceTypeForProperty(model, propertyName, UserInterfaceType.Hidden);
     };
-    /**
-     *  Установить для свойства модели тип пользовательского интерфейса textarea (большой текстовый инпут)
-     * @param model  модель для которой нужно поменять тип интерфейса для свойства
-     * @param propertyName имя свойства
-     */
     CrocoTypeDescriptionOverrider.SetTextArea = function (model, propertyName) {
         CrocoTypeDescriptionOverrider.SetUserInterfaceTypeForProperty(model, propertyName, UserInterfaceType.TextArea);
     };
-    /**
-     *  Установить для свойства модели тип пользовательского интерфейса выпадающий список
-     * @param model  модель для которой нужно поменять тип интерфейса для свойства
-     * @param propertyName имя свойства
-     * @param selectList  данные для построения выпадающего списка
-     */
     CrocoTypeDescriptionOverrider.SetDropDownList = function (model, propertyName, selectList) {
         var prop = CrocoTypeDescriptionOverrider.FindUserInterfacePropBlockByPropertyName(model, propertyName);
         prop.InterfaceType = UserInterfaceType.DropDownList;
@@ -198,7 +172,7 @@ var CrocoTypeDescriptionOverrider = /** @class */ (function () {
     return CrocoTypeDescriptionOverrider;
 }());
 
-var FormTypeAfterDrawnDrawer = /** @class */ (function () {
+var FormTypeAfterDrawnDrawer = (function () {
     function FormTypeAfterDrawnDrawer() {
     }
     FormTypeAfterDrawnDrawer.SetInnerHtmlForProperty = function (propertyName, modelPrefix, innerHtml) {
@@ -209,7 +183,7 @@ var FormTypeAfterDrawnDrawer = /** @class */ (function () {
     return FormTypeAfterDrawnDrawer;
 }());
 
-var FormTypeDrawer = /** @class */ (function () {
+var FormTypeDrawer = (function () {
     function FormTypeDrawer(formDrawer, typeDescription) {
         this._formDrawer = formDrawer;
         this._typeDescription = typeDescription;
@@ -247,7 +221,7 @@ var FormTypeDrawer = /** @class */ (function () {
     return FormTypeDrawer;
 }());
 
-var FormTypeDrawerModelBuilder = /** @class */ (function () {
+var FormTypeDrawerModelBuilder = (function () {
     function FormTypeDrawerModelBuilder(model) {
         this._model = model;
     }
@@ -294,7 +268,7 @@ var FormTypeDrawerModelBuilder = /** @class */ (function () {
     return FormTypeDrawerModelBuilder;
 }());
 
-var GenericForm = /** @class */ (function () {
+var GenericForm = (function () {
     function GenericForm(opts) {
         this._genericInterfaces = [];
         if (opts.FormDrawFactory == null) {
@@ -336,9 +310,6 @@ var GenericForm = /** @class */ (function () {
         alert(mes);
         throw Error(mes);
     };
-    /*
-     * Отрисовать все формы, которые имеются на экране
-     * */
     GenericForm.prototype.DrawForms = function () {
         var elems = document.getElementsByClassName("generic-user-interface");
         for (var i = 0; i < elems.length; i++) {
@@ -379,7 +350,7 @@ var GenericForm = /** @class */ (function () {
     return GenericForm;
 }());
 
-var PropertyFormTypeSearcher = /** @class */ (function () {
+var PropertyFormTypeSearcher = (function () {
     function PropertyFormTypeSearcher() {
     }
     PropertyFormTypeSearcher.FindPropByNameInOneDimension = function (type, propName) {
@@ -402,13 +373,9 @@ var PropertyFormTypeSearcher = /** @class */ (function () {
     return PropertyFormTypeSearcher;
 }());
 
-var ValueProviderBuilder = /** @class */ (function () {
+var ValueProviderBuilder = (function () {
     function ValueProviderBuilder() {
     }
-    /**
-     * Создать провайдера значений из объекта JavaScript
-     * @param obj объект из которого нужно создать провайдер значений
-     */
     ValueProviderBuilder.CreateFromObject = function (obj) {
         obj = CrocoAppCore.Application.FormDataUtils.ProccessAllDateTimePropertiesAsString(obj);
         var res = {
@@ -418,7 +385,6 @@ var ValueProviderBuilder = /** @class */ (function () {
         for (var index in obj) {
             var valueOfProp = obj[index];
             if (Array.isArray(valueOfProp)) {
-                //TODO Добавить поддержку массивов
                 continue;
             }
             if (valueOfProp !== undefined) {

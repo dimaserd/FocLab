@@ -11,13 +11,11 @@ using FocLab.Helpers;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Models.Users;
-using FocLab.Logic.Workers.ChemistryMethods;
 using FocLab.Logic.Workers.ChemistryReagents;
 using FocLab.Logic.Workers.ChemistryTasks;
 using FocLab.Logic.Workers.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
@@ -39,9 +37,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
             ChemistryTasksHtmlHelper chemistryTasksHtmlHelper,
             ChemistryTaskDocumentProccessor chemistryTaskDocumentProccessor,
             UserSearcher userSearcher,
-            ICrocoRequestContextAccessor requestContextAccessor,
-            IActionContextAccessor contextAccessor) : base(requestContextAccessor,
-                contextAccessor)
+            ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
         {
             ChemistryTasksWorker = chemistryTasksWorker;
             ChemistryReagentsWorker = chemistryReagentsWorker;

@@ -12,8 +12,8 @@
             return [];
         }
         if (typeDescription.IsEnumerable) {
-            var t_1 = this.GetUniqueTypes(typeDescription.EnumeratedType);
-            return t_1;
+            var t = this.GetUniqueTypes(typeDescription.EnumeratedType);
+            return t;
         }
         if (typeDescription.IsEnumeration) {
             return [typeDescription];

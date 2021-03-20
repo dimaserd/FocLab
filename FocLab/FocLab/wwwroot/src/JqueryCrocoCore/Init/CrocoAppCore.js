@@ -18,3 +18,4 @@
     };
     return CrocoAppCore;
 }());
+CrocoAppCore.InitFields();

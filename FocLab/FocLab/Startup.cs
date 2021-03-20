@@ -18,18 +18,27 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CrocoShop.CrocoStuff;
-using FocLab.Api;
 using FocLab.Logic.Extensions;
 using FocLab.Abstractions;
-using FocLab.Logic.Implementations;
-using FocLab.Logic.Abstractions;
 using Croco.Core.Application;
 using Zoo.GenericUserInterface.Models.Overridings;
 using FocLab.InterfaceDefinitions;
 using FocLab.Logic;
+using Croco.WebApplication.Models;
+using Croco.Core.Data.Models;
+using Croco.Core.Contract;
+using FocLab.Helpers;
+using Doc.Logic;
+using Croco.Core.Logic.Cache;
+using FocLab.Model.Entities;
 
 namespace FocLab
 {
+    public class SomeMiddleware
+    {
+
+    }
+
     public class Startup
     {
         StartupCroco Croco { get; }
@@ -47,7 +56,9 @@ namespace FocLab
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddControllersWithViews()
+                .AddRazorRuntimeCompilation()
+                .AddControllersAsServices();
 
             services.Configure<FormOptions>(options =>
             {
@@ -101,15 +112,11 @@ namespace FocLab
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<ILoggerManager, ApplicationLoggerManager>();
-            services.AddSingleton<IUserMailSender, FocLabEmailSender>();
 
-            services.AddMvc(options =>
-            {
-                options.Filters.Add<CrocoContextSetterFilter>(int.MinValue);
-            });
             ApplicationBuilder = Croco.SetCrocoApplication(services);
 
             LogicRegistrator.Register(services);
+            DocumentRegistrator.Register(services);
 
             new GenericUserInterfaceBagBuilder(services)
                 .AddDefaultDefinition<CreateUserModelUserInterfaceDefinition>()
@@ -117,6 +124,8 @@ namespace FocLab
                 .AddDefaultDefinition<CreateOrUpdateDayTaskInterfaceDefinition>()
                 .AddDefaultDefinition<CreateExperimentInterfaceDefinition>()
                 .Build();
+
+            services.AddTransient<ChemistryTasksHtmlHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -132,6 +141,15 @@ namespace FocLab
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+
+            app.Use(async (context, next) =>
+            {
+                OnActionExecuting(context);
+                // Do work that doesn't write to the Response.
+                await next.Invoke();
+                // Do logging or other work that doesn't write to the Response.
+            });
+
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -176,6 +194,16 @@ namespace FocLab
             settings.PropertyNameCaseInsensitive = true;
             settings.PropertyNamingPolicy = null;
             settings.Converters.Add(new JsonStringEnumConverter());
+        }
+
+        private static void OnActionExecuting(HttpContext httpContext)
+        {
+            var principal = new WebAppCrocoPrincipal(httpContext.User, x => x.GetUserId());
+            var requestContext = new CrocoRequestContext(principal);
+
+            httpContext.RequestServices
+                .GetRequiredService<ICrocoRequestContextAccessor>()
+                .SetRequestContext(requestContext);
         }
     }
 }

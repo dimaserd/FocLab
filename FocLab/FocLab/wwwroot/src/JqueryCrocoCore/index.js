@@ -1,4 +1,4 @@
-var AjaxLoader = /** @class */ (function () {
+var AjaxLoader = (function () {
     function AjaxLoader() {
     }
     AjaxLoader.prototype.InitAjaxLoads = function () {
@@ -39,7 +39,7 @@ var AjaxLoader = /** @class */ (function () {
     return AjaxLoader;
 }());
 
-var FormDrawImplementation = /** @class */ (function () {
+var FormDrawImplementation = (function () {
     function FormDrawImplementation(model) {
         this._datePickerPropNames = [];
         this._selectClass = 'form-draw-select';
@@ -47,12 +47,9 @@ var FormDrawImplementation = /** @class */ (function () {
         this._htmlDrawHelper = new HtmlSelectDrawHelper(CrocoAppCore.Application.FormDataHelper.NullValue);
     }
     FormDrawImplementation.prototype.BeforeFormDrawing = function () {
-        //TODO Init calendar or some scripts
     };
     FormDrawImplementation.prototype.AfterFormDrawing = function () {
-        //Красивые селекты
         $("." + this._selectClass).selectpicker('refresh');
-        //Иницилизация календарей
         for (var i = 0; i < this._datePickerPropNames.length; i++) {
             var datePickerPropName = this._datePickerPropNames[i];
             FormDrawImplementation.InitCalendarForPrefixedProperty(this._model.Prefix, datePickerPropName);
@@ -66,12 +63,10 @@ var FormDrawImplementation = /** @class */ (function () {
     };
     FormDrawImplementation.GetElementIdForFakeCalendar = function (modelPrefix, propName) {
         var result = modelPrefix + "_" + propName + "FakeCalendar";
-        //в айдишниках не поддерживаются точки поэтому их все заменяю на нижние подчеркивания
         return result.replace(new RegExp(/\./, 'g'), '_');
     };
     FormDrawImplementation.GetElementIdForRealCalendarBackProperty = function (modelPrefix, propName) {
         var result = modelPrefix + "_" + propName + "RealCalendar";
-        //в айдишниках не поддерживаются точки поэтому их все заменяю на нижние подчеркивания
         return result.replace(new RegExp(/\./, 'g'), '_');
     };
     FormDrawImplementation.InitCalendarForPrefixedProperty = function (modelPrefix, propName) {
@@ -150,7 +145,7 @@ var FormDrawImplementation = /** @class */ (function () {
     return FormDrawImplementation;
 }());
 
-var Logger_Resx = /** @class */ (function () {
+var Logger_Resx = (function () {
     function Logger_Resx() {
         this.LoggingAttempFailed = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
         this.ErrorOnApiRequest = "Ошибка запроса к апи";
@@ -160,7 +155,7 @@ var Logger_Resx = /** @class */ (function () {
     }
     return Logger_Resx;
 }());
-var Logger = /** @class */ (function () {
+var Logger = (function () {
     function Logger() {
     }
     Logger.prototype.LogException = function (exceptionText, exceptionDescription, link) {
@@ -187,10 +182,9 @@ var Logger = /** @class */ (function () {
     return Logger;
 }());
 
-var ModalWorker = /** @class */ (function () {
+var ModalWorker = (function () {
     function ModalWorker() {
     }
-    /** Показать модальное окно по идентификатору. */
     ModalWorker.prototype.ShowModal = function (modalId) {
         if (modalId === "" || modalId == null || modalId == undefined) {
             modalId = ModalWorker.LoadingModal;
@@ -209,14 +203,11 @@ var ModalWorker = /** @class */ (function () {
     ModalWorker.prototype.HideModal = function (modalId) {
         $("#" + modalId).modal('hide');
     };
-    /**
-     * идентификатор модального окна с загрузочной анимацией
-     */
     ModalWorker.LoadingModal = "loadingModal";
     return ModalWorker;
 }());
 
-var MyCrocoJsApplication = /** @class */ (function () {
+var MyCrocoJsApplication = (function () {
     function MyCrocoJsApplication() {
         this.CookieWorker = new CookieWorker();
         this.FormDataUtils = new FormDataUtils();
@@ -228,7 +219,7 @@ var MyCrocoJsApplication = /** @class */ (function () {
     return MyCrocoJsApplication;
 }());
 
-var Requester_Resx = /** @class */ (function () {
+var Requester_Resx = (function () {
     function Requester_Resx() {
         this.YouPassedAnEmtpyArrayOfObjects = "Вы подали пустой объект в запрос";
         this.ErrorOccuredWeKnowAboutIt = "Произошла ошибка! Мы уже знаем о ней, и скоро с ней разберемся!";
@@ -236,9 +227,12 @@ var Requester_Resx = /** @class */ (function () {
     }
     return Requester_Resx;
 }());
-var Requester = /** @class */ (function () {
+var Requester = (function () {
     function Requester() {
     }
+    Requester.prototype.GetParams = function (data) {
+        return $.param(data);
+    };
     Requester.prototype.DeleteCompletedRequest = function (link) {
         Requester.GoingRequests = Requester.GoingRequests.filter(function (x) { return x !== link; });
     };
@@ -275,12 +269,10 @@ var Requester = /** @class */ (function () {
                 }
             }).bind(this),
             error: (function (jqXHR, textStatus, errorThrown) {
-                //Логгирую ошибку
                 CrocoAppCore.Application.Logger.LogException(textStatus.toString(), "ErrorOnApiRequest", link);
                 _this.DeleteCompletedRequest(link);
                 CrocoAppCore.Application.ModalWorker.HideModals();
                 CrocoAppCore.ToastrWorker.ShowError(Requester.Resources.ErrorOccuredWeKnowAboutIt);
-                //Вызываю внешнюю функцию-обработчик
                 if (onErrorFunc) {
                     onErrorFunc(jqXHR, textStatus, errorThrown);
                 }
@@ -312,10 +304,8 @@ var Requester = /** @class */ (function () {
                 }
             }).bind(this),
             error: (function (jqXHR, textStatus, errorThrown) {
-                //Логгирую ошибку
                 CrocoAppCore.Application.Logger.LogException(textStatus.toString(), "Error on Api Request", link);
                 _this.DeleteCompletedRequest(link);
-                //Вызываю внешнюю функцию-обработчик
                 if (onErrorFunc) {
                     onErrorFunc(jqXHR, textStatus, errorThrown);
                 }
@@ -346,13 +336,11 @@ var Requester = /** @class */ (function () {
             }
         }).bind(this);
         params.error = (function (jqXHR, textStatus, errorThrown) {
-            //Логгирую ошибку
             CrocoAppCore.Application.Logger.LogException(textStatus.toString(), "Error on Api Request", link);
             _this.DeleteCompletedRequest(link);
             if (animations) {
                 Requester.OnErrorAnimationHandler();
             }
-            //Вызываю внешнюю функцию-обработчик
             if (onErrorFunc) {
                 onErrorFunc(jqXHR, textStatus, errorThrown);
             }
@@ -374,7 +362,7 @@ var Requester = /** @class */ (function () {
     return Requester;
 }());
 
-var TabFormDrawImplementation = /** @class */ (function () {
+var TabFormDrawImplementation = (function () {
     function TabFormDrawImplementation(model) {
         this._datePickerPropNames = [];
         this._selectClass = 'form-draw-select';
@@ -382,12 +370,9 @@ var TabFormDrawImplementation = /** @class */ (function () {
         this._drawHelper = new HtmlSelectDrawHelper(CrocoAppCore.Application.FormDataHelper.NullValue);
     }
     TabFormDrawImplementation.prototype.BeforeFormDrawing = function () {
-        //TODO Init calendar or some scripts
     };
     TabFormDrawImplementation.prototype.AfterFormDrawing = function () {
-        //Красивые селекты
         $("." + this._selectClass).selectpicker('refresh');
-        //Иницилизация календарей
         for (var i = 0; i < this._datePickerPropNames.length; i++) {
             var datePickerPropName = this._datePickerPropNames[i];
             FormDrawImplementation.InitCalendarForPrefixedProperty(this._model.Prefix, datePickerPropName);
@@ -429,7 +414,7 @@ var TabFormDrawImplementation = /** @class */ (function () {
     return TabFormDrawImplementation;
 }());
 
-var ToastrWorker = /** @class */ (function () {
+var ToastrWorker = (function () {
     function ToastrWorker() {
     }
     ToastrWorker.prototype.ShowError = function (text) {
@@ -477,7 +462,8 @@ var ToastrWorker = /** @class */ (function () {
     };
     return ToastrWorker;
 }());
-var CrocoAppCore = /** @class */ (function () {
+
+var CrocoAppCore = (function () {
     function CrocoAppCore() {
     }
     CrocoAppCore.GetFormDrawFactory = function () {
@@ -497,3 +483,4 @@ var CrocoAppCore = /** @class */ (function () {
     };
     return CrocoAppCore;
 }());
+CrocoAppCore.InitFields();

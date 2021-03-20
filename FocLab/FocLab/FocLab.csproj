@@ -84,10 +84,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\src\Garbage\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\DocTemplates\TaskTemplate.docx" />
     <None Include="wwwroot\js\Task.min.js" />
   </ItemGroup>

@@ -9,10 +9,12 @@ using FocLab.Implementations;
 using FocLab.Implementations.StateCheckers;
 using FocLab.Logic.Implementations;
 using FocLab.Model.Contexts;
+using FocLab.Model.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Croco.Core.Logic.Cache;
 
 namespace CrocoShop.CrocoStuff
 {
@@ -71,6 +73,7 @@ namespace CrocoShop.CrocoStuff
             services.AddSingleton(options);
 
             appBuilder.CheckAndRegisterApplication<FocLabWebApplication>();
+            appBuilder.RegisterDbFileManager<ChemistryDbContext, DbFile, ApplicationDbFileHistory>();
 
             return appBuilder;
         }

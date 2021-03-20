@@ -126,7 +126,7 @@ var SnippetLogin = function() {
             
             console.log("loginData", loginData);
 
-            Requester.SendAjaxPost("/Api/Account/Login/ByEmail", loginData, function (data) {
+            CrocoAppCore.Application.Requester.Post("/Api/Account/Login/ByEmail", loginData, function (data) {
                 console.log("Response from /Api/Account/Login/ByEmail", data);
 
                 btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
@@ -210,7 +210,7 @@ var SnippetLogin = function() {
 
             console.log("Registration", registerData);
 
-            Requester.SendAjaxPost("/Api/Account/Register", registerData, function (data) {
+            CrocoAppCore.Application.Requester.Post("/Api/Account/Register", registerData, function (data) {
                 console.log(data);
 
                 var form = $(".m-login__signup");
@@ -270,7 +270,7 @@ var SnippetLogin = function() {
                 Email: document.getElementById("m_email").value,
             };
 
-            Requester.SendAjaxPost('/Api/Account/ForgotPassword/ByEmail', data, response => {
+            CrocoAppCore.Application.Requester.Post('/Api/Account/ForgotPassword/ByEmail', data, response => {
 
 
                 btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false); // remove 

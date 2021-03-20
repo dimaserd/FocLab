@@ -14,11 +14,10 @@ namespace FocLab.Api.Controllers.Base
     {
         ICrocoRequestContext RequestContext { get; }
 
-        public BaseApiController(ICrocoRequestContextAccessor requestContextAccessor, IActionContextAccessor actionContextAccessor)
+        public BaseApiController(ICrocoRequestContextAccessor requestContextAccessor)
         {
             RequestContext = requestContextAccessor.GetRequestContext();
             UserId = RequestContext.UserPrincipal.UserId;
-            var actionContext = actionContextAccessor.ActionContext;
         }
 
         public string UserId { get; }

@@ -13,7 +13,6 @@ namespace FocLab.Implementations
             Logger = logger;
         }
 
-        
         public void LogException(Exception ex)
         {
             Logger.LogError(ex, "Global error");

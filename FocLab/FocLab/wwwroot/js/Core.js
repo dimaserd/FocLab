@@ -1,61 +1,413 @@
-var Dictionary = /** @class */ (function () {
-    function Dictionary(init) {
-        this._keys = [];
-        this._values = [];
-        if (init) {
-            for (var x = 0; x < init.length; x++) {
-                this[init[x].key] = init[x].value;
-                this._keys.push(init[x].key);
-                this._values.push(init[x].value);
+var UserInterfaceType;
+(function (UserInterfaceType) {
+    UserInterfaceType[UserInterfaceType["CustomInput"] = "CustomInput"] = "CustomInput";
+    UserInterfaceType[UserInterfaceType["TextBox"] = "TextBox"] = "TextBox";
+    UserInterfaceType[UserInterfaceType["TextArea"] = "TextArea"] = "TextArea";
+    UserInterfaceType[UserInterfaceType["DropDownList"] = "DropDownList"] = "DropDownList";
+    UserInterfaceType[UserInterfaceType["Hidden"] = "Hidden"] = "Hidden";
+    UserInterfaceType[UserInterfaceType["DatePicker"] = "DatePicker"] = "DatePicker";
+    UserInterfaceType[UserInterfaceType["MultipleDropDownList"] = "MultipleDropDownList"] = "MultipleDropDownList";
+})(UserInterfaceType || (UserInterfaceType = {}));
+
+
+
+
+
+
+
+
+var FormDrawFactory = (function () {
+    function FormDrawFactory(opts) {
+        this._defaultImplementation = opts.DefaultImplementation;
+        this._implementations = opts.Implementations;
+    }
+    FormDrawFactory.prototype.GetImplementation = function (buildModel, key) {
+        var func = this._implementations.get(key);
+        if (func == null) {
+            return this._defaultImplementation(buildModel);
+        }
+        return func(buildModel);
+    };
+    return FormDrawFactory;
+}());
+
+var FormDrawHelper = (function () {
+    function FormDrawHelper() {
+    }
+    FormDrawHelper.GetPropertyValueName = function (propertyName, modelPrefix) {
+        return "" + modelPrefix + propertyName;
+    };
+    FormDrawHelper.GetOuterFormElement = function (propertyName, modelPrefix) {
+        return document.querySelector("[" + FormDrawHelper.FormPropertyName + "=\"" + propertyName + "\"][" + FormDrawHelper.FormModelPrefix + "=\"" + modelPrefix + "\"]");
+    };
+    FormDrawHelper.GetOuterFormAttributes = function (propertyName, modelPrefix) {
+        return FormDrawHelper.FormPropertyName + "=\"" + propertyName + "\" " + FormDrawHelper.FormModelPrefix + "=\"" + modelPrefix + "\"";
+    };
+    FormDrawHelper.GetInputTypeHidden = function (propName, value, otherProps) {
+        if (otherProps === void 0) { otherProps = null; }
+        var t = otherProps != null ? otherProps : new Map();
+        t.set("value", value);
+        t.set("name", propName);
+        return HtmlDrawHelper.RenderInput("hidden", t);
+    };
+    FormDrawHelper.FormPropertyName = "form-property-name";
+    FormDrawHelper.FormModelPrefix = "form-model-prefix";
+    return FormDrawHelper;
+}());
+
+var HtmlDrawHelper = (function () {
+    function HtmlDrawHelper() {
+    }
+    HtmlDrawHelper.RenderInput = function (type, attrs) {
+        var attrString = HtmlDrawHelper.RenderAttributesString(attrs);
+        return "<input type=" + type + " " + attrString + "/>";
+    };
+    HtmlDrawHelper.RenderAttributesString = function (attrs) {
+        var result = "";
+        if (attrs == null) {
+            return result;
+        }
+        for (var _i = 0, _a = Array.from(attrs.keys()); _i < _a.length; _i++) {
+            var key = _a[_i];
+            var res = attrs.get(key);
+            if (res == null || res === "") {
+                result += " " + key;
+            }
+            else {
+                result += " " + key + "=\"" + res + "\"";
             }
         }
+        return result;
+    };
+    HtmlDrawHelper.RenderSelect = function (className, propName, selectList, attrs) {
+        var attrStr = HtmlDrawHelper.RenderAttributesString(attrs);
+        var select = "<select" + attrStr + " class=\"" + className + "\" name=\"" + propName + "\">";
+        for (var i = 0; i < selectList.length; i++) {
+            var item = selectList[i];
+            var selected = item.Selected ? " selected=\"selected\"" : '';
+            select += "<option" + selected + " value=\"" + item.Value + "\">" + item.Text + "</option>";
+        }
+        select += "</select>";
+        return select;
+    };
+    return HtmlDrawHelper;
+}());
+
+var HtmlSelectDrawHelper = (function () {
+    function HtmlSelectDrawHelper(nullValue) {
+        this.NullValue = nullValue;
     }
-    Dictionary.prototype.getByKey = function (key) {
-        var index = this._keys.indexOf(key, 0);
-        if (index > 0) {
-            return this._values[index];
+    HtmlSelectDrawHelper.prototype.ProccessSelectValues = function (typeDescription, rawValue, selectList) {
+        var _this = this;
+        selectList.forEach(function (x) {
+            if (x.Value == null) {
+                x.Value = _this.NullValue;
+            }
+        });
+        if (rawValue != null) {
+            selectList.forEach(function (x) { return x.Selected = false; });
+            var item = typeDescription.TypeName == CSharpType.Boolean.toString() ?
+                selectList.find(function (x) { return x.Value.toLowerCase() == rawValue.toLowerCase(); }) :
+                selectList.find(function (x) { return x.Value == rawValue; });
+            if (item != null) {
+                item.Selected = true;
+            }
         }
-        return null;
     };
-    Dictionary.prototype.add = function (key, value) {
-        if (this.containsKey(key)) {
-            throw new DOMException("\u041A\u043B\u044E\u0447 " + key + " \u0443\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u0432 \u0434\u0430\u043D\u043D\u043E\u043C \u0441\u043B\u043E\u0432\u0430\u0440\u0435");
+    return HtmlSelectDrawHelper;
+}());
+
+var ValueProviderHelper = (function () {
+    function ValueProviderHelper() {
+    }
+    ValueProviderHelper.GetStringValueFromValueProvider = function (prop, valueProvider) {
+        var value = ValueProviderHelper.GetRawValueFromValueProvider(prop, valueProvider);
+        return value == null ? "" : value;
+    };
+    ValueProviderHelper.GetRawValueFromValueProvider = function (prop, valueProvider) {
+        if (valueProvider == null) {
+            return null;
         }
-        this[key] = value;
-        this._keys.push(key);
-        this._values.push(value);
-    };
-    Dictionary.prototype.remove = function (key) {
-        var index = this._keys.indexOf(key, 0);
-        this._keys.splice(index, 1);
-        this._values.splice(index, 1);
-        delete this[key];
-    };
-    Dictionary.prototype.keys = function () {
-        return this._keys;
-    };
-    Dictionary.prototype.values = function () {
-        return this._values;
-    };
-    Dictionary.prototype.containsKey = function (key) {
-        if (typeof this[key] === "undefined") {
-            return false;
+        if (!prop.IsEnumerable) {
+            var value = valueProvider.Singles.find(function (x) { return x.PropertyName == prop.PropertyDescription.PropertyName; });
+            return (value == null) ? null : value.Value;
         }
-        return true;
+        return "";
     };
-    Dictionary.prototype.toLookup = function () {
+    return ValueProviderHelper;
+}());
+
+var CrocoTypeDescriptionOverrider = (function () {
+    function CrocoTypeDescriptionOverrider() {
+    }
+    CrocoTypeDescriptionOverrider.FindUserInterfacePropBlockByPropertyName = function (model, propertyName) {
+        var prop = model.Blocks.find(function (x) { return x.PropertyName === propertyName; });
+        if (prop == null) {
+            alert("\u0421\u0432\u043E\u0439\u0441\u0442\u0432\u043E '" + propertyName + "' \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E \u0432 \u043C\u043E\u0434\u0435\u043B\u0438 \u043E\u0431\u043E\u0431\u0449\u0435\u043D\u043D\u043E\u0433\u043E \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u043B\u0435\u044C\u0441\u043A\u043E\u0433\u043E \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430");
+            return;
+        }
+        return prop;
+    };
+    CrocoTypeDescriptionOverrider.SetUserInterfaceTypeForProperty = function (model, propertyName, interfaceType) {
+        var prop = CrocoTypeDescriptionOverrider.FindUserInterfacePropBlockByPropertyName(model, propertyName);
+        prop.InterfaceType = interfaceType;
+    };
+    CrocoTypeDescriptionOverrider.RemoveProperty = function (model, propertyName) {
+        model.Blocks = model.Blocks.filter(function (x) { return x.PropertyName !== propertyName; });
+    };
+    CrocoTypeDescriptionOverrider.SetLabelText = function (model, propertyName, labelText) {
+        CrocoTypeDescriptionOverrider.FindUserInterfacePropBlockByPropertyName(model, propertyName).LabelText = labelText;
+    };
+    CrocoTypeDescriptionOverrider.SetHidden = function (model, propertyName) {
+        CrocoTypeDescriptionOverrider.SetUserInterfaceTypeForProperty(model, propertyName, UserInterfaceType.Hidden);
+    };
+    CrocoTypeDescriptionOverrider.SetTextArea = function (model, propertyName) {
+        CrocoTypeDescriptionOverrider.SetUserInterfaceTypeForProperty(model, propertyName, UserInterfaceType.TextArea);
+    };
+    CrocoTypeDescriptionOverrider.SetDropDownList = function (model, propertyName, selectList) {
+        var prop = CrocoTypeDescriptionOverrider.FindUserInterfacePropBlockByPropertyName(model, propertyName);
+        prop.InterfaceType = UserInterfaceType.DropDownList;
+        prop.SelectList = selectList;
+    };
+    return CrocoTypeDescriptionOverrider;
+}());
+
+var FormTypeAfterDrawnDrawer = (function () {
+    function FormTypeAfterDrawnDrawer() {
+    }
+    FormTypeAfterDrawnDrawer.SetInnerHtmlForProperty = function (propertyName, modelPrefix, innerHtml) {
+        var elem = FormDrawHelper.GetOuterFormElement(propertyName, modelPrefix);
+        console.log("SetInnerHtmlForProperty elem", elem);
+        elem.innerHTML = innerHtml;
+    };
+    return FormTypeAfterDrawnDrawer;
+}());
+
+var FormTypeDrawer = (function () {
+    function FormTypeDrawer(formDrawer, typeDescription) {
+        this._formDrawer = formDrawer;
+        this._typeDescription = typeDescription;
+    }
+    FormTypeDrawer.prototype.BeforeFormDrawing = function () {
+        this._formDrawer.BeforeFormDrawing();
+    };
+    FormTypeDrawer.prototype.AfterFormDrawing = function () {
+        this._formDrawer.AfterFormDrawing();
+    };
+    FormTypeDrawer.prototype.TextBoxFor = function (propertyName, wrap) {
+        var prop = PropertyFormTypeSearcher.FindPropByName(this._typeDescription, propertyName);
+        return this._formDrawer.RenderTextBox(prop, wrap);
+    };
+    FormTypeDrawer.prototype.DatePickerFor = function (propertyName, wrap) {
+        var prop = PropertyFormTypeSearcher.FindPropByName(this._typeDescription, propertyName);
+        return this._formDrawer.RenderDatePicker(prop, wrap);
+    };
+    FormTypeDrawer.prototype.TextAreaFor = function (propertyName, wrap) {
+        var prop = PropertyFormTypeSearcher.FindPropByName(this._typeDescription, propertyName);
+        return this._formDrawer.RenderTextArea(prop, wrap);
+    };
+    FormTypeDrawer.prototype.DropDownFor = function (propertyName, selectList, wrap) {
+        var prop = PropertyFormTypeSearcher.FindPropByName(this._typeDescription, propertyName);
+        return this._formDrawer.RenderDropDownList(prop, selectList, wrap);
+    };
+    FormTypeDrawer.prototype.MultipleDropDownFor = function (propertyName, selectList, wrap) {
+        var prop = PropertyFormTypeSearcher.FindPropByName(this._typeDescription, propertyName);
+        return this._formDrawer.RenderMultipleDropDownList(prop, selectList, wrap);
+    };
+    FormTypeDrawer.prototype.HiddenFor = function (propertyName, wrap) {
+        var prop = PropertyFormTypeSearcher.FindPropByName(this._typeDescription, propertyName);
+        return this._formDrawer.RenderHidden(prop, wrap);
+    };
+    return FormTypeDrawer;
+}());
+
+var FormTypeDrawerModelBuilder = (function () {
+    function FormTypeDrawerModelBuilder(model) {
+        this._model = model;
+    }
+    FormTypeDrawerModelBuilder.prototype.SetMultipleDropDownListFor = function (propertyName, selectListItems) {
+        var block = this.GetPropertyBlockByName(propertyName);
+        block.InterfaceType = UserInterfaceType.MultipleDropDownList;
+        block.SelectList = selectListItems;
+        this.ResetBlock(block);
         return this;
     };
-    return Dictionary;
+    FormTypeDrawerModelBuilder.prototype.SetDropDownListFor = function (propertyName, selectListItems) {
+        var block = this.GetPropertyBlockByName(propertyName);
+        block.InterfaceType = UserInterfaceType.DropDownList;
+        block.SelectList = selectListItems;
+        this.ResetBlock(block);
+        return this;
+    };
+    FormTypeDrawerModelBuilder.prototype.SetTextAreaFor = function (propertyName) {
+        var block = this.GetPropertyBlockByName(propertyName);
+        if (block.InterfaceType != UserInterfaceType.TextBox) {
+            throw new Error("\u0422\u043E\u043B\u044C\u043A\u043E \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u0441 \u0442\u0438\u043F\u043E\u043C " + UserInterfaceType.TextBox + " \u043C\u043E\u0436\u043D\u043E \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u044C \u043D\u0430 " + UserInterfaceType.TextArea);
+        }
+        block.InterfaceType = UserInterfaceType.TextArea;
+        this.ResetBlock(block);
+        return this;
+    };
+    FormTypeDrawerModelBuilder.prototype.SetHiddenFor = function (propertyName) {
+        var block = this.GetPropertyBlockByName(propertyName);
+        block.InterfaceType = UserInterfaceType.Hidden;
+        this.ResetBlock(block);
+        return this;
+    };
+    FormTypeDrawerModelBuilder.prototype.ResetBlock = function (block) {
+        var index = this._model.Blocks.findIndex(function (x) { return x.PropertyName == block.PropertyName; });
+        this._model.Blocks[index] = block;
+    };
+    FormTypeDrawerModelBuilder.prototype.GetPropertyBlockByName = function (propertyName) {
+        var block = this._model.Blocks.find(function (x) { return x.PropertyName == propertyName; });
+        if (block == null) {
+            throw new Error("\u0411\u043B\u043E\u043A \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D \u043F\u043E \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u043C\u0443 \u0438\u043C\u0435\u043D\u0438 " + propertyName);
+        }
+        return block;
+    };
+    return FormTypeDrawerModelBuilder;
 }());
 
-var CrocoJsApplication = (function () {
-    function CrocoJsApplication() {
+var GenericForm = (function () {
+    function GenericForm(opts) {
+        this._genericInterfaces = [];
+        if (opts.FormDrawFactory == null) {
+            GenericForm.ThrowError("Фабрика реализаций отрисовки обобщенных форм == null. Проверьте заполнение свойства opts.FormDrawFactory");
+        }
+        this._formDrawFactory = opts.FormDrawFactory;
     }
-    return CrocoJsApplication;
+    GenericForm.UnWrapModel = function (model, drawer) {
+        var html = "";
+        for (var i = 0; i < model.Blocks.length; i++) {
+            var block = model.Blocks[i];
+            switch (block.InterfaceType) {
+                case UserInterfaceType.TextBox:
+                    html += drawer.TextBoxFor(block.PropertyName, true);
+                    break;
+                case UserInterfaceType.TextArea:
+                    html += drawer.TextAreaFor(block.PropertyName, true);
+                    break;
+                case UserInterfaceType.DropDownList:
+                    html += drawer.DropDownFor(block.PropertyName, block.SelectList, true);
+                    break;
+                case UserInterfaceType.Hidden:
+                    html += drawer.HiddenFor(block.PropertyName, true);
+                    break;
+                case UserInterfaceType.DatePicker:
+                    html += drawer.DatePickerFor(block.PropertyName, true);
+                    break;
+                case UserInterfaceType.MultipleDropDownList:
+                    html += drawer.MultipleDropDownFor(block.PropertyName, block.SelectList, true);
+                    break;
+                default:
+                    console.log("Данный блок не реализован", block);
+                    throw new Error("Не реализовано");
+            }
+        }
+        return html;
+    };
+    GenericForm.ThrowError = function (mes) {
+        alert(mes);
+        throw Error(mes);
+    };
+    GenericForm.prototype.DrawForms = function () {
+        var elems = document.getElementsByClassName("generic-user-interface");
+        for (var i = 0; i < elems.length; i++) {
+            this.FindFormAndSave(elems[i]);
+        }
+        for (var i = 0; i < this._genericInterfaces.length; i++) {
+            this.DrawForm(this._genericInterfaces[i]);
+        }
+    };
+    GenericForm.prototype.FindFormAndSave = function (elem) {
+        var id = elem.getAttribute("data-id");
+        var buildModel = window[id];
+        if (buildModel == null) {
+            return;
+        }
+        if (elem.id == null) {
+            console.log(elem);
+            GenericForm.ThrowError("\u041D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \u0438\u043C\u0435\u044E\u0442\u0441\u044F \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u0441 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u043C\u0438 \u0434\u043B\u044F \u0433\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u0438 \u043E\u0431\u043E\u0431\u0449\u0435\u043D\u043D\u043E\u0433\u043E \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430, \u043D\u043E \u0443 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430 \u043D\u0435\u0442 \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430");
+        }
+        this._genericInterfaces.push({
+            ElementId: elem.id,
+            FormDrawKey: "",
+            FormModel: buildModel
+        });
+        window[id] = null;
+    };
+    GenericForm.prototype.DrawForm = function (renderModel) {
+        var drawImpl = this._formDrawFactory.GetImplementation(renderModel.FormModel, renderModel.FormDrawKey);
+        var drawer = new FormTypeDrawer(drawImpl, renderModel.FormModel.TypeDescription);
+        drawer.BeforeFormDrawing();
+        var elem = document.getElementById(renderModel.ElementId);
+        if (elem == null) {
+            GenericForm.ThrowError("\u042D\u043B\u0435\u043C\u0435\u043D\u0442 \u0441 \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u043E\u043C " + renderModel.ElementId + " \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435");
+        }
+        elem.innerHTML = GenericForm.UnWrapModel(renderModel.FormModel, drawer);
+        drawer.AfterFormDrawing();
+    };
+    return GenericForm;
 }());
 
-var CookieWorker = /** @class */ (function () {
+var PropertyFormTypeSearcher = (function () {
+    function PropertyFormTypeSearcher() {
+    }
+    PropertyFormTypeSearcher.FindPropByNameInOneDimension = function (type, propName) {
+        return type.Properties.find(function (x) { return x.PropertyDescription.PropertyName === propName; });
+    };
+    PropertyFormTypeSearcher.FindPropByName = function (type, propName) {
+        if (propName.includes(".")) {
+            var indexOfFirstDot = propName.indexOf(".");
+            var fBit = propName.slice(0, indexOfFirstDot);
+            var anotherBit = propName.slice(indexOfFirstDot + 1, propName.length);
+            var innerProp = PropertyFormTypeSearcher.FindPropByNameInOneDimension(type, fBit);
+            return PropertyFormTypeSearcher.FindPropByName(innerProp, anotherBit);
+        }
+        var prop = PropertyFormTypeSearcher.FindPropByNameInOneDimension(type, propName);
+        if (prop == null) {
+            throw new Error("\u0421\u0432\u043E\u0439\u0441\u0442\u0432\u043E " + propName + " \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E");
+        }
+        return prop;
+    };
+    return PropertyFormTypeSearcher;
+}());
+
+var ValueProviderBuilder = (function () {
+    function ValueProviderBuilder() {
+    }
+    ValueProviderBuilder.CreateFromObject = function (obj) {
+        obj = CrocoAppCore.Application.FormDataUtils.ProccessAllDateTimePropertiesAsString(obj);
+        var res = {
+            Arrays: [],
+            Singles: []
+        };
+        for (var index in obj) {
+            var valueOfProp = obj[index];
+            if (Array.isArray(valueOfProp)) {
+                continue;
+            }
+            if (valueOfProp !== undefined) {
+                res.Singles.push({
+                    PropertyName: index,
+                    Value: valueOfProp
+                });
+            }
+        }
+        return res;
+    };
+    return ValueProviderBuilder;
+}());
+var CSharpType;
+(function (CSharpType) {
+    CSharpType[CSharpType["String"] = "String"] = "String";
+    CSharpType[CSharpType["Int"] = "Int"] = "Int";
+    CSharpType[CSharpType["Decimal"] = "Decimal"] = "Decimal";
+    CSharpType[CSharpType["Boolean"] = "Boolean"] = "Boolean";
+    CSharpType[CSharpType["DateTime"] = "DateTime"] = "DateTime";
+})(CSharpType || (CSharpType = {}));
+
+var CookieWorker = (function () {
     function CookieWorker() {
     }
     CookieWorker.prototype.setCookie = function (name, value, days) {
@@ -85,15 +437,15 @@ var CookieWorker = /** @class */ (function () {
     return CookieWorker;
 }());
 
-var FormDataHelper = /** @class */ (function () {
+var CrocoJsApplication = (function () {
+    function CrocoJsApplication() {
+    }
+    return CrocoJsApplication;
+}());
+
+var FormDataHelper = (function () {
     function FormDataHelper() {
-        /*
-        * Константа для обозначения null значений и вычленения их из строки
-        * */
         this.NullValue = "VALUE_NULL";
-        /*
-        * Константа для имени аттрибута содержащего тип данных
-        * */
         this.DataTypeAttributeName = "data-type";
     }
     FormDataHelper.prototype.FillDataByPrefix = function (object, prefix) {
@@ -133,7 +485,6 @@ var FormDataHelper = /** @class */ (function () {
             else {
                 element.value = valueOfProp;
             }
-            //Выбрасываю событие об изменении значения
             var event_2 = new Event("change");
             element.dispatchEvent(event_2);
         }
@@ -166,14 +517,8 @@ var FormDataHelper = /** @class */ (function () {
             }
             return null;
         }
-        //Чекбоксы нужно проверять отдельно потому что у них свойство не value а почему-то checked
         return htmlElement.type === "checkbox" ? htmlElement.checked : htmlElement.value;
     };
-    /**
-     * Собрать данные с сопоставлением типов
-     * @param modelPrefix префикс модели
-     * @param typeDescription описание типа
-     */
     FormDataHelper.prototype.CollectDataByPrefixWithTypeMatching = function (modelPrefix, typeDescription) {
         this.CheckData(typeDescription);
         var initData = this.BuildObject(typeDescription);
@@ -221,18 +566,12 @@ var FormDataHelper = /** @class */ (function () {
     return FormDataHelper;
 }());
 
-var CrocoJsApplication = /** @class */ (function () {
-    function CrocoJsApplication() {
-    }
-    return CrocoJsApplication;
-}());
 
 
 
 
 
-
-var FormDataUtils = /** @class */ (function () {
+var FormDataUtils = (function () {
     function FormDataUtils() {
     }
     FormDataUtils.prototype.GetStartUrlNoParams = function (startUrl) {
@@ -243,9 +582,6 @@ var FormDataUtils = /** @class */ (function () {
         }
         return startUrl.split('?')[0];
     };
-    /*
-     * Получить объект, который будет содержать все поля
-     * */
     FormDataUtils.prototype.GetUrlParamsObject = function (startUrl) {
         if (startUrl === void 0) { startUrl = null; }
         startUrl = startUrl == null ? window.location.href : startUrl;
@@ -313,12 +649,523 @@ var FormDataUtils = /** @class */ (function () {
     return FormDataUtils;
 }());
 
-var CSharpType;
-(function (CSharpType) {
-    CSharpType[CSharpType["String"] = "String"] = "String";
-    CSharpType[CSharpType["Int"] = "Int"] = "Int";
-    CSharpType[CSharpType["Decimal"] = "Decimal"] = "Decimal";
-    CSharpType[CSharpType["Boolean"] = "Boolean"] = "Boolean";
-    CSharpType[CSharpType["DateTime"] = "DateTime"] = "DateTime";
-})(CSharpType || (CSharpType = {}));
-var CookieWorker=function(){function n(){}return n.prototype.setCookie=function(n,t,i){var u="",r;i&&(r=new Date,r.setTime(r.getTime()+i*864e5),u="; expires="+r.toUTCString());document.cookie=n+"="+(t||"")+u+"; path=/"},n.prototype.getCookie=function(n){for(var t,r=n+"=",u=document.cookie.split(";"),i=0;i<u.length;i++){for(t=u[i];t.charAt(0)===" ";)t=t.substring(1,t.length);if(t.indexOf(r)===0)return t.substring(r.length,t.length)}return null},n.prototype.eraseCookie=function(n){document.cookie=n+"=; Max-Age=-99999999;"},n}(),FormDataHelper=function(){function n(){this.NullValue="VALUE_NULL";this.DataTypeAttributeName="data-type"}return n.prototype.FillDataByPrefix=function(n,t){var f,r,e,i,o,s,u,h,c;for(f in n)if((r=n[f],r!==null&&r!==undefined)&&(e=t+f,i=document.getElementsByName(e)[0],i!==null&&i!==undefined)){if(Array.isArray(r)){for(i.type!=="select-multiple"&&alert("An attempt to set an array to HTMLInputElement which is not a select with multiple attribute"),o=i,s=function(n){var t=o.options[n],i=r.filter(function(n){return t.value===n}).length>0;t.selected=i},u=0;u<o.options.length;u++)s(u);h=new Event("change");i.dispatchEvent(h);continue}i.type==="checkbox"?i.checked=r:i.type==="radio"?document.querySelector("input[name="+e+"][value="+r+"]").checked=!0:i.value=r;c=new Event("change");i.dispatchEvent(c)}},n.prototype.CollectDataByPrefix=function(n,t){var i,u,r,f;for(i in n)if(n.hasOwnProperty(i)){if(u=t+i,r=document.getElementsByName(u)[0],r==null){alert("Элемент не найден по указанному имени "+u);return}f=this.GetRawValueFromElement(r);n[i]=this.ValueMapper(f,r.getAttribute(this.DataTypeAttributeName))}},n.prototype.GetRawValueFromElement=function(n){var t,i;return n.type==="select-multiple"?Array.apply(null,n.options).filter(function(n){return n.selected}).map(function(n){return n.value}):n.type==="radio"?(t=document.querySelector('input[name="'+name+'"]:checked')!=null,t)?(i=document.querySelector('input[name="'+name+'"]:checked'),i.value):null:n.type==="checkbox"?n.checked:n.value},n.prototype.CollectDataByPrefixWithTypeMatching=function(n,t){var i,r,u,f;for(this.CheckData(t),i=this.BuildObject(t),this.CollectDataByPrefix(i,n),r=0;r<t.Properties.length;r++)u=t.Properties[r],f=this.GetInitValue(i[u.PropertyDescription.PropertyName]),i[u.PropertyDescription.PropertyName]=this.ValueMapper(f,u.TypeName);return i},n.prototype.ValueMapper=function(n,t){if(n===this.NullValue)return null;switch(t){case CSharpType.DateTime.toString():return new Date(n);case CSharpType.Decimal.toString():return n!==null?Number(n.replace(/,/g,".")):null;case CSharpType.Boolean.toString():return n!==null?n.toLowerCase()==="true":null}return n},n.prototype.GetInitValue=function(n){var t=n;return t===this.NullValue?null:t},n.prototype.CheckData=function(n){if(!n.IsClass){var t="Тип не являющийся классом не поддерживается";alert(t);throw Error(t);}},n.prototype.BuildObject=function(n){for(var r,i={},t=0;t<n.Properties.length;t++)r=n.Properties[t],i[r.PropertyDescription.PropertyName]="";return i},n}(),CrocoJsApplication=function(){function n(){}return n}(),FormDataUtils=function(){function n(){}return n.prototype.GetStartUrlNoParams=function(n){return(n===void 0&&(n=null),n=n==null?window.location.href:n,!n.includes("?"))?n:n.split("?")[0]},n.prototype.GetUrlParamsObject=function(n){var u,i,r,t,e,f;if(n===void 0&&(n=null),n=n==null?window.location.href:n,u=unescape(n),i={},!u.includes("?"))return i;for(r=u.split("?")[1].split("&"),t=0;t<r.length;t++)(e=r[t],e.includes("="))&&(f=r[t].split("="),i[f[0]]=f[1]);return i},n.prototype.ProccessStringPropertiesAsDateTime=function(n,t){var u=this,i,r;if(Array.isArray(n))return n.map(function(n){return u.ProccessStringPropertiesAsDateTime(n,t)});for(i in n){if(r=n[i],Array.isArray(r)){n[i]=r.map(function(n){return u.ProccessStringPropertiesAsDateTime(n,t)});continue}if(r instanceof Object&&r.constructor===Object){n[i]=this.ProccessStringPropertiesAsDateTime(r,t);continue}t.findIndex(function(n){return n===i})>-1&&n[i]!=null&&(n[i]=new Date(r))}return n},n.prototype.ProccessAllDateTimePropertiesAsString=function(n){for(var t in n){if(n[t]instanceof Object&&n[t].constructor===Object){n[t]=this.ProccessAllDateTimePropertiesAsString(n[t]);continue}Object.prototype.toString.call(n[t])==="[object Date]"&&(n[t]=n[t].toISOString())}return n},n.prototype.ProccessAllNumberPropertiesAsString=function(n){for(var t in n){if(n[t]instanceof Object&&n[t].constructor===Object){n[t]=this.ProccessAllNumberPropertiesAsString(n[t]);continue}typeof n[t]=="number"&&(n[t]=n[t].toString().replace(".",","))}return n},n}(),CSharpType;(function(n){n[n.String="String"]="String";n[n.Int="Int"]="Int";n[n.Decimal="Decimal"]="Decimal";n[n.Boolean="Boolean"]="Boolean";n[n.DateTime="DateTime"]="DateTime"})(CSharpType||(CSharpType={}));
+var GenericInterfaceAppHelper = (function () {
+    function GenericInterfaceAppHelper() {
+        this.FormHelper = new GenericForm({ FormDrawFactory: CrocoAppCore.GetFormDrawFactory() });
+    }
+    GenericInterfaceAppHelper.prototype.GetUserInterfaceModel = function (typeName, modelPrefix, callBack) {
+        var data = { typeName: typeName, modelPrefix: modelPrefix };
+        CrocoAppCore.Application.Requester.Post("/Api/Documentation/GenericInterface", data, function (x) {
+            if (x == null) {
+                alert("\u041E\u0431\u043E\u0431\u0449\u0435\u043D\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441 \u0441 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C '" + typeName + "' \u043D\u0435 \u043F\u0440\u0438\u0448\u0451\u043B \u0441 \u0441\u0435\u0440\u0432\u0435\u0440\u0430");
+                return;
+            }
+            callBack(x);
+        }, function () {
+            var mes = "\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u043F\u043E\u0438\u0441\u043A\u0435 \u043E\u0431\u043E\u0431\u0449\u0435\u043D\u043D\u043E\u0433\u043E \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430 \u043F\u043E \u0442\u0438\u043F\u0443 " + typeName;
+            alert(mes);
+            CrocoAppCore.Application.Logger.LogAction(mes, "", "GenericInterfaceAppHelper.GetUserInterfaceModel.ErrorOnRequest", JSON.stringify(data));
+        });
+    };
+    GenericInterfaceAppHelper.prototype.GetEnumModel = function (enumTypeName, callBack) {
+        var data = { typeName: enumTypeName };
+        CrocoAppCore.Application.Requester.Post("/Api/Documentation/EnumType", data, function (x) {
+            if (x == null) {
+                alert("\u041F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435 \u0441 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C '" + enumTypeName + "' \u043D\u0435 \u043F\u0440\u0438\u0448\u043B\u043E \u0441 \u0441\u0435\u0440\u0432\u0435\u0440\u0430");
+                return;
+            }
+            callBack(x);
+        }, function () {
+            var mes = "\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u043F\u043E\u0438\u0441\u043A\u0435 \u043F\u0435\u0440\u0435\u0447\u0435\u0438\u0441\u043B\u0435\u043D\u0438\u044F \u0441 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C " + enumTypeName;
+            alert(mes);
+            CrocoAppCore.Application.Logger.LogAction(mes, "", "GenericInterfaceAppHelper.GetEnumModel.ErrorOnRequest", JSON.stringify(data));
+        });
+    };
+    return GenericInterfaceAppHelper;
+}());
+var AjaxLoader = (function () {
+    function AjaxLoader() {
+    }
+    AjaxLoader.prototype.InitAjaxLoads = function () {
+        var elems = document.getElementsByClassName("ajax-load-html");
+        for (var i = 0; i < elems.length; i++) {
+            this.LoadInnerHtmlToElement(elems[i], null);
+        }
+    };
+    AjaxLoader.prototype.LoadInnerHtmlToElement = function (element, onSuccessFunc) {
+        var link = $(element).data('ajax-link');
+        var method = $(element).data('ajax-method');
+        var data = $(element).data('request-data');
+        var onSuccessScript = $(element).data('on-finish-script');
+        if (method == null) {
+            method = "GET";
+        }
+        $.ajax({
+            type: method,
+            url: link,
+            cache: false,
+            data: data,
+            success: function (response) {
+                $(element).html(response);
+                $(element).removeClass("ajax-load-html");
+                if (onSuccessScript) {
+                    eval(onSuccessScript);
+                }
+                if (onSuccessFunc) {
+                    onSuccessFunc();
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("There is an execption while executing request " + link);
+                console.log(xhr);
+            }
+        });
+    };
+    return AjaxLoader;
+}());
+
+var FormDrawImplementation = (function () {
+    function FormDrawImplementation(model) {
+        this._datePickerPropNames = [];
+        this._selectClass = 'form-draw-select';
+        this._model = model;
+        this._htmlDrawHelper = new HtmlSelectDrawHelper(CrocoAppCore.Application.FormDataHelper.NullValue);
+    }
+    FormDrawImplementation.prototype.BeforeFormDrawing = function () {
+    };
+    FormDrawImplementation.prototype.AfterFormDrawing = function () {
+        $("." + this._selectClass).selectpicker('refresh');
+        for (var i = 0; i < this._datePickerPropNames.length; i++) {
+            var datePickerPropName = this._datePickerPropNames[i];
+            FormDrawImplementation.InitCalendarForPrefixedProperty(this._model.Prefix, datePickerPropName);
+        }
+    };
+    FormDrawImplementation.prototype.GetPropertyName = function (propName) {
+        return FormDrawHelper.GetPropertyValueName(propName, this._model.Prefix);
+    };
+    FormDrawImplementation.prototype.GetPropertyBlock = function (propertyName) {
+        return this._model.Blocks.find(function (x) { return x.PropertyName === propertyName; });
+    };
+    FormDrawImplementation.GetElementIdForFakeCalendar = function (modelPrefix, propName) {
+        var result = modelPrefix + "_" + propName + "FakeCalendar";
+        return result.replace(new RegExp(/\./, 'g'), '_');
+    };
+    FormDrawImplementation.GetElementIdForRealCalendarBackProperty = function (modelPrefix, propName) {
+        var result = modelPrefix + "_" + propName + "RealCalendar";
+        return result.replace(new RegExp(/\./, 'g'), '_');
+    };
+    FormDrawImplementation.InitCalendarForPrefixedProperty = function (modelPrefix, propName) {
+        var calandarElementId = FormDrawImplementation.GetElementIdForFakeCalendar(modelPrefix, propName);
+        var backPropElementId = FormDrawImplementation.GetElementIdForRealCalendarBackProperty(modelPrefix, propName);
+        DatePickerUtils.SetDatePicker(calandarElementId, backPropElementId);
+    };
+    FormDrawImplementation.prototype.GetPropValue = function (typeDescription) {
+        return ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
+    };
+    FormDrawImplementation.prototype.RenderDatePicker = function (typeDescription, wrap) {
+        var propName = typeDescription.PropertyDescription.PropertyName;
+        var renderPropName = this.GetPropertyName(propName);
+        this._datePickerPropNames.push(propName);
+        var id = FormDrawImplementation.GetElementIdForFakeCalendar(this._model.Prefix, propName);
+        var hiddenProps = new Map()
+            .set("id", FormDrawImplementation.GetElementIdForRealCalendarBackProperty(this._model.Prefix, propName))
+            .set(CrocoAppCore.Application.FormDataHelper.DataTypeAttributeName, CSharpType.String.toString());
+        return this.RenderTextBoxInner(typeDescription, wrap, id, renderPropName + "Fake")
+            + FormDrawHelper.GetInputTypeHidden(renderPropName, "", hiddenProps);
+    };
+    FormDrawImplementation.prototype.RenderHidden = function (typeDescription, wrap) {
+        var value = this.GetPropValue(typeDescription);
+        var html = FormDrawHelper.GetInputTypeHidden(FormDrawHelper.GetPropertyValueName(typeDescription.PropertyDescription.PropertyName, this._model.Prefix), value, null);
+        return html;
+    };
+    FormDrawImplementation.prototype.RenderTextBox = function (typeDescription, wrap) {
+        return this.RenderTextBoxInner(typeDescription, wrap, null, this.GetPropertyName(typeDescription.PropertyDescription.PropertyName));
+    };
+    FormDrawImplementation.prototype.RenderTextBoxInner = function (typeDescription, wrap, id, propName) {
+        var _a;
+        var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
+        var idAttr = id == null ? "" : " id=\"" + id + "\"";
+        var propBlock = this.GetPropertyBlock(typeDescription.PropertyDescription.PropertyName);
+        var cSharpType = ((_a = propBlock.TextBoxData) === null || _a === void 0 ? void 0 : _a.IsInteger) ? CSharpType.Int : CSharpType.String;
+        var dataTypeAttr = CrocoAppCore.Application.FormDataHelper.DataTypeAttributeName + "=" + cSharpType.toString();
+        var typeAndStep = propBlock.TextBoxData.IsInteger ? "type=\"number\" step=\"" + propBlock.TextBoxData.IntStep + "\"" : "type=\"text\"";
+        var html = "<label for=\"" + typeDescription.PropertyDescription.PropertyName + "\">" + propBlock.LabelText + "</label>\n                <input" + idAttr + " autocomplete=\"off\" class=\"form-control m-input\" name=\"" + propName + "\" " + dataTypeAttr + " " + typeAndStep + " value=\"" + value + "\" />";
+        if (!wrap) {
+            return html;
+        }
+        return this.WrapInForm(typeDescription, html);
+    };
+    FormDrawImplementation.prototype.RenderTextArea = function (typeDescription, wrap) {
+        var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
+        var styles = "style=\"margin-top: 0px; margin-bottom: 0px; height: 79px;\"";
+        var propBlock = this.GetPropertyBlock(typeDescription.PropertyDescription.PropertyName);
+        var html = "<label for=\"" + typeDescription.PropertyDescription.PropertyName + "\">" + propBlock.LabelText + "</label>\n            <textarea autocomplete=\"off\" class=\"form-control m-input\" name=\"" + this.GetPropertyName(typeDescription.PropertyDescription.PropertyName) + "\" rows=\"3\" " + styles + ">" + value + "</textarea>";
+        if (!wrap) {
+            return html;
+        }
+        return this.WrapInForm(typeDescription, html);
+    };
+    FormDrawImplementation.prototype.RenderGenericDropList = function (typeDescription, selectList, isMultiple, wrap) {
+        var rawValue = ValueProviderHelper.GetRawValueFromValueProvider(typeDescription, this._model.ValueProvider);
+        this._htmlDrawHelper.ProccessSelectValues(typeDescription, rawValue, selectList);
+        var _class = this._selectClass + " form-control m-input m-bootstrap-select m_selectpicker";
+        var dict = isMultiple ? new Map().set("multiple", "") : null;
+        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyName(typeDescription.PropertyDescription.PropertyName), selectList, dict);
+        var propBlock = this.GetPropertyBlock(typeDescription.PropertyDescription.PropertyName);
+        var html = "<label for=\"" + typeDescription.PropertyDescription.PropertyName + "\">" + propBlock.LabelText + "</label>" + select;
+        if (!wrap) {
+            return html;
+        }
+        return this.WrapInForm(typeDescription, html);
+    };
+    FormDrawImplementation.prototype.WrapInForm = function (prop, html) {
+        return "<div class=\"form-group m-form__group\" " + FormDrawHelper.GetOuterFormAttributes(prop.PropertyDescription.PropertyName, this._model.Prefix) + ">\n                    " + html + "\n                </div>";
+    };
+    FormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList, wrap) {
+        return this.RenderGenericDropList(typeDescription, selectList, false, wrap);
+    };
+    FormDrawImplementation.prototype.RenderMultipleDropDownList = function (typeDescription, selectList, wrap) {
+        return this.RenderGenericDropList(typeDescription, selectList, true, wrap);
+    };
+    return FormDrawImplementation;
+}());
+
+var Logger_Resx = (function () {
+    function Logger_Resx() {
+        this.LoggingAttempFailed = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
+        this.ErrorOnApiRequest = "Ошибка запроса к апи";
+        this.ActionLogged = "Action logged";
+        this.ExceptionLogged = "Исключение залоггировано";
+        this.ErrorOccuredOnLoggingException = "Произошла ошибка в логгировании ошибки, срочно обратитесь к разработчикам приложения";
+    }
+    return Logger_Resx;
+}());
+var Logger = (function () {
+    function Logger() {
+    }
+    Logger.prototype.LogException = function (exceptionText, exceptionDescription, link) {
+        var data = {
+            ExceptionDate: new Date().toISOString(),
+            Description: exceptionDescription,
+            Message: exceptionText,
+            Uri: link !== null ? link : location.href
+        };
+        CrocoAppCore.Application.Requester.Post("/Api/Log/Exception", data, function (x) { return console.log(Logger.Resources.ExceptionLogged, x); }, function () { return alert(Logger.Resources.ErrorOccuredOnLoggingException); });
+    };
+    Logger.prototype.LogAction = function (message, description, eventId, parametersJson) {
+        var data = {
+            LogDate: new Date().toISOString(),
+            EventId: eventId,
+            ParametersJson: parametersJson,
+            Uri: window.location.href,
+            Description: description,
+            Message: message
+        };
+        CrocoAppCore.Application.Requester.Post("/Api/Log/Action", data, function (x) { return console.log(Logger.Resources.ActionLogged, x); }, function () { return alert(Logger.Resources.LoggingAttempFailed); });
+    };
+    Logger.Resources = new Logger_Resx();
+    return Logger;
+}());
+
+var ModalWorker = (function () {
+    function ModalWorker() {
+    }
+    ModalWorker.prototype.ShowModal = function (modalId) {
+        if (modalId === "" || modalId == null || modalId == undefined) {
+            modalId = ModalWorker.LoadingModal;
+        }
+        $("#" + modalId).modal('show');
+    };
+    ModalWorker.prototype.ShowLoadingModal = function () {
+        this.ShowModal(ModalWorker.LoadingModal);
+    };
+    ModalWorker.prototype.HideModals = function () {
+        $('.modal').modal('hide');
+        $(".modal-backdrop.fade").remove();
+        $('.modal').on('shown.bs.modal', function () {
+        });
+    };
+    ModalWorker.prototype.HideModal = function (modalId) {
+        $("#" + modalId).modal('hide');
+    };
+    ModalWorker.LoadingModal = "loadingModal";
+    return ModalWorker;
+}());
+
+var MyCrocoJsApplication = (function () {
+    function MyCrocoJsApplication() {
+        this.CookieWorker = new CookieWorker();
+        this.FormDataUtils = new FormDataUtils();
+        this.FormDataHelper = new FormDataHelper();
+        this.Logger = new Logger();
+        this.Requester = new Requester();
+        this.ModalWorker = new ModalWorker();
+    }
+    return MyCrocoJsApplication;
+}());
+
+var Requester_Resx = (function () {
+    function Requester_Resx() {
+        this.YouPassedAnEmtpyArrayOfObjects = "Вы подали пустой объект в запрос";
+        this.ErrorOccuredWeKnowAboutIt = "Произошла ошибка! Мы уже знаем о ней, и скоро с ней разберемся!";
+        this.FilesNotSelected = "Файлы не выбраны";
+    }
+    return Requester_Resx;
+}());
+var Requester = (function () {
+    function Requester() {
+    }
+    Requester.prototype.GetParams = function (data) {
+        return $.param(data);
+    };
+    Requester.prototype.DeleteCompletedRequest = function (link) {
+        Requester.GoingRequests = Requester.GoingRequests.filter(function (x) { return x !== link; });
+    };
+    Requester.prototype.SendPostRequestWithAnimation = function (link, data, onSuccessFunc, onErrorFunc) {
+        this.SendAjaxPostInner(link, data, onSuccessFunc, onErrorFunc, true);
+    };
+    Requester.prototype.UploadFilesToServer = function (inputId, link, onSuccessFunc, onErrorFunc) {
+        var _this = this;
+        var file_data = $("#" + inputId).prop("files");
+        var form_data = new FormData();
+        if (file_data.length === 0) {
+            CrocoAppCore.ToastrWorker.ShowError(Requester.Resources.FilesNotSelected);
+            if (onErrorFunc) {
+                onErrorFunc();
+            }
+            return;
+        }
+        for (var i = 0; i < file_data.length; i++) {
+            form_data.append("Files", file_data[i]);
+        }
+        $.ajax({
+            url: link,
+            type: "POST",
+            data: form_data,
+            async: true,
+            cache: false,
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            success: (function (response) {
+                _this.DeleteCompletedRequest(link);
+                if (onSuccessFunc) {
+                    onSuccessFunc(response);
+                }
+            }).bind(this),
+            error: (function (jqXHR, textStatus, errorThrown) {
+                CrocoAppCore.Application.Logger.LogException(textStatus.toString(), "ErrorOnApiRequest", link);
+                _this.DeleteCompletedRequest(link);
+                CrocoAppCore.Application.ModalWorker.HideModals();
+                CrocoAppCore.ToastrWorker.ShowError(Requester.Resources.ErrorOccuredWeKnowAboutIt);
+                if (onErrorFunc) {
+                    onErrorFunc(jqXHR, textStatus, errorThrown);
+                }
+            }).bind(this)
+        });
+    };
+    Requester.OnSuccessAnimationHandler = function (data) {
+        CrocoAppCore.Application.ModalWorker.HideModals();
+        CrocoAppCore.ToastrWorker.HandleBaseApiResponse(data);
+    };
+    Requester.OnErrorAnimationHandler = function () {
+        CrocoAppCore.Application.ModalWorker.HideModals();
+        CrocoAppCore.ToastrWorker.ShowError(Requester.Resources.ErrorOccuredWeKnowAboutIt);
+    };
+    Requester.prototype.Get = function (link, data, onSuccessFunc, onErrorFunc) {
+        var _this = this;
+        CrocoAppCore.Application.FormDataUtils.ProccessAllDateTimePropertiesAsString(data);
+        CrocoAppCore.Application.FormDataUtils.ProccessAllNumberPropertiesAsString(data);
+        var params = {
+            type: "GET",
+            data: data,
+            url: link,
+            async: true,
+            cache: false,
+            success: (function (response) {
+                _this.DeleteCompletedRequest(link);
+                if (onSuccessFunc) {
+                    onSuccessFunc(response);
+                }
+            }).bind(this),
+            error: (function (jqXHR, textStatus, errorThrown) {
+                CrocoAppCore.Application.Logger.LogException(textStatus.toString(), "Error on Api Request", link);
+                _this.DeleteCompletedRequest(link);
+                if (onErrorFunc) {
+                    onErrorFunc(jqXHR, textStatus, errorThrown);
+                }
+            }).bind(this)
+        };
+        $.ajax(params);
+    };
+    Requester.prototype.SendAjaxPostInner = function (link, data, onSuccessFunc, onErrorFunc, animations) {
+        var _this = this;
+        if (data == null) {
+            data = {};
+        }
+        CrocoAppCore.Application.FormDataUtils.ProccessAllDateTimePropertiesAsString(data);
+        CrocoAppCore.Application.FormDataUtils.ProccessAllNumberPropertiesAsString(data);
+        var params = {};
+        params.type = "POST";
+        params.data = data;
+        params.url = link;
+        params.async = true;
+        params.cache = false;
+        params.success = (function (response) {
+            _this.DeleteCompletedRequest(link);
+            if (animations) {
+                Requester.OnSuccessAnimationHandler(response);
+            }
+            if (onSuccessFunc) {
+                onSuccessFunc(response);
+            }
+        }).bind(this);
+        params.error = (function (jqXHR, textStatus, errorThrown) {
+            CrocoAppCore.Application.Logger.LogException(textStatus.toString(), "Error on Api Request", link);
+            _this.DeleteCompletedRequest(link);
+            if (animations) {
+                Requester.OnErrorAnimationHandler();
+            }
+            if (onErrorFunc) {
+                onErrorFunc(jqXHR, textStatus, errorThrown);
+            }
+        }).bind(this);
+        var isArray = data.constructor === Array;
+        if (isArray) {
+            params.contentType = "application/json; charset=utf-8";
+            params.dataType = "json";
+            params.data = JSON.stringify(data);
+        }
+        Requester.GoingRequests.push(link);
+        $.ajax(params);
+    };
+    Requester.prototype.Post = function (link, data, onSuccessFunc, onErrorFunc) {
+        this.SendAjaxPostInner(link, data, onSuccessFunc, onErrorFunc, false);
+    };
+    Requester.Resources = new Requester_Resx();
+    Requester.GoingRequests = new Array();
+    return Requester;
+}());
+
+var TabFormDrawImplementation = (function () {
+    function TabFormDrawImplementation(model) {
+        this._datePickerPropNames = [];
+        this._selectClass = 'form-draw-select';
+        this._model = model;
+        this._drawHelper = new HtmlSelectDrawHelper(CrocoAppCore.Application.FormDataHelper.NullValue);
+    }
+    TabFormDrawImplementation.prototype.BeforeFormDrawing = function () {
+    };
+    TabFormDrawImplementation.prototype.AfterFormDrawing = function () {
+        $("." + this._selectClass).selectpicker('refresh');
+        for (var i = 0; i < this._datePickerPropNames.length; i++) {
+            var datePickerPropName = this._datePickerPropNames[i];
+            FormDrawImplementation.InitCalendarForPrefixedProperty(this._model.Prefix, datePickerPropName);
+        }
+    };
+    TabFormDrawImplementation.prototype.RenderTextBox = function (typeDescription) {
+        var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
+        return "<div class=\"form-group m-form__group row\">\n                    <label class=\"col-xl-3 col-lg-3 col-form-label\">\n                        " + typeDescription.PropertyDescription.PropertyDisplayName + ":\n                    </label>\n                    <div class=\"col-xl-9 col-lg-9\">\n                        <div class=\"input-group\">\n                            <input type=\"text\" name=\"" + this.GetPropertyValueName(typeDescription.PropertyDescription.PropertyName) + "\" class=\"form-control m-input\" placeholder=\"\" value=\"" + value + "\">\n                        </div>\n                    </div>\n                </div>";
+    };
+    TabFormDrawImplementation.prototype.RenderTextArea = function (typeDescription) {
+        var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
+        return "<div class=\"form-group m-form__group row\">\n                    <label class=\"col-xl-3 col-lg-3 col-form-label\">" + typeDescription.PropertyDescription.PropertyDisplayName + "</label>\n                    <div class=\"col-xl-9 col-lg-9\">\n                        <textarea class=\"form-control m-input\" name=\"" + this.GetPropertyValueName(typeDescription.PropertyDescription.PropertyName) + "\" rows=\"3\">" + value + "</textarea>\n                    </div>\n                </div>";
+    };
+    TabFormDrawImplementation.prototype.RenderGenericDropList = function (typeDescription, selectList, isMultiple) {
+        var rawValue = ValueProviderHelper.GetRawValueFromValueProvider(typeDescription, this._model.ValueProvider);
+        this._drawHelper.ProccessSelectValues(typeDescription, rawValue, selectList);
+        var _class = this._selectClass + " form-control m-input m-bootstrap-select m_selectpicker";
+        var dict = isMultiple ? new Map().set("multiple", "") : null;
+        var select = HtmlDrawHelper.RenderSelect(_class, this.GetPropertyValueName(typeDescription.PropertyDescription.PropertyName), selectList, dict);
+        return "<div class=\"form-group m-form__group row\">\n                    <label class=\"col-xl-3 col-lg-3 col-form-label\">" + typeDescription.PropertyDescription.PropertyDisplayName + ":</label>\n                    <div class=\"col-xl-9 col-lg-9\">\n                        " + select + "\n                    </div>\n                </div>";
+    };
+    TabFormDrawImplementation.prototype.RenderDropDownList = function (typeDescription, selectList) {
+        return this.RenderGenericDropList(typeDescription, selectList, false);
+    };
+    TabFormDrawImplementation.prototype.RenderMultipleDropDownList = function (typeDescription, selectList) {
+        return this.RenderGenericDropList(typeDescription, selectList, true);
+    };
+    TabFormDrawImplementation.prototype.RenderHidden = function (typeDescription) {
+        var value = ValueProviderHelper.GetStringValueFromValueProvider(typeDescription, this._model.ValueProvider);
+        return "<input type=\"hidden\" name=\"" + this.GetPropertyValueName(typeDescription.PropertyDescription.PropertyName) + "\" value=\"" + value + "\">";
+    };
+    TabFormDrawImplementation.prototype.RenderDatePicker = function (typeDescription) {
+        this._datePickerPropNames.push(typeDescription.PropertyDescription.PropertyName);
+        return this.RenderTextBox(typeDescription);
+    };
+    TabFormDrawImplementation.prototype.GetPropertyValueName = function (propName) {
+        return "" + this._model.Prefix + propName;
+    };
+    return TabFormDrawImplementation;
+}());
+
+var ToastrWorker = (function () {
+    function ToastrWorker() {
+    }
+    ToastrWorker.prototype.ShowError = function (text) {
+        var data = {
+            IsSucceeded: false,
+            Message: text
+        };
+        this.HandleBaseApiResponse(data);
+    };
+    ToastrWorker.prototype.ShowSuccess = function (text) {
+        var data = {
+            IsSucceeded: true,
+            Message: text
+        };
+        this.HandleBaseApiResponse(data);
+    };
+    ToastrWorker.prototype.HandleBaseApiResponse = function (data) {
+        if (data.IsSucceeded === undefined || data.Message === undefined) {
+            alert("Произошла ошибка. Объект не является типом BaseApiResponse");
+            return;
+        }
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        if (data.IsSucceeded) {
+            toastr.success(data.Message);
+        }
+        else {
+            toastr.error(data.Message);
+        }
+    };
+    return ToastrWorker;
+}());
+
+var CrocoAppCore = (function () {
+    function CrocoAppCore() {
+    }
+    CrocoAppCore.GetFormDrawFactory = function () {
+        return new FormDrawFactory({
+            DefaultImplementation: function (x) { return new FormDrawImplementation(x); },
+            Implementations: new Map()
+                .set("Default", function (x) { return new FormDrawImplementation(x); })
+                .set("Tab", function (x) { return new TabFormDrawImplementation(x); })
+        });
+    };
+    CrocoAppCore.InitFields = function () {
+        CrocoAppCore.Application = new MyCrocoJsApplication();
+        CrocoAppCore.AjaxLoader = new AjaxLoader();
+        CrocoAppCore.ToastrWorker = new ToastrWorker();
+        CrocoAppCore.GenericInterfaceHelper = new GenericInterfaceAppHelper();
+        CrocoAppCore.AjaxLoader.InitAjaxLoads();
+    };
+    return CrocoAppCore;
+}());
+CrocoAppCore.InitFields();

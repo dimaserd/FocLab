@@ -8,7 +8,7 @@ namespace FocLab.Extensions
     public static class UserInterfaceBuildExtensions
     {
         /// <summary>
-        /// 
+        /// Отрендерить интерфейс
         /// </summary>
         /// <param name="htmlHelper"></param>
         /// <param name="model"></param>

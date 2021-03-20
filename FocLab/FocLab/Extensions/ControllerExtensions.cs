@@ -13,29 +13,27 @@ namespace FocLab.Extensions
         {
             controller.ViewData.Model = model;
 
-            using (var writer = new StringWriter())
+            using var writer = new StringWriter();
+            var viewEngine = controller.HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;
+            var viewResult = viewEngine.FindView(controller.ControllerContext, viewName, !partial);
+
+            if (!viewResult.Success)
             {
-                var viewEngine = controller.HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;
-                var viewResult = viewEngine.FindView(controller.ControllerContext, viewName, !partial);
-
-                if (!viewResult.Success)
-                {
-                    return $"A view with the name {viewName} could not be found";
-                }
-
-                var viewContext = new ViewContext(
-                    controller.ControllerContext,
-                    viewResult.View,
-                    controller.ViewData,
-                    controller.TempData,
-                    writer,
-                    new HtmlHelperOptions()
-                );
-
-                await viewResult.View.RenderAsync(viewContext);
-
-                return writer.GetStringBuilder().ToString();
+                return $"A view with the name {viewName} could not be found";
             }
+
+            var viewContext = new ViewContext(
+                controller.ControllerContext,
+                viewResult.View,
+                controller.ViewData,
+                controller.TempData,
+                writer,
+                new HtmlHelperOptions()
+            );
+
+            await viewResult.View.RenderAsync(viewContext);
+
+            return writer.GetStringBuilder().ToString();
         }
     }
 }

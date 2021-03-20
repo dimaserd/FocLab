@@ -1,4 +1,13 @@
-var CookieWorker = /** @class */ (function () {
+var CSharpType;
+(function (CSharpType) {
+    CSharpType[CSharpType["String"] = "String"] = "String";
+    CSharpType[CSharpType["Int"] = "Int"] = "Int";
+    CSharpType[CSharpType["Decimal"] = "Decimal"] = "Decimal";
+    CSharpType[CSharpType["Boolean"] = "Boolean"] = "Boolean";
+    CSharpType[CSharpType["DateTime"] = "DateTime"] = "DateTime";
+})(CSharpType || (CSharpType = {}));
+
+var CookieWorker = (function () {
     function CookieWorker() {
     }
     CookieWorker.prototype.setCookie = function (name, value, days) {
@@ -28,15 +37,15 @@ var CookieWorker = /** @class */ (function () {
     return CookieWorker;
 }());
 
-var FormDataHelper = /** @class */ (function () {
+var CrocoJsApplication = (function () {
+    function CrocoJsApplication() {
+    }
+    return CrocoJsApplication;
+}());
+
+var FormDataHelper = (function () {
     function FormDataHelper() {
-        /*
-        * Константа для обозначения null значений и вычленения их из строки
-        * */
         this.NullValue = "VALUE_NULL";
-        /*
-        * Константа для имени аттрибута содержащего тип данных
-        * */
         this.DataTypeAttributeName = "data-type";
     }
     FormDataHelper.prototype.FillDataByPrefix = function (object, prefix) {
@@ -76,7 +85,6 @@ var FormDataHelper = /** @class */ (function () {
             else {
                 element.value = valueOfProp;
             }
-            //Выбрасываю событие об изменении значения
             var event_2 = new Event("change");
             element.dispatchEvent(event_2);
         }
@@ -109,14 +117,8 @@ var FormDataHelper = /** @class */ (function () {
             }
             return null;
         }
-        //Чекбоксы нужно проверять отдельно потому что у них свойство не value а почему-то checked
         return htmlElement.type === "checkbox" ? htmlElement.checked : htmlElement.value;
     };
-    /**
-     * Собрать данные с сопоставлением типов
-     * @param modelPrefix префикс модели
-     * @param typeDescription описание типа
-     */
     FormDataHelper.prototype.CollectDataByPrefixWithTypeMatching = function (modelPrefix, typeDescription) {
         this.CheckData(typeDescription);
         var initData = this.BuildObject(typeDescription);
@@ -164,18 +166,12 @@ var FormDataHelper = /** @class */ (function () {
     return FormDataHelper;
 }());
 
-var CrocoJsApplication = /** @class */ (function () {
-    function CrocoJsApplication() {
-    }
-    return CrocoJsApplication;
-}());
 
 
 
 
 
-
-var FormDataUtils = /** @class */ (function () {
+var FormDataUtils = (function () {
     function FormDataUtils() {
     }
     FormDataUtils.prototype.GetStartUrlNoParams = function (startUrl) {
@@ -186,9 +182,6 @@ var FormDataUtils = /** @class */ (function () {
         }
         return startUrl.split('?')[0];
     };
-    /*
-     * Получить объект, который будет содержать все поля
-     * */
     FormDataUtils.prototype.GetUrlParamsObject = function (startUrl) {
         if (startUrl === void 0) { startUrl = null; }
         startUrl = startUrl == null ? window.location.href : startUrl;
@@ -256,11 +249,37 @@ var FormDataUtils = /** @class */ (function () {
     return FormDataUtils;
 }());
 
-var CSharpType;
-(function (CSharpType) {
-    CSharpType[CSharpType["String"] = "String"] = "String";
-    CSharpType[CSharpType["Int"] = "Int"] = "Int";
-    CSharpType[CSharpType["Decimal"] = "Decimal"] = "Decimal";
-    CSharpType[CSharpType["Boolean"] = "Boolean"] = "Boolean";
-    CSharpType[CSharpType["DateTime"] = "DateTime"] = "DateTime";
-})(CSharpType || (CSharpType = {}));
+var GenericInterfaceAppHelper = (function () {
+    function GenericInterfaceAppHelper() {
+        this.FormHelper = new GenericForm({ FormDrawFactory: CrocoAppCore.GetFormDrawFactory() });
+    }
+    GenericInterfaceAppHelper.prototype.GetUserInterfaceModel = function (typeName, modelPrefix, callBack) {
+        var data = { typeName: typeName, modelPrefix: modelPrefix };
+        CrocoAppCore.Application.Requester.Post("/Api/Documentation/GenericInterface", data, function (x) {
+            if (x == null) {
+                alert("\u041E\u0431\u043E\u0431\u0449\u0435\u043D\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441 \u0441 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C '" + typeName + "' \u043D\u0435 \u043F\u0440\u0438\u0448\u0451\u043B \u0441 \u0441\u0435\u0440\u0432\u0435\u0440\u0430");
+                return;
+            }
+            callBack(x);
+        }, function () {
+            var mes = "\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u043F\u043E\u0438\u0441\u043A\u0435 \u043E\u0431\u043E\u0431\u0449\u0435\u043D\u043D\u043E\u0433\u043E \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430 \u043F\u043E \u0442\u0438\u043F\u0443 " + typeName;
+            alert(mes);
+            CrocoAppCore.Application.Logger.LogAction(mes, "", "GenericInterfaceAppHelper.GetUserInterfaceModel.ErrorOnRequest", JSON.stringify(data));
+        });
+    };
+    GenericInterfaceAppHelper.prototype.GetEnumModel = function (enumTypeName, callBack) {
+        var data = { typeName: enumTypeName };
+        CrocoAppCore.Application.Requester.Post("/Api/Documentation/EnumType", data, function (x) {
+            if (x == null) {
+                alert("\u041F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435 \u0441 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C '" + enumTypeName + "' \u043D\u0435 \u043F\u0440\u0438\u0448\u043B\u043E \u0441 \u0441\u0435\u0440\u0432\u0435\u0440\u0430");
+                return;
+            }
+            callBack(x);
+        }, function () {
+            var mes = "\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u043F\u043E\u0438\u0441\u043A\u0435 \u043F\u0435\u0440\u0435\u0447\u0435\u0438\u0441\u043B\u0435\u043D\u0438\u044F \u0441 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C " + enumTypeName;
+            alert(mes);
+            CrocoAppCore.Application.Logger.LogAction(mes, "", "GenericInterfaceAppHelper.GetEnumModel.ErrorOnRequest", JSON.stringify(data));
+        });
+    };
+    return GenericInterfaceAppHelper;
+}());

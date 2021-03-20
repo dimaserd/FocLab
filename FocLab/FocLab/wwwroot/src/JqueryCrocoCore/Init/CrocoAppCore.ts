@@ -25,3 +25,4 @@
         CrocoAppCore.AjaxLoader.InitAjaxLoads();
     }
 }
+CrocoAppCore.InitFields();

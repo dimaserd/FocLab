@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Contract;
 using FocLab.Consts;
-using FocLab.Controllers.Base;
 using FocLab.Logic.Models.Reagents;
 using FocLab.Logic.Workers.ChemistryReagents;
 using Microsoft.AspNetCore.Authorization;

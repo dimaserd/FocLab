@@ -2,12 +2,10 @@
 using Croco.Core.Contract;
 using FocLab.Consts;
 using FocLab.Controllers.Base;
-using FocLab.Extensions;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Workers.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Zoo.GenericUserInterface.Services;
 
 namespace FocLab.Areas.Admin.Controllers.Mvc.Users
@@ -25,8 +23,7 @@ namespace FocLab.Areas.Admin.Controllers.Mvc.Users
 
         public UsersController(UserSearcher userSearcher, 
             ICrocoRequestContextAccessor requestContextAccessor,
-            IActionContextAccessor actionContextAccessor,
-            GenericUserInterfaceBag genericUserInterfaceBag) : base(requestContextAccessor, actionContextAccessor)
+            GenericUserInterfaceBag genericUserInterfaceBag) : base(requestContextAccessor)
         {
             UserSearcher = userSearcher;
             GenericUserInterfaceBag = genericUserInterfaceBag;

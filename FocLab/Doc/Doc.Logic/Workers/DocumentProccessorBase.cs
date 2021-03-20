@@ -1,21 +1,13 @@
-﻿using Croco.Core.Contract;
-using Croco.Core.Contract.Application;
-using Croco.Core.Contract.Models;
-using FocLab.Logic.Implementations;
+﻿using Croco.Core.Contract.Models;
 using Zoo.Doc.WordGen.Implementations;
 using Zoo.Doc.WordGen.Models;
 using Zoo.Doc.WordGen.Workers;
 
 namespace Doc.Logic.Workers
 {
-    public class DocumentProccessorBase : FocLabWorker
+    public class DocumentProccessorBase
     {
-        public DocumentProccessorBase(ICrocoAmbientContextAccessor context, ICrocoApplication application)
-            : base(context, application)
-        {
-        }
-
-        public static BaseApiResponse RenderDocument(DocXDocumentObjectModel docModel)
+        public BaseApiResponse RenderDocument(DocXDocumentObjectModel docModel)
         {
             var proccessor = new WordDocumentProcessor(new WordDocumentProcessorOptions
             {

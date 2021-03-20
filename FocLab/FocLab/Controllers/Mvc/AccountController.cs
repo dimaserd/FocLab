@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Contract;
 using Croco.Core.Contract.Models;
-using FocLab.Controllers.Base;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Models.Account;
 using FocLab.Logic.Workers.Account;

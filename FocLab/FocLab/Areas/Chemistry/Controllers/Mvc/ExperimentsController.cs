@@ -10,7 +10,6 @@ using FocLab.Logic.Models.Experiments;
 using FocLab.Logic.Workers.ChemistryTaskExperiments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Zoo.GenericUserInterface.Services;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
@@ -30,8 +29,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         public ExperimentsController(ChemistryTaskExperimentsWorker chemistryTaskExperimentsWorker,
             ChemistryExperimentDocumentProccessor documentProccessor,
             GenericUserInterfaceBag interfacesBag,
-            ICrocoRequestContextAccessor requestContextAccessor,
-            IActionContextAccessor contextAccessor) : base(requestContextAccessor, contextAccessor)
+            ICrocoRequestContextAccessor requestContextAccessor) : base(requestContextAccessor)
         {
             ChemistryTaskExperimentsWorker = chemistryTaskExperimentsWorker;
             DocumentProccessor = documentProccessor;

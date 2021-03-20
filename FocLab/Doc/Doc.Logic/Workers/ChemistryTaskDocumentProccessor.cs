@@ -4,6 +4,7 @@ using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Models;
 using Doc.Logic.Entities;
 using Doc.Logic.Models;
+using FocLab.Logic.Implementations;
 using FocLab.Logic.Models;
 using FocLab.Model.Entities.Chemistry;
 using FocLab.Model.Enumerations;
@@ -15,11 +16,15 @@ using Zoo.Doc.WordGen.Models;
 
 namespace Doc.Logic.Workers
 {
-    public class ChemistryTaskDocumentProccessor : DocumentProccessorBase
+    public class ChemistryTaskDocumentProccessor : FocLabWorker
     {
+        DocumentProccessorBase DocumentProccessorBase { get; }
+
         public ChemistryTaskDocumentProccessor(ICrocoAmbientContextAccessor context, 
-            ICrocoApplication app) : base(context, app)
+            ICrocoApplication app,
+            DocumentProccessorBase documentProccessorBase) : base(context, app)
         {
+            DocumentProccessorBase = documentProccessorBase;
         }
 
         private string GetDocTemplateFilePath()
@@ -58,9 +63,8 @@ namespace Doc.Logic.Workers
             var docModel = GetDocumentObjectModel(docSaveFileName,
                 model.SubstanceCounterJson, GetDocumentReplacesDicitonaryByTask(model), file);
 
-            return RenderDocument(docModel);
+            return DocumentProccessorBase.RenderDocument(docModel);
         }
-
 
         private DocXDocumentObjectModel GetDocumentObjectModel(string docSaveFileName, string substanceCounterJson, Dictionary<string, string> replaceDict, ChemistryTaskDbFile file)
         {

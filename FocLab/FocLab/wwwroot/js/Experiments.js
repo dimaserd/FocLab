@@ -6,13 +6,13 @@ var ExperimentIndexHandlers = (function () {
             ExperimentId: id,
             Performed: flag
         };
-        Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Perform', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation('/Api/Chemistry/Experiments/Perform', data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     };
     ExperimentIndexHandlers.RemoveExperiment = function (id) {
-        Requester.SendPostRequestWithAnimation("/Api/Chemistry/Experiments/Remove?id=" + id, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/Chemistry/Experiments/Remove?id=" + id, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     };
     ExperimentIndexHandlers.CancelRemoveExperiment = function (id) {
-        Requester.SendPostRequestWithAnimation("/Api/Chemistry/Experiments/CancelRemove?id=" + id, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/Chemistry/Experiments/CancelRemove?id=" + id, {}, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     };
     ExperimentIndexHandlers.SetHandlers = function () {
         EventSetter.SetHandlerForClass("exp-perform-btn", "click", function (x) {
@@ -50,17 +50,16 @@ var ExperimentPageHandlers = (function () {
             Title: "",
             PerformerText: "",
         };
-        toCollect = FormDataHelper.CollectDataByPrefix(toCollect, "Experiment.");
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(toCollect, "Experiment.");
         var data = {
             Id: ExperimentPageHandlers.ExperimentId,
             Title: toCollect.Title,
             PerformerText: toCollect.PerformerText,
             SubstanceCounterJson: JSON.stringify(SubstanceStaticHandlers.substance.getJSON())
         };
-        Requester.SendPostRequestWithAnimation("/Api/Chemistry/Experiments/Update", data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
+        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/Chemistry/Experiments/Update", data, DefaultHandlers.IfSuccessReloadPageAfter1500MSecs, null);
     };
     ExperimentPageHandlers.SetHandlers = function () {
-        var btn = document.getElementById("exp-update-btn");
         EventSetter.SetHandlerForClass("exp-update-btn", "click", function () { return ExperimentPageHandlers.UpdateExperiment(); });
     };
     return ExperimentPageHandlers;

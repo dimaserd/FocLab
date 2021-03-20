@@ -2,6 +2,7 @@
 //До вызова переопределений библиотека CrocoAppCore должна быть объявлена
 CrocoAppCore.InitFields();
 
+
 //Вызываю отрисовку обобщенных форм на UI
 CrocoAppCore.GenericInterfaceHelper.FormHelper.DrawForms();
 
