@@ -1,13 +1,9 @@
 ﻿using Croco.Core.Audit.Models;
-using Croco.Core.EventSourcing.Implementations.StatusLog.Models;
-using Croco.Core.Model.Entities;
-using FocLab.Model.Abstractions;
 using FocLab.Model.Entities;
 using FocLab.Model.Entities.Chemistry;
 using FocLab.Model.Entities.Tasker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Zoo.Core;
 
 namespace FocLab.Model.Contexts
 {

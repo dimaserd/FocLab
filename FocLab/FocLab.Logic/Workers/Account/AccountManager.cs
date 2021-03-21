@@ -130,9 +130,8 @@ namespace FocLab.Logic.Workers.Account
                 return new BaseApiResponse(false, "Новый пароль не указаны");
             }
 
-            var user = await Query<ApplicationUser>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == model.UserId);
+            var user = await UserManager
+                    .Users.FirstOrDefaultAsync(x => x.Id == model.UserId);
 
             if(user == null)
             {

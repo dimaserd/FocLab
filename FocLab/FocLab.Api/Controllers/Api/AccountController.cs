@@ -28,8 +28,7 @@ namespace FocLab.Api.Controllers.Api
 
         /// <inheritdoc />
         public AccountController(AccountManager accountManager, 
-            AccountLoginWorker accountLoginWorker,
-            AccountManager accountWorker)
+            AccountLoginWorker accountLoginWorker)
         {
             AccountManager = accountManager;
             AccountLoginWorker = accountLoginWorker;

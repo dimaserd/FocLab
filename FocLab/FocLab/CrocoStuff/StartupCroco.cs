@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Croco.Core.Logic.Cache;
+using Croco.Core.Logic.Files;
 using System.IO;
 
 namespace CrocoShop.CrocoStuff
@@ -67,7 +67,7 @@ namespace CrocoShop.CrocoStuff
             appBuilder.RegisterVirtualPathMapper(Env.ContentRootPath);
 
             new EFCrocoApplicationRegistrator(appBuilder)
-                .AddEntityFrameworkDataConnection(() => ChemistryDbContext.Create(Configuration));
+                .AddEntityFrameworkDataConnection<ChemistryDbContext>();
 
             var options = Configuration.GetSection("FocLabOptions").Get<CrocoWebApplicationOptions>();
 
