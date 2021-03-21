@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FocLab.Model.Migrations
@@ -8,6 +7,9 @@ namespace FocLab.Model.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "Store");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -27,6 +29,11 @@ namespace FocLab.Model.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(nullable: true),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -39,13 +46,12 @@ namespace FocLab.Model.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CurrentSnapshotId = table.Column<string>(nullable: true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     LastModifiedOn = table.Column<DateTime>(nullable: true),
                     LastModifiedBy = table.Column<string>(nullable: true),
-                    FilePath = table.Column<string>(nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     FileName = table.Column<string>(nullable: true),
                     FileData = table.Column<byte[]>(nullable: true)
                 },
@@ -55,11 +61,30 @@ namespace FocLab.Model.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AuditLog",
+                schema: "Store",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    RequestId = table.Column<string>(nullable: true),
+                    EntityName = table.Column<string>(nullable: true),
+                    OperatedAt = table.Column<DateTime>(nullable: false),
+                    OperatedBy = table.Column<string>(nullable: true),
+                    KeyValues = table.Column<string>(nullable: true),
+                    OldValues = table.Column<string>(nullable: true),
+                    NewValues = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuditLog", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -97,7 +122,7 @@ namespace FocLab.Model.Migrations
                     Name = table.Column<string>(nullable: true),
                     Surname = table.Column<string>(nullable: true),
                     Patronymic = table.Column<string>(nullable: true),
-                    CurrentSnapshotId = table.Column<string>(nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     LastModifiedOn = table.Column<DateTime>(nullable: true),
@@ -126,6 +151,11 @@ namespace FocLab.Model.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(nullable: true),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     Name = table.Column<string>(nullable: true),
                     FileId = table.Column<int>(nullable: false),
                     CreationDate = table.Column<DateTime>(nullable: false)
@@ -146,13 +176,7 @@ namespace FocLab.Model.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    CurrentSnapshotId = table.Column<string>(nullable: true),
-                    CreatedBy = table.Column<string>(nullable: true),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    LastModifiedOn = table.Column<DateTime>(nullable: true),
-                    LastModifiedBy = table.Column<string>(nullable: true),
                     ParentId = table.Column<int>(nullable: false),
-                    FilePath = table.Column<string>(nullable: true),
                     FileName = table.Column<string>(nullable: true),
                     FileData = table.Column<byte[]>(nullable: true),
                     FileMimeType = table.Column<string>(nullable: true)
@@ -173,7 +197,7 @@ namespace FocLab.Model.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -287,10 +311,55 @@ namespace FocLab.Model.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DayTasks",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(nullable: true),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    TaskDate = table.Column<DateTime>(type: "date", nullable: false),
+                    TaskText = table.Column<string>(nullable: true),
+                    TaskTitle = table.Column<string>(nullable: true),
+                    FinishDate = table.Column<DateTime>(nullable: true),
+                    TaskTarget = table.Column<string>(nullable: true),
+                    TaskReview = table.Column<string>(nullable: true),
+                    TaskComment = table.Column<string>(nullable: true),
+                    EstimationSeconds = table.Column<int>(nullable: false),
+                    CompletionSeconds = table.Column<int>(nullable: false),
+                    Seconds = table.Column<int>(nullable: false),
+                    AuthorId = table.Column<string>(nullable: true),
+                    AssigneeUserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DayTasks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DayTasks_AspNetUsers_AssigneeUserId",
+                        column: x => x.AssigneeUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DayTasks_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ChemistryTasks",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(nullable: true),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     Title = table.Column<string>(nullable: true),
                     DeadLineDate = table.Column<DateTime>(nullable: false),
                     PerformedDate = table.Column<DateTime>(nullable: true),
@@ -330,11 +399,47 @@ namespace FocLab.Model.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DayTaskComments",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(nullable: true),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Comment = table.Column<string>(nullable: true),
+                    DayTaskId = table.Column<string>(nullable: true),
+                    AuthorId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DayTaskComments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DayTaskComments_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DayTaskComments_DayTasks_DayTaskId",
+                        column: x => x.DayTaskId,
+                        principalTable: "DayTasks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ChemistryTaskDbFiles",
                 columns: table => new
                 {
                     ChemistryTaskId = table.Column<string>(nullable: false),
                     FileId = table.Column<int>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(nullable: true),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -359,6 +464,11 @@ namespace FocLab.Model.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(nullable: true),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     Title = table.Column<string>(nullable: true),
                     ChemistryTaskId = table.Column<string>(nullable: true),
                     PerformerId = table.Column<string>(nullable: true),
@@ -391,6 +501,11 @@ namespace FocLab.Model.Migrations
                 {
                     TaskId = table.Column<string>(nullable: false),
                     ReagentId = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(nullable: true),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     TakenQuantity = table.Column<decimal>(nullable: false),
                     ReturnedQuantity = table.Column<decimal>(nullable: false)
                 },
@@ -417,6 +532,11 @@ namespace FocLab.Model.Migrations
                 {
                     ChemistryTaskExperimentId = table.Column<string>(nullable: false),
                     FileId = table.Column<int>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(nullable: true),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -536,6 +656,26 @@ namespace FocLab.Model.Migrations
                 column: "PerformerUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DayTaskComments_AuthorId",
+                table: "DayTaskComments",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DayTaskComments_DayTaskId",
+                table: "DayTaskComments",
+                column: "DayTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DayTasks_AssigneeUserId",
+                table: "DayTasks",
+                column: "AssigneeUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DayTasks_AuthorId",
+                table: "DayTasks",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DbFileHistory_ParentId",
                 table: "DbFileHistory",
                 column: "ParentId");
@@ -571,7 +711,14 @@ namespace FocLab.Model.Migrations
                 name: "ChemistryTaskReagents");
 
             migrationBuilder.DropTable(
+                name: "DayTaskComments");
+
+            migrationBuilder.DropTable(
                 name: "DbFileHistory");
+
+            migrationBuilder.DropTable(
+                name: "AuditLog",
+                schema: "Store");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -581,6 +728,9 @@ namespace FocLab.Model.Migrations
 
             migrationBuilder.DropTable(
                 name: "ChemistryReagents");
+
+            migrationBuilder.DropTable(
+                name: "DayTasks");
 
             migrationBuilder.DropTable(
                 name: "ChemistryTasks");

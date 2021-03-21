@@ -14,7 +14,7 @@ namespace FocLab.Model.Contexts
     /// <summary>
     /// Контекст базы данных для приложения Химия
     /// </summary>
-    public class ChemistryDbContext : ApplicationDbContext, IStoreContext
+    public class ChemistryDbContext : ApplicationDbContext
     {
         public const string ConnectionString = "ServerConnection";
 
@@ -33,15 +33,9 @@ namespace FocLab.Model.Contexts
 
 
         #region IStore
-        public DbSet<RobotTask> RobotTasks { get; set; }
 
         public DbSet<AuditLog> AuditLogs { get; set; }
 
-        public DbSet<IntegrationMessageLog> IntegrationMessageLogs { get; set; }
-
-        public DbSet<IntegrationMessageStatusLog> IntegrationMessageStatusLogs { get; set; }
-
-        public DbSet<WebAppRequestContextLog> WebAppRequestContextLogs { get; set; }
         #endregion
 
         public DbSet<DbFile> DbFiles { get; set; }
@@ -97,8 +91,6 @@ namespace FocLab.Model.Contexts
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<AuditLog>().Property(x => x.Id).ValueGeneratedOnAdd();
-
-            WebAppRequestContextLog.OnModelCreating(builder);
 
             ChemistryTaskExperimentFile.OnModelCreating(builder);
             ChemistryTaskReagent.OnModelCreating(builder);

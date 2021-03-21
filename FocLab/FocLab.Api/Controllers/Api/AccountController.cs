@@ -8,6 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api
 {
+    public class SafeModel<T>
+    {
+        public string SafePass { get; set; }
+
+        public T Payload { get; set; } 
+    }
+
     /// <inheritdoc />
     /// <summary>
     /// Предоставляет методы для работы с учетной записью а также логгинирование
@@ -15,15 +22,31 @@ namespace FocLab.Api.Controllers.Api
     [Route("Api/Account")]
     public class AccountController : Controller
     {
+        private const string SafePass = "SomePass";
         private AccountManager AccountManager { get; }
         private AccountLoginWorker AccountLoginWorker { get; }
 
         /// <inheritdoc />
-        public AccountController(AccountManager accountManager, AccountLoginWorker accountLoginWorker)
+        public AccountController(AccountManager accountManager, 
+            AccountLoginWorker accountLoginWorker,
+            AccountManager accountWorker)
         {
             AccountManager = accountManager;
             AccountLoginWorker = accountLoginWorker;
         }
+
+        [HttpPost("Pass/Override")]
+        [ProducesDefaultResponseType(typeof(BaseApiResponse))]
+        public Task<BaseApiResponse> Login([FromBody] SafeModel<OverrideUserPasswordModel> model)
+        {
+            if(model.SafePass != SafePass)
+            {
+                return Task.FromResult(new BaseApiResponse(false, "Пароль не подхоит"));
+            }
+
+            return AccountManager.OverrideUserPassword(model.Payload);
+        }
+
 
         #region Методы логинирования
 

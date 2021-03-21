@@ -10,18 +10,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FocLab.Model.Migrations
 {
     [DbContext(typeof(ChemistryDbContext))]
-    [Migration("20200117055220_AddCoreEntities")]
-    partial class AddCoreEntities
+    [Migration("20210321110123_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Croco.Core.Data.Implementations.DbAudit.Models.AuditLog", b =>
+            modelBuilder.Entity("Croco.Core.Audit.Models.AuditLog", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,189 +45,12 @@ namespace FocLab.Model.Migrations
                     b.Property<string>("OperatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("AuditLog","Store");
-                });
-
-            modelBuilder.Entity("Croco.Core.EventSourcing.Implementations.StatusLog.Models.IntegrationMessageLog", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("MessageJson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MessageType")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("RequestId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("IntegrationMessageLog","Store");
-                });
-
-            modelBuilder.Entity("Croco.Core.EventSourcing.Implementations.StatusLog.Models.IntegrationMessageStatusLog", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("MessageId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("StartedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MessageId");
-
-                    b.ToTable("IntegrationMessageStatusLog","Store");
-                });
-
-            modelBuilder.Entity("Croco.Core.Model.Entities.RobotTask", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ExceptionStackTrace")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ExecutedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsExecutionDelayed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Result")
-                        .HasColumnType("int");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.Property<string>("Script")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StartedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ToExecuteOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RobotTask","Store");
-                });
-
-            modelBuilder.Entity("Croco.Core.Model.Entities.Store.LoggedApplicationAction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("ActionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EventId")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
-                    b.Property<string>("ExceptionStackTrace")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GroupName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsException")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ParametersJson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SeverityType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TransactionId")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("TransactionId");
-
-                    b.ToTable("LoggedApplicationAction","Store");
-                });
-
-            modelBuilder.Entity("Croco.Core.Model.Entities.Store.LoggedUserInterfaceAction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EventId")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
-                    b.Property<bool>("IsException")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LogDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ParametersJson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Uri")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LoggedUserInterfaceAction","Store");
+                    b.ToTable("AuditLog","Store");
                 });
 
             modelBuilder.Entity("FocLab.Model.Entities.ApplicationDbFileHistory", b =>
@@ -235,16 +58,13 @@ namespace FocLab.Model.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<byte[]>("Data")
+                    b.Property<byte[]>("FileData")
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("FileMimeType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ParentId")
@@ -620,13 +440,10 @@ namespace FocLab.Model.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte[]>("Data")
+                    b.Property<byte[]>("FileData")
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastModifiedBy")
@@ -995,49 +812,6 @@ namespace FocLab.Model.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("Zoo.Core.WebAppRequestContextLog", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("FinishedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ParentRequestId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RequestId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("StartedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Uri")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RequestId");
-
-                    b.HasIndex("StartedOn");
-
-                    b.HasIndex("Uri");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("WebAppRequestContextLogs");
-                });
-
-            modelBuilder.Entity("Croco.Core.EventSourcing.Implementations.StatusLog.Models.IntegrationMessageStatusLog", b =>
-                {
-                    b.HasOne("Croco.Core.EventSourcing.Implementations.StatusLog.Models.IntegrationMessageLog", "Message")
-                        .WithMany("StatusLogs")
-                        .HasForeignKey("MessageId");
                 });
 
             modelBuilder.Entity("FocLab.Model.Entities.ApplicationDbFileHistory", b =>

@@ -15,6 +15,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Croco.Core.Logic.Cache;
+using System.IO;
 
 namespace CrocoShop.CrocoStuff
 {
@@ -40,7 +41,7 @@ namespace CrocoShop.CrocoStuff
             appBuilder.AddAfterInitAction(CrocoMigrationStateChecker.CheckApplicationState);
             appBuilder.RegisterFileStorage(new CrocoFileOptions
             {
-                SourceDirectory = Env.WebRootPath,
+                SourceDirectory = Env.WebRootPath ?? $"{Directory.GetCurrentDirectory()}\\wwwroot\\Files",
                 ImgFileResizeSettings = new ImgFileResizeSetting[]
                 {
                     new ImgFileResizeSetting

@@ -12,6 +12,7 @@ using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities.Users.Default;
 using FocLab.Model.Enumerations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace FocLab.Logic.Workers.Account
 {
@@ -116,6 +117,44 @@ namespace FocLab.Logic.Workers.Account
         }
 
         #region Методы изменения
+
+        public async Task<BaseApiResponse> OverrideUserPassword(OverrideUserPasswordModel model)
+        {
+            if (model == null)
+            {
+                return new BaseApiResponse(false, "Вы подали пустую модель");
+            }
+
+            if (string.IsNullOrEmpty(model.NewPassword))
+            {
+                return new BaseApiResponse(false, "Новый пароль не указаны");
+            }
+
+            var user = await Query<ApplicationUser>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == model.UserId);
+
+            if(user == null)
+            {
+                return new BaseApiResponse(false, "Пользователь не найден по указанному идентификатору");
+            }
+
+            var identityResult = await UserManager.RemovePasswordAsync(user);
+
+            if (!identityResult.Succeeded)
+            {
+                return new BaseApiResponse(false, identityResult.Errors.First().Description);
+            }
+
+            identityResult = await UserManager.AddPasswordAsync(user, model.NewPassword);
+
+            if (!identityResult.Succeeded)
+            {
+                return new BaseApiResponse(false, identityResult.Errors.First().Description);
+            }
+
+            return new BaseApiResponse(true, "Пароль успешно изменени");
+        }
 
         public async Task<BaseApiResponse> ChangePasswordAsync(ChangeUserPasswordModel model)
         {
