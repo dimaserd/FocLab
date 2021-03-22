@@ -36,7 +36,7 @@ namespace FocLab.Api.Controllers.Api
 
         [HttpPost("Pass/Override")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public Task<BaseApiResponse> Login( SafeModel<OverrideUserPasswordModel> model)
+        public Task<BaseApiResponse> Login([FromBody] SafeModel<OverrideUserPasswordModel> model)
         {
             if(model.SafePass != SafePass)
             {
@@ -56,7 +56,7 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [HttpPost("Login/ByEmail")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse<LoginResultModel>))]
-        public Task<BaseApiResponse<LoginResultModel>> Login(LoginModel model)
+        public Task<BaseApiResponse<LoginResultModel>> Login([FromBody]LoginModel model)
         {
             return AccountLoginWorker.LoginAsync(model);
         }
@@ -68,7 +68,7 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [HttpPost("Login/ByPhone")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse<LoginResultModel>))]
-        public Task<BaseApiResponse<LoginResultModel>> LoginByPhone(LoginByPhoneNumberModel model)
+        public Task<BaseApiResponse<LoginResultModel>> LoginByPhone([FromBody] LoginByPhoneNumberModel model)
         {
             return AccountLoginWorker.LoginByPhoneNumberAsync(model);
         }
@@ -80,7 +80,7 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [HttpPost("Login/AsUser")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public Task<BaseApiResponse> LoginAsUser(UserIdModel model)
+        public Task<BaseApiResponse> LoginAsUser([FromBody] UserIdModel model)
         {
             return AccountLoginWorker.LoginAsUserAsync(model);
         }
@@ -95,7 +95,7 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [HttpPost("Change/Password")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public Task<BaseApiResponse> ChangePassword(ChangeUserPasswordModel model)
+        public Task<BaseApiResponse> ChangePassword([FromBody] ChangeUserPasswordModel model)
         {
             return AccountManager.ChangePasswordAsync(model);
         }

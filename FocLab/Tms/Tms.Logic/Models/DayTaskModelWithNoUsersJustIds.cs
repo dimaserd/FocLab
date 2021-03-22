@@ -1,9 +1,6 @@
-﻿using FocLab.Model.Entities.Tasker;
-using Newtonsoft.Json;
-using System;
-using System.Linq.Expressions;
+﻿using System;
 
-namespace Tms.Logic.Models.Tasker
+namespace Tms.Logic.Models
 {
     public class DayTaskModelWithNoUsersJustIds
     {

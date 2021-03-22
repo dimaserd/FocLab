@@ -13,14 +13,14 @@ using FocLab.Logic.Resources;
 using FocLab.Model.Entities.Tasker;
 using FocLab.Model.Entities.Users.Default;
 using Microsoft.EntityFrameworkCore;
-using Tms.Logic.Models.Tasker;
+using Tms.Logic.Models;
 
-namespace Tms.Logic.Workers.Tasker
+namespace Tms.Logic.Services
 {
     /// <summary>
     /// Класс для работы с заданиями на день 
     /// </summary>
-    public class DayTasksWorker : FocLabWorker
+    public class DayTasksService : FocLabWorker
     {
         /// <summary>
         /// Задания можно создавать и редактировать за один прошедший день
@@ -32,7 +32,7 @@ namespace Tms.Logic.Workers.Tasker
         /// </summary>
         /// <param name="contextAccessor"></param>
         /// <param name="application"></param>
-        public DayTasksWorker(ICrocoAmbientContextAccessor contextAccessor, ICrocoApplication application) : base(contextAccessor, application)
+        public DayTasksService(ICrocoAmbientContextAccessor contextAccessor, ICrocoApplication application) : base(contextAccessor, application)
         {
         }
 
@@ -94,7 +94,7 @@ namespace Tms.Logic.Workers.Tasker
 
             var noAssignee = model.ShowTasksWithNoAssignee || model.UserIds == null || model.UserIds.Length == 0;
 
-            initQuery = noAssignee?
+            initQuery = noAssignee ?
                 initQuery.Where(x => x.AssigneeUserId == null)
                 : initQuery.Where(x => model.UserIds.Contains(x.AssigneeUserId));
 
@@ -299,10 +299,10 @@ namespace Tms.Logic.Workers.Tasker
             });
 
         }
-    
+
         private Task<Dictionary<string, UserFullNameEmailAndAvatarModel>> GetCachedUsers()
         {
-            return Application.CacheManager.GetOrAddValueAsync($"{this.GetType().FullName}.users", async () =>
+            return Application.CacheManager.GetOrAddValueAsync($"{GetType().FullName}.users", async () =>
             {
                 var result = await Query<ApplicationUser>().Select(x => new UserFullNameEmailAndAvatarModel
                 {
@@ -335,10 +335,12 @@ namespace Tms.Logic.Workers.Tasker
                 .ToList();
         }
 
-        private DayTaskModel ToDayTaskModel(Dictionary<string, UserFullNameEmailAndAvatarModel> users, 
+        private DayTaskModel ToDayTaskModel(Dictionary<string, UserFullNameEmailAndAvatarModel> users,
             DayTaskModelWithNoUsersJustIds model)
         {
-            return new DayTaskModel(model, users[model.AuthorId], users[model.AssigneeId]);
+            users.TryGetValue(model.AuthorId, out var author);
+            users.TryGetValue(model.AuthorId, out var assignee);
+            return new DayTaskModel(model, author, assignee);
         }
 
         internal static Expression<Func<ApplicationDayTask, DayTaskModelWithNoUsersJustIds>> SelectExpression = x => new DayTaskModelWithNoUsersJustIds

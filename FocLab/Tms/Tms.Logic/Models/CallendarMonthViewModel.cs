@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Tms.Logic.Models.Tasker
+namespace Tms.Logic.Models
 {
     /// <summary>
     /// Модель месяца для календаря

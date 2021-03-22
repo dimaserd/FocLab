@@ -1,7 +1,7 @@
 ﻿using FocLab.Logic.Resources;
 using System.ComponentModel.DataAnnotations;
 
-namespace Tms.Logic.Models.Tasker
+namespace Tms.Logic.Models
 {
     public class UpdateDayTaskComment
     {

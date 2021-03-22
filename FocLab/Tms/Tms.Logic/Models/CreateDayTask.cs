@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tms.Logic.Models.Tasker
+namespace Tms.Logic.Models
 {
     public class CreateOrUpdateDayTask
     {
@@ -35,5 +35,4 @@ namespace Tms.Logic.Models.Tasker
         /// </summary>
         public string TaskComment { get; set; }
     }
-
 }

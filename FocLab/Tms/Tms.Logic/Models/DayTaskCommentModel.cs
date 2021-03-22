@@ -1,6 +1,6 @@
 ﻿using FocLab.Logic.Models.Users.Projection;
 
-namespace Tms.Logic.Models.Tasker
+namespace Tms.Logic.Models
 {
     public class DayTaskCommentModel
     {

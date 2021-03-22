@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Tms.Logic.Models.Tasker
+namespace Tms.Logic.Models
 {
     public class DayTaskModel
     {
