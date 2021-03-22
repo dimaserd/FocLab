@@ -2,6 +2,7 @@
 using Croco.Core.Contract;
 using FocLab.Controllers.Base;
 using FocLab.Logic.Workers.Users;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Controllers.Mvc

@@ -23,7 +23,7 @@ class Logger implements ICrocoLogger {
             Uri: link !== null ? link : location.href
         };
 
-        CrocoAppCore.Application.Requester.Post("/Api/Log/Exception", data, x => console.log(Logger.Resources.ExceptionLogged, x), () => alert(Logger.Resources.ErrorOccuredOnLoggingException));
+        CrocoAppCore.Application.Requester.SendAjaxPostInner("/Api/Log/Exception", data, x => console.log(Logger.Resources.ExceptionLogged, x), () => alert(Logger.Resources.ErrorOccuredOnLoggingException), false, false);
     }
 
     public LogAction(message: string, description: string, eventId: string, parametersJson: string) : void {
@@ -37,6 +37,6 @@ class Logger implements ICrocoLogger {
             Message: message
         };    
 
-        CrocoAppCore.Application.Requester.Post("/Api/Log/Action", data, x => console.log(Logger.Resources.ActionLogged, x), () => alert(Logger.Resources.LoggingAttempFailed));
+        CrocoAppCore.Application.Requester.SendAjaxPostInner("/Api/Log/Action", data, x => console.log(Logger.Resources.ActionLogged, x), () => alert(Logger.Resources.LoggingAttempFailed), false, false);
     }
 }

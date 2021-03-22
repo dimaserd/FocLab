@@ -19,7 +19,7 @@ class Requester implements ICrocoRequester {
     }
 
     SendPostRequestWithAnimation<TObject>(link: string, data: Object, onSuccessFunc: (x: TObject) => void, onErrorFunc: Function):void {
-        this.SendAjaxPostInner(link, data, onSuccessFunc, onErrorFunc, true);
+        this.SendAjaxPostInner(link, data, onSuccessFunc, onErrorFunc, true, true);
     }
 
     UploadFilesToServer<TObject>(inputId: string, link: string, onSuccessFunc: (x: TObject) => void, onErrorFunc: Function) {
@@ -59,7 +59,6 @@ class Requester implements ICrocoRequester {
             }).bind(this),
             error: ((jqXHR, textStatus, errorThrown) => {
 
-                
                 //Логгирую ошибку
                 CrocoAppCore.Application.Logger.LogException(textStatus.toString(), "ErrorOnApiRequest", link);
 
@@ -126,7 +125,7 @@ class Requester implements ICrocoRequester {
     }
 
 
-    private SendAjaxPostInner(link: string, data: Object, onSuccessFunc: Function, onErrorFunc: Function, animations: boolean) {
+    public SendAjaxPostInner(link: string, data: Object, onSuccessFunc: Function, onErrorFunc: Function, animations: boolean, logOnError: boolean) {
 
         if (data == null) {
             data = {};
@@ -155,8 +154,11 @@ class Requester implements ICrocoRequester {
         }).bind(this);
 
         params.error = ((jqXHR, textStatus, errorThrown) => {
-            //Логгирую ошибку
-            CrocoAppCore.Application.Logger.LogException(textStatus.toString(), "Error on Api Request", link);
+
+            if (logOnError) {
+                //Логгирую ошибку
+                CrocoAppCore.Application.Logger.LogException(textStatus.toString(), "Error on Api Request", link);
+            }
 
             this.DeleteCompletedRequest(link);
 
@@ -185,6 +187,6 @@ class Requester implements ICrocoRequester {
     }
 
     Post<TObject>(link: string, data: Object, onSuccessFunc: (x: TObject) => void, onErrorFunc: Function) {
-        this.SendAjaxPostInner(link, data, onSuccessFunc, onErrorFunc, false);
+        this.SendAjaxPostInner(link, data, onSuccessFunc, onErrorFunc, false, true);
     }
 }

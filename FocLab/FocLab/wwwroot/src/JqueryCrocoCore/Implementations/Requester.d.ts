@@ -13,6 +13,6 @@ declare class Requester implements ICrocoRequester {
     static OnSuccessAnimationHandler(data: IBaseApiResponse): void;
     static OnErrorAnimationHandler(): void;
     Get<TObject>(link: string, data: Object, onSuccessFunc: (x: TObject) => void, onErrorFunc: Function): void;
-    private SendAjaxPostInner;
+    SendAjaxPostInner(link: string, data: Object, onSuccessFunc: Function, onErrorFunc: Function, animations: boolean, logOnError: boolean): void;
     Post<TObject>(link: string, data: Object, onSuccessFunc: (x: TObject) => void, onErrorFunc: Function): void;
 }

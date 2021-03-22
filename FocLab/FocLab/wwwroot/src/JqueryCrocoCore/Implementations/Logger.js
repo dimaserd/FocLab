@@ -18,7 +18,7 @@ var Logger = (function () {
             Message: exceptionText,
             Uri: link !== null ? link : location.href
         };
-        CrocoAppCore.Application.Requester.Post("/Api/Log/Exception", data, function (x) { return console.log(Logger.Resources.ExceptionLogged, x); }, function () { return alert(Logger.Resources.ErrorOccuredOnLoggingException); });
+        CrocoAppCore.Application.Requester.SendAjaxPostInner("/Api/Log/Exception", data, function (x) { return console.log(Logger.Resources.ExceptionLogged, x); }, function () { return alert(Logger.Resources.ErrorOccuredOnLoggingException); }, false, false);
     };
     Logger.prototype.LogAction = function (message, description, eventId, parametersJson) {
         var data = {
@@ -29,7 +29,7 @@ var Logger = (function () {
             Description: description,
             Message: message
         };
-        CrocoAppCore.Application.Requester.Post("/Api/Log/Action", data, function (x) { return console.log(Logger.Resources.ActionLogged, x); }, function () { return alert(Logger.Resources.LoggingAttempFailed); });
+        CrocoAppCore.Application.Requester.SendAjaxPostInner("/Api/Log/Action", data, function (x) { return console.log(Logger.Resources.ActionLogged, x); }, function () { return alert(Logger.Resources.LoggingAttempFailed); }, false, false);
     };
     Logger.Resources = new Logger_Resx();
     return Logger;

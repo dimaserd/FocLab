@@ -18,7 +18,7 @@ namespace FocLab
                 })
                 .UseDefaultServiceProvider((context, options) =>
                 {
-                    options.ValidateOnBuild = false;
+                    options.ValidateOnBuild = true;
                 });
     }
 }

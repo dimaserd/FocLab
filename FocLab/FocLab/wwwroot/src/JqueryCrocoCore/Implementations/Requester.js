@@ -16,7 +16,7 @@ var Requester = (function () {
         Requester.GoingRequests = Requester.GoingRequests.filter(function (x) { return x !== link; });
     };
     Requester.prototype.SendPostRequestWithAnimation = function (link, data, onSuccessFunc, onErrorFunc) {
-        this.SendAjaxPostInner(link, data, onSuccessFunc, onErrorFunc, true);
+        this.SendAjaxPostInner(link, data, onSuccessFunc, onErrorFunc, true, true);
     };
     Requester.prototype.UploadFilesToServer = function (inputId, link, onSuccessFunc, onErrorFunc) {
         var _this = this;
@@ -92,7 +92,7 @@ var Requester = (function () {
         };
         $.ajax(params);
     };
-    Requester.prototype.SendAjaxPostInner = function (link, data, onSuccessFunc, onErrorFunc, animations) {
+    Requester.prototype.SendAjaxPostInner = function (link, data, onSuccessFunc, onErrorFunc, animations, logOnError) {
         var _this = this;
         if (data == null) {
             data = {};
@@ -115,7 +115,9 @@ var Requester = (function () {
             }
         }).bind(this);
         params.error = (function (jqXHR, textStatus, errorThrown) {
-            CrocoAppCore.Application.Logger.LogException(textStatus.toString(), "Error on Api Request", link);
+            if (logOnError) {
+                CrocoAppCore.Application.Logger.LogException(textStatus.toString(), "Error on Api Request", link);
+            }
             _this.DeleteCompletedRequest(link);
             if (animations) {
                 Requester.OnErrorAnimationHandler();
@@ -134,7 +136,7 @@ var Requester = (function () {
         $.ajax(params);
     };
     Requester.prototype.Post = function (link, data, onSuccessFunc, onErrorFunc) {
-        this.SendAjaxPostInner(link, data, onSuccessFunc, onErrorFunc, false);
+        this.SendAjaxPostInner(link, data, onSuccessFunc, onErrorFunc, false, true);
     };
     Requester.Resources = new Requester_Resx();
     Requester.GoingRequests = new Array();

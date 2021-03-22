@@ -31,6 +31,8 @@ using FocLab.Helpers;
 using Doc.Logic;
 using Croco.Core.Logic.Cache;
 using FocLab.Model.Entities;
+using Tms.Logic;
+using MigrationTool;
 
 namespace FocLab
 {
@@ -117,6 +119,8 @@ namespace FocLab
 
             LogicRegistrator.Register(services);
             DocumentRegistrator.Register(services);
+            TmsRegistrator.Register(services);
+            MigrationToolRegistator.Register(services);
 
             new GenericUserInterfaceBagBuilder(services)
                 .AddDefaultDefinition<CreateUserModelUserInterfaceDefinition>()
@@ -142,15 +146,6 @@ namespace FocLab
                 app.UseHsts();
             }
 
-            app.Use(async (context, next) =>
-            {
-                OnActionExecuting(context);
-                // Do work that doesn't write to the Response.
-                await next.Invoke();
-                // Do logging or other work that doesn't write to the Response.
-            });
-
-
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
@@ -166,10 +161,17 @@ namespace FocLab
             app.UseCookiePolicy();
 
             app.UseRouting();
-
             app.UseAuthentication();
-
             app.UseAuthorization();
+
+            app.Use(async (context, next) =>
+            {
+                OnActionExecuting(context);
+                // Do work that doesn't write to the Response.
+                await next.Invoke();
+                // Do logging or other work that doesn't write to the Response.
+            });
+
 
             app.UseEndpoints(endpoints =>
             {
@@ -198,10 +200,15 @@ namespace FocLab
 
         private static void OnActionExecuting(HttpContext httpContext)
         {
-            var principal = new WebAppCrocoPrincipal(httpContext.User, x => x.GetUserId());
+            var requestServices = httpContext.RequestServices;
+
+            var httpContextAccessor = requestServices
+                .GetRequiredService<IHttpContextAccessor>();
+
+            var principal = new WebAppCrocoPrincipal(httpContextAccessor.HttpContext.User, x => x.GetUserId());
             var requestContext = new CrocoRequestContext(principal);
 
-            httpContext.RequestServices
+            requestServices
                 .GetRequiredService<ICrocoRequestContextAccessor>()
                 .SetRequestContext(requestContext);
         }
