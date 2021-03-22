@@ -77,11 +77,6 @@ namespace FocLab.Model.Contexts
         /// Реагенты связанные с химическими заданиями
         /// </summary>
         public DbSet<ChemistryTaskReagent> ChemistryTaskReagents { get; set; }
-
-        /// <summary>
-        /// Задания на день
-        /// </summary>
-        public DbSet<ChemistryDayTask> ChemistryDayTasks { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder builder)
