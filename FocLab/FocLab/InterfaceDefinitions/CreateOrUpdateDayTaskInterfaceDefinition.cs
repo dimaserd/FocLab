@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Tms.Logic.Models.Tasker;
+using Tms.Logic.Models;
 using Zoo.GenericUserInterface.Models.Definition;
 using Zoo.GenericUserInterface.Services;
 

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Tms.Logic.Workers.Tasker;
+using Tms.Logic.Services;
 
 namespace Tms.Logic
 {
@@ -7,7 +7,7 @@ namespace Tms.Logic
     {
         public static void Register(IServiceCollection services)
         {
-            services.AddTransient<DayTasksWorker>();
+            services.AddTransient<DayTasksService>();
         }
     }
 }

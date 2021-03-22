@@ -6,8 +6,8 @@ using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Tasker;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Tms.Logic.Models.Tasker;
-using Tms.Logic.Workers.Tasker;
+using Tms.Logic.Models;
+using Tms.Logic.Services;
 using Zoo.GenericUserInterface.Models;
 using Zoo.GenericUserInterface.Services;
 
@@ -16,16 +16,16 @@ namespace FocLab.Controllers.Mvc
     public class ScheduleController : Controller
     {
         private UserSearcher UserSearcher { get; }
-        private DayTasksWorker TasksWorker { get; }
+        private DayTasksService TasksService { get; }
         private GenericUserInterfaceBag InterfacesBag { get; }
         private ChemistryDbContext ChemistryDb { get; }
 
         public ScheduleController(UserSearcher userSearcher,
-            DayTasksWorker dayTasksWorker, 
+            DayTasksService dayTasksService, 
             GenericUserInterfaceBag interfacesBag,
             ChemistryDbContext chemistryDb)
         {
-            TasksWorker = dayTasksWorker;
+            TasksService = dayTasksService;
             InterfacesBag = interfacesBag;
             ChemistryDb = chemistryDb;
             UserSearcher = userSearcher;
@@ -48,7 +48,7 @@ namespace FocLab.Controllers.Mvc
 
         public async Task<IActionResult> Task(string id)
         {
-            var model = await TasksWorker.GetDayTaskByIdAsync(id);
+            var model = await TasksService.GetDayTaskByIdAsync(id);
 
             var task = await ChemistryDb.Set<ApplicationDayTask>().FirstOrDefaultAsync(x => x.Id == id);
 
