@@ -26,7 +26,7 @@ namespace FocLab.Api.Controllers.Api.Users
         /// </summary>
         [HttpPost(nameof(Add))]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public Task<BaseApiResponse> Add([FromForm]UserIdAndRole model)
+        public Task<BaseApiResponse> Add(UserIdAndRole model)
         {
             return UserRoleWorker.AddUserToRoleAsync(model);
         }
@@ -36,7 +36,7 @@ namespace FocLab.Api.Controllers.Api.Users
         /// </summary>
         [HttpPost(nameof(Remove))]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public Task<BaseApiResponse> Remove([FromForm]UserIdAndRole model)
+        public Task<BaseApiResponse> Remove(UserIdAndRole model)
         {
             return UserRoleWorker.RemoveRoleFromUserAsync(model);
         }

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Models;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Implementations;
+using FocLab.Logic.Models.Users.Projection;
 using FocLab.Logic.Resources;
 using FocLab.Model.Entities.Tasker;
 using FocLab.Model.Entities.Users.Default;
@@ -24,6 +26,15 @@ namespace Tms.Logic.Workers.Tasker
         /// Задания можно создавать и редактировать за один прошедший день
         /// </summary>
         public int DaysSpan = 1;
+
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="contextAccessor"></param>
+        /// <param name="application"></param>
+        public DayTasksWorker(ICrocoAmbientContextAccessor contextAccessor, ICrocoApplication application) : base(contextAccessor, application)
+        {
+        }
 
         /// <summary>
         /// Получить допустимую дату
@@ -63,7 +74,7 @@ namespace Tms.Logic.Workers.Tasker
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public Task<List<DayTaskModel>> GetDayTasksAsync(UserScheduleSearchModel model)
+        public async Task<List<DayTaskModel>> GetDayTasksAsync(UserScheduleSearchModel model)
         {
             if (model == null)
             {
@@ -81,19 +92,25 @@ namespace Tms.Logic.Workers.Tasker
             var initQuery = GetRepository<ApplicationDayTask>().Query()
                 .Where(x => x.TaskDate >= firstDayInSearchMonth && x.TaskDate <= lastDayInSearchMonth);
 
-            initQuery = model.ShowTasksWithNoAssignee ?
+            var noAssignee = model.ShowTasksWithNoAssignee || model.UserIds == null || model.UserIds.Length == 0;
+
+            initQuery = noAssignee?
                 initQuery.Where(x => x.AssigneeUserId == null)
                 : initQuery.Where(x => model.UserIds.Contains(x.AssigneeUserId));
 
-            return initQuery.Select(DayTaskModel.SelectExpression)
+            var result = await initQuery.Select(SelectExpression)
                 .ToListAsync();
+
+            return await GetDayTasks(result);
         }
 
-        public Task<DayTaskModel> GetDayTaskByIdAsync(string id)
+        public async Task<DayTaskModel> GetDayTaskByIdAsync(string id)
         {
-            return GetRepository<ApplicationDayTask>().Query()
-                .Select(DayTaskModel.SelectExpression)
+            var res = await GetRepository<ApplicationDayTask>().Query()
+                .Select(SelectExpression)
                 .FirstOrDefaultAsync(x => x.Id == id);
+
+            return await GetDayTask(res);
         }
 
         public Task<BaseApiResponse> CreateOrUpdateDayTaskAsync(CreateOrUpdateDayTask model)
@@ -236,9 +253,9 @@ namespace Tms.Logic.Workers.Tasker
             {
                 await SaveChangesAsync();
 
-                var task = await repo.Query().Select(DayTaskModel.SelectExpression).FirstOrDefaultAsync(x => x.Id == model.DayTaskId);
+                var task = await repo.Query().Select(SelectExpression).FirstOrDefaultAsync(x => x.Id == model.DayTaskId);
 
-                return new BaseApiResponse<DayTaskModel>(true, TaskerResource.CommentAdded, task);
+                return new BaseApiResponse<DayTaskModel>(true, TaskerResource.CommentAdded, await GetDayTask(task));
             });
         }
 
@@ -275,21 +292,68 @@ namespace Tms.Logic.Workers.Tasker
                 var repo = GetRepository<ApplicationDayTask>();
 
                 var task = await repo.Query()
-                    .Select(DayTaskModel.SelectExpression)
+                    .Select(SelectExpression)
                     .FirstOrDefaultAsync(x => x.Id == comment.DayTaskId);
 
-                return new BaseApiResponse<DayTaskModel>(true, TaskerResource.CommentUpdated, task);
+                return new BaseApiResponse<DayTaskModel>(true, TaskerResource.CommentUpdated, await GetDayTask(task));
             });
 
         }
-
-        /// <summary>
-        /// Конструктор
-        /// </summary>
-        /// <param name="contextAccessor"></param>
-        /// <param name="application"></param>
-        public DayTasksWorker(ICrocoAmbientContextAccessor contextAccessor, ICrocoApplication application) : base(contextAccessor, application)
+    
+        private Task<Dictionary<string, UserFullNameEmailAndAvatarModel>> GetCachedUsers()
         {
+            return Application.CacheManager.GetOrAddValueAsync($"{this.GetType().FullName}.users", async () =>
+            {
+                var result = await Query<ApplicationUser>().Select(x => new UserFullNameEmailAndAvatarModel
+                {
+                    Id = x.Id,
+                    Email = x.Email,
+                    AvatarFileId = x.AvatarFileId,
+                    Name = x.Name,
+                    Patronymic = x.Patronymic,
+                    Surname = x.Surname
+                }).ToListAsync();
+
+                return result.ToDictionary(x => x.Id);
+
+            }, DateTime.Now.AddMinutes(10));
         }
+
+        private async Task<DayTaskModel> GetDayTask(DayTaskModelWithNoUsersJustIds model)
+        {
+            var users = await GetCachedUsers();
+
+            return ToDayTaskModel(users, model);
+        }
+
+        private async Task<List<DayTaskModel>> GetDayTasks(List<DayTaskModelWithNoUsersJustIds> model)
+        {
+            var users = await GetCachedUsers();
+
+            return model
+                .Select(m => ToDayTaskModel(users, m))
+                .ToList();
+        }
+
+        private DayTaskModel ToDayTaskModel(Dictionary<string, UserFullNameEmailAndAvatarModel> users, 
+            DayTaskModelWithNoUsersJustIds model)
+        {
+            return new DayTaskModel(model, users[model.AuthorId], users[model.AssigneeId]);
+        }
+
+        internal static Expression<Func<ApplicationDayTask, DayTaskModelWithNoUsersJustIds>> SelectExpression = x => new DayTaskModelWithNoUsersJustIds
+        {
+            Id = x.Id,
+            TaskTitle = x.TaskTitle,
+            TaskReview = x.TaskReview,
+            TaskText = x.TaskText,
+            FinishDate = x.FinishDate,
+            TaskDate = x.TaskDate,
+            TaskComment = x.TaskComment,
+            TaskTarget = x.TaskTarget,
+
+            AuthorId = x.AuthorId,
+            AssigneeId = x.AssigneeUserId
+        };
     }
 }

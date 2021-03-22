@@ -1,27 +1,12 @@
-﻿using FocLab.Logic.Models.Users.Projection;
+﻿using FocLab.Model.Entities.Tasker;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Tms.Logic.Models.Tasker
 {
-    public class DayTaskModel
+    public class DayTaskModelWithNoUsersJustIds
     {
-        public DayTaskModel(DayTaskModelWithNoUsersJustIds model, 
-            UserFullNameEmailAndAvatarModel author, 
-            UserFullNameEmailAndAvatarModel assignee)
-        {
-            Id = model.Id;
-            TaskDate = model.TaskDate;
-            TaskText = model.TaskText;
-            TaskTitle = model.TaskTitle;
-            FinishDate = model.FinishDate;
-            TaskTarget = model.TaskTarget;
-            TaskReview = model.TaskReview;
-            TaskComment = model.TaskComment;
-            Author = author;
-            AssigneeUser = assignee;
-        }
-
         /// <summary>
         /// Идентификатор
         /// </summary>
@@ -62,19 +47,14 @@ namespace Tms.Logic.Models.Tasker
         /// </summary>
         public string TaskComment { get; set; }
 
-        public List<DayTaskCommentModel> Comments { get; set; } = new List<DayTaskCommentModel>();
-        #region Свойства отношений
-
-
         /// <summary>
         /// Администратор
         /// </summary>
-        public UserFullNameEmailAndAvatarModel Author { get; set; }
+        public string AuthorId { get; set; }
 
         /// <summary>
         /// Исполнитель
         /// </summary>
-        public UserFullNameEmailAndAvatarModel AssigneeUser { get; set; }
-        #endregion
+        public string AssigneeId { get; set; }
     }
 }

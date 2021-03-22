@@ -164,11 +164,11 @@ namespace FocLab
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.Use(async (context, next) =>
+            app.Use((context, next) =>
             {
                 OnActionExecuting(context);
                 // Do work that doesn't write to the Response.
-                await next.Invoke();
+                return next.Invoke();
                 // Do logging or other work that doesn't write to the Response.
             });
 

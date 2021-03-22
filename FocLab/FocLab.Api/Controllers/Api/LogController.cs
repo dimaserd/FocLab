@@ -27,13 +27,13 @@ namespace FocLab.Api.Controllers.Api
     public class LogController : Controller
     {
         [HttpPost("Exception")]
-        public Task<BaseApiResponse> LogException([FromBody] FrontExceptionData model)
+        public Task<BaseApiResponse> LogException( FrontExceptionData model)
         {
             return Task.FromResult(new BaseApiResponse(true, ""));
         }
 
         [HttpPost("Action")]
-        public Task<BaseApiResponse> LogAction([FromBody] FrontLogData model)
+        public Task<BaseApiResponse> LogAction( FrontLogData model)
         {
             return Task.FromResult(new BaseApiResponse(true, ""));
         }

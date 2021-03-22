@@ -931,7 +931,8 @@ namespace FocLab.Model.Migrations
 
                     b.HasOne("FocLab.Model.Entities.Tasker.ApplicationDayTask", "DayTask")
                         .WithMany("Comments")
-                        .HasForeignKey("DayTaskId");
+                        .HasForeignKey("DayTaskId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("FocLab.Model.Entities.Users.Default.ApplicationUser", b =>

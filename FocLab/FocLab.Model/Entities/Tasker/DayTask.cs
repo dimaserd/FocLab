@@ -18,6 +18,11 @@ namespace FocLab.Model.Entities.Tasker
 
     public class DayTask<TUser, TDayTaskComment> : AuditableEntityBase where TUser : class, ICrocoUser where TDayTaskComment : class
     {
+        public DayTask()
+        {
+            Comments = new List<TDayTaskComment>();
+        }
+
         /// <summary>
         /// Идентификатор
         /// </summary>
@@ -101,7 +106,7 @@ namespace FocLab.Model.Entities.Tasker
         /// Комментарии к данному заданию
         /// </summary>
         [JsonIgnore]
-        public virtual ICollection<TDayTaskComment> Comments { get; set; }
+        public virtual ICollection<TDayTaskComment> Comments { get; set; } = new List<TDayTaskComment>();
         #endregion
     }
 }

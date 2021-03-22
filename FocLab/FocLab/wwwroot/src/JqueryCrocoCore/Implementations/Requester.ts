@@ -173,13 +173,9 @@ class Requester implements ICrocoRequester {
 
         }).bind(this);
 
-        const isArray = data.constructor === Array;
-
-        if (isArray) {
-            params.contentType = "application/json; charset=utf-8";
-            params.dataType = "json";
-            params.data = JSON.stringify(data);
-        }
+        params.contentType = "application/json; charset=utf-8";
+        params.dataType = "json";
+        params.data = JSON.stringify(data);
 
         Requester.GoingRequests.push(link);
 

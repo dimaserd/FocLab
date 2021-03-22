@@ -42,7 +42,7 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(GetListResult<ApplicationUserBaseModel>))]
         [HttpPost("Get")]
-        public Task<GetListResult<ApplicationUserBaseModel>> GetUsers([FromForm]UserSearch model)
+        public Task<GetListResult<ApplicationUserBaseModel>> GetUsers(UserSearch model)
         {
             return UserSearcher.GetUsersAsync(model);
         }
@@ -77,7 +77,7 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         [HttpPost("ActivateOrDeActivateUser")]
-        public Task<BaseApiResponse> ActivateOrDeActivateUser([FromForm]UserActivation model)
+        public Task<BaseApiResponse> ActivateOrDeActivateUser(UserActivation model)
         {
             return UserWorker.ActivateOrDeActivateUserAsync(model);
         }
@@ -89,7 +89,7 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         [HttpPost("Remove")]
-        public Task<BaseApiResponse> Remove([FromForm]UserIdModel model)
+        public Task<BaseApiResponse> Remove(UserIdModel model)
         {
             return UserWorker.RemoveUserAsync(model);
         }
@@ -101,7 +101,7 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse<ApplicationUserDto>))]
         [HttpPost("Create")]
-        public Task<BaseApiResponse<ApplicationUserDto>> Create([FromForm]CreateUserModel model)
+        public Task<BaseApiResponse<ApplicationUserDto>> Create(CreateUserModel model)
         {
             return AccountRegistrationWorker.RegisterUserByAdminAsync(model, model.Rights);
         }
@@ -113,7 +113,7 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         [HttpPost("ChangePassword")]
-        public Task<BaseApiResponse> ChangePassword([FromForm]ResetPasswordByAdminModel model)
+        public Task<BaseApiResponse> ChangePassword(ResetPasswordByAdminModel model)
         {
             return UserWorker.ChangePasswordAsync(model);
         }
@@ -125,7 +125,7 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         [HttpPost("Edit")]
-        public Task<BaseApiResponse> Edit([FromForm]EditApplicationUser model)
+        public Task<BaseApiResponse> Edit(EditApplicationUser model)
         {
             return UserWorker.EditUserAsync(model);
         }

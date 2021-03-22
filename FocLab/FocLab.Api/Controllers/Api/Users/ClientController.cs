@@ -29,7 +29,7 @@ namespace FocLab.Api.Controllers.Api.Users
         /// <returns></returns>
         [HttpPost("Update")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public Task<BaseApiResponse> Update([FromForm]EditClient model)
+        public Task<BaseApiResponse> Update(EditClient model)
         {
             return ClientWorker.EditUserAsync(model);
         }

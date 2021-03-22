@@ -92,6 +92,13 @@ namespace FocLab.Model.Contexts
             ChemistryTaskReagent.OnModelCreating(builder);
             ChemistryTaskDbFile.OnModelCreating(builder);
 
+            builder.Entity<ApplicationDayTask>().HasMany(p => p.Comments);
+
+            builder.Entity<ApplicationDayTaskComment>()
+                .HasOne(x => x.DayTask).WithMany(x => x.Comments)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
             base.OnModelCreating(builder);
         }
 
