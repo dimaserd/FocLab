@@ -136,7 +136,6 @@ var ScheduleStaticHandlers = (function () {
         }, null);
     };
     ScheduleStaticHandlers.createDayTask = function () {
-        console.log('createDayTask clicked');
         var data = {
             Id: "",
             TaskText: "",
@@ -148,11 +147,11 @@ var ScheduleStaticHandlers = (function () {
             TaskTarget: ""
         };
         CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "create.");
-        data.TaskDate = DatePickerUtils.GetDateFromDatePicker("TaskDate1");
-        if (data.TaskDate == null || document.getElementById("TaskDate1").value === "") {
+        if (document.getElementById("TaskDate1").value === "") {
             Requester.OnSuccessAnimationHandler({ IsSucceeded: false, Message: "Необходимо указать дату задания" });
             return;
         }
+        data.TaskDate = DatePickerUtils.GetDateFromDatePicker("TaskDate1");
         console.log("createDayTask", data);
         CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (resp) {
             if (resp.IsSucceeded) {
