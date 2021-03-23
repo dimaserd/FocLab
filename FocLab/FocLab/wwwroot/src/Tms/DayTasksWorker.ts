@@ -52,6 +52,7 @@ class DayTasksWorker {
         this.CurrentTaskId = taskId;
 
         this.CurrentTask = DayTasksWorker.Tasks.find(x => x.Id === taskId);
+        console.log("SetCurrentTaskId", this.CurrentTask);
     }
 
     static SendNotificationToAdmin() {
@@ -63,9 +64,14 @@ class DayTasksWorker {
 
     static GetTasks(): void {
 
-        CrocoAppCore.Application.Requester.Post("/Api/DayTask/GetTasks", this.SearchModel, x => {
-            DayTasksWorker.Tasks = x as Array<DayTaskModel>;
-            DayTasksWorker.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
+        var data = this.SearchModel;
+        data.MonthShift = +this.SearchModel.MonthShift;
+
+        console.log("DayTasksWorker.GetTasks()", data, JSON.stringify(data));
+
+        CrocoAppCore.Application.Requester.Post<DayTaskModel[]>("/Api/DayTask/GetTasks", data, x => {
+            DayTasksWorker.Tasks = x;
+            DayTasksWorker.Drawer.DrawTasks(x);
             DayTasksWorker.OpenTaskById();
         }, null);
     }

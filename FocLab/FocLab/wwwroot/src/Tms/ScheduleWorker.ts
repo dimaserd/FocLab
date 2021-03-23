@@ -99,5 +99,4 @@ class ScheduleWorker {
 
             }, null);
     }
-    
 }

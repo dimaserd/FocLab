@@ -4,6 +4,7 @@
 }
 interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
     timepicker(): any;
+    select2(): any;
     select2(arg0: {
         theme: string;
         width: string;

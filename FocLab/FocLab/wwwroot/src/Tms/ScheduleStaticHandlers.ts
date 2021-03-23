@@ -54,78 +54,99 @@ class ScheduleStaticHandlers {
 
     static Filter: UserScheduleSearchModel;
 
-    static _countOfChanges: number = 0;
+    static SetInnerHandlers(): void {
+        console.log("ScheduleStaticHandlers.SetInnerHandlers()");
+        $(".tms-next-month-btn").on("click", () => ScheduleStaticHandlers.RedirectToNewUserSchedule(1));
+        $(".tms-prev-month-btn").on("click", () => ScheduleStaticHandlers.RedirectToNewUserSchedule(-1));
 
-    static SetHandlers(): void {
-        EventSetter.SetHandlerForClass("tms-next-month-btn", "click", () => ScheduleStaticHandlers.ApplyFilter(true));
-        EventSetter.SetHandlerForClass("tms-prev-month-btn", "click", () => ScheduleStaticHandlers.ApplyFilter(false));
-        EventSetter.SetHandlerForClass("tms-add-comment-btn", "click", () => ScheduleStaticHandlers.addComment());
-        EventSetter.SetHandlerForClass("tms-update-comment-btn", "click", x => {
-            var commentId = (x.target as Element).getAttribute("data-comment-id");
-
-            ScheduleStaticHandlers.updateComment(commentId);
-        })
-
-        EventSetter.SetHandlerForClass("tms-profile-link", "click", x => {
-            var authorId = (x.target as Element).getAttribute("data-task-author-id");
-
-            ScheduleStaticHandlers.redirectToProfile(authorId);
-        });
-
-        EventSetter.SetHandlerForClass("tms-update-task-btn", "click", () => {
+        $(".tms-update-task-btn").unbind("click").on("click", () => {
             ScheduleStaticHandlers.updateDayTask();
             CrocoAppCore.Application.ModalWorker.HideModals();
         });
 
-        EventSetter.SetHandlerForClass("tms-redirect-to-full", "click", () => ScheduleStaticHandlers.redirectToFullVersion());
-        EventSetter.SetHandlerForClass("tms-create-task-btn", "click", () => ScheduleStaticHandlers.createDayTask());
-        EventSetter.SetHandlerForClass("tms-btn-create-task", "click", () => ScheduleStaticHandlers.ShowCreateTaskModal());
-        EventSetter.SetHandlerForClass("tms-show-task-modal", "click", x =>
-        {
-            var taskId = $(x.target).data("task-id") as string;
+        $(".tms-redirect-to-full").unbind("click").on("click", () => ScheduleStaticHandlers.redirectToFullVersion());
+        $("#tms-create-task-btn").on("click", e => {
+            console.log("tms-create-task-btn click");
+            e.preventDefault();
+            e.stopPropagation();
+            ScheduleStaticHandlers.createDayTask();
+        });
+        
+        $(document).on('click', '.tms-profile-link', function (e) {
+            console.log("tms-profile-link clicked");
+
+            var authorId = (e.target as Element).getAttribute("data-task-author-id");
+
+            ScheduleStaticHandlers.redirectToProfile(authorId);
+        });
+    }
+
+    static SetHandlers(): void {
+
+        $(".tms-show-task-modal").unbind("click").click(e => {
+            e.preventDefault();
+            e.stopPropagation();
+            var taskId = $(e.target).data("task-id") as string;
             ScheduleStaticHandlers.ShowDayTaskModal(taskId);
-        })
-    }
+        });
 
-    static GetQueryParams(isNextMonth: boolean) : string {
-        var data = {
-            UserIds: []
-        };
-
-        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
-
-        var dataFilter: UserScheduleSearchModel = {
-            UserIds: data.UserIds,
-            MonthShift: isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1
-        };
-
-
-        return CrocoAppCore.Application.Requester.GetParams(dataFilter);
-    }
-
-    static ApplyFilter(isNextMonth: boolean) {
-
-        location.href = `/Schedule/Index?${ScheduleStaticHandlers.GetQueryParams(isNextMonth)}`;
+        $(".tms-btn-create-task").on("click", e => {
+            e.preventDefault();
+            e.stopPropagation();
+            ScheduleStaticHandlers.ShowCreateTaskModal();
+        });
     }
 
     static OnUsersSelectChanged(): void {
-        ScheduleStaticHandlers._countOfChanges++;
 
-        // Так как в первый раз метод будет задействован, при установке данных FormDataHelper
-        //страница не должна перезагрузится, а только на следующие разы когда жто изменит пользователь
-        if (ScheduleStaticHandlers._countOfChanges > 1) {
-            ScheduleStaticHandlers.ShowUserSchedule();
-        }
-    }
-
-    static ShowUserSchedule() : void {
         var data = {
-            UserIds: []
+            UserIds: [],
         };
 
         CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
 
-        location.href = `/Schedule/Index?${CrocoAppCore.Application.Requester.GetParams(data)}`;
+        var currentLength = ScheduleStaticHandlers.Filter.UserIds == null
+            ? 0
+            : ScheduleStaticHandlers.Filter.UserIds.length; 
+
+        // Так как в первый раз метод будет задействован, при установке данных FormDataHelper
+        //страница не должна перезагрузится, а только на следующие разы когда жто изменит пользователь
+        if (data.UserIds.length !== currentLength) {
+            ScheduleStaticHandlers.RedirectToNewUserSchedule(0);
+        }
+    }
+
+    static RedirectToNewUserSchedule(monthShift: number) : void {
+
+        console.log("RedirectToNewUserSchedule", monthShift);
+
+        var data = {
+            UserIds: [],
+        };
+
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
+
+        var nData = {
+            UserIds: data.UserIds,
+            MonthShift: ScheduleStaticHandlers.Filter.MonthShift + monthShift
+        }
+
+        console.log("ShowUserSchedule.Data", nData);
+
+        let urlParts:string[] = [];
+
+        for (let i = 0; i < nData.UserIds.length; i++) {
+            urlParts.push(`UserIds=${nData.UserIds[i]}`);
+        }
+
+        if (nData.MonthShift !== 0) {
+            urlParts.push(`MonthShift=${nData.MonthShift}`);
+        }
+        
+        var url = `/Schedule/Index?${urlParts.join('&')}`;
+
+        console.log("ShowUserSchedule.Url", url);
+        location.href = url;
     }
 
 
@@ -178,40 +199,6 @@ class ScheduleStaticHandlers {
         });
     }
 
-    static updateComment(commentId : string) : void {
-        var data = {
-            Comment: ""
-        }
-        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "edit.");
-
-        var m: UpdateDayTaskComment = {
-            Comment: data.Comment,
-            DayTaskCommentId: commentId
-        }
-
-        CrocoAppCore.Application.Requester.Post<IGenericBaseApiResponse<DayTaskModel>>("/Api/DayTask/Comments/Update", m, resp => {
-            if (resp.IsSucceeded) {
-                TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
-                DayTasksWorker.GetTasks();
-            }
-        }, null);
-    }
-
-    static addComment() : void {
-        var data: AddComment = {
-            DayTaskId: "",
-            Comment: ""
-        }
-        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "");
-
-        CrocoAppCore.Application.Requester.Post<IGenericBaseApiResponse<DayTaskModel>>("/Api/DayTask/Comments/Add", data, resp => {
-            if (resp.IsSucceeded) {
-                TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
-                DayTasksWorker.GetTasks();
-            }
-        }, null);
-    }
-
     static redirectToFullVersion(): void {
         let data = { Id: "" };
 
@@ -257,10 +244,18 @@ class ScheduleStaticHandlers {
 
         CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "create.");
 
+        if ((document.getElementById("TaskDate1") as HTMLInputElement).value === "") {
+
+            Requester.OnSuccessAnimationHandler({ IsSucceeded: false, Message: "Необходимо указать дату задания" });
+            return;
+        }
+
         data.TaskDate = DatePickerUtils.GetDateFromDatePicker("TaskDate1");
 
+        console.log("createDayTask", data);
+
         CrocoAppCore.Application.Requester.SendPostRequestWithAnimation<IBaseApiResponse>("/Api/DayTask/CreateOrUpdate", data, resp => {
-            
+
             if (resp.IsSucceeded) {
                 ScheduleStaticHandlers.hideCreateModal();
             }
@@ -277,4 +272,5 @@ class ScheduleStaticHandlers {
     }
 }
 
+ScheduleStaticHandlers.SetInnerHandlers();
 ScheduleStaticHandlers.SetHandlers();

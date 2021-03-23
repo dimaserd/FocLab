@@ -10,6 +10,7 @@ class TaskModalWorker {
         CrocoAppCore.Application.FormDataHelper.FillDataByPrefix(task, "task.");
 
         DatePickerUtils.SetDatePicker("TaskDate", "RealTaskDate");
+        DatePickerUtils.SetDateToDatePicker("TaskDate", task.TaskDate);
 
         let selector = `#${TaskModalConsts.UserSelectId}`;
 
@@ -29,8 +30,8 @@ class TaskModalWorker {
 
         let avatar: string = ColorAvatarInitor.InitColorForAvatar(task);
 
-        document.getElementById("Author").innerHTML = `<a class="media-left tms-profile-link" href="#" data-task-author-id="${task.Author.Id}">${avatar}</a>
-                <a  href="#" data-task-author-id="${task.Author.Id}" class="tms-profile-link text-semibold media-heading box-inline ml-1 mb-1">
+        document.getElementById("Author").innerHTML = `<a class="media-left tms-profile-link" data-task-author-id="${task.Author.Id}">${avatar}</a>
+                <a data-task-author-id="${task.Author.Id}" class="tms-profile-link text-semibold media-heading box-inline ml-1 mb-1">
                     ${task.Author.Name} ${task.Author.Email}
                 </a>`;
 

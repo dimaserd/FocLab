@@ -11,6 +11,7 @@ var TaskModalWorker = (function () {
         TaskModalWorker.InitTask(task);
         CrocoAppCore.Application.FormDataHelper.FillDataByPrefix(task, "task.");
         DatePickerUtils.SetDatePicker("TaskDate", "RealTaskDate");
+        DatePickerUtils.SetDateToDatePicker("TaskDate", task.TaskDate);
         var selector = "#" + TaskModalConsts.UserSelectId;
         ScheduleStaticHandlers.InitUserSelect(selector);
         $(selector).val(task.AssigneeUser.Id).trigger('change');
@@ -21,7 +22,7 @@ var TaskModalWorker = (function () {
         TaskModalWorker.ClearContent();
         document.getElementById("dayTaskModalTitle").innerHTML = task.TaskTitle;
         var avatar = ColorAvatarInitor.InitColorForAvatar(task);
-        document.getElementById("Author").innerHTML = "<a class=\"media-left tms-profile-link\" href=\"#\" data-task-author-id=\"" + task.Author.Id + "\">" + avatar + "</a>\n                <a  href=\"#\" data-task-author-id=\"" + task.Author.Id + "\" class=\"tms-profile-link text-semibold media-heading box-inline ml-1 mb-1\">\n                    " + task.Author.Name + " " + task.Author.Email + "\n                </a>";
+        document.getElementById("Author").innerHTML = "<a class=\"media-left tms-profile-link\" data-task-author-id=\"" + task.Author.Id + "\">" + avatar + "</a>\n                <a data-task-author-id=\"" + task.Author.Id + "\" class=\"tms-profile-link text-semibold media-heading box-inline ml-1 mb-1\">\n                    " + task.Author.Name + " " + task.Author.Email + "\n                </a>";
         document.getElementsByName('DayTaskId')[0].value = task.Id;
         $("#usersSelect1").val(task.AssigneeUser.Id).trigger('change.select2');
         TaskModalWorker.DrawComments("Comments", task);

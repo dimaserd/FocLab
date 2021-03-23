@@ -1,15 +1,16 @@
 ﻿var DayTaskDrawer = (function () {
     function DayTaskDrawer() {
     }
-    DayTaskDrawer.prototype.DrawTasks = function (tasks, isAdmin) {
+    DayTaskDrawer.prototype.DrawTasks = function (tasks) {
+        if (tasks == null) {
+            return;
+        }
         this.ClearTasks();
         for (var i = 0; i < tasks.length; i++) {
             var task = tasks[i];
             this.AddTaskToDate(task);
         }
-        if (isAdmin) {
-            this.AddAdminActions();
-        }
+        this.AddAdminActions();
         ScheduleStaticHandlers.SetHandlers();
     };
     DayTaskDrawer.prototype.AddTaskToDate = function (task) {

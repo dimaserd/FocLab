@@ -24,6 +24,10 @@
     .no-margin {
         margin: 0 0 0 0;
     }
+
+    .tms-profile-link{
+        cursor:pointer;
+    }
 </style>
 
 
@@ -70,27 +74,27 @@
 
             var dayOfWeek = dateP.DayOfWeek;
 
-            <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted">
-                <h5 class="row align-items-center">
-                    <span class="date col-1">@dateP.Day</span>
-                    <small class="col d-sm-none text-center text-muted">@DayOfWeekToString(dateP.DayOfWeek)</small>
-                    <span class="col-1"></span>
-                </h5>
+        <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted">
+            <h5 class="row align-items-center">
+                <span class="date col-1">@dateP.Day</span>
+                <small class="col d-sm-none text-center text-muted">@DayOfWeekToString(dateP.DayOfWeek)</small>
+                <span class="col-1"></span>
+            </h5>
 
-                <div>
-                    <p class="no-tasks-text d-sm-none">Нет задач</p>
-                </div>
+            <div>
+                <p class="no-tasks-text d-sm-none">Нет задач</p>
             </div>
+        </div>
 
             if (dayOfWeek == DayOfWeek.Sunday)
             {
-                <div class="w-100"></div>
+        <div class="w-100"></div>
             }
         }
 
         @if (Model.TodayDate.DayOfWeek == DayOfWeek.Monday && Model.TodayDate.Day == 1)
         {
-            <div class="w-100"></div>
+        <div class="w-100"></div>
         }
 
         @foreach (var dateP in Model.DaysInThisMonth)
@@ -98,33 +102,33 @@
 
             var dayOfWeek = dateP.DayOfWeek;
 
-            <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate">
-                <h5 class="row align-items-center">
-                    <span class="date col-1">@dateP.Day</span>
-                    <small class="col d-sm-none text-center text-muted">@DayOfWeekToString(dateP.DayOfWeek)</small>
-                    <span class="col-1"></span>
-                </h5>
+        <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate">
+            <h5 class="row align-items-center">
+                <span class="date col-1">@dateP.Day</span>
+                <small class="col d-sm-none text-center text-muted">@DayOfWeekToString(dateP.DayOfWeek)</small>
+                <span class="col-1"></span>
+            </h5>
 
-                <div class="m-scrollable m-scrollable--track m-scroller" data-scrollable="true" data-date="@dateP.ToString("dd.MM.yyyy")" data-full-date="@dateP">
-                    <p class="no-tasks-text d-sm-none">Нет задач</p>
-                </div>
+            <div class="m-scrollable m-scrollable--track m-scroller" data-scrollable="true" data-date="@dateP.ToString("dd.MM.yyyy")" data-full-date="@dateP">
+                <p class="no-tasks-text d-sm-none">Нет задач</p>
             </div>
+        </div>
 
             if (dayOfWeek == DayOfWeek.Sunday)
             {
-                <div class="w-100"></div>
+        <div class="w-100"></div>
             }
         }
 
         @foreach (var dateP in Model.DaysInNextMonth)
         {
-            <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted">
-                <h5 class="row align-items-center">
-                    <span class="date col-1">@dateP.Day</span>
-                    <small class="col d-sm-none text-center text-muted">@((DayOfWeekToString(dateP.DayOfWeek)))</small>
-                    <span class="col-1"></span>
-                </h5>
-            </div>
+        <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate d-none d-sm-inline-block bg-light text-muted">
+            <h5 class="row align-items-center">
+                <span class="date col-1">@dateP.Day</span>
+                <small class="col d-sm-none text-center text-muted">@((DayOfWeekToString(dateP.DayOfWeek)))</small>
+                <span class="col-1"></span>
+            </h5>
+        </div>
         }
 
     </div>
@@ -149,36 +153,10 @@
 
 @await Html.PartialAsync("~/Views/Schedule/Partials/Modals.cshtml")
 
-
-
 @section Scripts{
-    <script src="~/js/Tms.min.js"></script>
 
     <script>
-
-    var filter = @Html.GetJson(searchModel);
-
-    ScheduleWorker.Constructor(filter);
-
-    var props = {
-        Tasks: null,
-        User: null,
-        SearchModel: filter
-    };
-
-
-    DayTasksWorker.Constructor(props);
-    ScheduleStaticHandlers.Filter = filter;
-
-    document.addEventListener("DOMContentLoaded", () => {
-
-        DayTasksWorker.GetTasks();
-
-        $("#usersSelect").select2().on("change", () => { ScheduleStaticHandlers.OnUsersSelectChanged(); });
-    });
-
-     $("body").tooltip({ selector: '[data-toggle=tooltip]' });
-
+        window["tms-filter"] = @Html.GetJson(searchModel);
     </script>
-
+    <script src="~/js/Tms.min.js"></script>
 }

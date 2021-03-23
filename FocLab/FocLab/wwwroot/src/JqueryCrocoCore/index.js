@@ -318,23 +318,21 @@ var Requester = (function () {
         if (data == null) {
             data = {};
         }
-        CrocoAppCore.Application.FormDataUtils.ProccessAllDateTimePropertiesAsString(data);
-        CrocoAppCore.Application.FormDataUtils.ProccessAllNumberPropertiesAsString(data);
         var params = {};
         params.type = "POST";
-        params.data = data;
+        params.data = JSON.stringify(data);
         params.url = link;
-        params.async = true;
-        params.cache = false;
-        params.success = (function (response) {
-            _this.DeleteCompletedRequest(link);
-            if (animations) {
-                Requester.OnSuccessAnimationHandler(response);
-            }
-            if (onSuccessFunc) {
-                onSuccessFunc(response);
-            }
-        }).bind(this);
+        params.contentType = "application/json; charset=utf-8",
+            params.dataType = "json",
+            params.success = (function (response) {
+                _this.DeleteCompletedRequest(link);
+                if (animations) {
+                    Requester.OnSuccessAnimationHandler(response);
+                }
+                if (onSuccessFunc) {
+                    onSuccessFunc(response);
+                }
+            }).bind(this);
         params.error = (function (jqXHR, textStatus, errorThrown) {
             if (logOnError) {
                 CrocoAppCore.Application.Logger.LogException(textStatus.toString(), "Error on Api Request", link);
@@ -347,9 +345,6 @@ var Requester = (function () {
                 onErrorFunc(jqXHR, textStatus, errorThrown);
             }
         }).bind(this);
-        params.contentType = "application/json; charset=utf-8";
-        params.dataType = "json";
-        params.data = JSON.stringify(data);
         Requester.GoingRequests.push(link);
         $.ajax(params);
     };

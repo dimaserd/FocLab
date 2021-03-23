@@ -131,16 +131,14 @@ class Requester implements ICrocoRequester {
             data = {};
         }
 
-        CrocoAppCore.Application.FormDataUtils.ProccessAllDateTimePropertiesAsString(data);
-        CrocoAppCore.Application.FormDataUtils.ProccessAllNumberPropertiesAsString(data);
-
         let params: any = {};
 
         params.type = "POST";
-        params.data = data;
+        params.data = JSON.stringify(data);
         params.url = link;
-        params.async = true;
-        params.cache = false;
+        params.contentType = "application/json; charset=utf-8",
+        params.dataType = "json",
+
         params.success = (response => {
             this.DeleteCompletedRequest(link);
 
@@ -172,10 +170,6 @@ class Requester implements ICrocoRequester {
             }
 
         }).bind(this);
-
-        params.contentType = "application/json; charset=utf-8";
-        params.dataType = "json";
-        params.data = JSON.stringify(data);
 
         Requester.GoingRequests.push(link);
 

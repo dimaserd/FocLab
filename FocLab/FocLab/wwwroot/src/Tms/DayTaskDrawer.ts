@@ -2,7 +2,11 @@ declare var moment: Function;
 
 class DayTaskDrawer {
 
-    DrawTasks(tasks: Array<DayTaskModel>, isAdmin: boolean) {
+    DrawTasks(tasks: Array<DayTaskModel>) {
+
+        if (tasks == null) {
+            return;
+        }
 
         this.ClearTasks();
         for (let i = 0; i < tasks.length; i++) {
@@ -10,14 +14,9 @@ class DayTaskDrawer {
             const task = tasks[i];
 
             this.AddTaskToDate(task);
-
         }
 
-        if (isAdmin) {
-            this.AddAdminActions();
-        }
-
-
+        this.AddAdminActions();
         ScheduleStaticHandlers.SetHandlers();
     }       
 
@@ -25,7 +24,6 @@ class DayTaskDrawer {
         const dateTrailed = moment(task.TaskDate).format("DD.MM.YYYY");
 
         const elem = document.querySelector(`[data-date='${dateTrailed}']`);
-
 
         $(elem).children(".no-tasks-text").hide();
 

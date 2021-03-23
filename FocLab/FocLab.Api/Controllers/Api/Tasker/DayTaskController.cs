@@ -30,7 +30,7 @@ namespace FocLab.Api.Controllers.Api.Tasker
         /// <returns></returns>
         [HttpPost("Comments/Add")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse<DayTaskModel>))]
-        public Task<BaseApiResponse<DayTaskModel>> CommentDayTask(CommentDayTask model)
+        public Task<BaseApiResponse<DayTaskModel>> CommentDayTask([FromBody] CommentDayTask model)
         {
             return DayTasksService.CommentDayTaskAsync(model);
         }
@@ -42,7 +42,7 @@ namespace FocLab.Api.Controllers.Api.Tasker
         /// <returns></returns>
         [HttpPost("Comments/Update")]
         [ProducesDefaultResponseType(typeof(BaseApiResponse<DayTaskModel>))]
-        public Task<BaseApiResponse<DayTaskModel>> UpdateDayTaskComment(UpdateDayTaskComment model)
+        public Task<BaseApiResponse<DayTaskModel>> UpdateDayTaskComment([FromBody] UpdateDayTaskComment model)
         {
             return DayTasksService.UpdateDayTaskCommentAsync(model);
         }
@@ -54,7 +54,7 @@ namespace FocLab.Api.Controllers.Api.Tasker
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(List<DayTaskModel>))]
         [HttpPost(nameof(GetTasks))]
-        public Task<List<DayTaskModel>> GetTasks(UserScheduleSearchModel model)
+        public Task<List<DayTaskModel>> GetTasks([FromBody] UserScheduleSearchModel model)
         {
             return DayTasksService.GetDayTasksAsync(model);
         }
@@ -66,7 +66,7 @@ namespace FocLab.Api.Controllers.Api.Tasker
         /// <returns></returns>
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         [HttpPost("CreateOrUpdate")]
-        public Task<BaseApiResponse> CreateOrUpdate(CreateOrUpdateDayTask model)
+        public Task<BaseApiResponse> CreateOrUpdate([FromBody]CreateOrUpdateDayTask model)
         {
             return DayTasksService.CreateOrUpdateDayTaskAsync(model);
         }

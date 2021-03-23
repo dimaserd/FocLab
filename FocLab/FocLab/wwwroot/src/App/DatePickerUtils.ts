@@ -98,7 +98,7 @@ class DatePickerUtils {
         if (elem == null) {
             alert(`DatePicker с идентификатором ${inputId} не инициалиирован на странице`);
         }
-
+        
         return new Date((document.getElementById(elem.BackElementId) as HTMLInputElement).value);
     }
 }

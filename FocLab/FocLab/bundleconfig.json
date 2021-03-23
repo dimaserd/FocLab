@@ -139,5 +139,17 @@
       "enabled": true,
       "renameLocals": true
     }
+  },
+
+  //src/App
+  {
+    "outputFileName": "wwwroot/js/App.js",
+    "inputFiles": [
+      "wwwroot/src/App/*.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
   }
 ]

@@ -22,15 +22,19 @@
     DayTasksWorker.SetCurrentTaskId = function (taskId) {
         this.CurrentTaskId = taskId;
         this.CurrentTask = DayTasksWorker.Tasks.find(function (x) { return x.Id === taskId; });
+        console.log("SetCurrentTaskId", this.CurrentTask);
     };
     DayTasksWorker.SendNotificationToAdmin = function () {
         CrocoAppCore.Application.ModalWorker.ShowModal("loadingModal");
         CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: DayTasksWorker.CurrentTaskId }, function (x) { return alert(x); }, null);
     };
     DayTasksWorker.GetTasks = function () {
-        CrocoAppCore.Application.Requester.Post("/Api/DayTask/GetTasks", this.SearchModel, function (x) {
+        var data = this.SearchModel;
+        data.MonthShift = +this.SearchModel.MonthShift;
+        console.log("DayTasksWorker.GetTasks()", data, JSON.stringify(data));
+        CrocoAppCore.Application.Requester.Post("/Api/DayTask/GetTasks", data, function (x) {
             DayTasksWorker.Tasks = x;
-            DayTasksWorker.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
+            DayTasksWorker.Drawer.DrawTasks(x);
             DayTasksWorker.OpenTaskById();
         }, null);
     };

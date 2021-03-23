@@ -1,36 +1,3 @@
-var AdminDayTaskCreator = (function () {
-    function AdminDayTaskCreator(props) {
-        this.AssigneeUserId = props.AssigneeUserId;
-        this.TaskDate = "";
-    }
-    AdminDayTaskCreator.prototype.SetDate = function (date) {
-        var a = date.split(".");
-        date = a[1] + "." + a[0] + "." + a[2];
-        this.TaskDate = date;
-    };
-    AdminDayTaskCreator.prototype.ProccessData = function (data) {
-        data.AssigneeUserId = this.AssigneeUserId;
-        data.TaskDate = this.TaskDate;
-        return data;
-    };
-    AdminDayTaskCreator.prototype.CreateDayTask = function (data) {
-        data = this.ProccessData(data);
-        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
-            if (x.IsSucceeded) {
-                DayTasksWorker.GetTasks();
-            }
-        }, null);
-    };
-    AdminDayTaskCreator.prototype.EditDayTask = function (data) {
-        CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (x) {
-            if (x.IsSucceeded) {
-                DayTasksWorker.GetTasks();
-            }
-        }, null);
-    };
-    return AdminDayTaskCreator;
-}());
-
 var ColorAvatarInitor = (function () {
     function ColorAvatarInitor() {
     }
@@ -78,15 +45,16 @@ var ColorAvatarInitor = (function () {
 var DayTaskDrawer = (function () {
     function DayTaskDrawer() {
     }
-    DayTaskDrawer.prototype.DrawTasks = function (tasks, isAdmin) {
+    DayTaskDrawer.prototype.DrawTasks = function (tasks) {
+        if (tasks == null) {
+            return;
+        }
         this.ClearTasks();
         for (var i = 0; i < tasks.length; i++) {
             var task = tasks[i];
             this.AddTaskToDate(task);
         }
-        if (isAdmin) {
-            this.AddAdminActions();
-        }
+        this.AddAdminActions();
         ScheduleStaticHandlers.SetHandlers();
     };
     DayTaskDrawer.prototype.AddTaskToDate = function (task) {
@@ -151,15 +119,19 @@ var DayTasksWorker = (function () {
     DayTasksWorker.SetCurrentTaskId = function (taskId) {
         this.CurrentTaskId = taskId;
         this.CurrentTask = DayTasksWorker.Tasks.find(function (x) { return x.Id === taskId; });
+        console.log("SetCurrentTaskId", this.CurrentTask);
     };
     DayTasksWorker.SendNotificationToAdmin = function () {
         CrocoAppCore.Application.ModalWorker.ShowModal("loadingModal");
         CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/SendToAdmin", { Id: DayTasksWorker.CurrentTaskId }, function (x) { return alert(x); }, null);
     };
     DayTasksWorker.GetTasks = function () {
-        CrocoAppCore.Application.Requester.Post("/Api/DayTask/GetTasks", this.SearchModel, function (x) {
+        var data = this.SearchModel;
+        data.MonthShift = +this.SearchModel.MonthShift;
+        console.log("DayTasksWorker.GetTasks()", data, JSON.stringify(data));
+        CrocoAppCore.Application.Requester.Post("/Api/DayTask/GetTasks", data, function (x) {
             DayTasksWorker.Tasks = x;
-            DayTasksWorker.Drawer.DrawTasks(DayTasksWorker.Tasks, true);
+            DayTasksWorker.Drawer.DrawTasks(x);
             DayTasksWorker.OpenTaskById();
         }, null);
     };
@@ -179,56 +151,73 @@ var ScheduleConsts = (function () {
 var ScheduleStaticHandlers = (function () {
     function ScheduleStaticHandlers() {
     }
-    ScheduleStaticHandlers.SetHandlers = function () {
-        EventSetter.SetHandlerForClass("tms-next-month-btn", "click", function () { return ScheduleStaticHandlers.ApplyFilter(true); });
-        EventSetter.SetHandlerForClass("tms-prev-month-btn", "click", function () { return ScheduleStaticHandlers.ApplyFilter(false); });
-        EventSetter.SetHandlerForClass("tms-add-comment-btn", "click", function () { return ScheduleStaticHandlers.addComment(); });
-        EventSetter.SetHandlerForClass("tms-update-comment-btn", "click", function (x) {
-            var commentId = x.target.getAttribute("data-comment-id");
-            ScheduleStaticHandlers.updateComment(commentId);
-        });
-        EventSetter.SetHandlerForClass("tms-profile-link", "click", function (x) {
-            var authorId = x.target.getAttribute("data-task-author-id");
-            ScheduleStaticHandlers.redirectToProfile(authorId);
-        });
-        EventSetter.SetHandlerForClass("tms-update-task-btn", "click", function () {
+    ScheduleStaticHandlers.SetInnerHandlers = function () {
+        console.log("ScheduleStaticHandlers.SetInnerHandlers()");
+        $(".tms-next-month-btn").on("click", function () { return ScheduleStaticHandlers.RedirectToNewUserSchedule(1); });
+        $(".tms-prev-month-btn").on("click", function () { return ScheduleStaticHandlers.RedirectToNewUserSchedule(-1); });
+        $(".tms-update-task-btn").unbind("click").on("click", function () {
             ScheduleStaticHandlers.updateDayTask();
             CrocoAppCore.Application.ModalWorker.HideModals();
         });
-        EventSetter.SetHandlerForClass("tms-redirect-to-full", "click", function () { return ScheduleStaticHandlers.redirectToFullVersion(); });
-        EventSetter.SetHandlerForClass("tms-create-task-btn", "click", function () { return ScheduleStaticHandlers.createDayTask(); });
-        EventSetter.SetHandlerForClass("tms-btn-create-task", "click", function () { return ScheduleStaticHandlers.ShowCreateTaskModal(); });
-        EventSetter.SetHandlerForClass("tms-show-task-modal", "click", function (x) {
-            var taskId = $(x.target).data("task-id");
-            ScheduleStaticHandlers.ShowDayTaskModal(taskId);
+        $(".tms-redirect-to-full").unbind("click").on("click", function () { return ScheduleStaticHandlers.redirectToFullVersion(); });
+        $("#tms-create-task-btn").on("click", function (e) {
+            console.log("tms-create-task-btn click");
+            e.preventDefault();
+            e.stopPropagation();
+            ScheduleStaticHandlers.createDayTask();
+        });
+        $(document).on('click', '.tms-profile-link', function (e) {
+            console.log("tms-profile-link clicked");
+            var authorId = e.target.getAttribute("data-task-author-id");
+            ScheduleStaticHandlers.redirectToProfile(authorId);
         });
     };
-    ScheduleStaticHandlers.GetQueryParams = function (isNextMonth) {
-        var data = {
-            UserIds: []
-        };
-        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
-        var dataFilter = {
-            UserIds: data.UserIds,
-            MonthShift: isNextMonth ? ScheduleStaticHandlers.Filter.MonthShift + 1 : ScheduleStaticHandlers.Filter.MonthShift - 1
-        };
-        return CrocoAppCore.Application.Requester.GetParams(dataFilter);
-    };
-    ScheduleStaticHandlers.ApplyFilter = function (isNextMonth) {
-        location.href = "/Schedule/Index?" + ScheduleStaticHandlers.GetQueryParams(isNextMonth);
+    ScheduleStaticHandlers.SetHandlers = function () {
+        $(".tms-show-task-modal").unbind("click").click(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var taskId = $(e.target).data("task-id");
+            ScheduleStaticHandlers.ShowDayTaskModal(taskId);
+        });
+        $(".tms-btn-create-task").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            ScheduleStaticHandlers.ShowCreateTaskModal();
+        });
     };
     ScheduleStaticHandlers.OnUsersSelectChanged = function () {
-        ScheduleStaticHandlers._countOfChanges++;
-        if (ScheduleStaticHandlers._countOfChanges > 1) {
-            ScheduleStaticHandlers.ShowUserSchedule();
-        }
-    };
-    ScheduleStaticHandlers.ShowUserSchedule = function () {
         var data = {
-            UserIds: []
+            UserIds: [],
         };
         CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
-        location.href = "/Schedule/Index?" + CrocoAppCore.Application.Requester.GetParams(data);
+        var currentLength = ScheduleStaticHandlers.Filter.UserIds == null
+            ? 0
+            : ScheduleStaticHandlers.Filter.UserIds.length;
+        if (data.UserIds.length !== currentLength) {
+            ScheduleStaticHandlers.RedirectToNewUserSchedule(0);
+        }
+    };
+    ScheduleStaticHandlers.RedirectToNewUserSchedule = function (monthShift) {
+        console.log("RedirectToNewUserSchedule", monthShift);
+        var data = {
+            UserIds: [],
+        };
+        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, ScheduleConsts.FilterPrefix);
+        var nData = {
+            UserIds: data.UserIds,
+            MonthShift: ScheduleStaticHandlers.Filter.MonthShift + monthShift
+        };
+        console.log("ShowUserSchedule.Data", nData);
+        var urlParts = [];
+        for (var i = 0; i < nData.UserIds.length; i++) {
+            urlParts.push("UserIds=" + nData.UserIds[i]);
+        }
+        if (nData.MonthShift !== 0) {
+            urlParts.push("MonthShift=" + nData.MonthShift);
+        }
+        var url = "/Schedule/Index?" + urlParts.join('&');
+        console.log("ShowUserSchedule.Url", url);
+        location.href = url;
     };
     ScheduleStaticHandlers.ShowDayTaskModal = function (taskId) {
         DayTasksWorker.SetCurrentTaskId(taskId);
@@ -266,35 +255,6 @@ var ScheduleStaticHandlers = (function () {
             }
         });
     };
-    ScheduleStaticHandlers.updateComment = function (commentId) {
-        var data = {
-            Comment: ""
-        };
-        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "edit.");
-        var m = {
-            Comment: data.Comment,
-            DayTaskCommentId: commentId
-        };
-        CrocoAppCore.Application.Requester.Post("/Api/DayTask/Comments/Update", m, function (resp) {
-            if (resp.IsSucceeded) {
-                TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
-                DayTasksWorker.GetTasks();
-            }
-        }, null);
-    };
-    ScheduleStaticHandlers.addComment = function () {
-        var data = {
-            DayTaskId: "",
-            Comment: ""
-        };
-        CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "");
-        CrocoAppCore.Application.Requester.Post("/Api/DayTask/Comments/Add", data, function (resp) {
-            if (resp.IsSucceeded) {
-                TaskModalWorker.DrawComments("Comments", resp.ResponseObject);
-                DayTasksWorker.GetTasks();
-            }
-        }, null);
-    };
     ScheduleStaticHandlers.redirectToFullVersion = function () {
         var data = { Id: "" };
         CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "task.");
@@ -320,6 +280,7 @@ var ScheduleStaticHandlers = (function () {
         }, null);
     };
     ScheduleStaticHandlers.createDayTask = function () {
+        console.log('createDayTask clicked');
         var data = {
             Id: "",
             TaskText: "",
@@ -332,6 +293,11 @@ var ScheduleStaticHandlers = (function () {
         };
         CrocoAppCore.Application.FormDataHelper.CollectDataByPrefix(data, "create.");
         data.TaskDate = DatePickerUtils.GetDateFromDatePicker("TaskDate1");
+        if (data.TaskDate == null || document.getElementById("TaskDate1").value === "") {
+            Requester.OnSuccessAnimationHandler({ IsSucceeded: false, Message: "Необходимо указать дату задания" });
+            return;
+        }
+        console.log("createDayTask", data);
         CrocoAppCore.Application.Requester.SendPostRequestWithAnimation("/Api/DayTask/CreateOrUpdate", data, function (resp) {
             if (resp.IsSucceeded) {
                 ScheduleStaticHandlers.hideCreateModal();
@@ -345,9 +311,9 @@ var ScheduleStaticHandlers = (function () {
     ScheduleStaticHandlers.redirectToProfile = function (profileId) {
         window.open(window.location.origin + "/Client/Details/" + profileId, '_blank');
     };
-    ScheduleStaticHandlers._countOfChanges = 0;
     return ScheduleStaticHandlers;
 }());
+ScheduleStaticHandlers.SetInnerHandlers();
 ScheduleStaticHandlers.SetHandlers();
 
 var ScheduleWorker_Resx = (function () {
@@ -438,6 +404,7 @@ var TaskModalWorker = (function () {
         TaskModalWorker.InitTask(task);
         CrocoAppCore.Application.FormDataHelper.FillDataByPrefix(task, "task.");
         DatePickerUtils.SetDatePicker("TaskDate", "RealTaskDate");
+        DatePickerUtils.SetDateToDatePicker("TaskDate", task.TaskDate);
         var selector = "#" + TaskModalConsts.UserSelectId;
         ScheduleStaticHandlers.InitUserSelect(selector);
         $(selector).val(task.AssigneeUser.Id).trigger('change');
@@ -448,7 +415,7 @@ var TaskModalWorker = (function () {
         TaskModalWorker.ClearContent();
         document.getElementById("dayTaskModalTitle").innerHTML = task.TaskTitle;
         var avatar = ColorAvatarInitor.InitColorForAvatar(task);
-        document.getElementById("Author").innerHTML = "<a class=\"media-left tms-profile-link\" href=\"#\" data-task-author-id=\"" + task.Author.Id + "\">" + avatar + "</a>\n                <a  href=\"#\" data-task-author-id=\"" + task.Author.Id + "\" class=\"tms-profile-link text-semibold media-heading box-inline ml-1 mb-1\">\n                    " + task.Author.Name + " " + task.Author.Email + "\n                </a>";
+        document.getElementById("Author").innerHTML = "<a class=\"media-left tms-profile-link\" data-task-author-id=\"" + task.Author.Id + "\">" + avatar + "</a>\n                <a data-task-author-id=\"" + task.Author.Id + "\" class=\"tms-profile-link text-semibold media-heading box-inline ml-1 mb-1\">\n                    " + task.Author.Name + " " + task.Author.Email + "\n                </a>";
         document.getElementsByName('DayTaskId')[0].value = task.Id;
         $("#usersSelect1").val(task.AssigneeUser.Id).trigger('change.select2');
         TaskModalWorker.DrawComments("Comments", task);
@@ -495,3 +462,31 @@ var TaskModalWorker = (function () {
     };
     return TaskModalWorker;
 }());
+
+var TmsOnPageInitor = (function () {
+    function TmsOnPageInitor() {
+    }
+    TmsOnPageInitor.Init = function () {
+        var _a;
+        var filter = window["tms-filter"];
+        console.log("TmsOnPageInitor.Init", filter);
+        ScheduleWorker.Constructor(filter);
+        var props = {
+            Tasks: null,
+            User: null,
+            IsAdmin: false,
+            MyUserId: (_a = AccountWorker.User) === null || _a === void 0 ? void 0 : _a.Id,
+            OpenTaskId: null,
+            SearchModel: filter
+        };
+        DayTasksWorker.Constructor(props);
+        ScheduleStaticHandlers.Filter = filter;
+        document.addEventListener("DOMContentLoaded", function () {
+            DayTasksWorker.GetTasks();
+            $("#usersSelect").select2().on("change", function () { ScheduleStaticHandlers.OnUsersSelectChanged(); });
+        });
+        $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+    };
+    return TmsOnPageInitor;
+}());
+TmsOnPageInitor.Init();

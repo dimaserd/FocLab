@@ -5,6 +5,7 @@ interface Select2Option {
 
 interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
     timepicker();
+    select2();
     select2(arg0: {
         theme: string;
         width: string;

@@ -339,7 +339,7 @@ namespace Tms.Logic.Services
             DayTaskModelWithNoUsersJustIds model)
         {
             users.TryGetValue(model.AuthorId, out var author);
-            users.TryGetValue(model.AuthorId, out var assignee);
+            users.TryGetValue(model.AssigneeId, out var assignee);
             return new DayTaskModel(model, author, assignee);
         }
 

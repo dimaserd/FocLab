@@ -109,7 +109,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success tms-redirect-to-full" data-toggle="tooltip" data-placement="top" title="Перейти в расширенную версию"><i class="fas fa-compress"></i></button>
+                @*<button type="button" class="btn btn-success tms-redirect-to-full" data-toggle="tooltip" data-placement="top" title="Перейти в расширенную версию"><i class="fas fa-compress"></i></button>*@
                 <button type="button" class="btn btn-primary tms-update-task-btn">Обновить</button>
             </div>
         </div>
@@ -154,7 +154,7 @@
                         <div class="form-group m-form__group">
                             <label>Дата выполнения</label>
                             <div class="form-group m-form__group">
-                                <input id="TaskDate1" type="text" value="">
+                                <input id="TaskDate1" type="text" class="form-control" value="">
                                 <input id="RealTaskDate1" type="hidden" name="create.TaskDate" class="form-control" value="">
                             </div>
                         </div>
@@ -169,7 +169,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary tms-create-task-btn">Создать</button>
+                <button id="tms-create-task-btn" type="button" class="btn btn-primary">Создать</button>
             </div>
         </div>
     </div>

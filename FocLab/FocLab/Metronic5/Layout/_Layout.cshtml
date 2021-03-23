@@ -151,18 +151,19 @@
     <script src="/Metronic5.5/assets/demo/default/custom/crud/forms/widgets/bootstrap-select.js" type="text/javascript"></script>
 
     <script src="~/js/Core.min.js"></script>
-
-
+    <script src="~/js/App.min.js"></script>
 
     <script>
+        jQuery(document).ready(function () {
+            jQuery(document).off().on("dblclick", function () {
+            });
+        });
         document.addEventListener("DOMContentLoaded", function () {
             AccountWorker.User = @Html.GetJson(user);
         })
         
     </script>
     <script src="~/js/FocLabCore.min.js"></script>
-
-
 
     @await RenderSectionAsync("scripts", false)
 
