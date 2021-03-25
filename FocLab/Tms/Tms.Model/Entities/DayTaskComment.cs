@@ -2,19 +2,12 @@
 using Croco.Core.Model.Models;
 using Newtonsoft.Json;
 
-namespace FocLab.Model.Entities.Tasker
+namespace Tms.Model.Entities
 {
-    public class ApplicationDayTaskComment : DayTaskComment<ApplicationDayTask>
-    {
-
-    }
-
     /// <summary>
     /// Комментарий к заданию от пользователя
     /// </summary>
-    /// <typeparam name="TDayTask"></typeparam>
-    /// <typeparam name="TUser"></typeparam>
-    public class DayTaskComment<TDayTask> : AuditableEntityBase where TDayTask : class
+    public class DayTaskComment : AuditableEntityBase
     {
         /// <summary>
         /// Идентификатор
@@ -36,7 +29,7 @@ namespace FocLab.Model.Entities.Tasker
         /// Задание к которому был оставлен комментарий
         /// </summary>
         [JsonIgnore]
-        public virtual TDayTask DayTask { get; set; }
+        public virtual DayTask DayTask { get; set; }
 
         /// <summary>
         /// Идентификатор автора данного комменатрия к заданию

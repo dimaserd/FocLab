@@ -37,5 +37,4 @@ namespace FocLab.Logic.Extensions
             return GetUserId(claim);
         }
     }
-
 }

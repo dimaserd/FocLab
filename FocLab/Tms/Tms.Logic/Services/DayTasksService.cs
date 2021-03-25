@@ -6,69 +6,34 @@ using System.Threading.Tasks;
 using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Models;
-using FocLab.Logic.Extensions;
-using FocLab.Logic.Implementations;
-using FocLab.Logic.Models.Users.Projection;
-using FocLab.Logic.Resources;
-using FocLab.Model.Entities.Tasker;
-using FocLab.Model.Entities.Users.Default;
 using Microsoft.EntityFrameworkCore;
+using Tms.Logic.Abstractions;
 using Tms.Logic.Models;
+using Tms.Model.Entities;
 
 namespace Tms.Logic.Services
 {
     /// <summary>
     /// Класс для работы с заданиями на день 
     /// </summary>
-    public class DayTasksService : FocLabWorker
+    public class DayTasksService : TmsBaseService
     {
         /// <summary>
         /// Задания можно создавать и редактировать за один прошедший день
         /// </summary>
         public int DaysSpan = 1;
 
-        /// <summary>
-        /// Конструктор
-        /// </summary>
-        /// <param name="contextAccessor"></param>
-        /// <param name="application"></param>
-        public DayTasksService(ICrocoAmbientContextAccessor contextAccessor, ICrocoApplication application) : base(contextAccessor, application)
+        public IUsersStorage UsersStorage { get; }
+
+        public DayTasksService(ICrocoAmbientContextAccessor contextAccessor, 
+            ICrocoApplication application, 
+            PrincipalCheker principalCheker,
+            IUsersStorage usersStorage) : base(contextAccessor, application, principalCheker)
         {
+            UsersStorage = usersStorage;
         }
 
-        /// <summary>
-        /// Получить допустимую дату
-        /// </summary>
-        /// <returns></returns>
-        public DateTime GetAllowedDate()
-        {
-            var dateNow = DateTime.Now;
-
-            var todayDate = new DateTime(dateNow.Year, dateNow.Month, dateNow.Day);
-
-            return todayDate.AddDays(-DaysSpan);
-        }
-
-
-        /// <summary>
-        /// Метод высчитывающий начальную 
-        /// </summary>
-        /// <param name="dateNow"></param>
-        /// <param name="monthShift"></param>
-        /// <returns></returns>
-        public Tuple<DateTime, DateTime> GetDatesTuple(DateTime dateNow, int monthShift)
-        {
-            var date = new DateTime(dateNow.Year, dateNow.Month, 1);
-
-            var dateMonthShifted = date.AddMonths(monthShift);
-
-            var firstDayInSearchMonth = new DateTime(dateMonthShifted.Year, dateMonthShifted.Month, 1);
-
-            var lastDayInSearchMonth = new DateTime(dateMonthShifted.Year, dateMonthShifted.Month, DateTime.DaysInMonth(dateMonthShifted.Year, dateMonthShifted.Month));
-
-            return new Tuple<DateTime, DateTime>(firstDayInSearchMonth, lastDayInSearchMonth);
-        }
-
+        
         /// <summary>
         /// Возвращает задания на месяц для текущего пользователя
         /// </summary>
@@ -89,7 +54,7 @@ namespace Tms.Logic.Services
 
             var lastDayInSearchMonth = tuple.Item2;
 
-            var initQuery = GetRepository<ApplicationDayTask>().Query()
+            var initQuery = Query<DayTask>()
                 .Where(x => x.TaskDate >= firstDayInSearchMonth && x.TaskDate <= lastDayInSearchMonth);
 
             var noAssignee = model.ShowTasksWithNoAssignee || model.UserIds == null || model.UserIds.Length == 0;
@@ -106,7 +71,7 @@ namespace Tms.Logic.Services
 
         public async Task<DayTaskModel> GetDayTaskByIdAsync(string id)
         {
-            var res = await GetRepository<ApplicationDayTask>().Query()
+            var res = await Query<DayTask>()
                 .Select(SelectExpression)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -145,14 +110,14 @@ namespace Tms.Logic.Services
                 return new BaseApiResponse(false, "Пустое описание задания");
             }
 
-            if (!await GetRepository<ApplicationUser>().Query().AnyAsync(x => x.Id == model.AssigneeUserId))
+            if ((await UsersStorage.GetUserById(model.AssigneeUserId)) != null)
             {
                 return new BaseApiResponse(false, "Пользователь не найден по указанному идентификатору");
             }
 
-            var repo = GetRepository<ApplicationDayTask>();
+            var repo = GetRepository<DayTask>();
 
-            repo.CreateHandled(new ApplicationDayTask
+            repo.CreateHandled(new DayTask
             {
                 AuthorId = UserId,
                 AssigneeUserId = model.AssigneeUserId,
@@ -186,7 +151,7 @@ namespace Tms.Logic.Services
                 return new BaseApiResponse(false, "Пустое описание задания");
             }
 
-            var repo = GetRepository<ApplicationDayTask>();
+            var repo = GetRepository<DayTask>();
 
             var dayTask = await repo.Query().FirstOrDefaultAsync(x => x.Id == model.Id);
 
@@ -195,7 +160,7 @@ namespace Tms.Logic.Services
                 return new BaseApiResponse(false, "Задание не найдено по указанному идентификатору");
             }
 
-            if (dayTask.AssigneeUserId != userId && !User.IsAdmin())
+            if (dayTask.AssigneeUserId != userId && !IsUserAdmin())
             {
                 return new BaseApiResponse(false, "Вы не можете редактировать данное задание, так как вы не являетесь его исполнителем");
             }
@@ -212,123 +177,16 @@ namespace Tms.Logic.Services
             return await TrySaveChangesAndReturnResultAsync("Задание обновлено");
         }
 
-        /// <summary>
-        /// Добавить комментарий к заданию
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public async Task<BaseApiResponse<DayTaskModel>> CommentDayTaskAsync(CommentDayTask model)
-        {
-            if (!IsAuthenticated)
-            {
-                return new BaseApiResponse<DayTaskModel>(false, ValidationMessages.YouAreNotAuthorized);
-            }
-
-            var validation = ValidateModel(model);
-
-            if (!validation.IsSucceeded)
-            {
-                return new BaseApiResponse<DayTaskModel>(validation);
-            }
-
-            var repo = GetRepository<ApplicationDayTask>();
-
-            var dayTask = await repo.Query().FirstOrDefaultAsync(x => x.Id == model.DayTaskId);
-
-            if (dayTask == null)
-            {
-                return new BaseApiResponse<DayTaskModel>(false, TaskerResource.DayTaskNotFoundByProvidedId);
-            }
-
-            var commentsRepo = GetRepository<ApplicationDayTaskComment>();
-
-            commentsRepo.CreateHandled(new ApplicationDayTaskComment
-            {
-                AuthorId = UserId,
-                Comment = model.Comment,
-                DayTaskId = model.DayTaskId
-            });
-
-            return await TryExecuteCodeAndReturnSuccessfulResultAsync(async () =>
-            {
-                await SaveChangesAsync();
-
-                var task = await repo.Query().Select(SelectExpression).FirstOrDefaultAsync(x => x.Id == model.DayTaskId);
-
-                return new BaseApiResponse<DayTaskModel>(true, TaskerResource.CommentAdded, await GetDayTask(task));
-            });
-        }
-
-        public async Task<BaseApiResponse<DayTaskModel>> UpdateDayTaskCommentAsync(UpdateDayTaskComment model)
-        {
-            if (!IsAuthenticated)
-            {
-                return new BaseApiResponse<DayTaskModel>(false, ValidationMessages.YouAreNotAuthorized);
-            }
-
-            var validation = ValidateModel(model);
-
-            if (!validation.IsSucceeded)
-            {
-                return new BaseApiResponse<DayTaskModel>(validation);
-            }
-
-            var commentsRepo = GetRepository<ApplicationDayTaskComment>();
-
-            var comment = await commentsRepo.Query().FirstOrDefaultAsync(x => x.Id == model.DayTaskCommentId);
-
-            if (comment == null)
-            {
-                return new BaseApiResponse<DayTaskModel>(false, TaskerResource.DayTaskCommentNotFoundById);
-            }
-
-            comment.Comment = model.Comment;
-
-            commentsRepo.UpdateHandled(comment);
-
-            return await TryExecuteCodeAndReturnSuccessfulResultAsync(async () =>
-            {
-                await SaveChangesAsync();
-                var repo = GetRepository<ApplicationDayTask>();
-
-                var task = await repo.Query()
-                    .Select(SelectExpression)
-                    .FirstOrDefaultAsync(x => x.Id == comment.DayTaskId);
-
-                return new BaseApiResponse<DayTaskModel>(true, TaskerResource.CommentUpdated, await GetDayTask(task));
-            });
-
-        }
-
-        private Task<Dictionary<string, UserFullNameEmailAndAvatarModel>> GetCachedUsers()
-        {
-            return Application.CacheManager.GetOrAddValueAsync($"{GetType().FullName}.users", async () =>
-            {
-                var result = await Query<ApplicationUser>().Select(x => new UserFullNameEmailAndAvatarModel
-                {
-                    Id = x.Id,
-                    Email = x.Email,
-                    AvatarFileId = x.AvatarFileId,
-                    Name = x.Name,
-                    Patronymic = x.Patronymic,
-                    Surname = x.Surname
-                }).ToListAsync();
-
-                return result.ToDictionary(x => x.Id);
-
-            }, DateTime.Now.AddMinutes(10));
-        }
-
         private async Task<DayTaskModel> GetDayTask(DayTaskModelWithNoUsersJustIds model)
         {
-            var users = await GetCachedUsers();
+            var users = await UsersStorage.GetUsersDictionary();
 
             return ToDayTaskModel(users, model);
         }
 
         private async Task<List<DayTaskModel>> GetDayTasks(List<DayTaskModelWithNoUsersJustIds> model)
         {
-            var users = await GetCachedUsers();
+            var users = await UsersStorage.GetUsersDictionary();
 
             return model
                 .Select(m => ToDayTaskModel(users, m))
@@ -343,7 +201,7 @@ namespace Tms.Logic.Services
             return new DayTaskModel(model, author, assignee);
         }
 
-        internal static Expression<Func<ApplicationDayTask, DayTaskModelWithNoUsersJustIds>> SelectExpression = x => new DayTaskModelWithNoUsersJustIds
+        internal static Expression<Func<DayTask, DayTaskModelWithNoUsersJustIds>> SelectExpression = x => new DayTaskModelWithNoUsersJustIds
         {
             Id = x.Id,
             TaskTitle = x.TaskTitle,
@@ -357,5 +215,39 @@ namespace Tms.Logic.Services
             AuthorId = x.AuthorId,
             AssigneeId = x.AssigneeUserId
         };
+
+
+        /// <summary>
+        /// Получить допустимую дату
+        /// </summary>
+        /// <returns></returns>
+        private DateTime GetAllowedDate()
+        {
+            var dateNow = DateTime.Now;
+
+            var todayDate = new DateTime(dateNow.Year, dateNow.Month, dateNow.Day);
+
+            return todayDate.AddDays(-DaysSpan);
+        }
+
+
+        /// <summary>
+        /// Метод высчитывающий начальную 
+        /// </summary>
+        /// <param name="dateNow"></param>
+        /// <param name="monthShift"></param>
+        /// <returns></returns>
+        private Tuple<DateTime, DateTime> GetDatesTuple(DateTime dateNow, int monthShift)
+        {
+            var date = new DateTime(dateNow.Year, dateNow.Month, 1);
+
+            var dateMonthShifted = date.AddMonths(monthShift);
+
+            var firstDayInSearchMonth = new DateTime(dateMonthShifted.Year, dateMonthShifted.Month, 1);
+
+            var lastDayInSearchMonth = new DateTime(dateMonthShifted.Year, dateMonthShifted.Month, DateTime.DaysInMonth(dateMonthShifted.Year, dateMonthShifted.Month));
+
+            return new Tuple<DateTime, DateTime>(firstDayInSearchMonth, lastDayInSearchMonth);
+        }
     }
 }

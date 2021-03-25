@@ -58,6 +58,7 @@
 
     <div class="form-group m-form__group">
         @Html.LabelFor(x => x.DeadLineDate)
+        <input type="hidden" name="DeadLineDatePicker" />
         @Html.TextBoxFor(x => x.DeadLineDate, new { @class = "form-control" })
     </div>
 
@@ -77,8 +78,6 @@
     </div>
 
 
-
-
 <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions m-form__actions">
         <div class="row">
@@ -93,61 +92,9 @@
 
 @section Scripts{
     <script>
-        
-        $("#FileMethodsSelect").select2({
-            placeholder: "Выберите метод решения",
 
-            "language": {
-                "noResults": function() {
-                    return "Метод решения не найден.";
-                }
-            },
-            escapeMarkup: function(markup) {
-                return markup;
-            }
-        });
+        window["NotSelectedValue"] = "@NotSelectedValue";
 
-        $("#PerformerSelect").select2({
-            placeholder: "Выберите исполнителя",
-
-            "language": {
-                "noResults": function() {
-                    return "Исполнитель не найден.";
-                }
-            },
-            escapeMarkup: function(markup) {
-                return markup;
-            }
-        });
-
-        Utils.SetDatePicker("input[name='DeadLineDate']", new Date());
-
-        $(".form-action-btn").on("click", () => CreateTask());
-
-        function CreateTask() {
-            var data = {
-                AdminId: "",
-                FileMethodId: "",
-                Title: "",
-                DeadLineDate: "",
-                PerformerId: "",
-                Quality: "",
-                Quantity: ""
-            };
-
-            data = FormDataHelper.CollectData(data);
-            console.log("Собраные данные", data);
-            data.DeadLineDate = Requester.ParseDate(data.DeadLineDate);
-
-            if (data.FileMethodId === "@NotSelectedValue") {
-                data.FileMethodId = null;
-            }
-
-            Requester.SendPostRequestWithAnimation("/Api/Chemistry/Tasks/Admin/Create", data, x => {
-                if (x.IsSucceeded) {
-                    setTimeout(() => location.href = "/Chemistry/Tasks/Index", 1500);
-                }
-            });
-        }
     </script>
+    <script src="~/src/Areas/Chemistry/Tasks/CreateTask/CreateTaskScripts.js"></script>
 }

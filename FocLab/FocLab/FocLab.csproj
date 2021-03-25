@@ -37,6 +37,7 @@
     <Content Remove="wwwroot\src\App\NotificationWorker.ts" />
     <Content Remove="wwwroot\src\Areas\Admin\UserCreatePage.ts" />
     <Content Remove="wwwroot\src\Areas\Chemistry\Experiments\CreateExperiment.ts" />
+    <Content Remove="wwwroot\src\Areas\Chemistry\Tasks\CreateTask\CreateTaskScripts.ts" />
     <Content Remove="wwwroot\src\Areas\Chemistry\Tasks\Task\TaskUpdater.ts" />
     <Content Remove="wwwroot\src\FocLab\AdminTasksIndex.ts" />
     <Content Remove="wwwroot\src\FocLab\DefaultHandlers.ts" />

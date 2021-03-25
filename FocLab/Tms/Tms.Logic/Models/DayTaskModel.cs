@@ -1,5 +1,4 @@
-﻿using FocLab.Logic.Models.Users.Projection;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Tms.Logic.Models
@@ -63,6 +62,7 @@ namespace Tms.Logic.Models
         public string TaskComment { get; set; }
 
         public List<DayTaskCommentModel> Comments { get; set; } = new List<DayTaskCommentModel>();
+
         #region Свойства отношений
 
 

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using FocLab.Logic.Resources;
+using Tms.Logic.Resources;
 
 namespace Tms.Logic.Models
 {

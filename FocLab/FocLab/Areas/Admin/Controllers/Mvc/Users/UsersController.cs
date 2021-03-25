@@ -79,7 +79,6 @@ namespace FocLab.Areas.Admin.Controllers.Mvc.Users
 
             return View(interfaceModel);
         }
-
         
         /// <summary>
         /// Редактирование пользователя

@@ -33,6 +33,7 @@ using Croco.Core.Logic.Cache;
 using FocLab.Model.Entities;
 using Tms.Logic;
 using MigrationTool;
+using FocLab.Logic.Implementations;
 
 namespace FocLab
 {
@@ -119,7 +120,7 @@ namespace FocLab
 
             LogicRegistrator.Register(services);
             DocumentRegistrator.Register(services);
-            TmsRegistrator.Register(services);
+            TmsRegistrator.Register<TmsUsersStorage>(services, MyIdentityExtensions.IsAdmin);
             MigrationToolRegistator.Register(services);
 
             new GenericUserInterfaceBagBuilder(services)
@@ -171,7 +172,6 @@ namespace FocLab
                 return next.Invoke();
                 // Do logging or other work that doesn't write to the Response.
             });
-
 
             app.UseEndpoints(endpoints =>
             {

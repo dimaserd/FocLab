@@ -15,11 +15,13 @@ namespace FocLab.Api.Controllers.Api.Tasker
     public class DayTaskController : Controller
     {
         private DayTasksService DayTasksService { get; }
+        private DayTaskCommentService TaskCommentService { get; }
 
         /// <inheritdoc />
-        public DayTaskController(DayTasksService dayTasksService)
+        public DayTaskController(DayTasksService dayTasksService, DayTaskCommentService taskCommentService)
         {
             DayTasksService = dayTasksService;
+            TaskCommentService = taskCommentService;
         }
 
         
@@ -32,7 +34,7 @@ namespace FocLab.Api.Controllers.Api.Tasker
         [ProducesDefaultResponseType(typeof(BaseApiResponse<DayTaskModel>))]
         public Task<BaseApiResponse<DayTaskModel>> CommentDayTask([FromBody] CommentDayTask model)
         {
-            return DayTasksService.CommentDayTaskAsync(model);
+            return TaskCommentService.CommentDayTaskAsync(model);
         }
 
         /// <summary>
@@ -44,7 +46,7 @@ namespace FocLab.Api.Controllers.Api.Tasker
         [ProducesDefaultResponseType(typeof(BaseApiResponse<DayTaskModel>))]
         public Task<BaseApiResponse<DayTaskModel>> UpdateDayTaskComment([FromBody] UpdateDayTaskComment model)
         {
-            return DayTasksService.UpdateDayTaskCommentAsync(model);
+            return TaskCommentService.UpdateDayTaskCommentAsync(model);
         }
 
         /// <summary>

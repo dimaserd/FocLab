@@ -117,19 +117,91 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CommentAdded" xml:space="preserve">
-    <value>Комментарий добавлен</value>
+  <data name="EmailIsNotValid" xml:space="preserve">
+    <value>Неправильный Email адрес</value>
   </data>
-  <data name="CommentCantBeEmpty" xml:space="preserve">
-    <value>Комментарий к заданию не может быть пустым</value>
+  <data name="EmailIsRequired" xml:space="preserve">
+    <value>Необходимо указать Email</value>
   </data>
-  <data name="CommentUpdated" xml:space="preserve">
-    <value>Комментарий обновлён</value>
+  <data name="ErrorOccuredFormat" xml:space="preserve">
+    <value>Произошла ошибка. {0}</value>
   </data>
-  <data name="DayTaskCommentNotFoundById" xml:space="preserve">
-    <value>Комментарий к заданию не найден по указанному идентификатору</value>
+  <data name="ModelIsNullObject" xml:space="preserve">
+    <value>Модель является пустым объектом</value>
   </data>
-  <data name="DayTaskNotFoundByProvidedId" xml:space="preserve">
-    <value>Задание не найдено по указанному идентификатору</value>
+  <data name="ModelIsValid" xml:space="preserve">
+    <value>Модель валидна</value>
+  </data>
+  <data name="ProductAddedToCart" xml:space="preserve">
+    <value>Товар добавлен в корзину</value>
+  </data>
+  <data name="ProductIsAlreadyInCart" xml:space="preserve">
+    <value>Товар уже добавлен в корзину</value>
+  </data>
+  <data name="ProductItemIdIsRequired" xml:space="preserve">
+    <value>Необходимо указать идентификатор товарной позиции</value>
+  </data>
+  <data name="ProductItemIsNotFoundByProvidedIdentifier" xml:space="preserve">
+    <value>Товарная позиция не найдена по указанному идентификатору</value>
+  </data>
+  <data name="ProductItemIsNotFoundInCart" xml:space="preserve">
+    <value>Товарная позиция не найдена в корзине</value>
+  </data>
+  <data name="ThisEmailIsAlreadyTaken" xml:space="preserve">
+    <value>Данный Email уже занят другим пользователем</value>
+  </data>
+  <data name="ThisPhoneNumberIsAlreadyTaken" xml:space="preserve">
+    <value>Данный номер телефона уже занят другим пользователем</value>
+  </data>
+  <data name="ThisPhoneNumberIsAlreadyTakenByOtherUser" xml:space="preserve">
+    <value>Данный номер телефона уже занят другим пользователем</value>
+  </data>
+  <data name="UriIsRequired" xml:space="preserve">
+    <value>Необходимо указать Uri</value>
+  </data>
+  <data name="UserFound" xml:space="preserve">
+    <value>Пользователь найден</value>
+  </data>
+  <data name="UserIdentifierMustBeProvided" xml:space="preserve">
+    <value>Необходимо указать идентификатор пользователя</value>
+  </data>
+  <data name="UserIdIsRequired" xml:space="preserve">
+    <value>Необходимо указать идентификатор пользователя</value>
+  </data>
+  <data name="UserIsNotFoundByIdentifier" xml:space="preserve">
+    <value>Пользователь не найден по указанному идентификатору</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>Пользователь не найден</value>
+  </data>
+  <data name="YouAreNotAnAdministrator" xml:space="preserve">
+    <value>Вы не являетесь администратором</value>
+  </data>
+  <data name="YouAreNotAuthorized" xml:space="preserve">
+    <value>Вы не авторизованы</value>
+  </data>
+  <data name="YouCantAddOrEditProductToCartWithQuantityLessOrEqualThanZero" xml:space="preserve">
+    <value>Вы не можете изменить или добавить товар в корзину с колличеством меньшим или равным нулю</value>
+  </data>
+  <data name="YouCantEditRootUser" xml:space="preserve">
+    <value>Вы не можете редактировать пользователя Root</value>
+  </data>
+  <data name="YouCantEditUserBecauseHeIsAdministrator" xml:space="preserve">
+    <value>Вы не можете редактировать пользователя, так как он является администратором</value>
+  </data>
+  <data name="YouCantEditUserBecauseHeIsSuperAdministrator" xml:space="preserve">
+    <value>Вы не можете редактировать пользователя, так как он является Супер-Администратором</value>
+  </data>
+  <data name="BrandNameCanNotBeEmpty" xml:space="preserve">
+    <value>Название бренда не может быть пустым</value>
+  </data>
+  <data name="ProductFileIdsArrayIsEmpty" xml:space="preserve">
+    <value>Список идентификаторов файлов для товара пуст</value>
+  </data>
+  <data name="YouAreNotAnAdministratorOrSeller" xml:space="preserve">
+    <value>Вы не являетесь администратором или продавцом.</value>
+  </data>
+  <data name="ProductCategoryMenuNameCanNotBeEmpty" xml:space="preserve">
+    <value>Название  меню продуктовых категорий не может быть пустым</value>
   </data>
 </root>

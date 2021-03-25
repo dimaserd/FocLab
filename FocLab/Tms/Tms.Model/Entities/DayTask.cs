@@ -1,26 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Croco.Core.Model.Abstractions.Entity;
 using Croco.Core.Model.Models;
-using FocLab.Model.Entities.Users.Default;
 using Newtonsoft.Json;
 
-namespace FocLab.Model.Entities.Tasker
+namespace Tms.Model.Entities
 {
-    /// <summary>
-    /// Химическое задание
-    /// </summary>
-    public class ApplicationDayTask : DayTask<ApplicationDayTaskComment>
-    {
-
-    }
-
-    public class DayTask<TDayTaskComment> : AuditableEntityBase where TDayTaskComment : class
+    public class DayTask : AuditableEntityBase
     {
         public DayTask()
         {
-            Comments = new List<TDayTaskComment>();
+            Comments = new List<DayTaskComment>();
         }
 
         /// <summary>
@@ -89,7 +79,7 @@ namespace FocLab.Model.Entities.Tasker
         /// Комментарии к данному заданию
         /// </summary>
         [JsonIgnore]
-        public virtual ICollection<TDayTaskComment> Comments { get; set; } = new List<TDayTaskComment>();
+        public virtual ICollection<DayTaskComment> Comments { get; set; }
         #endregion
     }
 }
