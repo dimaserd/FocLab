@@ -2,29 +2,29 @@
 using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Models;
-using Doc.Logic.Entities;
-using Doc.Logic.Models;
+using Doc.Logic.Word.Abstractions;
+using Doc.Logic.Word.Models;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models;
+using FocLab.Logic.Models.Doc;
 using FocLab.Model.Entities.Chemistry;
 using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Zoo.Doc.WordGen.Models;
 
 namespace Doc.Logic.Workers
 {
     public class ChemistryTaskDocumentProccessor : FocLabWorker
     {
-        DocumentProccessorBase DocumentProccessorBase { get; }
+        IWordProccessorEngine ProccessorEngine { get; }
 
         public ChemistryTaskDocumentProccessor(ICrocoAmbientContextAccessor context, 
             ICrocoApplication app,
-            DocumentProccessorBase documentProccessorBase) : base(context, app)
+            IWordProccessorEngine proccessorEngine) : base(context, app)
         {
-            DocumentProccessorBase = documentProccessorBase;
+            ProccessorEngine = proccessorEngine;
         }
 
         private string GetDocTemplateFilePath()
@@ -63,7 +63,7 @@ namespace Doc.Logic.Workers
             var docModel = GetDocumentObjectModel(docSaveFileName,
                 model.SubstanceCounterJson, GetDocumentReplacesDicitonaryByTask(model), file);
 
-            return DocumentProccessorBase.RenderDocument(docModel);
+            return ProccessorEngine.Create(docModel);
         }
 
         private DocXDocumentObjectModel GetDocumentObjectModel(string docSaveFileName, string substanceCounterJson, Dictionary<string, string> replaceDict, ChemistryTaskDbFile file)

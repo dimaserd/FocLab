@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Zoo.Doc.WordGen.Models
+namespace Doc.Logic.Word.Models
 {
     public class DocumentTable
     {

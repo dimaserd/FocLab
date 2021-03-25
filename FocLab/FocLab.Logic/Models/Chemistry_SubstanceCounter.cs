@@ -1,7 +1,7 @@
 ﻿using Croco.Core.Utils;
+using Doc.Logic.Word.Models;
 using System.Collections.Generic;
 using System.Linq;
-using Zoo.Doc.WordGen.Models;
 
 namespace FocLab.Logic.Models
 {

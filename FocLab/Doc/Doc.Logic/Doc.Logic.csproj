@@ -6,13 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.12.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\FocLab.Logic\FocLab.Logic.csproj" />
-    <ProjectReference Include="..\..\FocLab.Model\FocLab.Model.csproj" />
-    <ProjectReference Include="..\..\Zoo\Zoo.csproj" />
-    <ProjectReference Include="..\Doc.Contract\Doc.Contract.csproj" />
+    <PackageReference Include="Croco.Core.Logic" Version="1.0.13" />
   </ItemGroup>
 
 </Project>

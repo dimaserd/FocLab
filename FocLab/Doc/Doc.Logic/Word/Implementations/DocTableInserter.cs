@@ -1,9 +1,9 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+﻿using Doc.Logic.Word.Models;
+using DocumentFormat.OpenXml.Packaging;
 using System;
 using System.Linq;
-using Zoo.Doc.WordGen.Models;
 
-namespace Zoo.Doc.WordGen.Implementations
+namespace Doc.Logic.Word.Implementations
 {
     public static class DocTableInserter
     {

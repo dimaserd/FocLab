@@ -1,15 +1,14 @@
 ﻿using System;
 using System.IO;
-using Doc.Logic.Entities;
+using Doc.Logic.Word.Models;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Zoo.Doc.WordGen.Models;
 using A = DocumentFormat.OpenXml.Drawing;
 using DW = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
 
-namespace Zoo.Doc.WordGen.Implementations
+namespace Doc.Logic.Word.Implementations
 {
     public static class DocImageInserter
     {

@@ -1,4 +1,4 @@
-﻿namespace Zoo.Doc.WordGen.Models
+﻿namespace Doc.Logic.Word.Models
 {
     public class EmuRectangle
     {

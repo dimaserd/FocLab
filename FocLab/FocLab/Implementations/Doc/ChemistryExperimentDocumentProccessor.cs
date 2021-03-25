@@ -2,27 +2,28 @@
 using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Models;
-using Doc.Logic.Entities;
-using Doc.Logic.Models;
+using Doc.Logic.Word.Abstractions;
+using Doc.Logic.Word.Models;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models;
+using FocLab.Logic.Models.Doc;
 using FocLab.Model.Entities.Chemistry;
 using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Zoo.Doc.WordGen.Implementations;
-using Zoo.Doc.WordGen.Models;
-using Zoo.Doc.WordGen.Workers;
 
-namespace Doc.Logic.Workers
+namespace FocLab.Implementations.Doc
 {
     public class ChemistryExperimentDocumentProccessor : FocLabWorker
     {
+        IWordProccessorEngine WordProccessorEngine { get; }
+
         public ChemistryExperimentDocumentProccessor(ICrocoAmbientContextAccessor context,
-            ICrocoApplication application) : base(context, application)
+            ICrocoApplication application, IWordProccessorEngine wordProccessorEngine) : base(context, application)
         {
+            WordProccessorEngine = wordProccessorEngine;
         }
 
         private string GetDocTemplateFilePath()
@@ -62,12 +63,7 @@ namespace Doc.Logic.Workers
             var docModel = GetDocumentObjectModel(docSaveFileName,
                 model.SubstanceCounterJson, GetDocumentReplacesDicitonaryByExperiment(model), file);
 
-            var proccessor = new WordDocumentProcessor(new WordDocumentProcessorOptions
-            {
-                Engine = new DocOpenFormatWordEngine()
-            });
-
-            return proccessor.RenderDocument(docModel);
+            return WordProccessorEngine.Create(docModel);
         }
 
 

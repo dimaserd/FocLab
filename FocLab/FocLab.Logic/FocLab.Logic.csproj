@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Doc\Doc.Logic\Doc.Logic.csproj" />
     <ProjectReference Include="..\FocLab.Model\FocLab.Model.csproj" />
     <ProjectReference Include="..\Tms\Tms.Logic\Tms.Logic.csproj" />
   </ItemGroup>

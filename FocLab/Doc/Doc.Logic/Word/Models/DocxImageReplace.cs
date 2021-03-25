@@ -1,4 +1,4 @@
-﻿namespace Doc.Logic.Entities
+﻿namespace Doc.Logic.Word.Models
 {
     public class DocxImageReplace
     {

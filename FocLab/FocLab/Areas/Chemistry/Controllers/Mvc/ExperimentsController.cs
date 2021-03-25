@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Croco.Core.Application;
 using Croco.Core.Contract;
-using Doc.Logic.Models;
-using Doc.Logic.Workers;
 using FocLab.Consts;
 using FocLab.Controllers.Base;
+using FocLab.Implementations.Doc;
+using FocLab.Logic.Models.Doc;
 using FocLab.Logic.Models.Experiments;
 using FocLab.Logic.Workers.ChemistryTaskExperiments;
 using Microsoft.AspNetCore.Authorization;

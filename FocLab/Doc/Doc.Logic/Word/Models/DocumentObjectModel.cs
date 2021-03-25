@@ -1,7 +1,6 @@
-﻿using Doc.Logic.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Zoo.Doc.WordGen.Models
+namespace Doc.Logic.Word.Models
 {
     public class DocXDocumentObjectModel
     {

@@ -1,4 +1,4 @@
-﻿namespace Doc.Logic.Models
+﻿namespace FocLab.Logic.Models.Doc
 {
     public class RenderChemistryExperimentDocument
     {

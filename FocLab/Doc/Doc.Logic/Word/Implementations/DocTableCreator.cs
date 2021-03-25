@@ -1,27 +1,10 @@
-﻿using DocumentFormat.OpenXml;
+﻿using Doc.Logic.Word.Models;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Collections.Generic;
-using Zoo.Doc.WordGen.Models;
 
-namespace Zoo.Doc.WordGen.Implementations
+namespace Doc.Logic.Word.Implementations
 {
-    public class DocTableSettings
-    {
-        public string BorderColor { get; set; }
-
-        public uint BorderSize { get; set; }
-
-
-        public int HeaderFontSize { get; set; }
-
-        public bool BoldHeader { get; set; }
-
-        public int TableRowFontSize { get; set; }
-
-        public bool BoldTableRow { get; set; }
-    }
-
-
     public static class DocTableCreator
     {
         const int WidthForTable = 9026;
