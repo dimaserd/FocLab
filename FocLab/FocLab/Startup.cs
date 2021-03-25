@@ -32,6 +32,11 @@ using Doc.Logic;
 using Tms.Logic;
 using MigrationTool;
 using FocLab.Logic.Implementations;
+using Croco.Core.Application.Registrators;
+using Tms.Model;
+using FocLab.DbFactories;
+using FocLab.Implementations.Doc;
+using Doc.Logic.Workers;
 
 namespace FocLab
 {
@@ -117,7 +122,14 @@ namespace FocLab
             ApplicationBuilder = Croco.SetCrocoApplication(services);
 
             LogicRegistrator.Register(services);
+
             DocumentRegistrator.Register(services);
+
+            services.AddScoped<ChemistryExperimentDocumentProccessor>();
+            services.AddScoped<ChemistryTaskDocumentProccessor>();
+
+            services.AddScoped(srv => new TmsDbContextFactory().CreateDbContext(null));
+            new EFCrocoApplicationRegistrator(ApplicationBuilder).AddEntityFrameworkDataConnection<TmsDbContext>();
             TmsRegistrator.Register<TmsUsersStorage>(services, MyIdentityExtensions.IsAdmin);
             MigrationToolRegistator.Register(services);
 
