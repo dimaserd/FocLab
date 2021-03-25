@@ -1,47 +1,50 @@
 ﻿using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
-using FocLab.Logic.Implementations;
-using FocLab.Model.Entities.Chemistry;
+using Croco.Core.Logic.Workers;
+using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Tasker;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using Tms.Model;
 
 namespace MigrationTool.Tools
 {
-    public class ExportDayTaskToOldTmsService : FocLabWorker
+    public class ExportOldTmsDataToTmsService : BaseCrocoWorker<ChemistryDbContext>
     {
         private readonly int BatchSize = 50;
 
-        public ExportDayTaskToOldTmsService(ICrocoAmbientContextAccessor context, ICrocoApplication application) : base(context, application)
+        TmsDbContext TmsDbContext { get; }
+
+        public ExportOldTmsDataToTmsService(ICrocoAmbientContextAccessor context, 
+            ICrocoApplication application, TmsDbContext tmsDbContext) : base(context, application)
         {
+            TmsDbContext = tmsDbContext;
         }
 
         public async Task<CurrentState> GetState()
         {
             return new CurrentState
             {
-                ChemistryDayTaskDataCount = await Query<ChemistryDayTask>().CountAsync(),
+                NewTmsServiceTasksCount = await TmsDbContext.DayTasks.CountAsync(),
                 OldTmsServiceTasksCount = await Query<ApplicationDayTask>().CountAsync()
             };
         }
 
         public async Task<int> PasteData()
         {
-            var db = this.AmbientContext.DataConnection.ConnectionContext;
+            var set = TmsDbContext.DayTasks;
 
-            var set = db.DayTasks;
+            var count = await Query<ApplicationDayTask>().CountAsync();
 
-            var count = await Query<ChemistryDayTask>().CountAsync();
-
-            var setting = Application.SettingsFactory.GetSetting<ExportDayTaskState>();
+            var setting = Application.SettingsFactory.GetSetting<ExportOldTmsDataToTmsServiceState>();
 
             int counter = setting.Count;
 
             var skip = counter * BatchSize;
 
-            var data = await Query<ChemistryDayTask>()
-                    .OrderBy(x => x.CreationDate)
+            var data = await Query<ApplicationDayTask>()
+                    .OrderBy(x => x.CreatedOn)
                     .Skip(skip)
                     .Take(BatchSize)
                     .ToListAsync();
@@ -57,7 +60,7 @@ namespace MigrationTool.Tools
 
             set.AddRange(dataToAdd);
 
-            await db.SaveChangesAsync();
+            await TmsDbContext.SaveChangesAsync();
 
             counter++;
             setting.Count = counter;
@@ -66,34 +69,34 @@ namespace MigrationTool.Tools
             return count - (counter + 1) * BatchSize;
         }
 
-        public class ExportDayTaskState
+        public class CurrentState
+        {
+            public int NewTmsServiceTasksCount { get; set; }
+            public int OldTmsServiceTasksCount { get; set; }
+        }
+
+        public class ExportOldTmsDataToTmsServiceState
         {
             public int Count { get; set; }
         }
 
-        public class CurrentState
+        private Tms.Model.Entities.DayTask ToDayTask(ApplicationDayTask task)
         {
-            public int ChemistryDayTaskDataCount { get; set; }
-            public int OldTmsServiceTasksCount { get; set; }
-        }
-
-        private ApplicationDayTask ToDayTask(ChemistryDayTask task)
-        {
-            return new ApplicationDayTask
+            return new Tms.Model.Entities.DayTask
             {
                 AssigneeUserId = task.AssigneeUserId,
-                AuthorId = task.AdminId,
+                AuthorId = task.AuthorId,
                 CompletionSeconds = 0,
-                TaskComment = task.TaskCommentHtml,
+                TaskComment = task.TaskComment,
                 EstimationSeconds = 0,
                 FinishDate = task.FinishDate,
-                TaskReview = task.TaskReviewHtml,
-                CreatedOn = task.CreationDate,
-                CreatedBy = task.AdminId,
+                TaskReview = task.TaskReview,
+                CreatedOn = task.CreatedOn,
+                CreatedBy = task.CreatedBy,
                 TaskTitle = task.TaskTitle,
                 Id = task.Id,
                 TaskText = task.TaskText,
-                TaskTarget = task.TaskTargetHtml,
+                TaskTarget = task.TaskTarget,
                 TaskDate = task.TaskDate,
                 Seconds = 0,
             };
