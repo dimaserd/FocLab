@@ -22,6 +22,7 @@ namespace FocLab.Logic.Implementations
         public TmsUsersStorage(ICrocoAmbientContextAccessor contextAccessor, 
             ICrocoApplication application) : base(contextAccessor, application)
         {
+            CacheManager = application.CacheManager;
         }
 
         public Task<Dictionary<string, UserFullNameEmailAndAvatarModel>> GetUsersDictionary()
