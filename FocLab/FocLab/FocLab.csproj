@@ -93,12 +93,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Doc\Doc.Logic\Doc.Logic.csproj" />
     <ProjectReference Include="..\Ecc\Ecc.Logic\Ecc.Logic.csproj" />
     <ProjectReference Include="..\FocLab.Api\FocLab.Api.csproj" />
     <ProjectReference Include="..\FocLab.Logic\FocLab.Logic.csproj" />
     <ProjectReference Include="..\MigrationTool\MigrationTool.csproj" />
-    <ProjectReference Include="..\Tms\Tms.Logic\Tms.Logic.csproj" />
   </ItemGroup>
 
   <ItemGroup>

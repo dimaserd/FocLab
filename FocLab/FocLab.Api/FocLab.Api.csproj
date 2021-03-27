@@ -8,13 +8,13 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
     <PackageReference Include="NetCroco.Core.Documentation" Version="1.1.46" />
+    <PackageReference Include="Zoo.Croco.Tms" Version="0.8.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FocLab.Logic\FocLab.Logic.csproj" />
     <ProjectReference Include="..\FocLab.Model\FocLab.Model.csproj" />
     <ProjectReference Include="..\MigrationTool\MigrationTool.csproj" />
-    <ProjectReference Include="..\Tms\Tms.Logic\Tms.Logic.csproj" />
   </ItemGroup>
 
 </Project>

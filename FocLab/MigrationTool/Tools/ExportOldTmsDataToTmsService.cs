@@ -97,8 +97,7 @@ namespace MigrationTool.Tools
                 Id = task.Id,
                 TaskText = task.TaskText,
                 TaskTarget = task.TaskTarget,
-                TaskDate = task.TaskDate,
-                Seconds = 0,
+                TaskDate = task.TaskDate
             };
         }
     }

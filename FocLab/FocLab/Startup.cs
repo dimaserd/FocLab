@@ -130,7 +130,7 @@ namespace FocLab
 
             services.AddScoped(srv => new TmsDbContextFactory().CreateDbContext(null));
             new EFCrocoApplicationRegistrator(ApplicationBuilder).AddEntityFrameworkDataConnection<TmsDbContext>();
-            TmsRegistrator.Register<TmsUsersStorage>(services, MyIdentityExtensions.IsAdmin);
+            TmsRegistrator.Register<TmsUsersStorage>(ApplicationBuilder, MyIdentityExtensions.IsAdmin);
             MigrationToolRegistator.Register(services);
 
             new GenericUserInterfaceBagBuilder(services)
