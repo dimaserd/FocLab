@@ -1,8 +1,6 @@
 ﻿using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Cache;
-using Croco.Core.Logic.Workers;
-using FocLab.Model.Contexts;
 using FocLab.Model.Entities.Users.Default;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,7 +13,7 @@ using Tms.Logic.Models;
 
 namespace FocLab.Logic.Implementations
 {
-    public class TmsUsersStorage : BaseCrocoWorker<ChemistryDbContext>, IUsersStorage
+    public class TmsUsersStorage : FocLabWorker, IUsersStorage
     {
         ICrocoCacheManager CacheManager { get; }
 

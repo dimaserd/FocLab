@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
-using Croco.Core.Logic.Workers;
+using Croco.Core.Logic.Services;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Workers.ChemistryMethods;
 using FocLab.Logic.Workers.Users;
@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FocLab.Helpers
 {
-    public class ChemistryTasksHtmlHelper : BaseCrocoWorker<ChemistryDbContext>
+    public class ChemistryTasksHtmlHelper : BaseCrocoService<ChemistryDbContext>
     {
         private readonly ChemistryMethodsWorker _methodsWorker;
 

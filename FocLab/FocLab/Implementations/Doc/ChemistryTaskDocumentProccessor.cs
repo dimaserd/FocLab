@@ -63,7 +63,7 @@ namespace Doc.Logic.Workers
             var docModel = GetDocumentObjectModel(docSaveFileName,
                 model.SubstanceCounterJson, GetDocumentReplacesDicitonaryByTask(model), file);
 
-            return ProccessorEngine.Create(docModel);
+            return ProccessorEngine.ProccessTemplate(docModel);
         }
 
         private DocXDocumentObjectModel GetDocumentObjectModel(string docSaveFileName, string substanceCounterJson, Dictionary<string, string> replaceDict, ChemistryTaskDbFile file)

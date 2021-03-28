@@ -34,7 +34,6 @@ using MigrationTool;
 using FocLab.Logic.Implementations;
 using Croco.Core.Application.Registrators;
 using Tms.Model;
-using FocLab.DbFactories;
 using FocLab.Implementations.Doc;
 using Doc.Logic.Workers;
 

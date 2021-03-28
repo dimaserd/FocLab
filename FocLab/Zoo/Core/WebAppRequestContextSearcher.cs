@@ -2,7 +2,7 @@
 using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Models.Search;
 using Croco.Core.Logic.Models.Users;
-using Croco.Core.Logic.Workers;
+using Croco.Core.Logic.Services;
 using Croco.Core.Model.Abstractions.Entity;
 using Croco.Core.Search.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Zoo.Core
 {
-    public class WebAppRequestContextSearcher<TDbContext> : BaseCrocoWorker<TDbContext> where TDbContext : DbContext
+    public class WebAppRequestContextSearcher<TDbContext> : BaseCrocoService<TDbContext> where TDbContext : DbContext
     {
         public WebAppRequestContextSearcher(ICrocoAmbientContextAccessor context, ICrocoApplication application) : base(context, application)
         {

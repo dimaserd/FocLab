@@ -54,9 +54,9 @@ namespace FocLab.Api.Controllers.Api.Tasker
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [ProducesDefaultResponseType(typeof(List<DayTaskModel>))]
+        [ProducesDefaultResponseType(typeof(DayTaskModel[]))]
         [HttpPost(nameof(GetTasks))]
-        public Task<List<DayTaskModel>> GetTasks([FromBody] UserScheduleSearchModel model)
+        public Task<DayTaskModel[]> GetTasks([FromBody] UserScheduleSearchModel model)
         {
             return DayTasksService.GetDayTasksAsync(model);
         }

@@ -63,7 +63,7 @@ namespace FocLab.Implementations.Doc
             var docModel = GetDocumentObjectModel(docSaveFileName,
                 model.SubstanceCounterJson, GetDocumentReplacesDicitonaryByExperiment(model), file);
 
-            return WordProccessorEngine.Create(docModel);
+            return WordProccessorEngine.ProccessTemplate(docModel);
         }
 
 
