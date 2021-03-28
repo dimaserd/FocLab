@@ -145,9 +145,12 @@ namespace FocLab
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TmsDbContext tmsDbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
+            TmsDbContext tmsDbContext,
+            ChemistryDbContext chemistryDbContext)
         {
             tmsDbContext.Database.Migrate();
+            chemistryDbContext.Database.Migrate();
 
             if (env.EnvironmentName == "Development")
             {
