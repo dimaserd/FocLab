@@ -1,5 +1,5 @@
 ﻿using Croco.Core.Model.Models;
-using FocLab.Model.Entities.Users.Default;
+using NewFocLab.Model.External;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -46,7 +46,7 @@ namespace FocLab.Model.Entities.Chemistry
         /// Исполнитель
         /// </summary>
         [JsonIgnore]
-        public virtual ApplicationUser Performer { get; set; }
+        public virtual FocLabUser Performer { get; set; }
         #endregion
 
         /// <summary>
