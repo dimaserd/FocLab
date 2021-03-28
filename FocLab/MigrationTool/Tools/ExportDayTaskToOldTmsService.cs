@@ -17,9 +17,9 @@ namespace MigrationTool.Tools
         {
         }
 
-        public async Task<CurrentState> GetState()
+        public async Task<CurrentExportState> GetState()
         {
-            return new CurrentState
+            return new CurrentExportState
             {
                 ChemistryDayTaskDataCount = await Query<ChemistryDayTask>().CountAsync(),
                 OldTmsServiceTasksCount = await Query<ApplicationDayTask>().CountAsync()
@@ -71,7 +71,7 @@ namespace MigrationTool.Tools
             public int Count { get; set; }
         }
 
-        public class CurrentState
+        public class CurrentExportState
         {
             public int ChemistryDayTaskDataCount { get; set; }
             public int OldTmsServiceTasksCount { get; set; }

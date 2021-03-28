@@ -31,7 +31,7 @@ namespace FocLab.Api.Controllers.Api
         }
 
         [HttpGet("ExportDayTaskToOldTmsService/GetState")]
-        public Task<ExportDayTaskToOldTmsService.CurrentState> ExportDayTaskToOldTmsService_GetState()
+        public Task<ExportDayTaskToOldTmsService.CurrentExportState> ExportDayTaskToOldTmsService_GetState()
         {
             return ExportDayTaskToOldTmsService.GetState();
         }

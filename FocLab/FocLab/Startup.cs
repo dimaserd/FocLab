@@ -128,7 +128,9 @@ namespace FocLab
             services.AddScoped<ChemistryExperimentDocumentProccessor>();
             services.AddScoped<ChemistryTaskDocumentProccessor>();
 
-            services.AddScoped(srv => new TmsDbContextFactory().CreateDbContext(null));
+            services.AddDbContext<TmsDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("TmsDbConnection")));
+
             new EFCrocoApplicationRegistrator(ApplicationBuilder).AddEntityFrameworkDataConnection<TmsDbContext>();
             TmsRegistrator.Register<TmsUsersStorage>(ApplicationBuilder, MyIdentityExtensions.IsAdmin);
             MigrationToolRegistator.Register(services);
@@ -144,8 +146,10 @@ namespace FocLab
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TmsDbContext tmsDbContext)
         {
+            tmsDbContext.Database.Migrate();
+
             if (env.EnvironmentName == "Development")
             {
                 app.UseDeveloperExceptionPage();

@@ -44,10 +44,5 @@ namespace FocLab.Model.Entities.Chemistry
             modelBuilder.Entity<ChemistryTaskExperimentFile>()
                 .HasKey(p => new { p.ChemistryTaskExperimentId, p.FileId });
         }
-
-        public string GetComposedId()
-        {
-            return $"ChemistryTaskExperimentId={ChemistryTaskExperimentId}&FileId={FileId}";
-        }
     }
 }
