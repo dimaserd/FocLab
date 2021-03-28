@@ -1,7 +1,6 @@
 ﻿using Croco.Core.Audit.Models;
 using FocLab.Model.Entities;
 using FocLab.Model.Entities.Chemistry;
-using FocLab.Model.Entities.Tasker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -37,10 +36,6 @@ namespace FocLab.Model.Contexts
         public DbSet<DbFile> DbFiles { get; set; }
 
         public DbSet<ApplicationDbFileHistory> DbFileHistory { get; set; }
-
-        public DbSet<ApplicationDayTask> DayTasks { get; set; }
-
-        public DbSet<ApplicationDayTaskComment> DayTaskComments { get; set; }
 
         #region Химимя
         /// <summary>
@@ -86,13 +81,6 @@ namespace FocLab.Model.Contexts
             ChemistryTaskExperimentFile.OnModelCreating(builder);
             ChemistryTaskReagent.OnModelCreating(builder);
             ChemistryTaskDbFile.OnModelCreating(builder);
-
-            builder.Entity<ApplicationDayTask>().HasMany(p => p.Comments);
-
-            builder.Entity<ApplicationDayTaskComment>()
-                .HasOne(x => x.DayTask).WithMany(x => x.Comments)
-                .OnDelete(DeleteBehavior.Restrict);
-
 
             base.OnModelCreating(builder);
         }

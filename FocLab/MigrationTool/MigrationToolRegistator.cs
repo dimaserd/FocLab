@@ -9,8 +9,6 @@ namespace MigrationTool
         {
             services.AddTransient<AddDbFileHistory>();
             services.AddTransient<AddSnaphotsForEntities>();
-            services.AddTransient<ExportDayTaskToOldTmsService>();
-            services.AddTransient<ExportOldTmsDataToTmsService>();
         }
     }
 }

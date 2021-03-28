@@ -3,11 +3,12 @@ using System.Threading.Tasks;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Workers.Users;
 using FocLab.Model.Contexts;
-using FocLab.Model.Entities.Tasker;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tms.Logic.Models;
 using Tms.Logic.Services;
+using Tms.Model;
+using Tms.Model.Entities;
 using Zoo.GenericUserInterface.Models;
 using Zoo.GenericUserInterface.Services;
 
@@ -18,16 +19,16 @@ namespace FocLab.Controllers.Mvc
         private UserSearcher UserSearcher { get; }
         private DayTasksService TasksService { get; }
         private GenericUserInterfaceBag InterfacesBag { get; }
-        private ChemistryDbContext ChemistryDb { get; }
+        public TmsDbContext TmsDb { get; }
 
         public ScheduleController(UserSearcher userSearcher,
             DayTasksService dayTasksService, 
             GenericUserInterfaceBag interfacesBag,
-            ChemistryDbContext chemistryDb)
+            TmsDbContext tmsDb)
         {
             TasksService = dayTasksService;
             InterfacesBag = interfacesBag;
-            ChemistryDb = chemistryDb;
+            TmsDb = tmsDb;
             UserSearcher = userSearcher;
         }
 
@@ -50,7 +51,7 @@ namespace FocLab.Controllers.Mvc
         {
             var model = await TasksService.GetDayTaskByIdAsync(id);
 
-            var task = await ChemistryDb.Set<ApplicationDayTask>().FirstOrDefaultAsync(x => x.Id == id);
+            var task = await TmsDb.Set<DayTask>().FirstOrDefaultAsync(x => x.Id == id);
 
             var users = await UserSearcher.GetUsersAsync(UserSearch.GetAllUsers);
 
