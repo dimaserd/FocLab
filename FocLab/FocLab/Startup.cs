@@ -128,7 +128,7 @@ namespace FocLab
             services.AddScoped<ChemistryTaskDocumentProccessor>();
 
             services.AddDbContext<TmsDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("TmsDbConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("TmsDbConnection"), b => b.MigrationsAssembly("FocLab.Model")));
 
             new EFCrocoApplicationRegistrator(ApplicationBuilder).AddEntityFrameworkDataConnection<TmsDbContext>();
             TmsRegistrator.Register<TmsUsersStorage>(ApplicationBuilder, MyIdentityExtensions.IsAdmin);

@@ -97,7 +97,7 @@ namespace FocLab.Model.Contexts
             base.OnModelCreating(builder);
         }
 
-        public ChemistryDbContext(DbContextOptions options) : base(options)
+        public ChemistryDbContext(DbContextOptions<ChemistryDbContext> options) : base(options)
         {
         }
     }

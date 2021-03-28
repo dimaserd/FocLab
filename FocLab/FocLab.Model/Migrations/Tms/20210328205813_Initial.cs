@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace FocLab.Migrations.Tms
+namespace FocLab.Model.Migrations.Tms
 {
     public partial class Initial : Migration
     {
@@ -26,7 +26,6 @@ namespace FocLab.Migrations.Tms
                     TaskComment = table.Column<string>(nullable: true),
                     EstimationSeconds = table.Column<int>(nullable: false),
                     CompletionSeconds = table.Column<int>(nullable: false),
-                    Seconds = table.Column<int>(nullable: false),
                     AuthorId = table.Column<string>(nullable: true),
                     AssigneeUserId = table.Column<string>(nullable: true)
                 },

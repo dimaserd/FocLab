@@ -11,7 +11,7 @@ namespace FocLab.Model
         public TmsDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<TmsDbContext>();
-            optionsBuilder.UseSqlServer(LocalConnection);
+            optionsBuilder.UseSqlServer(LocalConnection, b => b.MigrationsAssembly("FocLab.Model"));
 
             return new TmsDbContext(optionsBuilder.Options);
         }
