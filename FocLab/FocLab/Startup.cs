@@ -36,14 +36,10 @@ using Croco.Core.Application.Registrators;
 using Tms.Model;
 using FocLab.Implementations.Doc;
 using Doc.Logic.Workers;
+using NewFocLab.Model;
 
 namespace FocLab
 {
-    public class SomeMiddleware
-    {
-
-    }
-
     public class Startup
     {
         StartupCroco Croco { get; }
@@ -87,6 +83,7 @@ namespace FocLab
             services.AddDbContext<ChemistryDbContext>(options =>
                 options.UseSqlServer(conString));
 
+            
             services.AddIdentity<ApplicationUser, ApplicationRole>(opts =>
             {
                 opts.Password.RequiredLength = 5;
@@ -127,6 +124,9 @@ namespace FocLab
             services.AddScoped<ChemistryExperimentDocumentProccessor>();
             services.AddScoped<ChemistryTaskDocumentProccessor>();
 
+            services.AddDbContext<FocLabDbContext>(opts => 
+            opts.UseSqlServer(Configuration.GetConnectionString("FocLabDbConnection"), b => b.MigrationsAssembly("FocLab")));
+
             services.AddDbContext<TmsDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("TmsDbConnection"), b => b.MigrationsAssembly("FocLab.Model")));
 
@@ -147,10 +147,12 @@ namespace FocLab
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
             TmsDbContext tmsDbContext,
-            ChemistryDbContext chemistryDbContext)
+            ChemistryDbContext chemistryDbContext,
+            FocLabDbContext focLabDbContext)
         {
             tmsDbContext.Database.Migrate();
             chemistryDbContext.Database.Migrate();
+            focLabDbContext.Database.Migrate();
 
             if (env.EnvironmentName == "Development")
             {

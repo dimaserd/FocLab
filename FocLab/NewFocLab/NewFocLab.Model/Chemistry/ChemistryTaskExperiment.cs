@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FocLab.Model.Entities.Chemistry
+namespace NewFocLab.Model.Entities.Chemistry
 {
     /// <summary>
     /// Сущность описывающая эксперимент к химическому заданию

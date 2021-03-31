@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FocLab.Logic\FocLab.Logic.csproj" />
     <ProjectReference Include="..\FocLab.Model\FocLab.Model.csproj" />
+    <ProjectReference Include="..\NewFocLab\NewFocLab.Model\NewFocLab.Model.csproj" />
   </ItemGroup>
 
   <ItemGroup>

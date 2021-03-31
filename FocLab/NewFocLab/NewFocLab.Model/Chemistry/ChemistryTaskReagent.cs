@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FocLab.Model.Entities.Chemistry
+namespace NewFocLab.Model.Entities.Chemistry
 {
     /// <summary>
     /// Реагент для химического задания

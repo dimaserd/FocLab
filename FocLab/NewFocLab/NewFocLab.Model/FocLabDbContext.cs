@@ -1,8 +1,7 @@
-﻿using FocLab.Model.Entities;
-using FocLab.Model.Entities.Chemistry;
+﻿using NewFocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
-using NewFocLab.Model.External;
 using System.Diagnostics.CodeAnalysis;
+using NewFocLab.Model.External;
 
 namespace NewFocLab.Model
 {
@@ -20,41 +19,44 @@ namespace NewFocLab.Model
         /// <summary>
         /// Химические задания
         /// </summary>
-        public DbSet<ChemistryTask> ChemistryTasks { get; set; }
+        public DbSet<ChemistryTask> Tasks { get; set; }
 
         /// <summary>
         /// Файлы связанные с химическим заданием
         /// </summary>
-        public DbSet<ChemistryTaskDbFile> ChemistryTaskDbFiles { get; set; }
+        public DbSet<ChemistryTaskDbFile> TaskDbFiles { get; set; }
 
         /// <summary>
         /// Методы решения химических 
         /// </summary>
-        public DbSet<ChemistryMethodFile> ChemistryMethodFiles { get; set; }
+        public DbSet<ChemistryMethodFile> MethodFiles { get; set; }
 
         /// <summary>
         /// Эксперименты 
         /// </summary>
-        public DbSet<ChemistryTaskExperiment> ChemistryTaskExperiments { get; set; }
+        public DbSet<ChemistryTaskExperiment> TaskExperiments { get; set; }
 
         /// <summary>
         /// Файлы для экспериментов
         /// </summary>
-        public DbSet<ChemistryTaskExperimentFile> ChemistryTaskExperimentFiles { get; set; }
+        public DbSet<ChemistryTaskExperimentFile> TaskExperimentFiles { get; set; }
 
         /// <summary>
         /// Реагенты
         /// </summary>
-        public DbSet<ChemistryReagent> ChemistryReagents { get; set; }
+        public DbSet<ChemistryReagent> Reagents { get; set; }
 
         /// <summary>
         /// Реагенты связанные с химическими заданиями
         /// </summary>
-        public DbSet<ChemistryTaskReagent> ChemistryTaskReagents { get; set; }
+        public DbSet<ChemistryTaskReagent> TaskReagents { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            FocLabDbFile.OnModelCreating(builder);
+            FocLabUser.OnModelCreating(builder);
+
             ChemistryTaskExperimentFile.OnModelCreating(builder);
             ChemistryTaskReagent.OnModelCreating(builder);
             ChemistryTaskDbFile.OnModelCreating(builder);

@@ -1,9 +1,10 @@
 ﻿using Croco.Core.Model.Models;
+using NewFocLab.Model.External;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FocLab.Model.Entities.Chemistry
+namespace NewFocLab.Model.Entities.Chemistry
 {
     /// <summary>
     /// Метод решения (Является файлом)

@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace FocLab.Model.Entities.Chemistry
+namespace NewFocLab.Model.Entities.Chemistry
 {
     /// <summary>
     /// Реагент химической задачи которые нужно использовать для задания

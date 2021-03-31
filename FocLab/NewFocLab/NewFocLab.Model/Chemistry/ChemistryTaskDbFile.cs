@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Croco.Core.Model.Models;
-using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
+using NewFocLab.Model.External;
+using NewNewFocLab.Model.Enumerations;
 using Newtonsoft.Json;
 
-namespace FocLab.Model.Entities.Chemistry
+namespace NewFocLab.Model.Entities.Chemistry
 {
     /// <summary>
     /// Файл для химического задания

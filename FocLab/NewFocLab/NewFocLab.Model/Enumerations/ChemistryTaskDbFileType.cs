@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FocLab.Model.Enumerations
+namespace NewNewFocLab.Model.Enumerations
 {
     /// <summary>
     /// Тип файла для химического задания

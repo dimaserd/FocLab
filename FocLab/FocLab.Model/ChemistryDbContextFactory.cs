@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace FocLab.Model
 {
-    public class FocLabDbContextFactory : IDesignTimeDbContextFactory<ChemistryDbContext>
+    public class ChemistryDbContextFactory : IDesignTimeDbContextFactory<ChemistryDbContext>
     {
         const string LocalConnection = "Server=(localdb)\\mssqllocaldb;Database=aspnet-FocLab-53bc9b9d-9d6a-45d4-8429-2a2761773502;Trusted_Connection=True;MultipleActiveResultSets=true";
 
