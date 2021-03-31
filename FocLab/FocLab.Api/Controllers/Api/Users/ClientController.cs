@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Clt.Contract.Models.Users;
+using Clt.Logic.Services.Users;
 using Croco.Core.Contract.Models;
-using FocLab.Logic.Models.Users;
-using FocLab.Logic.Workers.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api.Users
@@ -31,7 +31,7 @@ namespace FocLab.Api.Controllers.Api.Users
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         public Task<BaseApiResponse> Update(EditClient model)
         {
-            return ClientWorker.EditUserAsync(model);
+            return ClientWorker.EditClientAsync(model);
         }
 
         /// <summary>
@@ -49,10 +49,10 @@ namespace FocLab.Api.Controllers.Api.Users
         /// Получение пользователя
         /// </summary>
         [HttpGet(nameof(Get))]
-        [ProducesDefaultResponseType(typeof(BaseApiResponse))]
+        [ProducesDefaultResponseType(typeof(BaseApiResponse<ClientModel>))]
         public Task<BaseApiResponse<ClientModel>> Get()
         {
-            return ClientWorker.GetUserAsync();
+            return ClientWorker.GetClientFromAuthorizationAsync();
         }
     }
 }

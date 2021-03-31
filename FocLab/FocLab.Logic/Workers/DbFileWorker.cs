@@ -38,9 +38,9 @@ namespace FocLab.Logic.Workers
 
         public async Task<BaseApiResponse> ReloadFileAsync(int fileId, IFileData httpFile)
         {
-            if (!User.IsAdmin() && !User.HasRight(UserRight.Developer))
+            if (!User.IsAdmin())
             {
-                return new BaseApiResponse(false, "Чтобы перезагружать файлы вы должны обладать правами администратора или разработчика");
+                return new BaseApiResponse(false, "Чтобы перезагружать файлы вы должны обладать правами администратора");
             }
 
             return await TryExecuteCodeAndReturnSuccessfulResultAsync(async () =>

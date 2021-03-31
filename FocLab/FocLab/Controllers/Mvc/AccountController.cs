@@ -1,9 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Croco.Core.Contract.Models;
-using FocLab.Logic.EntityDtos.Users.Default;
-using FocLab.Logic.Models.Account;
-using FocLab.Logic.Workers.Account;
-using FocLab.Logic.Workers.Users;
+using Clt.Logic.Services.Account;
+using Clt.Logic.Services.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,81 +14,23 @@ namespace FocLab.Controllers.Mvc
     public class AccountController : Controller
     {
         AccountLoginWorker AccountLoginWorker { get; }
-        AccountManager AccountManager { get; }
         UserSearcher UserSearcher { get; }
         UserWorker UserWorker { get; }
 
         public AccountController(AccountLoginWorker accountLoginWorker,
-            AccountManager accountManager,
             UserSearcher userSearcher,
             UserWorker userWorker)
         {
             AccountLoginWorker = accountLoginWorker;
-            AccountManager = accountManager;
             UserSearcher = userSearcher;
             UserWorker = userWorker;
         }
 
         
-        #region Dev Methods
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [AllowAnonymous]
-        public async Task<string> Dev()
-        {
-            var result = await AccountManager.InitAsync();
-
-            return result.Message;
-        }
-        #endregion
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<JsonResult> ResetPass(ApplicationUserDto model)
-        {
-            var user = await UserSearcher.GetUserByIdAsync(model.Id);
-
-            if(user == null)
-            {
-                return Json(new BaseApiResponse(false, "Произошла ошибка"));
-            }
-
-            if (user.ObjectJson != model.ObjectJson)
-            {
-                return Json(new BaseApiResponse(false, "Произошла ошибка"));
-            }
-
-            var t = await UserWorker.ChangePasswordBaseAsync(new ResetPasswordByAdminModel
-            {
-                Email = user.Email,
-                Password = user.PasswordHash
-            });
-
-            if(!t.IsSucceeded)
-            {
-                return Json(new BaseApiResponse(false, "Произошла ошибка"));
-            }
-
-            return Json(new BaseApiResponse(true, "Ваш пароль изменен"));
-        }
 
         #region Обычные методы
         
-        [AllowAnonymous]
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -169,7 +108,7 @@ namespace FocLab.Controllers.Mvc
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {   
-            await AccountLoginWorker.LogOut(User);
+            await AccountLoginWorker.LogOut();
             return RedirectToAction("Index", "Home");
         }
 
@@ -181,7 +120,7 @@ namespace FocLab.Controllers.Mvc
         [HttpGet]
         public async Task<IActionResult> LogOut()
         {
-            await AccountLoginWorker.LogOut(User);
+            await AccountLoginWorker.LogOut();
             return RedirectToAction("Index", "Home");
         }
         

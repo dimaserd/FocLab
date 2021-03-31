@@ -1,9 +1,7 @@
 ﻿using System;
 using FocLab.Extensions;
 using FocLab.Implementations;
-using FocLab.Logic.Services;
 using FocLab.Model.Contexts;
-using FocLab.Model.Entities.Users.Default;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -76,23 +74,8 @@ namespace FocLab
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            var conString = Configuration.GetConnectionString(ChemistryDbContext.ConnectionString);
-
-            services.AddTransient<ApplicationUserManager>();
-            services.AddTransient<ApplicationSignInManager>();
-
             services.AddDbContext<ChemistryDbContext>(options =>
-                options.UseSqlServer(conString, b => b.MigrationsAssembly("FocLab.Model")));
-
-            
-            services.AddIdentity<ApplicationUser, ApplicationRole>(opts =>
-            {
-                opts.Password.RequiredLength = 5;
-                opts.Password.RequireNonAlphanumeric = false;
-                opts.Password.RequireLowercase = false;
-                opts.Password.RequireUppercase = false;
-                opts.Password.RequireDigit = false;
-            }).AddEntityFrameworkStores<ChemistryDbContext>();
+                options.UseSqlServer(Configuration.GetConnectionString("ServerConnection"), b => b.MigrationsAssembly("FocLab.Model")));
 
             SwaggerConfiguration.ConfigureSwagger(services, new List<string>
             {

@@ -1,20 +1,13 @@
 ﻿using System.Threading.Tasks;
+using Clt.Contract.Models.Account;
+using Clt.Contract.Models.Common;
+using Clt.Logic.Models.Account;
+using Clt.Logic.Services.Account;
 using Croco.Core.Contract.Models;
-using FocLab.Logic.EntityDtos.Users.Default;
-using FocLab.Logic.Models.Account;
-using FocLab.Logic.Models.Users;
-using FocLab.Logic.Workers.Account;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api
 {
-    public class SafeModel<T>
-    {
-        public string SafePass { get; set; }
-
-        public T Payload { get; set; } 
-    }
-
     /// <inheritdoc />
     /// <summary>
     /// Предоставляет методы для работы с учетной записью а также логгинирование
@@ -22,31 +15,18 @@ namespace FocLab.Api.Controllers.Api
     [Route("Api/Account")]
     public class AccountController : Controller
     {
-        private const string SafePass = "SomePass";
-        private AccountManager AccountManager { get; }
+        private AccountInitiator AccountManager { get; }
         private AccountLoginWorker AccountLoginWorker { get; }
 
         /// <inheritdoc />
-        public AccountController(AccountManager accountManager, 
+        public AccountController(AccountInitiator accountManager, 
             AccountLoginWorker accountLoginWorker)
         {
             AccountManager = accountManager;
             AccountLoginWorker = accountLoginWorker;
         }
 
-        [HttpPost("Pass/Override")]
-        [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public Task<BaseApiResponse> Login([FromBody] SafeModel<OverrideUserPasswordModel> model)
-        {
-            if(model.SafePass != SafePass)
-            {
-                return Task.FromResult(new BaseApiResponse(false, "Пароль не подхоит"));
-            }
-
-            return AccountManager.OverrideUserPassword(model.Payload);
-        }
-
-
+        
         #region Методы логинирования
 
         /// <summary>
@@ -73,32 +53,10 @@ namespace FocLab.Api.Controllers.Api
             return AccountLoginWorker.LoginByPhoneNumberAsync(model);
         }
 
-        /// <summary>
-        /// Войти под другим пользователем (доступно только исключительным пользователям)
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost("Login/AsUser")]
-        [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public Task<BaseApiResponse> LoginAsUser([FromBody] UserIdModel model)
-        {
-            return AccountLoginWorker.LoginAsUserAsync(model);
-        }
-        
         #endregion
 
         #region Методы изменения
-        /// <summary>
-        /// Изменить пароль
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost("Change/Password")]
-        [ProducesDefaultResponseType(typeof(BaseApiResponse))]
-        public Task<BaseApiResponse> ChangePassword([FromBody] ChangeUserPasswordModel model)
-        {
-            return AccountManager.ChangePasswordAsync(model);
-        }
+     
         #endregion
 
         
@@ -108,8 +66,8 @@ namespace FocLab.Api.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [HttpPost("CheckUserChanges")]
-        [ProducesDefaultResponseType(typeof(BaseApiResponse<ApplicationUserDto>))]
-        public BaseApiResponse<ApplicationUserDto> CheckUserChanges()
+        [ProducesDefaultResponseType(typeof(BaseApiResponse<ApplicationUserBaseModel>))]
+        public BaseApiResponse<ApplicationUserBaseModel> CheckUserChanges()
         {
             return AccountManager.CheckUserChanges();
         }
@@ -122,7 +80,7 @@ namespace FocLab.Api.Controllers.Api
         [ProducesDefaultResponseType(typeof(BaseApiResponse))]
         public Task<BaseApiResponse> LogOut()
         {
-            return AccountLoginWorker.LogOut(User);
+            return AccountLoginWorker.LogOut();
         }
     }
 }

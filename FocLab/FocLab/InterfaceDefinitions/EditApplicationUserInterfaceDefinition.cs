@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Clt.Logic.Models.Users;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using FocLab.Logic.Models.Users;
 using Zoo.GenericUserInterface.Models.Definition;
 using Zoo.GenericUserInterface.Services;
 

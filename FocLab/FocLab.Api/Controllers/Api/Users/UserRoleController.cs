@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Clt.Contract.Models.Roles;
+using Clt.Logic.Services.Users;
 using Croco.Core.Contract.Models;
-using FocLab.Logic.Models.Users;
-using FocLab.Logic.Workers.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api.Users

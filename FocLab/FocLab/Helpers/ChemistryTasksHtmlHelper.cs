@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Clt.Logic.Models.Users;
+using Clt.Logic.Services.Users;
 using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
 using Croco.Core.Logic.Services;
-using FocLab.Logic.Models.Users;
 using FocLab.Logic.Workers.ChemistryMethods;
-using FocLab.Logic.Workers.Users;
 using FocLab.Model.Contexts;
 using FocLab.Model.Enumerations;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -43,9 +43,9 @@ namespace FocLab.Helpers
 
         public async Task<List<SelectListItem>> GetUsersSelectListAsync()
         {
-            var users = await UserSearcher.SearchUsersAsync(UserSearch.GetAllUsers);
+            var users = await UserSearcher.GetUsersAsync(UserSearch.GetAllUsers);
 
-            var usersSelectList = users.List.Where(x => !x.HasRight(UserRight.Admin) && !x.HasRight(UserRight.SuperAdmin))
+            var usersSelectList = users.List.Where(x => !x.RoleNames.Contains("Admin"))
                 .Where(x => x.Id != UserId)
                 .Select(x => new SelectListItem
                 {

@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
     <PackageReference Include="Croco.WebApplication" Version="2.0.24" />
     <PackageReference Include="Croco.Core.Logic" Version="1.0.17" />
+    <PackageReference Include="Zoo.Croco.Clt" Version="0.8.11" />
     <PackageReference Include="Zoo.Croco.Doc" Version="0.8.1" />
     <PackageReference Include="Zoo.Croco.Tms" Version="0.8.1" />
   </ItemGroup>

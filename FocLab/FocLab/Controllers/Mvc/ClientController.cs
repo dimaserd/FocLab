@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Clt.Logic.Services.Users;
 using Croco.Core.Contract;
 using FocLab.Controllers.Base;
-using FocLab.Logic.Workers.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Controllers.Mvc
@@ -26,7 +26,7 @@ namespace FocLab.Controllers.Mvc
         /// <returns></returns>
         public async Task<IActionResult> Index()
         {
-            var response = await ClientWorker.GetUserAsync();
+            var response = await ClientWorker.GetClientFromAuthorizationAsync();
 
             if (!response.IsSucceeded)
             {

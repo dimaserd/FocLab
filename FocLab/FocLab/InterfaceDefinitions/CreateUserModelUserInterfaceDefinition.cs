@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using FocLab.Logic.Models.Users;
 using Zoo.GenericUserInterface.Models.Definition;
 using Zoo.GenericUserInterface.Services;
 

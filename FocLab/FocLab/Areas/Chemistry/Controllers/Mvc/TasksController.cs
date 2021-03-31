@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Clt.Logic.Models.Users;
+using Clt.Logic.Services.Users;
 using Croco.Core.Application;
 using Croco.Core.Contract;
 using Doc.Logic.Workers;
@@ -10,8 +12,6 @@ using FocLab.Helpers;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Doc;
 using FocLab.Logic.Models.Tasks;
-using FocLab.Logic.Models.Users;
-using FocLab.Logic.Workers.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -75,7 +75,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
         {
             var user = await UserSearcher.GetUserByIdAsync(id);
 
-            var usersList = await UserSearcher.SearchUsersAsync(UserSearch.GetAllUsers);
+            var usersList = await UserSearcher.GetUsersAsync(UserSearch.GetAllUsers);
 
             var usersSelectList = usersList.List.Select(x => new SelectListItem { Value = x.Id, Text = $"{x.Name} {x.Email}" }).ToList();
 
