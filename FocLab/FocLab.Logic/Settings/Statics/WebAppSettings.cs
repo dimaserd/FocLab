@@ -10,10 +10,6 @@ namespace FocLab.Logic.Settings.Statics
 
         public static bool UseMainRedirect => Model.UseMainRedirect;
 
-        /// <summary>
-        /// Текущий выбранный шаблон
-        /// </summary>
-        public static string TemplateName => Model.TemplateName;
 
         public static string RedirectUri => Model.RedirectUri;
     }

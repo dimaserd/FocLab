@@ -72,14 +72,6 @@
                             Создать уведомление
                         </a>
 
-                        @if (User.HasRight(UserRight.Root) && RightsSettings.UserRemovingEnabled)
-                        {
-                            <a onclick="RemoveUser('@user.Id')" style="margin-top:10px" href="#" class="btn btn-danger btn-block">
-                                <i class="fas fa-trash-alt"></i>
-                                Удалить
-                            </a>
-                        }
-
                         @if ((User.HasRight(UserRight.Root) || User.HasRight(UserRight.SuperAdmin)) && !user.HasRight(UserRight.SuperAdmin))
                         {
                             <a href="/Admin/Users/ChangePassword/@user.Id" style="margin-top:10px" class="btn btn-warning btn-block">
