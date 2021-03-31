@@ -2,14 +2,15 @@
 using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Models;
+using Croco.Core.Utils;
 using Doc.Logic.Word.Abstractions;
 using Doc.Logic.Word.Models;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.Doc;
-using FocLab.Model.Entities.Chemistry;
-using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
+using NewFocLab.Model.Entities;
+using NewFocLab.Model.Enumerations;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -75,7 +76,7 @@ namespace FocLab.Implementations.Doc
 
                 Tables = new List<DocumentTable>
                 {
-                    Chemistry_SubstanceCounter.GetSubstanceDocumentTable(substanceCounterJson),
+                    GetSubstanceDocumentTable(substanceCounterJson),
                 },
 
                 DocumentTemplateFileName = GetDocTemplateFilePath(),
@@ -99,6 +100,63 @@ namespace FocLab.Implementations.Doc
 
             return res;
         }
+
+        public static DocumentTable GetSubstanceDocumentTable(string substanceJson)
+        {
+            var substanceCounter = Tool.JsonConverter.Deserialize<Chemistry_SubstanceCounter>(substanceJson);
+
+            if (substanceCounter == null)
+            {
+                substanceCounter = Chemistry_SubstanceCounter.GetDefaultCounter();
+            }
+
+            substanceCounter.Substances.Insert(0, substanceCounter.Etalon);
+
+            substanceCounter.Substances.ForEach(x =>
+            {
+                if (x.Koef == null)
+                {
+                    x.Koef = "";
+                }
+
+                if (x.Name == null)
+                {
+                    x.Name = "";
+                }
+
+                if (x.MolarMassa == null)
+                {
+                    x.MolarMassa = "";
+                }
+
+                if (x.Massa == null)
+                {
+                    x.Massa = "";
+                }
+            });
+
+            return new DocumentTable
+            {
+                PlacingText = "{SubstancesTablePlace}",
+
+                Header = new List<string>
+                {
+                    "Название вещества",
+                    "Масса вещества (г)",
+                    "Молярная масса (г / моль)",
+                    "Коэфициент"
+                },
+
+                Data = substanceCounter.Substances.Select(x => new List<string>
+                {
+                    x.Name,
+                    x.Massa,
+                    x.MolarMassa,
+                    x.Koef
+                }).ToList()
+            };
+        }
+
 
         private static Dictionary<string, string> GetDocumentReplacesDicitonaryByExperiment(ChemistryTaskExperiment model)
         {

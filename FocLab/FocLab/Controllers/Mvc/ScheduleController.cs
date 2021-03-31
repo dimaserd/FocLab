@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using FocLab.Logic.Models.Users;
 using FocLab.Logic.Workers.Users;
-using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tms.Logic.Models;

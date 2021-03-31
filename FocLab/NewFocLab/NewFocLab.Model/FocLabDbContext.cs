@@ -1,7 +1,7 @@
-﻿using NewFocLab.Model.Entities.Chemistry;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 using NewFocLab.Model.External;
+using NewFocLab.Model.Entities;
 
 namespace NewFocLab.Model
 {

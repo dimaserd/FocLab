@@ -37,6 +37,7 @@ using Tms.Model;
 using FocLab.Implementations.Doc;
 using Doc.Logic.Workers;
 using NewFocLab.Model;
+using NewFocLab.Logic;
 
 namespace FocLab
 {
@@ -81,7 +82,7 @@ namespace FocLab
             services.AddTransient<ApplicationSignInManager>();
 
             services.AddDbContext<ChemistryDbContext>(options =>
-                options.UseSqlServer(conString));
+                options.UseSqlServer(conString, b => b.MigrationsAssembly("FocLab.Model")));
 
             
             services.AddIdentity<ApplicationUser, ApplicationRole>(opts =>
@@ -130,7 +131,10 @@ namespace FocLab
             services.AddDbContext<TmsDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("TmsDbConnection"), b => b.MigrationsAssembly("FocLab.Model")));
 
-            new EFCrocoApplicationRegistrator(ApplicationBuilder).AddEntityFrameworkDataConnection<TmsDbContext>();
+            var efRegistrator = new EFCrocoApplicationRegistrator(ApplicationBuilder);
+            efRegistrator.AddEntityFrameworkDataConnection<FocLabDbContext>();
+            FocLabLogicRegistrator.Register(ApplicationBuilder);
+            efRegistrator.AddEntityFrameworkDataConnection<TmsDbContext>();
             TmsRegistrator.Register<TmsUsersStorage>(ApplicationBuilder, MyIdentityExtensions.IsAdmin);
             MigrationToolRegistator.Register(services);
 

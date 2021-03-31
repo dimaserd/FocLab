@@ -11,12 +11,12 @@ using FocLab.Logic.Extensions;
 using FocLab.Logic.Models.Doc;
 using FocLab.Logic.Models.Tasks;
 using FocLab.Logic.Models.Users;
-using FocLab.Logic.Workers.ChemistryReagents;
-using FocLab.Logic.Workers.ChemistryTasks;
 using FocLab.Logic.Workers.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NewFocLab.Logic.Services.ChemistryReagents;
+using NewFocLab.Logic.Services.ChemistryTasks;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc
 {
@@ -90,7 +90,7 @@ namespace FocLab.Areas.Chemistry.Controllers.Mvc
 
             ViewData["User"] = user;
 
-            var model = await ChemistryTasksWorker.GetNotDeletedTasksAsync(usersList.List);
+            var model = await ChemistryTasksWorker.GetNotDeletedTasksAsync();
 
             var tasksSelectList = model.Select(x => new SelectListItem { Text = x.Title, Value = x.Title }).ToList();
 

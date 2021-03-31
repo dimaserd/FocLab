@@ -1,7 +1,7 @@
 ﻿using Croco.Core.Contract.Models;
 using FocLab.Logic.Models.Reagents;
-using FocLab.Logic.Workers.ChemistryReagents;
 using Microsoft.AspNetCore.Mvc;
+using NewFocLab.Logic.Services.ChemistryReagents;
 using System.Threading.Tasks;
 
 namespace FocLab.Api.Controllers.Api.FocLab

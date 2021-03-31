@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\FocLab.Logic\FocLab.Logic.csproj" />
+    <ProjectReference Include="..\..\NewFocLab\NewFocLab.Logic\NewFocLab.Logic.csproj" />
   </ItemGroup>
 
 </Project>

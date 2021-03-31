@@ -7,9 +7,9 @@ using FocLab.Controllers.Base;
 using FocLab.Implementations.Doc;
 using FocLab.Logic.Models.Doc;
 using FocLab.Logic.Models.Experiments;
-using FocLab.Logic.Workers.ChemistryTaskExperiments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NewFocLab.Logic.Services.ChemistryTaskExperiments;
 using Zoo.GenericUserInterface.Services;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc

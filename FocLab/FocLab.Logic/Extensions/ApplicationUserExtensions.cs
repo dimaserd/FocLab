@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
 using FocLab.Logic.EntityDtos.Users.Default;
 using FocLab.Logic.Enumerations;
 using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities.Users.Default;
-using FocLab.Model.Enumerations;
 
 namespace FocLab.Logic.Extensions
 {
@@ -113,21 +110,5 @@ namespace FocLab.Logic.Extensions
                 string.IsNullOrEmpty(user1.PhoneNumber) == string.IsNullOrEmpty(user2.PhoneNumber);
         }
 
-        public static List<UserRight> ToUserRights(List<Tuple<ApplicationRole, string, UserRight>> rightsTupleList, List<ApplicationUserRoleDto> roles)
-        {
-            var rights = new List<UserRight>();
-
-            foreach (var role in roles)
-            {
-                var rightTuple = rightsTupleList.FirstOrDefault(x => x.Item1.Id == role.RoleId);
-
-                if (rightTuple != null)
-                {
-                    rights.Add(rightTuple.Item3);
-                }
-            }
-
-            return rights;
-        }
     }
 }

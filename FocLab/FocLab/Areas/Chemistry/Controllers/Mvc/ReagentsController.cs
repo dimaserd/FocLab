@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using FocLab.Consts;
 using FocLab.Logic.Models.Reagents;
-using FocLab.Logic.Workers.ChemistryReagents;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NewFocLab.Logic.Services.ChemistryReagents;
 using Zoo.GenericUserInterface.Services;
 
 namespace FocLab.Areas.Chemistry.Controllers.Mvc

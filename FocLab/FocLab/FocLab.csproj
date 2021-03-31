@@ -96,6 +96,7 @@
     <ProjectReference Include="..\FocLab.Api\FocLab.Api.csproj" />
     <ProjectReference Include="..\FocLab.Logic\FocLab.Logic.csproj" />
     <ProjectReference Include="..\MigrationTool\MigrationTool.csproj" />
+    <ProjectReference Include="..\NewFocLab\NewFocLab.Logic\NewFocLab.Logic.csproj" />
   </ItemGroup>
 
   <ItemGroup>

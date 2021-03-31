@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Croco.Core.Contract.Application;
 using Croco.Core.EventSourcing.Implementations;
-using FocLab.Logic.Events;
 using Microsoft.Extensions.Logging;
+using NewFocLab.Logic.Events;
 
 namespace Ecc.Logic.EventHandlers
 {

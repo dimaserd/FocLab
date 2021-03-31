@@ -2,8 +2,8 @@
 using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Models;
 using FocLab.Logic.Implementations;
-using FocLab.Model.Entities.Chemistry;
 using Microsoft.EntityFrameworkCore;
+using NewFocLab.Model.Entities;
 using System.Threading.Tasks;
 
 namespace MigrationTool.Tools

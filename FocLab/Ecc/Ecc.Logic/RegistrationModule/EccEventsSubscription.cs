@@ -1,6 +1,6 @@
 ﻿using Croco.Core.Application;
 using Ecc.Logic.EventHandlers;
-using FocLab.Logic.Events;
+using NewFocLab.Logic.Events;
 
 namespace Ecc.Logic.RegistrationModule
 {

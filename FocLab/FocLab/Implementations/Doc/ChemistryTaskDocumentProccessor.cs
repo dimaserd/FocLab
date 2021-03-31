@@ -4,12 +4,12 @@ using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Models;
 using Doc.Logic.Word.Abstractions;
 using Doc.Logic.Word.Models;
+using FocLab.Implementations.Doc;
 using FocLab.Logic.Implementations;
-using FocLab.Logic.Models;
 using FocLab.Logic.Models.Doc;
-using FocLab.Model.Entities.Chemistry;
-using FocLab.Model.Enumerations;
 using Microsoft.EntityFrameworkCore;
+using NewFocLab.Model.Entities;
+using NewFocLab.Model.Enumerations;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -74,7 +74,7 @@ namespace Doc.Logic.Workers
 
                 Tables = new List<DocumentTable>
                 {
-                    Chemistry_SubstanceCounter.GetSubstanceDocumentTable(substanceCounterJson)
+                    ChemistryExperimentDocumentProccessor.GetSubstanceDocumentTable(substanceCounterJson)
                 },
 
                 DocumentTemplateFileName = GetDocTemplateFilePath(),

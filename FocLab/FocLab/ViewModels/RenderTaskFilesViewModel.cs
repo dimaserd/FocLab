@@ -1,6 +1,6 @@
 ﻿using FocLab.Logic.Models.Experiments;
 using FocLab.Logic.Models.Tasks;
-using FocLab.Model.Enumerations;
+using NewFocLab.Model.Enumerations;
 using System.Collections.Generic;
 using System.Linq;
 
