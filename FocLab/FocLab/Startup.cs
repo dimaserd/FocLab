@@ -122,7 +122,6 @@ namespace FocLab
             MigrationToolRegistator.Register(services);
 
             new GenericUserInterfaceBagBuilder(services)
-                .AddDefaultDefinition<CreateUserModelUserInterfaceDefinition>()
                 .AddDefaultDefinition<EditApplicationUserInterfaceDefinition>()
                 .AddDefaultDefinition<CreateOrUpdateDayTaskInterfaceDefinition>()
                 .AddDefaultDefinition<CreateExperimentInterfaceDefinition>()
