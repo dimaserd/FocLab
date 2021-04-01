@@ -4,7 +4,6 @@ using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Models;
 using Doc.Logic.Word.Abstractions;
 using Doc.Logic.Word.Models;
-using FocLab.Implementations.Doc;
 using FocLab.Logic.Implementations;
 using FocLab.Logic.Models.Doc;
 using Microsoft.EntityFrameworkCore;
@@ -14,13 +13,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Doc.Logic.Workers
+namespace FocLab.Logic.Services.Doc
 {
     public class ChemistryTaskDocumentProccessor : FocLabWorker
     {
         IWordProccessorEngine ProccessorEngine { get; }
 
-        public ChemistryTaskDocumentProccessor(ICrocoAmbientContextAccessor context, 
+        public ChemistryTaskDocumentProccessor(ICrocoAmbientContextAccessor context,
             ICrocoApplication app,
             IWordProccessorEngine proccessorEngine) : base(context, app)
         {

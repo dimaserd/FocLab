@@ -36,11 +36,17 @@ namespace FocLab.Logic.Settings.Statics
         #endregion
 
         #region Публичные Методы
-        public static bool IsImage(this IFileData file)
+
+        public static bool IsImage(this string fileName)
         {
-            var ext = GetExtension(file);
+            var ext = GetExtension(fileName);
 
             return ImageExtensions.Any(x => x == ext);
+        }
+
+        public static bool IsImage(this IFileData file)
+        {
+            return IsImage(file.FileName);
         }
 
         public static bool IsGoodFile(this IFileData file)
@@ -50,7 +56,7 @@ namespace FocLab.Logic.Settings.Statics
 
         public static bool IsGoodFile(string fileName)
         {
-            var ext = Path.GetExtension(fileName)?.ToLower();
+            var ext = GetExtension(fileName);
 
             var allExtensions = GetExtensions();
 
@@ -74,9 +80,9 @@ namespace FocLab.Logic.Settings.Statics
         #endregion
 
         #region Вспомогательные методы
-        public static string GetExtension(IFileData file)
+        public static string GetExtension(string fileName)
         {
-            return Path.GetExtension(file.FileName)?.ToLower();
+            return Path.GetExtension(fileName)?.ToLower();
         }
         #endregion
     }

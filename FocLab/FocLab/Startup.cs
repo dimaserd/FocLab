@@ -26,16 +26,9 @@ using Croco.WebApplication.Models;
 using Croco.Core.Data.Models;
 using Croco.Core.Contract;
 using FocLab.Helpers;
-using Doc.Logic;
-using Tms.Logic;
 using MigrationTool;
-using FocLab.Logic.Implementations;
-using Croco.Core.Application.Registrators;
 using Tms.Model;
-using FocLab.Implementations.Doc;
-using Doc.Logic.Workers;
 using NewFocLab.Model;
-using NewFocLab.Logic;
 
 namespace FocLab
 {
@@ -99,26 +92,16 @@ namespace FocLab
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<ILoggerManager, ApplicationLoggerManager>();
 
-            ApplicationBuilder = Croco.SetCrocoApplication(services);
-
-            LogicRegistrator.Register(services);
-
-            DocumentRegistrator.Register(services);
-
-            services.AddScoped<ChemistryExperimentDocumentProccessor>();
-            services.AddScoped<ChemistryTaskDocumentProccessor>();
-
-            services.AddDbContext<FocLabDbContext>(opts => 
-            opts.UseSqlServer(Configuration.GetConnectionString("FocLabDbConnection"), b => b.MigrationsAssembly("FocLab")));
+            services.AddDbContext<FocLabDbContext>(opts =>
+                opts.UseSqlServer(Configuration.GetConnectionString("FocLabDbConnection"), b => b.MigrationsAssembly("FocLab")));
 
             services.AddDbContext<TmsDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("TmsDbConnection"), b => b.MigrationsAssembly("FocLab.Model")));
 
-            var efRegistrator = new EFCrocoApplicationRegistrator(ApplicationBuilder);
-            efRegistrator.AddEntityFrameworkDataConnection<FocLabDbContext>();
-            FocLabLogicRegistrator.Register(ApplicationBuilder);
-            efRegistrator.AddEntityFrameworkDataConnection<TmsDbContext>();
-            TmsRegistrator.Register<TmsUsersStorage>(ApplicationBuilder, MyIdentityExtensions.IsAdmin);
+
+            ApplicationBuilder = Croco.SetCrocoApplication(services);
+
+            LogicRegistrator.Register(ApplicationBuilder);
             MigrationToolRegistator.Register(services);
 
             new GenericUserInterfaceBagBuilder(services)

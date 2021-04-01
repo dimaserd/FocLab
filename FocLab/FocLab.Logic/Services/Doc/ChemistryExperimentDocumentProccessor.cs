@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FocLab.Implementations.Doc
+namespace FocLab.Logic.Services.Doc
 {
     public class ChemistryExperimentDocumentProccessor : FocLabWorker
     {
