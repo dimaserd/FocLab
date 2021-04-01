@@ -124,11 +124,13 @@ namespace FocLab
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
             TmsDbContext tmsDbContext,
             ChemistryDbContext chemistryDbContext,
-            FocLabDbContext focLabDbContext)
+            FocLabDbContext focLabDbContext,
+            CltDbContext cltDbContext)
         {
             tmsDbContext.Database.Migrate();
             chemistryDbContext.Database.Migrate();
             focLabDbContext.Database.Migrate();
+            cltDbContext.Database.Migrate();
 
             if (env.EnvironmentName == "Development")
             {

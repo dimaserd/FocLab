@@ -13,7 +13,7 @@ namespace FocLab.Logic.Handlers
 {
     public class ClientDataUpdatedEventHandler : CrocoMessageHandler<ClientDataUpdatedEvent>
     {
-        public ClientDataUpdatedEventHandler(ICrocoApplication application, ILogger logger) : base(application, logger)
+        public ClientDataUpdatedEventHandler(ICrocoApplication application, ILogger<ClientDataUpdatedEventHandler> logger) : base(application, logger)
         {
         }
 
