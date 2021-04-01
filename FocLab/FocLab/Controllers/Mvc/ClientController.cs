@@ -12,12 +12,12 @@ namespace FocLab.Controllers.Mvc
     /// </summary>
     public class ClientController : BaseController
     {
-        ClientWorker ClientWorker { get; }
+        ClientQueryService QueryService { get; }
 
         public ClientController(ICrocoRequestContextAccessor requestContextAccessor,
-            ClientWorker clientWorker) : base(requestContextAccessor)
+            ClientQueryService clientWorker) : base(requestContextAccessor)
         {
-            ClientWorker = clientWorker;
+            QueryService = clientWorker;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace FocLab.Controllers.Mvc
         /// <returns></returns>
         public async Task<IActionResult> Index()
         {
-            var response = await ClientWorker.GetClientFromAuthorizationAsync();
+            var response = await QueryService.GetClientFromAuthorizationAsync();
 
             if (!response.IsSucceeded)
             {
@@ -39,7 +39,7 @@ namespace FocLab.Controllers.Mvc
 
         public async Task<IActionResult> Details(string id)
         {
-            var resp = await ClientWorker.GetClientByIdAsync(id);
+            var resp = await QueryService.GetClientByIdAsync(id);
 
             return View(resp);
         }

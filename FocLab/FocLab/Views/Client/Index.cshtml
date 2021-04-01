@@ -1,6 +1,6 @@
 ﻿@using System.Globalization
 @using FocLab.Logic
-@model FocLab.Logic.Models.Users.ClientModel
+@model Clt.Contract.Models.Users.ClientModel
 @{
     ViewBag.Title = "Профиль";
 
@@ -21,7 +21,7 @@
                         </div>
                         <div class="m-card-profile__pic">
                             <div class="m-card-profile__pic-wrapper">
-                                <img src="@Model.GetImgLink(ImageSizeType.Medium)" alt="No avatar found">
+                                <img src="@Model.GetAvatarLink(ImageSizeType.Medium)" alt="No avatar found">
                             </div>
                         </div>
                         <div class="m-card-profile__details">
@@ -31,12 +31,6 @@
                     </div>
                     <ul class="m-nav m-nav--hover-bg m-portlet-fit--sides">
                         <li class="m-nav__separator m-nav__separator--fit"></li>
-                        @*<li class="m-nav__item">
-                            <a href="/Chat/Index" class="m-nav__link">
-                                <i class="m-nav__link-icon flaticon-chat-1"></i>
-                                <span class="m-nav__link-text">Сообщения</span>
-                            </a>
-                        </li>*@
                     </ul>
                     <div class="m-portlet__body-separator"></div>
                 </div>

@@ -1,8 +1,9 @@
-﻿@inject Clt.Logic.Services.ApplicationUserManager UserManager
+﻿@using FocLab.Logic.Extensions
+@inject FocLab.Logic.Services.ClientCacheService clientCacheService
 @{
     Layout = null;
 
-    var user = UserManager.GetCachedUser(User);
+    var user = clientCacheService.GetCachedUser();
 
     var userAvatarLink = user.GetAvatarLink(ImageSizeType.Icon);
 }
@@ -58,32 +59,6 @@
                                             <span class="m-nav__link-text">Мой профиль</span>
                                         </span>
                                     </span>
-                                </a>
-                            </li>
-                            <li class="m-nav__item">
-                                <a onclick="ToastrWorker.ShowSuccess('Пока в разработке')" class="m-nav__link">
-                                    <i class="m-nav__link-icon flaticon-share"></i>
-                                    <span class="m-nav__link-text">Активность</span>
-                                </a>
-                            </li>
-                            <li class="m-nav__item">
-                                <a onclick="ToastrWorker.ShowSuccess('Пока в далеких планах')" class="m-nav__link">
-                                    <i class="m-nav__link-icon flaticon-chat-1"></i>
-                                    <span class="m-nav__link-text">Сообщения</span>
-                                </a>
-                            </li>
-                            <li class="m-nav__separator m-nav__separator--fit">
-                            </li>
-                            <li class="m-nav__item">
-                                <a onclick="ToastrWorker.ShowSuccess('Пока в разработке')" class="m-nav__link">
-                                    <i class="m-nav__link-icon flaticon-info"></i>
-                                    <span class="m-nav__link-text">FAQ</span>
-                                </a>
-                            </li>
-                            <li class="m-nav__item">
-                                <a onclick="ToastrWorker.ShowSuccess('Пока в планах, придётся решать вопросы лично')" class="m-nav__link">
-                                    <i class="m-nav__link-icon flaticon-lifebuoy"></i>
-                                    <span class="m-nav__link-text">Поддержка</span>
                                 </a>
                             </li>
                             <li class="m-nav__separator m-nav__separator--fit">

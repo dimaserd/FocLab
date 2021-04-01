@@ -1,9 +1,8 @@
-﻿@using FocLab.Logic.Models.Users
-@model GetListResult<FocLab.Logic.EntityDtos.Users.Default.ApplicationUserDto>
+﻿@model GetListResult<FocLab.Logic.EntityDtos.Users.Default.ApplicationUserDto>
 @{
     ViewBag.Title = "Список пользователей";
 
-    var searchModel = ViewData["searchModel"] as UserSearch;
+    var searchModel = ViewData["searchModel"] as Clt.Contract.Models.Users.UserSearch;
 
     var q = searchModel.Q;
 

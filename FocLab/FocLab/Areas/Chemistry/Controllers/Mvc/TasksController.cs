@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Clt.Logic.Models.Users;
+using Clt.Contract.Models.Users;
 using Clt.Logic.Services.Users;
 using Croco.Core.Application;
 using Croco.Core.Contract;

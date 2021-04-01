@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Clt.Logic.Models.Users;
+using Clt.Contract.Models.Users;
 using Clt.Logic.Services.Users;
 using Croco.Core.Contract;
 using FocLab.Consts;

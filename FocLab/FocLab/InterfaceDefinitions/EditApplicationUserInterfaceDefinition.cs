@@ -1,4 +1,4 @@
-﻿using Clt.Logic.Models.Users;
+﻿using Clt.Contract.Models.Users;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Zoo.GenericUserInterface.Models.Definition;

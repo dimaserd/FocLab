@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Clt.Contract.Models.Common;
-using Clt.Logic.Models.Users;
+using Clt.Contract.Models.Users;
 using Clt.Logic.Services.Account;
 using Clt.Logic.Services.Users;
 using Croco.Core.Contract.Models;
@@ -20,22 +20,17 @@ namespace FocLab.Api.Controllers.Api.Users
         private UserSearcher UserSearcher { get; }
 
         private UserWorker UserWorker { get; }
-        private AccountRegistrationWorker AccountRegistrationWorker { get; }
-
-
+        
         /// <inheritdoc />
         public UserController(
             UserSearcher userSearcher,
-            UserWorker userWorker,
-            AccountRegistrationWorker accountRegistrationWorker)
+            UserWorker userWorker)
         {
             UserSearcher = userSearcher;
             UserWorker = userWorker;
-            AccountRegistrationWorker = accountRegistrationWorker;
         }
 
 
-        
         /// <summary>
         /// Получает список всех пользователей
         /// </summary>

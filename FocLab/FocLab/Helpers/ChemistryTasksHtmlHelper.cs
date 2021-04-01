@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Clt.Logic.Models.Users;
+using Clt.Contract.Models.Users;
 using Clt.Logic.Services.Users;
 using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
 using Croco.Core.Logic.Services;
 using FocLab.Logic.Workers.ChemistryMethods;
 using FocLab.Model.Contexts;
-using FocLab.Model.Enumerations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FocLab.Helpers

@@ -14,11 +14,14 @@ namespace FocLab.Api.Controllers.Api.Users
     public class ClientController : Controller
     {
         private ClientWorker ClientWorker { get; }
+        private ClientQueryService QueryService { get; }
 
         public ClientController(
-            ClientWorker clientWorker)
+            ClientWorker clientWorker,
+            ClientQueryService queryService)
         {
             ClientWorker = clientWorker;
+            QueryService = queryService;
         }
 
 
@@ -52,7 +55,7 @@ namespace FocLab.Api.Controllers.Api.Users
         [ProducesDefaultResponseType(typeof(BaseApiResponse<ClientModel>))]
         public Task<BaseApiResponse<ClientModel>> Get()
         {
-            return ClientWorker.GetClientFromAuthorizationAsync();
+            return QueryService.GetClientFromAuthorizationAsync();
         }
     }
 }

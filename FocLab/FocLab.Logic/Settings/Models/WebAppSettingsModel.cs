@@ -15,16 +15,10 @@
         /// </summary>
         public string RedirectUri { get; set; }
         
-        /// <summary>
-        /// Имя стартового шаблона (Папка во ViewTemplates)
-        /// </summary>
-        public string TemplateName { get; set; }
-
         public WebAppSettingsModel()
         {
             RedirectUri = "";
             UseMainRedirect = false;
-            TemplateName = "Standard";
         }
     }
 }
