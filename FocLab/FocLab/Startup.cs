@@ -30,6 +30,7 @@ using MigrationTool;
 using Tms.Model;
 using NewFocLab.Model;
 using Clt.Model;
+using Croco.Core.Logic.DbContexts;
 
 namespace FocLab
 {
@@ -107,6 +108,7 @@ namespace FocLab
 
         public void RegiterDbContexts(IServiceCollection services)
         {
+            //Необхожимо удалить после миграции
             services.AddDbContext<ChemistryDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ServerConnection"), b => b.MigrationsAssembly("FocLab.Model")));
 
@@ -118,6 +120,9 @@ namespace FocLab
 
             services.AddDbContext<CltDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("CltDbConnection"), b => b.MigrationsAssembly("FocLab.Model")));
+
+            services.AddDbContext<CrocoInternalDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("CrocoDbConnection"), b => b.MigrationsAssembly("FocLab.Model")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -125,12 +130,14 @@ namespace FocLab
             TmsDbContext tmsDbContext,
             ChemistryDbContext chemistryDbContext,
             FocLabDbContext focLabDbContext,
-            CltDbContext cltDbContext)
+            CltDbContext cltDbContext,
+            CrocoInternalDbContext internalDbContext)
         {
             tmsDbContext.Database.Migrate();
             chemistryDbContext.Database.Migrate();
             focLabDbContext.Database.Migrate();
             cltDbContext.Database.Migrate();
+            internalDbContext.Database.Migrate();
 
             if (env.EnvironmentName == "Development")
             {

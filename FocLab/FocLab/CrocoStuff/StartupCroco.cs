@@ -38,7 +38,7 @@ namespace CrocoShop.CrocoStuff
             services.AddSingleton<ICrocoCacheManager, ApplicationCacheManager>();
 
             var appBuilder = new CrocoApplicationBuilder(services);
-            appBuilder.AddAfterInitAction(CrocoMigrationStateChecker.CheckApplicationState);
+            
             appBuilder.RegisterFileStorage(new CrocoFileOptions
             {
                 SourceDirectory = Env.WebRootPath ?? $"{Directory.GetCurrentDirectory()}\\wwwroot\\Files",
@@ -74,8 +74,7 @@ namespace CrocoShop.CrocoStuff
             services.AddSingleton(options);
 
             appBuilder.CheckAndRegisterApplication<FocLabWebApplication>();
-            appBuilder.RegisterDbFileManager<ChemistryDbContext, DbFile, ApplicationDbFileHistory>();
-
+            
             return appBuilder;
         }
     }

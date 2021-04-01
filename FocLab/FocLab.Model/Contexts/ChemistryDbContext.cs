@@ -8,7 +8,7 @@ namespace FocLab.Model.Contexts
     /// <summary>
     /// Контекст базы данных для приложения Химия
     /// </summary>
-    public class ChemistryDbContext : ApplicationDbContext
+    public class ChemistryDbContext : DbContext
     {
         public static ChemistryDbContext Create(string connectionString)
         {

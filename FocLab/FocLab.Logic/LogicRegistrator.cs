@@ -4,6 +4,7 @@ using Clt.Logic;
 using Clt.Model;
 using Croco.Core.Application;
 using Croco.Core.Application.Registrators;
+using Croco.Core.Logic.Files;
 using Doc.Logic;
 using FocLab.Logic.Extensions;
 using FocLab.Logic.Handlers;
@@ -21,6 +22,9 @@ namespace FocLab.Logic
     {
         public static void Register(this CrocoApplicationBuilder appBuilder)
         {
+            appBuilder.RegisterDbFileManager();
+
+
             var efRegistrator = new EFCrocoApplicationRegistrator(appBuilder);
             efRegistrator.AddEntityFrameworkDataConnection<FocLabDbContext>();
             FocLabLogicRegistrator.Register(appBuilder);
