@@ -1,7 +1,6 @@
 ﻿using System;
 using FocLab.Extensions;
 using FocLab.Implementations;
-using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -26,7 +25,6 @@ using Croco.WebApplication.Models;
 using Croco.Core.Data.Models;
 using Croco.Core.Contract;
 using FocLab.Helpers;
-using MigrationTool;
 using Tms.Model;
 using NewFocLab.Model;
 using Clt.Model;
@@ -95,8 +93,7 @@ namespace FocLab
             ApplicationBuilder = Croco.SetCrocoApplication(services);
 
             LogicRegistrator.Register(ApplicationBuilder);
-            MigrationToolRegistator.Register(services);
-
+            
             new GenericUserInterfaceBagBuilder(services)
                 .AddDefaultDefinition<EditApplicationUserInterfaceDefinition>()
                 .AddDefaultDefinition<CreateOrUpdateDayTaskInterfaceDefinition>()
@@ -108,10 +105,6 @@ namespace FocLab
 
         public void RegiterDbContexts(IServiceCollection services)
         {
-            //Необхожимо удалить после миграции
-            services.AddDbContext<ChemistryDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("ServerConnection"), b => b.MigrationsAssembly("FocLab.Model")));
-
             services.AddDbContext<FocLabDbContext>(opts =>
                 opts.UseSqlServer(Configuration.GetConnectionString("FocLabDbConnection"), b => b.MigrationsAssembly("FocLab")));
 
@@ -128,13 +121,11 @@ namespace FocLab
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
             TmsDbContext tmsDbContext,
-            ChemistryDbContext chemistryDbContext,
             FocLabDbContext focLabDbContext,
             CltDbContext cltDbContext,
             CrocoInternalDbContext internalDbContext)
         {
             tmsDbContext.Database.Migrate();
-            chemistryDbContext.Database.Migrate();
             focLabDbContext.Database.Migrate();
             cltDbContext.Database.Migrate();
             internalDbContext.Database.Migrate();

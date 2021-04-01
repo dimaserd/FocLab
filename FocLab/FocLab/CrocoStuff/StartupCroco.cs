@@ -6,15 +6,11 @@ using Croco.Core.Contract.Cache;
 using Croco.Core.Contract.Files;
 using Croco.WebApplication.Application;
 using FocLab.Implementations;
-using FocLab.Implementations.StateCheckers;
 using FocLab.Logic.Implementations;
-using FocLab.Model.Contexts;
-using FocLab.Model.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Croco.Core.Logic.Files;
 using System.IO;
 
 namespace CrocoShop.CrocoStuff
@@ -65,9 +61,6 @@ namespace CrocoShop.CrocoStuff
                 }
             });
             appBuilder.RegisterVirtualPathMapper(Env.ContentRootPath);
-
-            new EFCrocoApplicationRegistrator(appBuilder)
-                .AddEntityFrameworkDataConnection<ChemistryDbContext>();
 
             var options = Configuration.GetSection("FocLabOptions").Get<CrocoWebApplicationOptions>();
 

@@ -7,12 +7,12 @@ using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
 using Croco.Core.Logic.Services;
 using FocLab.Logic.Workers.ChemistryMethods;
-using FocLab.Model.Contexts;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NewFocLab.Model;
 
 namespace FocLab.Helpers
 {
-    public class ChemistryTasksHtmlHelper : BaseCrocoService<ChemistryDbContext>
+    public class ChemistryTasksHtmlHelper : BaseCrocoService<FocLabDbContext>
     {
         private readonly ChemistryMethodsWorker _methodsWorker;
 

@@ -6,14 +6,10 @@
     string myId = User.Identity.GetUserId();
 }
 
-
-
 @foreach (var user in Model.List.Where(x => x.Id != myId))
 {
 
-    string _class = user.DeActivated ? "bg-danger" : "";
-
-    <tr scope="row" class="@_class">
+    <tr scope="row">
 
         <td>
             @Html.DisplayFor(modelItem => user.Name)
@@ -39,28 +35,6 @@
                         Подробнее
                     </a>
 
-
-
-
-                    @if (user.DeActivated)
-                    {
-
-                        <a onclick="ActivateOrDeactivateUser('@user.Id', 'false')" href="#" style="margin-top:10px" class="btn btn-success btn-block">
-                            <i class="fas fa-plug"></i>
-                            Активировать
-                        </a>
-
-                    }
-                    else
-                    {
-
-                        <a onclick="ActivateOrDeactivateUser('@user.Id', 'true')" href="#" style="margin-top:10px" class="btn btn-danger btn-block">
-                            <i class="fas fa-unlink"></i>
-                            Деактивировать
-                        </a>
-
-                    }
-
                     <a onclick="$('#anotherActions_@user.Id').fadeToggle()" style="margin-top:10px" class="btn btn-primary btn-block" href="#">
                         Другие действия
                     </a>
@@ -72,27 +46,10 @@
                             Создать уведомление
                         </a>
 
-                        @if ((User.HasRight(UserRight.Root) || User.HasRight(UserRight.SuperAdmin)) && !user.HasRight(UserRight.SuperAdmin))
-                        {
-                            <a href="/Admin/Users/ChangePassword/@user.Id" style="margin-top:10px" class="btn btn-warning btn-block">
-                                <i class="fa fa-pencil-square-o"></i>
-                                Изменить пароль
-                            </a>
-                        }
-
-
-                        @if(User.HasRight(UserRight.Root))
-                        {
-                            <a style="margin-top:10px" href="#" class="btn btn-success btn-block" onclick="LoginAsUser('@user.Id')">
-                                Войти в систему как @user.Email
-                            </a>
-                        }
 
                     </div>
                 </div>
-
             </div>
-
         </td>
     </tr>
 }

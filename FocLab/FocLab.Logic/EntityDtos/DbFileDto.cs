@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Croco.Core.Logic.Files.Entites;
+using System;
 using System.Linq.Expressions;
-using FocLab.Model.Entities;
 
 namespace FocLab.Logic.EntityDtos
 {

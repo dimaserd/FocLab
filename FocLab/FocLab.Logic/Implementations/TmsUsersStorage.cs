@@ -1,7 +1,7 @@
-﻿using Croco.Core.Contract;
+﻿using Clt.Model.Entities;
+using Croco.Core.Contract;
 using Croco.Core.Contract.Application;
 using Croco.Core.Contract.Cache;
-using FocLab.Model.Entities.Users.Default;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace FocLab.Logic.Implementations
         {
             return CacheManager.GetOrAddValueAsync($"{GetType().FullName}.users", async () =>
             {
-                var result = await Query<ApplicationUser>().Select(SelectExpression).ToListAsync();
+                var result = await Query<Client>().Select(SelectExpression).ToListAsync();
 
                 return result.ToDictionary(x => x.Id);
 
@@ -36,10 +36,10 @@ namespace FocLab.Logic.Implementations
 
         public Task<UserFullNameEmailAndAvatarModel> GetUserById(string userId)
         {
-            return Query<ApplicationUser>().Select(SelectExpression).FirstOrDefaultAsync(x => x.Id == userId);
+            return Query<Client>().Select(SelectExpression).FirstOrDefaultAsync(x => x.Id == userId);
         }
 
-        public static readonly Expression<Func<ApplicationUser, UserFullNameEmailAndAvatarModel>> SelectExpression = x => new UserFullNameEmailAndAvatarModel
+        public static readonly Expression<Func<Client, UserFullNameEmailAndAvatarModel>> SelectExpression = x => new UserFullNameEmailAndAvatarModel
         {
             Id = x.Id,
             Email = x.Email,

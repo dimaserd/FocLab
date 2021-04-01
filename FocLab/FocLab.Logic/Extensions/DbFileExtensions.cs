@@ -1,9 +1,9 @@
 ﻿using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
+using Croco.Core.Logic.Files.Entites;
 using Croco.Core.Logic.Files.Models;
 using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Implementations;
-using FocLab.Model.Entities;
 
 namespace FocLab.Logic.Extensions
 {
