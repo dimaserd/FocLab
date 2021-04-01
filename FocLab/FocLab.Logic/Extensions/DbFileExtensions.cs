@@ -1,12 +1,8 @@
-﻿using System.IO;
-using Croco.Core.Application;
+﻿using Croco.Core.Application;
 using Croco.Core.Common.Enumerations;
-using Croco.Core.Contract.Files;
-using Croco.Core.Contract.Models;
 using Croco.Core.Logic.Files.Models;
 using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Implementations;
-using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities;
 
 namespace FocLab.Logic.Extensions
@@ -26,35 +22,6 @@ namespace FocLab.Logic.Extensions
         public static bool IsImage(this DbFileDto file)
         {
             return FocLabWebApplication.IsImage(file.FileName);
-        }
-
-        public static BaseApiResponse CheckFile(this IFileData file)
-        {
-            if (file.IsGoodFile())
-            {
-                return new BaseApiResponse(true, "Файл допущен к загрузке");
-            }
-
-            var ext = Path.GetExtension(file.FileName);
-
-            return new BaseApiResponse(false, $"Файл с разрешением {ext} не допущен к загрузке");
-        }
-
-        public static BaseApiResponse<DbFile> ToDbFile(this IFileData file)
-        {
-            var checkResult = CheckFile(file);
-
-            if (!checkResult.IsSucceeded)
-            {
-                return new BaseApiResponse<DbFile>(checkResult);
-            }
-
-            return new BaseApiResponse<DbFile>(checkResult.IsSucceeded, checkResult.Message, new DbFile
-            {
-                Id = 0,
-                FileData = file.FileData,
-                FileName = file.FileName
-            });
         }
 
         public static string GetLinkToDownload(this int fileId, ImageSizeType sizeType = ImageSizeType.Original)

@@ -29,6 +29,7 @@ using FocLab.Helpers;
 using MigrationTool;
 using Tms.Model;
 using NewFocLab.Model;
+using Clt.Model;
 
 namespace FocLab
 {
@@ -67,9 +68,6 @@ namespace FocLab
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<ChemistryDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("ServerConnection"), b => b.MigrationsAssembly("FocLab.Model")));
-
             SwaggerConfiguration.ConfigureSwagger(services, new List<string>
             {
             });
@@ -92,13 +90,7 @@ namespace FocLab
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<ILoggerManager, ApplicationLoggerManager>();
 
-            services.AddDbContext<FocLabDbContext>(opts =>
-                opts.UseSqlServer(Configuration.GetConnectionString("FocLabDbConnection"), b => b.MigrationsAssembly("FocLab")));
-
-            services.AddDbContext<TmsDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("TmsDbConnection"), b => b.MigrationsAssembly("FocLab.Model")));
-
-
+            RegiterDbContexts(services);
             ApplicationBuilder = Croco.SetCrocoApplication(services);
 
             LogicRegistrator.Register(ApplicationBuilder);
@@ -111,6 +103,21 @@ namespace FocLab
                 .Build();
 
             services.AddTransient<ChemistryTasksHtmlHelper>();
+        }
+
+        public void RegiterDbContexts(IServiceCollection services)
+        {
+            services.AddDbContext<ChemistryDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("ServerConnection"), b => b.MigrationsAssembly("FocLab.Model")));
+
+            services.AddDbContext<FocLabDbContext>(opts =>
+                opts.UseSqlServer(Configuration.GetConnectionString("FocLabDbConnection"), b => b.MigrationsAssembly("FocLab")));
+
+            services.AddDbContext<TmsDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("TmsDbConnection"), b => b.MigrationsAssembly("FocLab.Model")));
+
+            services.AddDbContext<CltDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("CltDbConnection"), b => b.MigrationsAssembly("FocLab.Model")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

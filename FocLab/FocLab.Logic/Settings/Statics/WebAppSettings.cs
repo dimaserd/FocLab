@@ -1,5 +1,4 @@
-﻿using System;
-using Croco.Core.Application;
+﻿using Croco.Core.Application;
 using FocLab.Logic.Settings.Models;
 
 namespace FocLab.Logic.Settings.Statics

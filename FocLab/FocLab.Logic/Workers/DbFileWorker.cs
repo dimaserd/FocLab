@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FocLab.Logic.EntityDtos;
 using FocLab.Logic.Extensions;
-using FocLab.Logic.Settings.Statics;
 using FocLab.Model.Entities;
-using FocLab.Model.Enumerations;
 using FocLab.Logic.Implementations;
 using Croco.Core.Contract.Models.Search;
 using Croco.Core.Contract;
@@ -14,19 +12,22 @@ using Croco.Core.Logic.Files.Abstractions;
 using Croco.Core.Search.Extensions;
 using Croco.Core.Contract.Files;
 using Croco.Core.Contract.Models;
-using Croco.Core.Logic.Files.Models;
+using Croco.Core.Logic.Files.Services;
 
 namespace FocLab.Logic.Workers
 {
     public class DbFileWorker : FocLabWorker
     {
         IDbFileManager FileManager { get; }
+        FileChecker FileChecker { get; }
 
         public DbFileWorker(ICrocoAmbientContextAccessor context,
             ICrocoApplication application,
-            IDbFileManager fileManager) : base(context, application)
+            IDbFileManager fileManager,
+            FileChecker fileChecker) : base(context, application)
         {
             FileManager = fileManager;
+            FileChecker = fileChecker;
         }
 
         public Task<GetListResult<DbFileDto>> GetFiles(GetListSearchModel model)
@@ -54,7 +55,7 @@ namespace FocLab.Logic.Workers
         public async Task<BaseApiResponse<int[]>> UploadFilesAsync(IEnumerable<IFileData> httpFiles)
         {
             //Добавляем функцию отложенной загрузки файлов
-            var arrayOfIds = await FileManager.UploadFilesAsync(httpFiles.Where(x => x.IsGoodFile()));
+            var arrayOfIds = await FileManager.UploadFilesAsync(httpFiles.Where(x => FileChecker.IsGoodFile(x)));
 
             if (arrayOfIds.Length == 0)
             {
