@@ -2,7 +2,7 @@
 using FocLab.Abstractions;
 using Microsoft.Extensions.Logging;
 
-namespace FocLab.Implementations
+namespace FocLabWebApp.Implementations
 {
     public class ApplicationLoggerManager : ILoggerManager
     {

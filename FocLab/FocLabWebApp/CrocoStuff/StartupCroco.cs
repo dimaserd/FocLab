@@ -5,7 +5,7 @@ using Croco.Core.Contract.Cache;
 using Croco.Core.Contract.Files;
 using Croco.WebApplication.Application;
 using FocLab.App.Logic.Implementations;
-using FocLab.Implementations;
+using FocLabWebApp.Implementations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;

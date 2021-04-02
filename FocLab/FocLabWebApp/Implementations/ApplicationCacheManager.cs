@@ -5,7 +5,7 @@ using Croco.Core.Contract.Models;
 using Croco.Core.Contract.Models.Cache;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace FocLab.Implementations
+namespace FocLabWebApp.Implementations
 {
     public class ApplicationCacheManager : ICrocoCacheManager
     {

@@ -1,6 +1,5 @@
 ﻿using System;
 using FocLab.Extensions;
-using FocLab.Implementations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -22,13 +21,14 @@ using FocLab.InterfaceDefinitions;
 using Croco.WebApplication.Models;
 using Croco.Core.Data.Models;
 using Croco.Core.Contract;
-using FocLab.Helpers;
 using Tms.Model;
 using FocLab.Model;
 using Clt.Model;
 using Croco.Core.Logic.DbContexts;
 using FocLab.App.Logic;
 using FocLab.App.Logic.Extensions;
+using FocLabWebApp.Helpers;
+using FocLabWebApp.Implementations;
 
 namespace FocLab
 {
@@ -106,16 +106,16 @@ namespace FocLab
         public void RegiterDbContexts(IServiceCollection services)
         {
             services.AddDbContext<FocLabDbContext>(opts =>
-                opts.UseSqlServer(Configuration.GetConnectionString("FocLabDbConnection"), b => b.MigrationsAssembly("FocLab")));
+                opts.UseSqlServer(Configuration.GetConnectionString("FocLabDbConnection"), b => b.MigrationsAssembly("FocLabWebApp")));
 
             services.AddDbContext<TmsDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("TmsDbConnection"), b => b.MigrationsAssembly("FocLab.Model")));
+                options.UseSqlServer(Configuration.GetConnectionString("TmsDbConnection"), b => b.MigrationsAssembly("FocLab.App.Model")));
 
             services.AddDbContext<CltDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("CltDbConnection"), b => b.MigrationsAssembly("FocLab.Model")));
+                options.UseSqlServer(Configuration.GetConnectionString("CltDbConnection"), b => b.MigrationsAssembly("FocLab.App.Model")));
 
             services.AddDbContext<CrocoInternalDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("CrocoDbConnection"), b => b.MigrationsAssembly("FocLab.Model")));
+                options.UseSqlServer(Configuration.GetConnectionString("CrocoDbConnection"), b => b.MigrationsAssembly("FocLab.App.Model")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

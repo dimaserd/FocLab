@@ -10,7 +10,7 @@ using FocLab.Logic.Workers.ChemistryMethods;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using FocLab.Model;
 
-namespace FocLab.Helpers
+namespace FocLabWebApp.Helpers
 {
     public class ChemistryTasksHtmlHelper : BaseCrocoService<FocLabDbContext>
     {
@@ -21,14 +21,14 @@ namespace FocLab.Helpers
         public ChemistryTasksHtmlHelper(
             ICrocoAmbientContextAccessor contextAccessor,
             ICrocoApplication application,
-            ChemistryMethodsWorker methodsWorker, 
+            ChemistryMethodsWorker methodsWorker,
             UserSearcher userSearcher) : base(contextAccessor, application)
         {
             _methodsWorker = methodsWorker;
             UserSearcher = userSearcher;
         }
 
-        
+
         public async Task<List<SelectListItem>> GetMethodsSelectListAsync()
         {
             var model = await _methodsWorker.GetMethodsAsync();
