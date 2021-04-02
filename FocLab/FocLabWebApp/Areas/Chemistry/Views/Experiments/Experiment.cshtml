@@ -1,5 +1,5 @@
-﻿@using FocLab.Logic
-@using FocLab.Logic.Extensions
+﻿@using FocLab.App.Logic
+@using FocLab.App.Logic.Extensions
 @using FocLab.Model.Enumerations
 @using FocLab.ViewModels
 @model FocLab.Logic.Models.Experiments.ChemistryTaskExperimentModel
@@ -10,7 +10,7 @@
 
     const string viewsChemistry = "~/Areas/Chemistry/Views";
 
-    var isNotAdmin = !User.HasRight(UserRight.Admin) && !User.HasRight(UserRight.SuperAdmin);
+    var isNotAdmin = !User.IsInRole("Admin");
 
     var userId = User.Identity.GetUserId();
 

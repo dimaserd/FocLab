@@ -1,10 +1,11 @@
 ﻿@using FocLab.ViewModels
+@using FocLab.App.Logic.Extensions
 @model FocLab.Logic.Models.Tasks.ChemistryTaskModel
 @{
     Layout = ChemistrySettings.LayoutPath;
     ViewBag.Title = "Задание";
 
-    var isNotAdmin = !User.HasRight(UserRight.Admin) && !User.HasRight(UserRight.SuperAdmin);
+    var isNotAdmin = !User.IsInRole("Admin");
 
     var userId = User.Identity.GetUserId();
 
