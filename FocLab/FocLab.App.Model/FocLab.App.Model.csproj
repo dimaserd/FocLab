@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <FrameworkReference>Microsoft.AspNetCore.App</FrameworkReference>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Croco.Core.Logic" Version="1.0.19" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.13" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.13" />
+    <PackageReference Include="Croco.Core" Version="2.0.24" />
+    <PackageReference Include="Croco.WebApplication" Version="2.0.24" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Zoo.Croco.Clt" Version="0.8.13" />
+    <PackageReference Include="Zoo.Croco.Tms" Version="0.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FocLab\FocLab.Model\FocLab.Model.csproj" />
+    <ProjectReference Include="..\Zoo\Zoo.csproj" />
+  </ItemGroup>
+
+</Project>

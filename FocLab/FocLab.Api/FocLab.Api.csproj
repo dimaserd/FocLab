@@ -12,10 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FocLab.Logic\FocLab.Logic.csproj" />
-    <ProjectReference Include="..\FocLab.Model\FocLab.Model.csproj" />
+    <ProjectReference Include="..\FocLab.App.Logic\FocLab.App.Logic.csproj" />
+    <ProjectReference Include="..\FocLab.App.Model\FocLab.App.Model.csproj" />
+    <ProjectReference Include="..\FocLab\FocLab.Logic\FocLab.Logic.csproj" />
     <ProjectReference Include="..\MigrationTool\MigrationTool.csproj" />
-    <ProjectReference Include="..\NewFocLab\NewFocLab.Logic\NewFocLab.Logic.csproj" />
   </ItemGroup>
 
 </Project>

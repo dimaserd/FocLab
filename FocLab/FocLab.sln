@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FocLab.Logic", "FocLab.Logic\FocLab.Logic.csproj", "{A5575CBC-2DB7-466E-A271-BF04AC9A920C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FocLab.App.Logic", "FocLab.App.Logic\FocLab.App.Logic.csproj", "{A5575CBC-2DB7-466E-A271-BF04AC9A920C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FocLab.Model", "FocLab.Model\FocLab.Model.csproj", "{65BD3695-0771-4B36-B8A5-A6E89F0DEA46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FocLab.App.Model", "FocLab.App.Model\FocLab.App.Model.csproj", "{65BD3695-0771-4B36-B8A5-A6E89F0DEA46}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FocLab", "FocLab\FocLab.csproj", "{065F3281-5668-4F2A-A641-7B20BAA82279}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FocLabWebApp", "FocLabWebApp\FocLabWebApp.csproj", "{065F3281-5668-4F2A-A641-7B20BAA82279}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MigrationTool", "MigrationTool\MigrationTool.csproj", "{F30BE4AC-CD24-409B-8987-450BA3D0DE6D}"
 EndProject
@@ -15,11 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FocLab.Api", "FocLab.Api\Fo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zoo", "Zoo\Zoo.csproj", "{15185C27-1C0B-4124-B4FA-9ED8076D46D4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFocLab", "NewFocLab", "{180B1FC3-D513-4973-A28C-90A842259FE9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FocLab", "FocLab", "{180B1FC3-D513-4973-A28C-90A842259FE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewFocLab.Model", "NewFocLab\NewFocLab.Model\NewFocLab.Model.csproj", "{ABD52651-BF65-4652-93B4-6C0099630935}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FocLab.Model", "FocLab\FocLab.Model\FocLab.Model.csproj", "{ABD52651-BF65-4652-93B4-6C0099630935}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewFocLab.Logic", "NewFocLab\NewFocLab.Logic\NewFocLab.Logic.csproj", "{C9E4DA3B-12DC-4113-93E3-367C537E5636}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FocLab.Logic", "FocLab\FocLab.Logic\FocLab.Logic.csproj", "{C9E4DA3B-12DC-4113-93E3-367C537E5636}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

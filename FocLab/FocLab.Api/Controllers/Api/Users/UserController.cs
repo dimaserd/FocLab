@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Clt.Contract.Models.Common;
 using Clt.Contract.Models.Users;
-using Clt.Logic.Services.Account;
 using Clt.Logic.Services.Users;
 using Croco.Core.Contract.Models;
 using Croco.Core.Contract.Models.Search;
-using FocLab.Logic.EntityDtos.Users.Default;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FocLab.Api.Controllers.Api.Users
@@ -46,7 +44,7 @@ namespace FocLab.Api.Controllers.Api.Users
         /// Метод  поиска пользователя по номеру телефона
         /// </summary>
         /// <returns></returns>
-        [ProducesDefaultResponseType(typeof(ApplicationUserDto))]
+        [ProducesDefaultResponseType(typeof(ApplicationUserBaseModel))]
         [HttpPost("Search/ByPhone")]
         public Task<ApplicationUserBaseModel> SearchByPhone([FromQuery]string phone)
         {
@@ -58,7 +56,7 @@ namespace FocLab.Api.Controllers.Api.Users
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        [ProducesDefaultResponseType(typeof(ApplicationUserDto))]
+        [ProducesDefaultResponseType(typeof(ApplicationUserBaseModel))]
         [HttpPost("Search/ByEmail")]
         public Task<ApplicationUserBaseModel> SearchByEmail([FromQuery]string email)
         {

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FocLab.Api.Models;
-using FocLab.Logic.Extensions;
-using FocLab.Logic.Workers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Croco.Core.Contract.Models;
 using Croco.Core.Logic.Files.Models;
 using Croco.Core.Logic.Files.Abstractions;
+using FocLab.App.Logic.Workers;
+using FocLab.App.Logic.Extensions;
 
 namespace FocLab.Api.Controllers.Api
 {

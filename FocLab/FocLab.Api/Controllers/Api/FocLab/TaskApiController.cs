@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Croco.Core.Contract.Models;
 using FocLab.Logic.Models;
 using FocLab.Logic.Models.Tasks;
+using FocLab.Logic.Services.ChemistryTasks;
 using Microsoft.AspNetCore.Mvc;
-using NewFocLab.Logic.Services.ChemistryTasks;
 
 namespace FocLab.Api.Controllers.Api.FocLab
 {

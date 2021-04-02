@@ -1,0 +1,21 @@
+﻿@model List<FocLab.Logic.Models.Tasks.ChemistryTaskModel>
+@{
+    Layout = ChemistrySettings.LayoutPath;
+    ViewBag.Title = "Список заданий";
+
+    const string viewsDir = "~/Areas/Chemistry/Views/Tasks/Partials";
+
+    var hasAdminRight = User.IsInRole("Admin");
+}
+
+@if (hasAdminRight)
+{
+    @await Html.PartialAsync($"{viewsDir}/AdminIndex.cshtml", Model)
+}
+else
+{
+    @await Html.PartialAsync($"{viewsDir}/PerformerIndex.cshtml", Model)
+}
+
+
+
