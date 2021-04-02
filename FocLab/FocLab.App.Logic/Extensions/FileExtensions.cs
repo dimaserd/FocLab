@@ -1,4 +1,5 @@
 ﻿using Croco.Core.Contract.Files;
+using Croco.Core.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 
@@ -10,22 +11,6 @@ namespace FocLab.App.Logic.Extensions
     public static class FileExtensions
     {
         /// <summary>
-        /// Файл
-        /// </summary>
-        internal class TempFileData : IFileData
-        {
-            /// <summary>
-            /// Название файла
-            /// </summary>
-            public string FileName { get; set; }
-
-            /// <summary>
-            /// Данные в файле
-            /// </summary>
-            public byte[] FileData { get; set; }
-        }
-
-        /// <summary>
         /// Переложить файл из платформы AspNetCore для работы с библиотекой NetCroco.Core
         /// </summary>
         /// <param name="file"></param>
@@ -36,7 +21,7 @@ namespace FocLab.App.Logic.Extensions
             file.CopyTo(ms);
             var fileBytes = ms.ToArray();
 
-            return new TempFileData
+            return new CrocoFileData
             {
                 FileName = file.FileName,
                 FileData = fileBytes

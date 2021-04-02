@@ -16,6 +16,7 @@ using FocLab.Model;
 using Tms.Logic;
 using Tms.Model;
 using FocLab.Logic;
+using FocLab.Logic.Extensions;
 
 namespace FocLab.App.Logic
 {

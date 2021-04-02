@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FocLab.App.Logic.EntityDtos;
-using FocLab.App.Logic.Extensions;
 using FocLab.App.Logic.Implementations;
 using Croco.Core.Contract.Models.Search;
 using Croco.Core.Contract;
@@ -13,6 +12,7 @@ using Croco.Core.Contract.Files;
 using Croco.Core.Contract.Models;
 using Croco.Core.Logic.Files.Services;
 using Croco.Core.Logic.Files.Entites;
+using FocLab.Logic.Extensions;
 
 namespace FocLab.App.Logic.Workers
 {
